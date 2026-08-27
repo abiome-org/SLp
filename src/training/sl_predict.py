@@ -66,6 +66,18 @@ def load_splits():
     return data
 
 
+def relation_pretrain_pool(ppi_pairs, random_pairs, benchmark_pairs):
+    """Build a deterministic relation-training pool disjoint from all benchmark pairs."""
+    benchmark_pairs = np.unique(np.sort(benchmark_pairs.astype("int32"), axis=1), axis=0)
+    candidates = np.unique(np.sort(np.concatenate((ppi_pairs, random_pairs)).astype("int32"), axis=1), axis=0)
+    benchmark_keys = benchmark_pairs[:, 0].astype("int64") * 1_000_003 + benchmark_pairs[:, 1]
+    candidate_keys = candidates[:, 0].astype("int64") * 1_000_003 + candidates[:, 1]
+    pool = candidates[~np.isin(candidate_keys, benchmark_keys)]
+    pool_keys = pool[:, 0].astype("int64") * 1_000_003 + pool[:, 1]
+    assert not np.isin(pool_keys, benchmark_keys).any(), "relation pretraining overlaps a benchmark pair"
+    return pool
+
+
 def benchmarks():
     data = {}
     for source, folder in (("full", "data_split"), ("wo_comp", "data_split_wo_comp")):
@@ -119,22 +131,39 @@ def prepare(anchor_count=32, stem="features", geneformer_checkpoint="Geneformer-
     state = np.concatenate((gf, esm, kg, pt, effect[:, anchors], expression[:, anchors],
                             *(g[:, anchors] for g in gos), ppi[:, anchors].toarray()), 1)
     state = np.nan_to_num(state); state = (state - state.mean(0)) / np.maximum(state.std(0), 1e-5)
-    splits = load_splits(); all_pairs = np.concatenate(list(splits.values())).astype("int32")
+    splits = load_splits()
+    benchmark_pairs = np.unique(np.sort(np.concatenate(list(splits.values())).astype("int32"), axis=1), axis=0)
     upper = sparse.triu(ppi, 1).tocoo(); ppi_pairs = np.stack((upper.row, upper.col), 1)
     if len(ppi_pairs) > 150000: ppi_pairs = ppi_pairs[rng.choice(len(ppi_pairs), 150000, False)]
     random_pairs = rng.integers(0, len(meta), size=(250000, 2), dtype="int32")
     random_pairs.sort(1); random_pairs = random_pairs[random_pairs[:, 0] != random_pairs[:, 1]]
-    pairs = np.unique(np.concatenate((all_pairs, ppi_pairs, random_pairs)), axis=0)
-    i, j = pairs.T
-    rel = np.stack((effect[i, j], expression[i, j], *(g[i, j] for g in gos),
-                    np.asarray(ppi[i, j]).ravel()), 1).astype("float32")
+    # The relation task must not be sampled from benchmark membership.  Keep
+    # benchmark pairs only for read-only evaluator features, and use PPI plus
+    # independent random pairs to train the relation world model.
+    pretrain_pairs = relation_pretrain_pool(ppi_pairs, random_pairs, benchmark_pairs)
+    pairs = np.unique(np.concatenate((benchmark_pairs, pretrain_pairs)), axis=0)
+
+    def relation_targets(pair_array):
+        i, j = pair_array.T
+        return np.stack((effect[i, j], expression[i, j], *(g[i, j] for g in gos),
+                         np.asarray(ppi[i, j]).ravel()), 1).astype("float32")
+
+    rel = relation_targets(pairs)
+    pretrain_rel = relation_targets(pretrain_pairs)
     if stem != "features":
-        old=np.load(OUT/"features.npz"); pairs=old["pairs"]; rel=old["relations"]
+        old=np.load(OUT/"features.npz")
+        pairs=old["pairs"]
+        rel=old["relations"]
+        pretrain_pairs=old["pretrain_pairs"] if "pretrain_pairs" in old.files else pairs
+        pretrain_rel=old["pretrain_relations"] if "pretrain_relations" in old.files else rel
     np.savez_compressed(OUT / f"{stem}.npz", state=state.astype("float16"), pairs=pairs,
-                        relations=rel.astype("float16"), anchors=anchors, gf_hit=gf_hit, esm_hit=esm_hit)
+                        relations=rel.astype("float16"), pretrain_pairs=pretrain_pairs,
+                        pretrain_relations=pretrain_rel.astype("float16"), anchors=anchors,
+                        gf_hit=gf_hit, esm_hit=esm_hit)
     np.savez_compressed(OUT / "splits.npz", **splits)
     (OUT / f"{stem}.json").write_text(json.dumps({"genes": len(meta), "state_dim": state.shape[1],
-        "relation_pairs": len(pairs), "geneformer_coverage": int(gf_hit.sum()), "protein_coverage": int(esm_hit.sum()),
+        "relation_pairs": len(pairs), "pretrain_relation_pairs": len(pretrain_pairs),
+        "geneformer_coverage": int(gf_hit.sum()), "protein_coverage": int(esm_hit.sum()),
         "geneformer_checkpoint": geneformer_checkpoint,
         "modalities": {"geneformer": 768, "protein": 256, "kg": 400, "ptgnn": 200, "anchors": 6*anchor_count}}, indent=2))
 
@@ -151,16 +180,16 @@ def prepare_spectral(k=32):
     base=np.load(OUT/"features.npz"); graph=np.load(OUT/"relation_graphs.npz"); n=int(graph["n"]); views=[]
     for name in graph["names"]:
         a=sparse.csr_matrix((graph[f"{name}_data"],graph[f"{name}_indices"],graph[f"{name}_indptr"]),shape=(n,n)); values,vectors=eigsh(a,k=k,which="LA",v0=np.linspace(1,2,n)); order=np.argsort(values)[::-1]; z=vectors[:,order]*values[order]; views.append(z.astype("float32")); print(name,float(values[order[0]]),float(values[order[-1]]),flush=True)
-    state=np.concatenate((base["state"][:,:1624].astype("float32"),*views),1); state=(state-state.mean(0))/np.maximum(state.std(0),1e-5); np.savez_compressed(OUT/"features_spectral.npz",state=state.astype("float16"),pairs=base["pairs"],relations=base["relations"],gf_hit=base["gf_hit"],esm_hit=base["esm_hit"]); (OUT/"features_spectral.json").write_text(json.dumps({"genes":n,"state_dim":state.shape[1],"relation_pairs":len(base["pairs"]),"spectral_dimensions_per_view":k,"views":graph["names"].tolist()},indent=2))
+    state=np.concatenate((base["state"][:,:1624].astype("float32"),*views),1); state=(state-state.mean(0))/np.maximum(state.std(0),1e-5); pretrain_pairs=base["pretrain_pairs"] if "pretrain_pairs" in base.files else base["pairs"]; pretrain_relations=base["pretrain_relations"] if "pretrain_relations" in base.files else base["relations"]; np.savez_compressed(OUT/"features_spectral.npz",state=state.astype("float16"),pairs=base["pairs"],relations=base["relations"],pretrain_pairs=pretrain_pairs,pretrain_relations=pretrain_relations,gf_hit=base["gf_hit"],esm_hit=base["esm_hit"]); (OUT/"features_spectral.json").write_text(json.dumps({"genes":n,"state_dim":state.shape[1],"relation_pairs":len(base["pairs"]),"pretrain_relation_pairs":len(pretrain_pairs),"spectral_dimensions_per_view":k,"views":graph["names"].tolist()},indent=2))
 
 
 def prepare_spectral_safe():
-    pack=np.load(OUT/"features_spectral.npz"); state=pack["state"].copy(); state[:,1024:1424]=0; np.savez_compressed(OUT/"features_spectral_safe.npz",state=state,pairs=pack["pairs"],relations=pack["relations"],gf_hit=pack["gf_hit"],esm_hit=pack["esm_hit"]); (OUT/"features_spectral_safe.json").write_text(json.dumps({"genes":len(state),"state_dim":state.shape[1],"excluded":"ambiguous frozen knowledge-graph embedding","retained":"Geneformer, State/ESM, PPI/GO PT-GNN, six non-SL spectral graph views"},indent=2))
+    pack=np.load(OUT/"features_spectral.npz"); state=pack["state"].copy(); state[:,1024:1424]=0; pretrain_pairs=pack["pretrain_pairs"] if "pretrain_pairs" in pack.files else pack["pairs"]; pretrain_relations=pack["pretrain_relations"] if "pretrain_relations" in pack.files else pack["relations"]; np.savez_compressed(OUT/"features_spectral_safe.npz",state=state,pairs=pack["pairs"],relations=pack["relations"],pretrain_pairs=pretrain_pairs,pretrain_relations=pretrain_relations,gf_hit=pack["gf_hit"],esm_hit=pack["esm_hit"]); (OUT/"features_spectral_safe.json").write_text(json.dumps({"genes":len(state),"state_dim":state.shape[1],"excluded":"ambiguous frozen knowledge-graph embedding","retained":"Geneformer, State/ESM, PPI/GO PT-GNN, six non-SL spectral graph views"},indent=2))
 
 
 def prepare_spectral_scgpt():
     import csv
-    pack=np.load(OUT/"features_spectral_safe.npz"); state=pack["state"].copy(); symbols=[r["symbol"] for r in csv.DictReader(open(RAW/"meta_table_9845.csv"))]; emb=pickle.load(open(ROOT/"data/models/MuSL/processed_data/all_emb_scgpt.pkl","rb")); hit=np.asarray([g in emb for g in symbols]); block=np.zeros((len(state),400),"float32"); block[hit]=np.asarray([emb[g][:400] for g in np.asarray(symbols)[hit]]); mean=block[hit].mean(0); sd=block[hit].std(0); block[hit]=(block[hit]-mean)/(sd+1e-6); state[:,1024:1424]=block.astype(state.dtype); np.savez_compressed(OUT/"features_spectral_scgpt.npz",state=state,pairs=pack["pairs"],relations=pack["relations"],gf_hit=pack["gf_hit"],esm_hit=pack["esm_hit"],scgpt_hit=hit); (OUT/"features_spectral_scgpt.json").write_text(json.dumps({"genes":len(state),"scgpt_genes":int(hit.sum()),"state_dim":state.shape[1],"source":"MuSL all_emb_scgpt.pkl; first 400 coordinates standardized without SL labels","retained":"Geneformer, State/ESM, scGPT, PPI/GO PT-GNN, six non-SL spectral graph views"},indent=2))
+    pack=np.load(OUT/"features_spectral_safe.npz"); state=pack["state"].copy(); symbols=[r["symbol"] for r in csv.DictReader(open(RAW/"meta_table_9845.csv"))]; emb=pickle.load(open(ROOT/"data/models/MuSL/processed_data/all_emb_scgpt.pkl","rb")); hit=np.asarray([g in emb for g in symbols]); block=np.zeros((len(state),400),"float32"); block[hit]=np.asarray([emb[g][:400] for g in np.asarray(symbols)[hit]]); mean=block[hit].mean(0); sd=block[hit].std(0); block[hit]=(block[hit]-mean)/(sd+1e-6); state[:,1024:1424]=block.astype(state.dtype); pretrain_pairs=pack["pretrain_pairs"] if "pretrain_pairs" in pack.files else pack["pairs"]; pretrain_relations=pack["pretrain_relations"] if "pretrain_relations" in pack.files else pack["relations"]; np.savez_compressed(OUT/"features_spectral_scgpt.npz",state=state,pairs=pack["pairs"],relations=pack["relations"],pretrain_pairs=pretrain_pairs,pretrain_relations=pretrain_relations,gf_hit=pack["gf_hit"],esm_hit=pack["esm_hit"],scgpt_hit=hit); (OUT/"features_spectral_scgpt.json").write_text(json.dumps({"genes":len(state),"scgpt_genes":int(hit.sum()),"state_dim":state.shape[1],"source":"MuSL all_emb_scgpt.pkl; first 400 coordinates standardized without SL labels","retained":"Geneformer, State/ESM, scGPT, PPI/GO PT-GNN, six non-SL spectral graph views"},indent=2))
 
 
 def pair_features(state, relation, pairs):

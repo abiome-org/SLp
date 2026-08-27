@@ -4,6 +4,8 @@ import modal
 ROOT = Path.cwd()
 LOCAL = (ROOT / "src/training/world_model.py").exists()
 MODEL = ROOT / "src/training/world_model.py" if LOCAL else Path("/root/world_model.py")
+MODEL_PACKAGE = ROOT / "model" if LOCAL else Path("/root/model")
+MODULES_PACKAGE = ROOT / "modules" if LOCAL else Path("/root/modules")
 FEATURES = ROOT / "results/sl_predict/features.npz" if LOCAL else Path("/root/data/features.npz")
 FEATURES_V1 = ROOT / "results/sl_predict/features_v1.npz" if LOCAL else Path("/root/data/features_v1.npz")
 FEATURES_CANCER = ROOT / "results/sl_predict/features_cancer.npz" if LOCAL else Path("/root/data/features_cancer.npz")
@@ -49,6 +51,8 @@ volume = modal.Volume.from_name("sl-predict", create_if_missing=True)
 image = (modal.Image.debian_slim(python_version="3.11")
          .pip_install("torch==2.5.1", "numpy==2.1.3", "scikit-learn==1.5.2", "lightgbm==4.5.0")
          .add_local_file(MODEL, "/root/world_model.py")
+         .add_local_dir(MODEL_PACKAGE, "/root/model")
+         .add_local_dir(MODULES_PACKAGE, "/root/modules")
          .add_local_file(FEATURES, "/root/data/features.npz")
          .add_local_file(FEATURES_V1, "/root/data/features_v1.npz")
          .add_local_file(FEATURES_CANCER, "/root/data/features_cancer.npz")
@@ -88,9 +92,11 @@ for musl_file in MUSL_FILES: eval_image=eval_image.add_local_file(musl_file,f"/r
 def train(pretrain_epochs=12, rl_epochs=3, cv3_only=False, objective_only=False, d=384, latent=128, layers=6):
     import sys
     sys.path.insert(0, "/root")
-    from world_model import run
+    from modules.training.world import run
     name = f"native_d{d}_l{layers}_z{latent}_p{pretrain_epochs}_r{rl_epochs}"
-    cvs = () if objective_only else ((3,) if cv3_only else (1, 2, 3))
+    if cv3_only:
+        raise ValueError("--cv3-only is retired; lock the checkpoint and invoke --evaluate-model separately.")
+    cvs = ()
     rows = run("/root/data", f"/artifacts/{name}", pretrain_epochs, rl_epochs, cvs, d, latent, layers)
     volume.commit()
     return rows
@@ -99,208 +105,208 @@ def train(pretrain_epochs=12, rl_epochs=3, cv3_only=False, objective_only=False,
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_relational(pretrain_epochs=12,rl_epochs=3,cancer=False):
     import sys
-    sys.path.insert(0,"/root"); from world_model import run
-    name=f"native_rel256{'_cancer' if cancer else ''}_guard_p{pretrain_epochs}_r{rl_epochs}"; feature_name="features_cancer.npz" if cancer else "features_v1.npz"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(3,),384,128,6,feature_name)
+    sys.path.insert(0,"/root"); from modules.training.world import run
+    name=f"native_rel256{'_cancer' if cancer else ''}_guard_p{pretrain_epochs}_r{rl_epochs}"; feature_name="features_cancer.npz" if cancer else "features_v1.npz"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(),384,128,6,feature_name)
     volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_spectral(pretrain_epochs=12,rl_epochs=3):
     import sys
-    sys.path.insert(0,"/root"); from world_model import run
-    name=f"native_spectral_guard_p{pretrain_epochs}_r{rl_epochs}"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(3,),384,128,6,"features_spectral.npz")
+    sys.path.insert(0,"/root"); from modules.training.world import run
+    name=f"native_spectral_guard_p{pretrain_epochs}_r{rl_epochs}"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(),384,128,6,"features_spectral.npz")
     volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_spectral_external(pretrain_epochs=12,rl_epochs=3):
     import sys
-    sys.path.insert(0,"/root"); from world_model import run
-    name=f"native_spectral_external_guard_p{pretrain_epochs}_r{rl_epochs}"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(3,),384,128,6,"features_spectral.npz","slkb_outcomes_strict_external.npz")
+    sys.path.insert(0,"/root"); from modules.training.world import run
+    name=f"native_spectral_external_guard_p{pretrain_epochs}_r{rl_epochs}"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(),384,128,6,"features_spectral.npz","slkb_outcomes_strict_external.npz")
     volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_spectral_safe_external(pretrain_epochs=12,rl_epochs=3):
     import sys
-    sys.path.insert(0,"/root"); from world_model import run
-    name=f"native_spectral_safe_external_guard_p{pretrain_epochs}_r{rl_epochs}"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(3,),384,128,6,"features_spectral_safe.npz","slkb_outcomes_strict_external.npz")
+    sys.path.insert(0,"/root"); from modules.training.world import run
+    name=f"native_spectral_safe_external_guard_p{pretrain_epochs}_r{rl_epochs}"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(),384,128,6,"features_spectral_safe.npz","slkb_outcomes_strict_external.npz")
     volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_spectral_safe_intervention(pretrain_epochs=12,rl_epochs=3):
     import sys
-    sys.path.insert(0,"/root"); from world_model import run
-    name=f"native_spectral_safe_intervention_guard_p{pretrain_epochs}_r{rl_epochs}"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(3,),384,128,6,"features_spectral_safe.npz","slkb_outcomes_intervention_external.npz")
+    sys.path.insert(0,"/root"); from modules.training.world import run
+    name=f"native_spectral_safe_intervention_guard_p{pretrain_epochs}_r{rl_epochs}"; rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(),384,128,6,"features_spectral_safe.npz","slkb_outcomes_intervention_external.npz")
     volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_safe_pretrain(pretrain_epochs=12):
     import sys
-    sys.path.insert(0,"/root"); from world_model import run_pretrain
+    sys.path.insert(0,"/root"); from modules.training.world import run_pretrain
     name=f"native_spectral_safe_pretrain_p{pretrain_epochs}"; rows=run_pretrain("/root/data",f"/artifacts/{name}",pretrain_epochs,384,128,6,"features_spectral_safe.npz"); volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_scgpt_pretrain(pretrain_epochs=12):
     import sys
-    sys.path.insert(0,"/root"); from world_model import run_pretrain
+    sys.path.insert(0,"/root"); from modules.training.world import run_pretrain
     name=f"native_spectral_scgpt_pretrain_p{pretrain_epochs}"; rows=run_pretrain("/root/data",f"/artifacts/{name}",pretrain_epochs,384,128,6,"features_spectral_scgpt.npz"); volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=1800,volumes={"/artifacts":volume})
 def train_safe_cold(mode="cold_joint",pretrain_epochs=12,rl_epochs=3):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_outcomes
+    sys.path.insert(0,"/root"); from modules.training.world import resume_outcomes
     name=f"native_spectral_safe_intervention_{mode}_p{pretrain_epochs}_r{rl_epochs}"; outcome="slkb_outcomes_intervention_depmap_gene.npz" if mode=="cold_depmap_gene" else ("slkb_outcomes_intervention_depmap.npz" if mode=="cold_depmap" else ("slkb_outcomes_intervention_context.npz" if mode=="cold_context" else "slkb_outcomes_intervention_external.npz")); rows=resume_outcomes("/root/data",f"/artifacts/native_spectral_safe_pretrain_p{pretrain_epochs}/world_model.pt",f"/artifacts/{name}",mode,6,rl_epochs,384,128,6,"features_spectral_safe.npz",outcome); volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_safe_depmap_world(pretrain_epochs=12,dependency_epochs=3,rl_epochs=3):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_depmap_world
+    sys.path.insert(0,"/root"); from modules.training.world import resume_depmap_world
     name=f"native_spectral_safe_intervention_depmap_world_p{pretrain_epochs}_d{dependency_epochs}_r{rl_epochs}"; rows=resume_depmap_world("/root/data",f"/artifacts/native_spectral_safe_pretrain_p{pretrain_epochs}/world_model.pt",f"/artifacts/{name}",dependency_epochs,6,rl_epochs); volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_safe_perturbseq(pretrain_epochs=12,perturb_epochs=10,rl_epochs=3,residual=False,context_select=False,corpus="perturbseq_world.npz"):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_perturbseq
+    sys.path.insert(0,"/root"); from modules.training.world import resume_perturbseq
     name=f"native_spectral_safe_intervention_perturbseq{'_v2' if corpus.endswith('_v2.npz') else ''}{'_residual' if residual else ''}{'_context_select' if context_select else ''}_p{pretrain_epochs}_t{perturb_epochs}_r{rl_epochs}"; rows=resume_perturbseq("/root/data",f"/artifacts/native_spectral_safe_pretrain_p{pretrain_epochs}/world_model.pt",f"/artifacts/{name}",perturb_epochs,rl_epochs,6,residual_weight=float(residual),context_selection=context_select,perturb_name=corpus); volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=7200,volumes={"/artifacts":volume})
 def train_basal_perturbseq(pretrain_epochs=12,dependency_epochs=3,perturb_epochs=10,rl_epochs=3):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_basal_perturbseq
+    sys.path.insert(0,"/root"); from modules.training.world import resume_basal_perturbseq
     name=f"native_spectral_safe_intervention_basal_perturbseq_v3_p{pretrain_epochs}_d{dependency_epochs}_t{perturb_epochs}_r{rl_epochs}"; rows=resume_basal_perturbseq("/root/data",f"/artifacts/native_spectral_safe_pretrain_p{pretrain_epochs}/world_model.pt",f"/artifacts/{name}",dependency_epochs,perturb_epochs,rl_epochs); volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_tolerance(model_name,epochs=5,d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_tolerance_head
+    sys.path.insert(0,"/root"); from modules.training.world import fit_tolerance_head
     result=fit_tolerance_head("/root/data",f"/artifacts/{model_name}/world_model.pt",f"/artifacts/{model_name}",epochs,1000000,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_interaction(model_name,epochs=20,d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_interaction_head
+    sys.path.insert(0,"/root"); from modules.training.world import fit_interaction_head
     result=fit_interaction_head("/root/data",f"/artifacts/{model_name}/world_model.pt",f"/artifacts/{model_name}",epochs,100000,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_interaction_shrinkage(model_name,epochs=20,d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_interaction_shrinkage_head
+    sys.path.insert(0,"/root"); from modules.training.world import fit_interaction_shrinkage_head
     result=fit_interaction_shrinkage_head("/root/data",f"/artifacts/{model_name}/world_model.pt",f"/artifacts/{model_name}",epochs,100000,.15,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def compositional_ridge(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_compositional_ridge
+    sys.path.insert(0,"/root"); from modules.training.world import fit_compositional_ridge
     base="native_spectral_safe_intervention_basal_perturbseq_v3_p12_d3_t10_r3"; residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_compositional_ridge("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}/interaction_residual_head.pt",f"/artifacts/{residual}",d=d,latent=latent,layers=layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def source_landmark_endpoint(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_source_endpoint
+    sys.path.insert(0,"/root"); from modules.training.world import fit_source_endpoint
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_source_endpoint("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}",12,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def dependency_landscape_endpoint(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_dependency_landscape_endpoint
+    sys.path.insert(0,"/root"); from modules.training.world import fit_dependency_landscape_endpoint
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_dependency_landscape_endpoint("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}",20,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def dependency_core_endpoint(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_dependency_landscape_endpoint
+    sys.path.insert(0,"/root"); from modules.training.world import fit_dependency_landscape_endpoint
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_dependency_landscape_endpoint("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}",20,d,latent,layers,16,"dependency_core"); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def dependency_action_adapter(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_dependency_action_adapter
+    sys.path.insert(0,"/root"); from modules.training.world import fit_dependency_action_adapter
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_dependency_action_adapter("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}/dependency_landscape_endpoint.pt",f"/artifacts/{residual}",30,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def dependency_core_interaction(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_dependency_core_interaction
+    sys.path.insert(0,"/root"); from modules.training.world import fit_dependency_core_interaction
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_dependency_core_interaction("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}/interaction_residual_head.pt",f"/artifacts/{residual}/dependency_core_endpoint.pt",f"/artifacts/{residual}",20,100000,.15,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def pair_transition(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_pair_transition_adapter
+    sys.path.insert(0,"/root"); from modules.training.world import fit_pair_transition_adapter
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_pair_transition_adapter("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}",30,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def dixit_pair_transition(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_dixit_pair_adapter
+    sys.path.insert(0,"/root"); from modules.training.world import fit_dixit_pair_adapter
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; out=f"/artifacts/{residual}/dixit_combinatorial"; result=fit_dixit_pair_adapter("/root/data",f"/artifacts/{residual}/world_model.pt",out,20,30,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def dixit_symmetric_latent(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_dixit_symmetric_latent
+    sys.path.insert(0,"/root"); from modules.training.world import fit_dixit_symmetric_latent
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_dixit_symmetric_latent("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}/dixit_combinatorial/dixit_decoder.pt",f"/artifacts/{residual}/dixit_symmetric",30,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def dixit_residual_latent(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_dixit_symmetric_latent
+    sys.path.insert(0,"/root"); from modules.training.world import fit_dixit_symmetric_latent
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_dixit_symmetric_latent("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}/dixit_combinatorial/dixit_decoder.pt",f"/artifacts/{residual}/dixit_residual",30,d,latent,layers,True); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def transition_mixture(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_transition_mixture
+    sys.path.insert(0,"/root"); from modules.training.world import fit_transition_mixture
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_transition_mixture("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}",d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def perturbseq_action_calibration(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_perturbseq_action_calibration
+    sys.path.insert(0,"/root"); from modules.training.world import fit_perturbseq_action_calibration
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_perturbseq_action_calibration("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}/dependency_core_endpoint.pt",f"/artifacts/{residual}",20,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def single_trained_action_rotation(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_single_trained_action_rotation
+    sys.path.insert(0,"/root"); from modules.training.world import fit_single_trained_action_rotation
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_single_trained_action_rotation("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}/dependency_core_endpoint.pt",f"/artifacts/{residual}",30,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def safe_symmetric_pair_fusion(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_safe_symmetric_pair_fusion
+    sys.path.insert(0,"/root"); from modules.training.world import fit_safe_symmetric_pair_fusion
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_safe_symmetric_pair_fusion("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}",30,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def source_landmark_invariant_ridge(d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_source_invariant_ridge
+    sys.path.insert(0,"/root"); from modules.training.world import fit_source_invariant_ridge
     residual="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"; result=fit_source_invariant_ridge("/root/data",f"/artifacts/{residual}/world_model.pt",f"/artifacts/{residual}/interaction_residual_head.pt",f"/artifacts/{residual}/source_landmark_endpoint.pt",f"/artifacts/{residual}",d=d,latent=latent,layers=layers); volume.commit(); return result
 
 
@@ -321,30 +327,30 @@ def slamr_residual_interaction(d=384,latent=128,layers=6):
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_interaction_depletion(model_name,epochs=20,d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import fit_interaction_depletion_head
+    sys.path.insert(0,"/root"); from modules.training.world import fit_interaction_depletion_head
     result=fit_interaction_depletion_head("/root/data",f"/artifacts/{model_name}/world_model.pt",f"/artifacts/{model_name}",epochs,100000,d,latent,layers); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_scgpt_perturbseq(pretrain_epochs=12,perturb_epochs=10,rl_epochs=3):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_perturbseq
+    sys.path.insert(0,"/root"); from modules.training.world import resume_perturbseq
     name=f"native_spectral_scgpt_intervention_perturbseq_p{pretrain_epochs}_t{perturb_epochs}_r{rl_epochs}"; rows=resume_perturbseq("/root/data",f"/artifacts/native_spectral_scgpt_pretrain_p{pretrain_epochs}/world_model.pt",f"/artifacts/{name}",perturb_epochs,rl_epochs,6,feature_name="features_spectral_scgpt.npz"); volume.commit(); return rows
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def train_safe_perturbseq_fitness(pretrain_epochs=12,perturb_epochs=10,rl_epochs=3):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_perturbseq
+    sys.path.insert(0,"/root"); from modules.training.world import resume_perturbseq
     name=f"native_spectral_safe_intervention_perturbseq_fitness_p{pretrain_epochs}_t{perturb_epochs}_r{rl_epochs}"; rows=resume_perturbseq("/root/data",f"/artifacts/native_spectral_safe_pretrain_p{pretrain_epochs}/world_model.pt",f"/artifacts/{name}",perturb_epochs,rl_epochs,6,384,128,6,"perturbseq_world_fitness.npz"); volume.commit(); return rows
 
 
 @app.function(image=image,gpu="A100",timeout=7200,volumes={"/artifacts":volume})
 def train_large(pretrain_epochs=12,rl_epochs=3,d=768,latent=256,layers=8):
     import sys
-    sys.path.insert(0,"/root"); from world_model import run
+    sys.path.insert(0,"/root"); from modules.training.world import run
     name=f"native_d{d}_l{layers}_z{latent}_p{pretrain_epochs}_r{rl_epochs}"
-    rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(3,),d,latent,layers)
+    rows=run("/root/data",f"/artifacts/{name}",pretrain_epochs,rl_epochs,(),d,latent,layers)
     volume.commit(); return rows
 
 
@@ -367,7 +373,7 @@ def slamr(model_name,d=384,latent=128,layers=6):
 @app.function(image=image,gpu="L4",timeout=1800,volumes={"/artifacts":volume})
 def perturb_benchmark(model_name,d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_perturb_evaluate
+    sys.path.insert(0,"/root"); from modules.training.world import resume_perturb_evaluate
     rows=resume_perturb_evaluate("/root/data",f"/artifacts/{model_name}/world_model.pt",f"/artifacts/{model_name}/perturb_decoder.pt",f"/artifacts/{model_name}/metrics_rollout.json",d,latent,layers); volume.commit(); return rows
 
 
@@ -482,7 +488,7 @@ def musl_hap1_sequential(model_name,d=384,latent=128,layers=6):
 @app.function(image=image,gpu="L4",timeout=1800,volumes={"/artifacts":volume})
 def calibrate(model_name,d=384,latent=128,layers=6):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume
+    sys.path.insert(0,"/root"); from modules.training.world import resume
     out=f"/artifacts/{model_name}/rich_metrics.json"; rows=resume("/root/data",f"/artifacts/{model_name}/world_model.pt",out,d,latent,layers)
     volume.commit(); return rows
 
@@ -490,7 +496,7 @@ def calibrate(model_name,d=384,latent=128,layers=6):
 @app.function(image=image,gpu="L4",timeout=1800,volumes={"/artifacts":volume})
 def metric(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_metric
+    sys.path.insert(0,"/root"); from modules.training.world import resume_metric
     out=f"/artifacts/{model_name}/metric_metrics.json"; rows=resume_metric("/root/data",f"/artifacts/{model_name}/world_model.pt",out,d,latent,layers,feature_name)
     volume.commit(); return rows
 
@@ -498,7 +504,7 @@ def metric(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def pair(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_pair
+    sys.path.insert(0,"/root"); from modules.training.world import resume_pair
     out=f"/artifacts/{model_name}/pair_metrics.json"; rows=resume_pair("/root/data",f"/artifacts/{model_name}/world_model.pt",out,d,latent,layers,feature_name)
     volume.commit(); return rows
 
@@ -506,7 +512,7 @@ def pair(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
 def emergent(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_emergent
+    sys.path.insert(0,"/root"); from modules.training.world import resume_emergent
     out=f"/artifacts/{model_name}/emergent_metrics.json"; rows=resume_emergent("/root/data",f"/artifacts/{model_name}/world_model.pt",out,d,latent,layers,feature_name)
     volume.commit(); return rows
 
@@ -514,7 +520,7 @@ def emergent(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
 @app.function(image=image,gpu="L4",timeout=1800,volumes={"/artifacts":volume})
 def transfer(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_transfer
+    sys.path.insert(0,"/root"); from modules.training.world import resume_transfer
     out=f"/artifacts/{model_name}/transfer_metrics.json"; rows=resume_transfer("/root/data",f"/artifacts/{model_name}/world_model.pt",out,d,latent,layers,feature_name)
     volume.commit(); return rows
 
@@ -522,7 +528,7 @@ def transfer(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
 @app.function(image=image,gpu="L4",cpu=8,timeout=3600,volumes={"/artifacts":volume})
 def tabular(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_tabular
+    sys.path.insert(0,"/root"); from modules.training.world import resume_tabular
     out=f"/artifacts/{model_name}/tabular_metrics.json"; rows=resume_tabular("/root/data",f"/artifacts/{model_name}/world_model.pt",out,d,latent,layers,feature_name)
     volume.commit(); return rows
 
@@ -530,7 +536,7 @@ def tabular(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
 @app.function(image=image,gpu="L4",cpu=8,timeout=3600,volumes={"/artifacts":volume})
 def graph(model_name,d=384,latent=128,layers=6,feature_name="features.npz"):
     import sys
-    sys.path.insert(0,"/root"); from world_model import resume_graph
+    sys.path.insert(0,"/root"); from modules.training.world import resume_graph
     out=f"/artifacts/{model_name}/graph_metrics.json"; rows=resume_graph("/root/data",f"/artifacts/{model_name}/world_model.pt",out,d,latent,layers,feature_name)
     volume.commit(); return rows
 

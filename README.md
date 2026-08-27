@@ -7,9 +7,15 @@ The current compact model is a 6-layer, 384-wide transformer with 11.92M trainab
 ## Codebase map
 
 ```text
+model/
+  v1/                    immutable, data-free world-model contract and checkpoint tools
+modules/
+  training/              molecular-only training entry points
+  decoders/              application decoders (fitness, SL, drug response)
+  evaluation/            read-only benchmark guardrails and adapters
 src/
   training/
-    world_model.py       model, objectives, fitting, and ablations
+    world_model.py       compatibility layer for legacy training objectives and ablations
     run_modal.py         Modal GPU training and evaluation entry point
     sl_predict.py        feature, split, graph, and baseline preparation
     depmap.py            DepMap expression and dependency preparation
@@ -32,6 +38,12 @@ results/                 local artifacts; only .gitkeep is committed
 ontology/                local research graph; never committed
 ```
 
+`model/v1` simulates molecular state only. It does not load a dataset, inspect
+a benchmark split, or score synthetic lethality. Application decoders remain
+outside the model so an SL score cannot silently become part of the world
+model. A released checkpoint is identified by its versioned model code and
+SHA-256 manifest; behavior changes require a new model version.
+
 ## Environment
 
 Python 3.11 is the working runtime. The core local dependencies are PyTorch, NumPy, pandas, SciPy, scikit-learn, h5py, and Modal; particular preparation paths additionally use `rdata` or `safetensors`. GPU jobs are defined with pinned packages in `src/training/run_modal.py`.
@@ -43,6 +55,25 @@ python -m pip install torch numpy pandas scipy scikit-learn h5py modal rdata saf
 ```
 
 Raw datasets and generated arrays are intentionally absent from Git. Restore the expected inputs under `data/`, then build the relevant packs under `results/sl_predict/`; every script resolves paths from the repository root.
+
+## Hugging Face artifacts
+
+The public artifact repository is [potteryrage/SLp](https://huggingface.co/potteryrage/SLp). It is currently an empty artifact home; repository creation alone is not a model or data release. Git remains source-only, while cleaned, redistributable data products and released weights belong on the Hub under immutable versioned paths:
+
+```text
+checkpoints/vN/RELEASE/       world-model weights and checkpoint manifest
+decoders/vN/RELEASE/          application-decoder weights and metadata
+data/CORPUS/VERSION/           cleaned arrays plus schema and provenance audit
+```
+
+Every checkpoint upload must include the generated SHA-256 manifest. Every data upload must identify its upstream sources, licenses, transformations, schema, split construction, exclusions, and file checksums. Do not upload restricted raw inputs or third-party weights whose licenses do not permit redistribution.
+
+After an artifact exists locally, upload it directly without moving it into Git, for example:
+
+```bash
+hf upload potteryrage/SLp results/sl_predict/RELEASE/world_model.pt checkpoints/v1/RELEASE/world_model.pt
+hf upload potteryrage/SLp results/sl_predict/RELEASE/world_model.manifest.json checkpoints/v1/RELEASE/world_model.manifest.json
+```
 
 ## Training
 
@@ -65,6 +96,16 @@ Run a named checkpoint evaluation through the same entry point, for example:
 ```bash
 modal run src/training/run_modal.py --musl-interaction-shrinkage-model MODEL_NAME
 ```
+
+Training commands now perform molecular validation only. They do not open
+Feng, MuSL, SLAMR, Sanger, or HAP1 by default. Use a dedicated evaluation flag
+only after the checkpoint and its application decoder are locked.
+
+Feature packs created before this boundary remain readable for historical
+reproduction, but they do not contain a separate relation-pretraining pool.
+Regenerate the feature family before a new generalization experiment so model
+pretraining uses only PPI and independent random relation pairs, never pair
+membership from a benchmark split.
 
 Use `modal run src/training/run_modal.py --help` for the full set of controlled training and ablation flags. Local preprocessing commands expose their own `--help` output.
 

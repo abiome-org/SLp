@@ -36,13 +36,47 @@ Run `modal run src/training/run_modal.py --help` before changing flags. Do not s
 
 ## Engineering rules
 
+- Treat `model/vN/` as immutable model code. It must remain data-free: no
+  dataset paths, split logic, benchmark imports, fitting loops, or application
+  scores. A numerical behavior change creates `model/v(N+1)` with a new model
+  card and checkpoint manifest.
+- Keep assay-specific fitness, SL, and drug-response heads in `modules/decoders/`.
+  Training and evaluation code may consume a model checkpoint but must not
+  alter the model package.
+- Training commands must not open a benchmark by default. Benchmark evaluation
+  is a distinct, explicit operation after model and decoder selection lock.
 - Keep the repository extremely lean. Prefer editing an existing function over adding a framework, abstraction layer, configuration system, or duplicate runner.
-- Put training and data preparation in `src/training/`; put only evaluation logic in `src/benchmarks/`.
+- Put reusable training workflows in `modules/training/`; keep command adapters
+  and data preparation in `src/training/`; put only evaluation logic in
+  `src/benchmarks/`.
 - Keep `docs/` limited to `litreview.md`, `model-card.md`, and `results.md`.
 - Never commit `data/`, `results/` artifacts, model weights, caches, vendored repositories, credentials, or `ontology/`. The ontology is local research infrastructure, not part of the public codebase.
 - Preserve deterministic seeds and leakage assertions. Add a focused check when changing split, exclusion, or benchmark logic.
 - Write like a scientist: name the dataset, population, endpoint, uncertainty, and limitation. Avoid internal process jargon.
 - Do not refactor unrelated code during an experiment.
+
+## Artifact publishing
+
+- The canonical public artifact repository is
+  `https://huggingface.co/potteryrage/SLp` (`potteryrage/SLp`, model repo).
+  Keep Git source-only; publish cleaned data products and released model or
+  decoder weights to the Hub without copying them into tracked directories.
+- Use immutable paths: `checkpoints/vN/RELEASE/`, `decoders/vN/RELEASE/`, and
+  `data/CORPUS/VERSION/`. Never overwrite an existing release; publish a new
+  version when bytes, preprocessing, splits, exclusions, or model behavior
+  change.
+- Before uploading data, verify that each upstream license permits
+  redistribution. Exclude restricted raw records, private data, credentials,
+  and third-party weights without redistribution rights. Derived or cleaned
+  does not automatically mean redistributable.
+- A data release must include an audit describing sources, licenses,
+  transformations, schema, population, endpoints, split construction,
+  leakage exclusions, and SHA-256 checksums. A checkpoint release must include
+  its generated manifest, model version, training-data release IDs, decoder
+  separation, and the supporting model-card/result commit.
+- Use the authenticated `hf` CLI. Never place a Hugging Face token in a
+  command, script, log, manifest, or tracked file. Review the exact local and
+  destination paths before each upload.
 
 ## Compute
 
