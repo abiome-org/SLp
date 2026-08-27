@@ -38,9 +38,14 @@ GRAPHS = ROOT / "results/sl_predict/relation_graphs.npz" if LOCAL else Path("/ro
 EVALUATOR = ROOT / "src/benchmarks/sl_predict.py" if LOCAL else Path("/root/evaluate.py")
 SLAMR_EVALUATOR = ROOT / "src/benchmarks/slamr.py" if LOCAL else Path("/root/slamr.py")
 MUSL_EVALUATOR = ROOT / "src/benchmarks/musl.py" if LOCAL else Path("/root/musl.py")
+TCGA_TREE_DECODER = ROOT / "src/training/tcga_tree_decoder.py" if LOCAL else Path("/root/tcga_tree_decoder.py")
 HAP1_EVALUATOR = ROOT / "src/benchmarks/hap1.py" if LOCAL else Path("/root/hap1.py")
 HAP1_PACK = ROOT / "results/sl_predict/hap1_score_pack.npz" if LOCAL else Path("/root/data/hap1_score_pack.npz")
 HAP1_AUX = ROOT / "results/sl_predict/hap1_auxiliary.npz" if LOCAL else Path("/root/data/hap1_auxiliary.npz")
+CODEPENDENCY = ROOT / "results/sl_predict/depmap_codependency.npz" if LOCAL else Path("/root/data/depmap_codependency.npz")
+TCGA_RELATION = ROOT / "results/sl_predict/tcga_mutual_exclusivity.npz" if LOCAL else Path("/root/data/tcga_mutual_exclusivity.npz")
+EXPRESSION_SILENCING = ROOT / "results/sl_predict/depmap_expression_silencing.npz" if LOCAL else Path("/root/data/depmap_expression_silencing.npz")
+FULL_TRANSCRIPTOME_RESPONSE = ROOT / "results/sl_predict/full_transcriptome_codependency.npz" if LOCAL else Path("/root/data/full_transcriptome_codependency.npz")
 META = ROOT / "data/feng2024/data/preprocessed_data/meta_table_9845.csv" if LOCAL else Path("/root/data/meta_table_9845.csv")
 MUSL_META = ROOT / "data/models/MuSL/processed_data/meta_table_7684.csv" if LOCAL else Path("/root/data/musl/meta_table_7684.csv")
 MUSL_FILES = [ROOT/f"data/models/MuSL/processed_data/data/CV3_bins_32/fold_data/{kind}_{part}_seed{seed}.pkl" if LOCAL else Path(f"/root/data/musl/{kind}_{part}_seed{seed}.pkl") for seed in (42,432) for kind in ("train","test") for part in ("pairs","labels")]
@@ -86,6 +91,10 @@ eval_image = image.add_local_file(BENCH,"/root/data/cv3_benchmarks.npz").add_loc
 for split in SLAMR_SPLITS: eval_image=eval_image.add_local_file(split,f"/root/data/{split.name}")
 for cell_text in SLAMR_TEXT: eval_image=eval_image.add_local_file(cell_text,f"/root/data/{cell_text.name.split('_gpt-5.1_')[-1].replace('_desc_embedding.csv','')}_text.csv")
 for musl_file in MUSL_FILES: eval_image=eval_image.add_local_file(musl_file,f"/root/data/musl/{musl_file.name}")
+public_eval_image=eval_image.add_local_file(CODEPENDENCY,"/root/data/depmap_codependency.npz").add_local_file(TCGA_RELATION,"/root/data/tcga_mutual_exclusivity.npz")
+tcga_tree_image=image.add_local_file(TCGA_RELATION,"/root/data/tcga_mutual_exclusivity.npz").add_local_file(TCGA_TREE_DECODER,"/root/tcga_tree_decoder.py")
+silencing_eval_image=public_eval_image.add_local_file(EXPRESSION_SILENCING,"/root/data/depmap_expression_silencing.npz")
+response_eval_image=silencing_eval_image.add_local_file(FULL_TRANSCRIPTOME_RESPONSE,"/root/data/full_transcriptome_codependency.npz")
 
 
 @app.function(image=image, gpu="L4", timeout=3600, volumes={"/artifacts": volume})
@@ -100,6 +109,12 @@ def train(pretrain_epochs=12, rl_epochs=3, cv3_only=False, objective_only=False,
     rows = run("/root/data", f"/artifacts/{name}", pretrain_epochs, rl_epochs, cvs, d, latent, layers)
     volume.commit()
     return rows
+
+@app.function(image=tcga_tree_image,gpu="L4",cpu=8,memory=32768,timeout=3600,volumes={"/artifacts":volume})
+def train_tcga_tree(model_name="native_spectral_safe_intervention_basal_perturbseq_residual64_p12_d3_t10_r3"):
+    import sys
+    sys.path.insert(0,"/root"); from tcga_tree_decoder import fit
+    result=fit(f"/artifacts/{model_name}/world_model.pt",f"/artifacts/{model_name}"); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
@@ -182,6 +197,41 @@ def train_basal_perturbseq(pretrain_epochs=12,dependency_epochs=3,perturb_epochs
     import sys
     sys.path.insert(0,"/root"); from modules.training.world import resume_basal_perturbseq
     name=f"native_spectral_safe_intervention_basal_perturbseq_v3_p{pretrain_epochs}_d{dependency_epochs}_t{perturb_epochs}_r{rl_epochs}"; rows=resume_basal_perturbseq("/root/data",f"/artifacts/native_spectral_safe_pretrain_p{pretrain_epochs}/world_model.pt",f"/artifacts/{name}",dependency_epochs,perturb_epochs,rl_epochs); volume.commit(); return rows
+
+
+@app.function(image=image,gpu="L4",timeout=7200,volumes={"/artifacts":volume})
+def train_scaled_pretrain():
+    import sys
+    sys.path.insert(0,"/root"); from world_model import run_pretrain
+    name="native_spectral_safe_scaled_d768_z256_l8_p12"; result=run_pretrain("/root/data",f"/artifacts/{name}",12,768,256,8,"features_spectral_safe.npz"); volume.commit(); return result
+
+
+@app.function(image=image,gpu="L4",timeout=14400,volumes={"/artifacts":volume})
+def train_scaled_molecular():
+    import sys
+    sys.path.insert(0,"/root"); from world_model import resume_basal_perturbseq
+    pre="native_spectral_safe_scaled_d768_z256_l8_p12"; name=f"{pre}_d3_t10_r3"; result=resume_basal_perturbseq("/root/data",f"/artifacts/{pre}/world_model.pt",f"/artifacts/{name}",3,10,3,0,768,256,8,evaluate_cv3=False,fit_outcome=False); volume.commit(); return result
+
+
+@app.function(image=image,gpu="L4",timeout=14400,volumes={"/artifacts":volume})
+def train_scaled_molecular_adjusted():
+    import sys
+    sys.path.insert(0,"/root"); from world_model import resume_basal_perturbseq
+    pre="native_spectral_safe_scaled_d768_z256_l8_p12"; name=f"{pre}_adjusted_d3_t10_r3"; result=resume_basal_perturbseq("/root/data",f"/artifacts/{pre}/world_model.pt",f"/artifacts/{name}",3,10,3,0,768,256,8,evaluate_cv3=False,fit_outcome=False,perturb_learning_rate=0.00013411943852941884,perturb_rl_learning_rate=0.000008941295901961258); volume.commit(); return result
+
+
+@app.function(image=image,gpu="L4",timeout=7200,volumes={"/artifacts":volume})
+def train_single_only_compact():
+    import sys
+    sys.path.insert(0,"/root"); from world_model import resume_basal_perturbseq
+    pre="native_spectral_safe_pretrain_p12"; name=f"{pre}_single_only_d3_t10_r3"; result=resume_basal_perturbseq("/root/data",f"/artifacts/{pre}/world_model.pt",f"/artifacts/{name}",3,10,3,0,384,128,6,evaluate_cv3=False,fit_outcome=False,single_only=True); volume.commit(); return result
+
+
+@app.function(image=image,gpu="L4",timeout=14400,volumes={"/artifacts":volume})
+def train_single_only_scaled():
+    import sys
+    sys.path.insert(0,"/root"); from world_model import resume_basal_perturbseq
+    pre="native_spectral_safe_scaled_d768_z256_l8_p12"; name=f"{pre}_single_only_d3_t10_r3"; result=resume_basal_perturbseq("/root/data",f"/artifacts/{pre}/world_model.pt",f"/artifacts/{name}",3,10,3,0,768,256,8,evaluate_cv3=False,fit_outcome=False,single_only=True); volume.commit(); return result
 
 
 @app.function(image=image,gpu="L4",timeout=3600,volumes={"/artifacts":volume})
@@ -422,6 +472,34 @@ def musl_calibrated(model_name,d=384,latent=128,layers=6):
     import sys
     sys.path.insert(0,"/root"); from musl import calibrated
     out=f"/artifacts/{model_name}/musl_cv3_calibrated.json"; result=calibrated(f"/artifacts/{model_name}/world_model.pt","/root/data/features_spectral_safe.npz","/root/data/meta_table_9845.csv","/root/data/musl/meta_table_7684.csv",out,d,latent,layers); volume.commit(); return result
+
+
+@app.function(image=public_eval_image,gpu="L4",cpu=8,memory=16384,timeout=7200,volumes={"/artifacts":volume})
+def musl_calibrated_public(model_name: str,d: int=768,latent: int=256,layers: int=8):
+    import sys
+    sys.path.insert(0,"/root"); from musl import calibrated
+    out=f"/artifacts/{model_name}/musl_cv3_calibrated_public.json"; result=calibrated(f"/artifacts/{model_name}/world_model.pt","/root/data/features_spectral_safe.npz","/root/data/meta_table_9845.csv","/root/data/musl/meta_table_7684.csv",out,d,latent,layers,codependency_path="/root/data/depmap_codependency.npz",tcga_path="/root/data/tcga_mutual_exclusivity.npz"); volume.commit(); return result
+
+
+@app.function(image=silencing_eval_image,gpu="L4",cpu=8,memory=16384,timeout=7200,volumes={"/artifacts":volume})
+def musl_calibrated_public_silencing(model_name: str,d: int=768,latent: int=256,layers: int=8):
+    import sys
+    sys.path.insert(0,"/root"); from musl import calibrated
+    out=f"/artifacts/{model_name}/musl_cv3_calibrated_public_silencing.json"; result=calibrated(f"/artifacts/{model_name}/world_model.pt","/root/data/features_spectral_safe.npz","/root/data/meta_table_9845.csv","/root/data/musl/meta_table_7684.csv",out,d,latent,layers,codependency_path="/root/data/depmap_codependency.npz",tcga_path="/root/data/tcga_mutual_exclusivity.npz",silencing_path="/root/data/depmap_expression_silencing.npz"); volume.commit(); return result
+
+
+@app.function(image=silencing_eval_image,gpu="L4",cpu=8,memory=32768,timeout=14400,volumes={"/artifacts":volume})
+def musl_calibrated_public_silencing_stacked(model_name: str,d: int=768,latent: int=256,layers: int=8):
+    import sys
+    sys.path.insert(0,"/root"); from musl import calibrated
+    out=f"/artifacts/{model_name}/musl_cv3_calibrated_public_silencing_stacked.json"; result=calibrated(f"/artifacts/{model_name}/world_model.pt","/root/data/features_spectral_safe.npz","/root/data/meta_table_9845.csv","/root/data/musl/meta_table_7684.csv",out,d,latent,layers,codependency_path="/root/data/depmap_codependency.npz",tcga_path="/root/data/tcga_mutual_exclusivity.npz",silencing_path="/root/data/depmap_expression_silencing.npz",stacked=True); volume.commit(); return result
+
+
+@app.function(image=response_eval_image,gpu="L4",cpu=8,memory=16384,timeout=7200,volumes={"/artifacts":volume})
+def musl_calibrated_full_transcriptome(model_name: str,d: int=768,latent: int=256,layers: int=8):
+    import sys
+    sys.path.insert(0,"/root"); from musl import calibrated
+    out=f"/artifacts/{model_name}/musl_cv3_calibrated_full_transcriptome.json"; result=calibrated(f"/artifacts/{model_name}/world_model.pt","/root/data/features_spectral_safe.npz","/root/data/meta_table_9845.csv","/root/data/musl/meta_table_7684.csv",out,d,latent,layers,codependency_path="/root/data/depmap_codependency.npz",tcga_path="/root/data/tcga_mutual_exclusivity.npz",silencing_path="/root/data/depmap_expression_silencing.npz",response_path="/root/data/full_transcriptome_codependency.npz"); volume.commit(); return result
 
 
 @app.function(image=eval_image,gpu="L4",cpu=8,memory=16384,timeout=7200,volumes={"/artifacts":volume})

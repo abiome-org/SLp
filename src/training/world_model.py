@@ -1,7 +1,7 @@
 """Backward-compatible import surface for the modular training implementation.
 
 The immutable simulator is in :mod:`model.v1`; optimization workflows are in
-``modules.training.world``.  This file preserves existing scripts and remote
+``modules.training.world``. This file preserves existing scripts and remote
 entry points that import ``world_model`` directly.
 """
 

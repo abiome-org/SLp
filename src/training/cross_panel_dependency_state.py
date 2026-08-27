@@ -1,0 +1,23 @@
+import io,json,re,struct,zlib
+from pathlib import Path
+import numpy as np,pandas as pd
+from scipy.stats import spearmanr
+from sklearn.decomposition import PCA
+
+ROOT=Path(__file__).resolve().parents[2]; OUT=ROOT/"results/sl_predict"
+
+def norm(x): return re.sub(r"V\d+$","",re.sub(r"[^A-Z0-9]","",str(x).upper()))
+def profile(x,k):
+    mean=np.where(k,x,0).sum(0)/k.sum(0); x=np.where(k,x-mean,0); return x/np.sqrt((x*x).sum(0)).clip(1e-6)
+def relation(a,b): return {"pearson":float(np.corrcoef(a,b)[0,1]),"spearman":float(spearmanr(a,b).statistic)}
+def retrieval(a,b):
+    score=a@b.T; diagonal=np.diag(score); rank=1+(score>diagonal[:,None]).sum(1); return {"mrr":float(np.mean(1/rank)),"top_one_accuracy":float(np.mean(rank==1)),"median_rank":float(np.median(rank))}
+
+def main():
+    record=(ROOT/"data/project_score/corrected_logFCs.record").read_bytes(); n,x=struct.unpack_from("<HH",record,26); frame=pd.read_csv(io.BytesIO(zlib.decompress(record[30+n+x:],-15)),sep="\t"); source_models=np.asarray(frame.columns[1:].astype(str)); source_genes=frame.Gene.astype(str).str.upper().to_numpy(); source=frame.iloc[:,1:].to_numpy("float32").T
+    meta=pd.read_csv(ROOT/"data/depmap24q2/Model.csv"); basal=np.load(OUT/"basal_context.npz"); ids=set(basal["model_ids"].astype(str)); meta=meta[meta.ModelID.isin(ids)].copy(); source_names={norm(v) for v in source_models}; overlap=meta.apply(lambda r:any(norm(r[c]) in source_names for c in ("CellLineName","StrippedCellLineName")) or norm(str(r.CCLEName).split("_",1)[0]) in source_names,axis=1); excluded=set(meta.loc[overlap,"ModelID"]); keep=basal["train_cell"]&~np.isin(basal["model_ids"].astype(str),list(excluded)); dep=basal["dependency"][keep].astype("float32"); dep_known=basal["dependency_known"][keep]
+    universe=pd.read_csv(ROOT/"data/feng2024/data/preprocessed_data/meta_table_9845.csv").symbol.astype(str).str.upper(); sr={g:i for i,g in enumerate(source_genes)}; genes=np.asarray([i for i,g in enumerate(universe) if g in sr],"int64"); cols=np.asarray([sr[universe.iloc[i]] for i in genes]); source=source[:,cols]; known=np.isfinite(source); parity=np.asarray([int.from_bytes(__import__('hashlib').sha256(v.encode()).digest()[:1],'little')&1 for v in source_models]); eligible=np.asarray([(known[parity==q].mean(0)>=.8) for q in (0,1)]).all(0)&(dep_known[:,genes].mean(0)>=.8); genes=genes[eligible]; source=profile(source[:,eligible],known[:,eligible]).T; dep=profile(dep[:,genes],dep_known[:,genes]).T; train=genes%5!=0; valid=~train
+    pca_x=PCA(128,whiten=True,svd_solver="randomized",random_state=953).fit(source[train]); pca_y=PCA(128,whiten=True,svd_solver="randomized",random_state=953).fit(dep[train]); x=pca_x.transform(source); y=pca_y.transform(dep); u,s,v=np.linalg.svd(x[train].T@y[train]/(train.sum()-1),full_matrices=False); x=x@u[:,:64]; y=y@v.T[:,:64]; x/=np.linalg.norm(x,axis=1,keepdims=True).clip(1e-6); y/=np.linalg.norm(y,axis=1,keepdims=True).clip(1e-6); consensus=x+y; consensus/=np.linalg.norm(consensus,axis=1,keepdims=True).clip(1e-6)
+    i,j=np.triu_indices(valid.sum(),1); xv=x[valid]; yv=y[valid]; learned=relation(np.sum(xv[i]*xv[j],1),np.sum(yv[i]*yv[j],1)); raw=np.load(OUT/"project_score_codependency.npz"); pos={g:k for k,g in enumerate(raw["genes"].astype("int64"))}; p=np.asarray([pos[g] for g in genes[valid]]); baseline=relation(((raw["half0"][p[i],p[j]].astype("float32")+raw["half1"][p[i],p[j]].astype("float32"))/2),raw["independent"][p[i],p[j]].astype("float32")); retrieve={"project_to_depmap":retrieval(xv,yv),"depmap_to_project":retrieval(yv,xv)}; advanced=learned["pearson"]>=.15 and learned["spearman"]>=.15 and learned["pearson"]>=baseline["pearson"]+.08 and learned["spearman"]>=baseline["spearman"]+.08 and all(r["mrr"]>=.05 and r["top_one_accuracy"]>=.01 for r in retrieve.values()); np.savez_compressed(OUT/"cross_panel_dependency_state.npz",genes=genes.astype("int16"),project=x.astype("float16"),depmap=y.astype("float16"),consensus=consensus.astype("float16"),train_gene=train,canonical_correlation=s[:64].astype("float32")); result={"schema":"sl-predict-cross-panel-dependency-state-v1","fitting_genes":int(train.sum()),"held_genes":int(valid.sum()),"held_pairs":len(i),"pca_rank":128,"canonical_rank":64,"mean_fitting_canonical_correlation":float(s[:64].mean()),"raw_held_relation":baseline,"canonical_held_relation":learned,"retrieval":retrieve,"advanced":bool(advanced),"double_perturbation_data_used":False,"sl_labels_used":False}; (OUT/"cross_panel_dependency_state.json").write_text(json.dumps(result,indent=2)); print(json.dumps(result,indent=2))
+
+if __name__=="__main__": main()
