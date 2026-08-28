@@ -126,9 +126,42 @@ class GeneralizationValidationTest(unittest.TestCase):
         np.testing.assert_array_equal(first.train, second.train)
         np.testing.assert_array_equal(first.test, second.test)
 
+    def test_group_folds_are_balanced_when_enough_groups_exist(self):
+        rows = 20
+        table = GeneralizationTable(
+            np.column_stack((np.arange(rows), np.arange(rows) + rows)).astype("int32"),
+            source=np.repeat([f"study-{index}" for index in range(5)], 4),
+        )
+        held_sources = []
+        for fold in range(5):
+            split = make_split(
+                table,
+                "source_cold",
+                fold=fold,
+                requirements=self.requirements,
+            )
+            self.assertEqual(len(np.unique(table.source[split.test])), 1)
+            held_sources.extend(np.unique(table.source[split.test]).tolist())
+        self.assertEqual(set(held_sources), set(table.source))
+
     def test_duplicate_action_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "duplicate"):
             GeneralizationTable(np.asarray([[2, 2]], dtype="int32"))
+
+    def test_action_modes_distinguish_opposite_interventions_on_one_target(self):
+        table = GeneralizationTable(
+            np.asarray([[2, 2]], dtype="int32"),
+            action_modes=np.asarray([["activation", "repression"]]),
+        )
+        self.assertEqual(table.action_sets()[0], "2:activation@1+2:repression@1")
+
+    def test_action_dose_is_part_of_exact_action_identity(self):
+        table = GeneralizationTable(
+            np.asarray([[2, -1], [2, -1]], dtype="int32"),
+            action_modes=np.asarray([["repression", ""], ["repression", ""]]),
+            action_doses=np.asarray([[1, 0], [2, 0]], dtype="float32"),
+        )
+        self.assertNotEqual(table.action_sets()[0], table.action_sets()[1])
 
     def test_loader_does_not_treat_guide_condition_as_experimental_condition(self):
         with tempfile.TemporaryDirectory() as temporary_directory:

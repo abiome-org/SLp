@@ -98,6 +98,8 @@ def load_table(path: Path) -> tuple[GeneralizationTable, dict[str, object]]:
         if actions.ndim != 2:
             raise ValueError("actions/pairs must have shape [rows, slots]")
         row_count = len(actions)
+        mode_name, action_modes = _first(pack, ("action_modes",))
+        dose_name, action_doses = _first(pack, ("action_doses",))
         target_name, target = _first(pack, ("target_delta", "target"))
         context_name, context = _first(pack, ("context_id", "context"))
         if context is not None:
@@ -112,6 +114,8 @@ def load_table(path: Path) -> tuple[GeneralizationTable, dict[str, object]]:
             semantics = str(semantics_array.reshape(-1)[0])
         table = GeneralizationTable(
             actions=actions,
+            action_modes=action_modes,
+            action_doses=action_doses,
             target=target,
             context=context,
             source=source,
@@ -120,6 +124,8 @@ def load_table(path: Path) -> tuple[GeneralizationTable, dict[str, object]]:
         )
         fields = {
             "actions": action_name,
+            "action_modes": mode_name,
+            "action_doses": dose_name,
             "target": target_name,
             "target_semantics": semantics_name,
             "context": context_name,
@@ -182,7 +188,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, object], bool]:
     passed = not schema_failures and not required_failures
     report = {
         "schema": "slp-molecular-generalization-audit-v1",
-        "input": str(args.input.resolve()),
+        "input": args.input.as_posix(),
         "input_sha256": sha256(args.input),
         "rows": len(table.actions),
         "action_slots": table.actions.shape[1],

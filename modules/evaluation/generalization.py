@@ -44,6 +44,8 @@ class GeneralizationTable:
 
     actions: np.ndarray
     target: np.ndarray | None = None
+    action_modes: np.ndarray | Sequence[Sequence[str]] | None = None
+    action_doses: np.ndarray | Sequence[Sequence[float]] | None = None
     context: np.ndarray | Sequence[str] | None = None
     source: np.ndarray | Sequence[str] | None = None
     condition: np.ndarray | Sequence[str] | None = None
@@ -58,11 +60,34 @@ class GeneralizationTable:
         actions = actions.astype("int64", copy=False)
         if np.any(actions < -1):
             raise ValueError("action identifiers must be non-negative; -1 is padding")
-        for row in actions:
+        modes = None if self.action_modes is None else np.asarray(self.action_modes).astype(str)
+        if modes is not None and modes.shape != actions.shape:
+            raise ValueError(f"action_modes must have shape {actions.shape}")
+        if modes is not None:
+            if np.any((actions >= 0) & (np.char.strip(modes) == "")):
+                raise ValueError("every valid action must have an action mode")
+            if np.any((actions < 0) & (np.char.strip(modes) != "")):
+                raise ValueError("padded actions cannot have an action mode")
+        doses = None if self.action_doses is None else np.asarray(self.action_doses, dtype="float64")
+        if doses is not None and doses.shape != actions.shape:
+            raise ValueError(f"action_doses must have shape {actions.shape}")
+        if doses is not None:
+            if not np.all(np.isfinite(doses)):
+                raise ValueError("action_doses must be finite")
+            if np.any((actions >= 0) & (doses <= 0)):
+                raise ValueError("every valid action must have a positive dose")
+            if np.any((actions < 0) & (doses != 0)):
+                raise ValueError("padded actions must have zero dose")
+        for index, row in enumerate(actions):
             valid = row[row >= 0]
             if not len(valid):
                 raise ValueError("every row must contain at least one action")
-            if len(np.unique(valid)) != len(valid):
+            row_modes = np.repeat("unspecified", len(valid)) if modes is None else modes[index][row >= 0]
+            row_doses = np.ones(len(valid)) if doses is None else doses[index][row >= 0]
+            identities = np.asarray(
+                [f"{gene}:{mode}@{dose:.9g}" for gene, mode, dose in zip(valid, row_modes, row_doses)]
+            )
+            if len(np.unique(identities)) != len(identities):
                 raise ValueError("an action set cannot contain duplicate interventions")
         rows = len(actions)
         target = None if self.target is None else np.asarray(self.target)
@@ -78,6 +103,8 @@ class GeneralizationTable:
         if semantics is not None and semantics not in {"perturbation_delta", "absolute_state"}:
             raise ValueError("target_semantics must be perturbation_delta or absolute_state")
         object.__setattr__(self, "actions", actions)
+        object.__setattr__(self, "action_modes", modes)
+        object.__setattr__(self, "action_doses", doses)
         object.__setattr__(self, "target", target)
         object.__setattr__(self, "context", _metadata(self.context, rows, "context"))
         object.__setattr__(self, "source", _metadata(self.source, rows, "source"))
@@ -89,9 +116,27 @@ class GeneralizationTable:
         return (self.actions >= 0).sum(axis=1)
 
     def action_sets(self) -> np.ndarray:
-        return np.asarray(
-            ["+".join(map(str, sorted(row[row >= 0].tolist()))) for row in self.actions]
-        )
+        keys = []
+        for index, row in enumerate(self.actions):
+            valid = row >= 0
+            members = [str(gene) for gene in row[valid]]
+            if self.action_modes is not None or self.action_doses is not None:
+                modes = (
+                    np.repeat("unspecified", valid.sum())
+                    if self.action_modes is None
+                    else self.action_modes[index][valid]
+                )
+                doses = (
+                    np.ones(valid.sum())
+                    if self.action_doses is None
+                    else self.action_doses[index][valid]
+                )
+                members = [
+                    f"{gene}:{mode}@{dose:.9g}"
+                    for gene, mode, dose in zip(row[valid], modes, doses)
+                ]
+            keys.append("+".join(sorted(members)))
+        return np.asarray(keys)
 
 
 @dataclass(frozen=True)
@@ -152,7 +197,14 @@ def _rows_all_in(actions: np.ndarray, genes: set[int]) -> np.ndarray:
 
 
 def _group_holdout(values: np.ndarray, folds: int, fold: int, seed: int, namespace: str):
-    held = {value for value in np.unique(values) if _fold(value, folds, seed, namespace) == fold}
+    groups = sorted(
+        np.unique(values).tolist(),
+        key=lambda value: (
+            _fold(value, 2**31 - 1, seed, namespace),
+            str(value),
+        ),
+    )
+    held = {value for rank, value in enumerate(groups) if rank % folds == fold}
     return np.isin(values, list(held)), held
 
 
@@ -166,6 +218,9 @@ def _counts(table: GeneralizationTable, rows: np.ndarray) -> dict[str, int]:
         "multi_action_rows": int(multi.sum()),
         "unique_action_sets": int(len(np.unique(table.action_sets()[indices]))),
         "unique_genes": int(len(np.unique(valid))),
+        "action_modes": 0 if table.action_modes is None else int(
+            len(np.unique(table.action_modes[indices][table.actions[indices] >= 0]))
+        ),
         "contexts": 0 if table.context is None else int(len(np.unique(table.context[indices]))),
         "sources": 0 if table.source is None else int(len(np.unique(table.source[indices]))),
         "conditions": 0 if table.condition is None else int(len(np.unique(table.condition[indices]))),
@@ -358,38 +413,50 @@ def additive_single_baseline(
     fields = tuple(field for field in match_fields if getattr(table, field) is not None)
     singleton = split.train[table.cardinality[split.train] == 1]
     exact: dict[tuple[object, ...], list[np.ndarray]] = {}
+    action_only: dict[tuple[object, ...], list[np.ndarray]] = {}
     gene_only: dict[int, list[np.ndarray]] = {}
     for row in singleton:
         gene = int(table.actions[row][table.actions[row] >= 0][0])
+        mode = "unspecified" if table.action_modes is None else table.action_modes[row][table.actions[row] >= 0][0]
+        dose = 1.0 if table.action_doses is None else float(table.action_doses[row][table.actions[row] >= 0][0])
         metadata = tuple(getattr(table, field)[row] for field in fields)
-        exact.setdefault((gene, *metadata), []).append(table.target[row])
+        exact.setdefault((gene, mode, dose, *metadata), []).append(table.target[row])
+        action_only.setdefault((gene, mode, dose), []).append(table.target[row])
         gene_only.setdefault(gene, []).append(table.target[row])
     exact_mean = {key: np.mean(values, axis=0) for key, values in exact.items()}
+    action_mean = {key: np.mean(values, axis=0) for key, values in action_only.items()}
     gene_mean = {key: np.mean(values, axis=0) for key, values in gene_only.items()}
     zero = np.zeros(table.target.shape[1], dtype="float64")
-    exact_actions = fallback_actions = missing_actions = 0
+    exact_actions = action_fallback_actions = gene_fallback_actions = missing_actions = 0
     predictions = []
     for row in split.test:
         metadata = tuple(getattr(table, field)[row] for field in fields)
         prediction = zero.copy()
-        for gene in table.actions[row][table.actions[row] >= 0]:
-            key = (int(gene), *metadata)
+        valid = table.actions[row] >= 0
+        modes = np.repeat("unspecified", valid.sum()) if table.action_modes is None else table.action_modes[row][valid]
+        doses = np.ones(valid.sum()) if table.action_doses is None else table.action_doses[row][valid]
+        for gene, mode, dose in zip(table.actions[row][valid], modes, doses):
+            key = (int(gene), mode, float(dose), *metadata)
             if key in exact_mean:
                 prediction += exact_mean[key]
                 exact_actions += 1
+            elif (int(gene), mode, float(dose)) in action_mean:
+                prediction += action_mean[(int(gene), mode, float(dose))]
+                action_fallback_actions += 1
             elif int(gene) in gene_mean:
                 prediction += gene_mean[int(gene)]
-                fallback_actions += 1
+                gene_fallback_actions += 1
             else:
                 missing_actions += 1
         predictions.append(prediction)
-    total = exact_actions + fallback_actions + missing_actions
+    total = exact_actions + action_fallback_actions + gene_fallback_actions + missing_actions
     audit = {
         "matched_fields": list(fields),
         "training_singletons": int(len(singleton)),
-        "action_coverage": 0.0 if not total else (exact_actions + fallback_actions) / total,
+        "action_coverage": 0.0 if not total else (exact_actions + action_fallback_actions + gene_fallback_actions) / total,
         "exact_actions": exact_actions,
-        "gene_fallback_actions": fallback_actions,
+        "action_fallback_actions": action_fallback_actions,
+        "gene_fallback_actions": gene_fallback_actions,
         "missing_actions": missing_actions,
     }
     return np.asarray(predictions), audit
