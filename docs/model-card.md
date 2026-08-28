@@ -47,6 +47,18 @@ The retained compact scale is 11.92M parameters. A controlled 59.64M model impro
 
 ## Evaluation
 
+Every new molecular outcome corpus is first audited under deterministic
+five-fold exact-action-set, composition-gene, intervention-gene, context,
+source, perturbation-condition and compound source-plus-gene holdouts. The
+composition-gene protocol permits matched single interventions for a held gene
+but forbids that gene in any fitted multi-intervention example; the stricter
+intervention-gene protocol forbids every fitted intervention involving it.
+Source, context and condition identifiers are independent provenance fields.
+Ineligible folds and absent fields are reported as failures. Molecular state
+loss is compared with a cardinality-matched training mean and, for delta
+targets, a matched-single additive predictor before any SL benchmark is
+opened.
+
 Primary evaluation is the released Feng et al. protocol, with pair holdout, one-new-gene and two-new-gene splits, random/expression/dependency negatives, class ratios 1:1 through 1:50, and both classification and ranking metrics. The intended confirmatory design selects models on inner training-only splits and evaluates outer folds once. The current development run inspected outer CV3 across representation and readout ablations, so its scores are development estimates; a final SOTA claim requires a newly locked evaluation or independent experimental benchmark.
 
 The two-new-gene matrix is compacted into 24 protocols and evaluated with the authors' gene-wise ranking semantics. Label-free ranking scores are generated over all 9,845 genes; training pairs are removed before NDCG, recall, precision and MAP are calculated.

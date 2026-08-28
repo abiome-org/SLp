@@ -19,9 +19,10 @@ Advance state of the art in cold-start synthetic-lethality prediction, especiall
 1. Read `docs/model-card.md` and the latest section of `docs/results.md` before proposing an experiment.
 2. State one falsifiable hypothesis and a fixed advancement criterion. Prefer the smallest experiment that can reject it.
 3. Prepare data with scripts in `src/training/`; write generated arrays and audit JSON to `results/`, never into source or documentation directories.
-4. Train through `src/training/run_modal.py` or a focused local entry point. The retained compact configuration is `d=384`, `latent=128`, `layers=6`, with 12 pretraining, 10 perturbation, and 3 reinforcement epochs where applicable.
-5. Evaluate molecular validation first. Advance to MuSL, SLAMR, Sanger, HAP1, or Feng only when the prespecified criterion passes.
-6. Append the hypothesis, protocol, hashes, compute, fold-level metrics, interpretation, and decision to `docs/results.md`. Update the model card only when the supported model or claim changes.
+4. Run `src/training/validate_generalization.py` on the molecular outcome pack. Keep source/study, biological context, and perturbation condition as distinct required fields; never infer one from another. A perturbation-delta pack must beat or justify its behavior relative to both the cardinality-matched mean and matched-single additive baselines.
+5. Train through `src/training/run_modal.py` or a focused local entry point. The retained compact configuration is `d=384`, `latent=128`, `layers=6`, with 12 pretraining, 10 perturbation, and 3 reinforcement epochs where applicable.
+6. Evaluate molecular validation first. Advance to MuSL, SLAMR, Sanger, HAP1, or Feng only when every prespecified required fold is eligible and the advancement criterion passes. Treat an underpowered or metadata-incomplete protocol as failed data support, not as a protocol to omit after seeing it.
+7. Append the hypothesis, protocol, hashes, compute, fold-level metrics, interpretation, and decision to `docs/results.md`. Update the model card only when the supported model or claim changes.
 
 For the retained intervention-isolated training path:
 

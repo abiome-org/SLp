@@ -20,6 +20,7 @@ src/
     sl_predict.py        feature, split, graph, and baseline preparation
     depmap.py            DepMap expression and dependency preparation
     perturbseq*.py       perturbational-expression state construction
+    validate_generalization.py  fail-closed molecular generalization gate
     slkb.py              quantitative double-knockout outcome preparation
     kg.py                provenance-safe knowledge-graph preparation
   benchmarks/
@@ -116,6 +117,34 @@ Use `modal run src/training/run_modal.py --help` for the full set of controlled 
 - Select transition models and label-free decoders only on molecular validation objectives; do not inspect benchmark test labels for selection, calibration, sign choice, or stopping.
 - Report label-free scores, benchmark-supervised readouts, retrospective analyses, and prospective confirmation as distinct claims.
 - Record the exact split, seed, input checksums, checkpoint checksum, feature access, and mean plus fold-level metrics in `docs/results.md`.
+
+### Hard molecular generalization gate
+
+Before an SL benchmark can be opened, run the molecular outcome pack through
+the five-fold generalization gate:
+
+```bash
+python3 src/training/validate_generalization.py \
+  results/sl_predict/perturbseq_world.npz
+```
+
+The default gate requires every fold of seven distinct protocols: exact
+action-set holdout; composition-gene holdout, where matched singleton outcomes
+remain available but held genes never occur in a training composition; full
+intervention-gene holdout; context holdout; source/study holdout;
+perturbation-condition holdout; and compound source-plus-gene holdout. It also
+reports a cardinality-matched mean and a matched-single additive baseline.
+
+This command is intentionally fail-closed. A pack must provide a finite
+`target`, scalar `target_semantics=perturbation_delta`, distinct `source` or
+`source_id`, `context_id`, and either an explicit experimental condition ID or
+finite modality-plus-duration metadata. Source, context, and experimental
+condition are not aliases. Every required fold must meet the default minimums
+of 128 training rows, 32 test rows, 16 distinct test action sets, and 8 test
+genes. The JSON audit is written under `results/generalization/`, including the
+input SHA-256, exclusions, baseline coverage, and the exact reason for every
+ineligible fold. Failing a gate is a data-support result, not permission to
+weaken or silently redefine the protocol.
 
 ## Repository policy
 

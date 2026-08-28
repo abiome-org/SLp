@@ -296,6 +296,21 @@ Explicitly supervising expression non-additivity was also rejected. All 180 meas
 
 SLAMR scenario 3 also supplies fold-local SL training and validation data. A frozen LightGBM ranking probe over world-state pair features is therefore reported separately from emergence. It is trained on each fold's training pairs, stopped on that fold's validation queries and evaluated once on its test queries. The cold-joint features reach 0.1240 MRR / 0.3845 Recall@20 on Jurkat and 0.1086 / 0.2599 on K562. Exposing the independent gene-aligned DepMap measurements changes these to 0.1046 / 0.3365 and 0.1247 / 0.3116, respectively. Fold-local validation selection between the label-free model and the text prior reaches 0.1285 / 0.3331 on Jurkat and 0.1127 / 0.2298 on K562. These supervised readouts show that the frozen state is useful, especially for recall, but they are not evidence that SL performance emerged without benchmark labels.
 
+## Hard molecular generalization gate
+
+A source-only validation change adds deterministic five-fold exact-action-set,
+composition-gene, intervention-gene, context, source, condition and compound
+source-plus-gene protocols. Each fold records exclusions and evidence counts,
+and refuses missing provenance rather than substituting source, context or
+condition identifiers. Perturbation-delta outcomes are scored against
+cardinality-matched mean and matched-single additive baselines. The aggregate
+Perturb-seq builder now preserves complete upstream context and experimental
+condition metadata and records when either axis is incomplete. Seven focused
+NumPy tests pass; the two PyTorch contract tests remain skipped in the local
+environment because PyTorch is absent. No model was trained, no SL benchmark
+was opened and no performance claim changes. Existing generated packs must be
+regenerated and pass the gate before they can support a new benchmark run.
+
 ## Exact label-free CV3 matrix
 
 The compact native-score checkpoint was evaluated over all 9,845 genes with the authors' gene-wise ranking semantics. PR-AUC below is trapezoidal area under the precision-recall curve, whereas the training table above reports average precision. These results do not establish emergent SL ranking.
