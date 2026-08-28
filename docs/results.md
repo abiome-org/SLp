@@ -341,3 +341,48 @@ The compact native-score checkpoint was evaluated over all 9,845 genes with the 
 | non-computational random 1:5 | 0.5732 | 0.2233 | 0.00183 |
 | non-computational random 1:20 | 0.5733 | 0.0703 | 0.00183 |
 | non-computational random 1:50 | 0.5724 | 0.0294 | 0.00183 |
+
+## Public multi-study perturbation atlas v1
+
+To address the corpus limitation that blocked composition-cold selection (102
+distinct fitting pairs, four both-genes-new selection pairs, all from Norman),
+seven public GEO perturbation-expression deposits were acquired with
+checksum-pinned manifests and converted to one canonical action/mode/dose
+schema. `src/training/merge_perturbation_corpora.py` builds
+`data/perturbation-atlas/public-multi-study-v1` from the seven constituent
+packs, each with its own audit:
+
+| accession | population | modality | rows | action targets |
+| --- | --- | --- | ---: | ---: |
+| GSE220974 | K562 | CRISPRa/i singles and pairs | 256 | 22 |
+| GSE221321 | THP-1 + LPS, compressed composite | knockout/repression | 53,735 | 599 |
+| GSE337988 | DLD1 CRISPRi, six MOIs | repression | 3,056 | 35 |
+| GSE213957 | THP-1 Cas13d CaRPool | RNA knockdown | 3,122 | 28 |
+| GSE200201 | MOLM13 mSWI/SNF knockout | knockout, up to 8 actions | 761 | 28 |
+| GSE208240 | Calu-3 CRISPRi host-factor screen | repression | 370 | 183 |
+| GSE278572 | primary CD4 T-cell CRISPRi | repression | 437 | 28 |
+
+Merged over the exact 124-gene expression-feature intersection: 61,737 rows
+(27,900 single-action, 20,980 two-action, 9,857 three-plus-action), 853 unique
+action targets, eight contexts, and study-balancing weights. Each pack keeps
+source, biological context and perturbation condition as separate explicit
+fields; unreported axes (donor, activation, infection, duration) are recorded
+as unreported rather than inferred. No SL benchmark label was applied to this
+corpus, and the merge performs no cross-study normalization, projection or
+imputation.
+
+On the preregistered hard molecular gate
+(`src/training/validate_generalization.py`, five folds, seed 731) the atlas is
+eligible in every fold for pair-cold, composition-gene-cold,
+intervention-gene-cold, context-cold, source-cold and condition-cold
+protocols, but source-gene-cold is eligible in only 2 of 5 folds because the
+four smallest sources (256-761 rows) cannot satisfy the 32-row/16-action-set/
+8-gene test minimums once held out with their genes. The gate therefore fails
+closed: this corpus supports molecular training and six hard validation
+protocols, and does not yet support a source-gene-cold claim.
+
+Engineering note: the GSE278572 matrix (1.03 billion entries) is streamed in
+newline-aligned binary blocks because buffered CSV chunking over a text stream
+split lines and silently corrupted coordinates; the builder asserts coordinate
+ranges and a clean end-of-stream. Constituent packs remain untracked generated
+artifacts; the data-preparation scripts are tracked source.
