@@ -194,6 +194,8 @@ This is a diagnostic, not a byte-level reproduction. Local input artifacts had b
 
 A provenance audit of this ablation also found that the scaled directory's plain `musl_cv3_calibrated.json` is byte-identical to the compact run's file; the plain deterministic readout had not previously been executed on SLp-1. The 0.89339 AUROC cited on the SLp-1 card comes from the later stacked variant with six additional public relation features and inner-fold simplex weighting, which is a further instance of the same relation-topology dependence.
 
+The ablation's fold-level outputs are published at `results/ablations/musl-cv3-relation-topology-v1/` on `potteryrage/SLp`: the four result JSONs (SLp-1 and compact, each with and without the observed-relation block) and an audit with input checksums, reconstruction verification levels and the paired deltas. The compact checkpoint is SHA-256 `7832b1108d30f3d66b5e1d09f3e2771f1280227575a35bad445535070c208691`; the SLp-1 checkpoint is the released `177991d2c0aec316985e3f47949fdcdf381e71ef24d9c0adcf6d1bde1e0d3b78`.
+
 ## External experimental tests
 
 The four-source sequential score was locked before downloading outcomes from Harle et al. 2025 (`10.6084/m9.figshare.25954027.v4`). The official hit rule is `mean_norm_gi < -0.5`, FDR below 0.01 and neither gene singly depleted. The intervention-cold primary set contains 157 paralog pairs, 3,496 pair-cell-line measurements and 400 hits. The fixed score correlates in the wrong direction with mean negative interaction strength (Spearman rho **-0.2531**, pair-bootstrap 95% CI -0.4020 to -0.1011; two-sided permutation p=0.00150) and gives 0.4819 macro AUROC. No sign reversal was permitted. This locked confirmation failed.
