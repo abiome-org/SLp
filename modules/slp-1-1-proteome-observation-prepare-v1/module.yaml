@@ -1,0 +1,161 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-proteome-observation-prepare-v1
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:2b8837ecc5287dd25a4100a7ed4e30c60ae8aaf6c1273c4ffd3fa3ebb39372d9
+  contracts:
+    input:
+      type: object
+      required:
+        - rawProteome
+        - interventionInventory
+        - proteinRelations
+        - heldRoster
+        - sgdCurrentOrfs
+        - sgdMappingManifest
+      properties:
+        rawProteome: {type: object}
+        interventionInventory: {type: object}
+        proteinRelations: {type: object}
+        heldRoster: {type: object}
+        sgdCurrentOrfs: {type: object}
+        sgdMappingManifest: {type: object}
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - preparationSummary
+        - observationArchiveSha256
+        - basalArchiveSha256
+        - auditSha256
+        - records
+        - interventionGenes
+        - targetValues
+        - missingValues
+        - basalControls
+        - basalObservedValues
+        - basalSupportedReadouts
+        - excludedValidationRows
+        - excludedFinalRows
+        - excludedQuarantineRows
+        - excludedQcRows
+      properties:
+        preparationSummary: {type: object}
+        observationArchiveSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        basalArchiveSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        auditSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        records: {type: integer, minimum: 0, maximum: 100000}
+        interventionGenes: {type: integer, minimum: 0, maximum: 100000}
+        targetValues: {type: integer, minimum: 0, maximum: 20000000}
+        missingValues: {type: integer, minimum: 0, maximum: 20000000}
+        basalControls: {type: integer, minimum: 0, maximum: 100000}
+        basalObservedValues: {type: integer, minimum: 0, maximum: 20000000}
+        basalSupportedReadouts: {type: integer, minimum: 0, maximum: 100000}
+        excludedValidationRows: {type: integer, minimum: 0, maximum: 100000}
+        excludedFinalRows: {type: integer, minimum: 0, maximum: 100000}
+        excludedQuarantineRows: {type: integer, minimum: 0, maximum: 100000}
+        excludedQcRows: {type: integer, minimum: 0, maximum: 100000}
+      additionalProperties: false
+    config:
+      type: object
+      required:
+        - role
+        - expectedMetadataRows
+        - expectedEligibleRows
+        - expectedEligibleGenes
+        - expectedPretrainRecords
+        - expectedPretrainGenes
+        - expectedTargetValues
+        - expectedMissingValues
+        - expectedTrajectoryGenesSha256
+        - expectedTrajectoryGeneSetSha256
+        - expectedProteinReadouts
+        - expectedBasalControls
+        - expectedBasalObservedValues
+        - expectedBasalSupportedReadouts
+        - expectedValidationGenes
+        - expectedValidationRows
+        - expectedFinalGenes
+        - expectedFinalRows
+        - expectedQuarantineRows
+        - expectedQcRows
+      properties:
+        role: {const: pretrain}
+        expectedMetadataRows: {const: 5476}
+        expectedEligibleRows: {const: 4623}
+        expectedEligibleGenes: {const: 4476}
+        expectedPretrainRecords: {const: 3811}
+        expectedPretrainGenes: {const: 3679}
+        expectedTargetValues: {const: 6865493}
+        expectedMissingValues: {const: 184857}
+        expectedTrajectoryGenesSha256: {const: a37fbd5ba56ba4f38cf4ec0655d7dd9734e4727e77f68064739c24d025d3b7e1}
+        expectedTrajectoryGeneSetSha256: {const: f6083da5b795d5653e630d41758e52855ab1e931d9a6311a1b7ae7350b59b838}
+        expectedProteinReadouts: {const: 1850}
+        expectedBasalControls: {const: 388}
+        expectedBasalObservedValues: {const: 701619}
+        expectedBasalSupportedReadouts: {const: 1843}
+        expectedValidationGenes: {const: 529}
+        expectedValidationRows: {const: 537}
+        expectedFinalGenes: {const: 268}
+        expectedFinalRows: {const: 275}
+        expectedQuarantineRows: {const: 76}
+        expectedQcRows: {const: 389}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          rawProteome: {}
+          interventionInventory: {}
+          proteinRelations: {}
+          heldRoster: {}
+          sgdCurrentOrfs: {}
+          sgdMappingManifest: {}
+        config:
+          role: pretrain
+          expectedMetadataRows: 5476
+          expectedEligibleRows: 4623
+          expectedEligibleGenes: 4476
+          expectedPretrainRecords: 3811
+          expectedPretrainGenes: 3679
+          expectedTargetValues: 6865493
+          expectedMissingValues: 184857
+          expectedTrajectoryGenesSha256: a37fbd5ba56ba4f38cf4ec0655d7dd9734e4727e77f68064739c24d025d3b7e1
+          expectedTrajectoryGeneSetSha256: f6083da5b795d5653e630d41758e52855ab1e931d9a6311a1b7ae7350b59b838
+          expectedProteinReadouts: 1850
+          expectedBasalControls: 388
+          expectedBasalObservedValues: 701619
+          expectedBasalSupportedReadouts: 1843
+          expectedValidationGenes: 529
+          expectedValidationRows: 537
+          expectedFinalGenes: 268
+          expectedFinalRows: 275
+          expectedQuarantineRows: 76
+          expectedQcRows: 389
+        state: {}
+      result:
+        status: ok
+        outputs:
+          preparationSummary:
+            schema: slp.proteome-observation-preparation-audit/v1
+            role: pretrain
+            validationOnly: true
+          observationArchiveSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          basalArchiveSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          auditSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          records: 0
+          interventionGenes: 0
+          targetValues: 0
+          missingValues: 0
+          basalControls: 0
+          basalObservedValues: 0
+          basalSupportedReadouts: 0
+          excludedValidationRows: 0
+          excludedFinalRows: 0
+          excludedQuarantineRows: 0
+          excludedQcRows: 0

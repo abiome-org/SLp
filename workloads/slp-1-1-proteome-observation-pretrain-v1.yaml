@@ -1,0 +1,60 @@
+# Exact pretraining-only quantitative proteome normalization. The module pins
+# all source, identity, roster, and count contracts again at runtime. It has no
+# reward or benchmark input and emits only regular file artifacts.
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-proteome-observation-pretrain-v1
+spec:
+  graph:
+    stages:
+      - name: prepare
+        module: modules/slp-1-1-proteome-observation-prepare-v1/module.yaml
+        operation: run
+        inputs:
+          rawProteome: dataset/slp-1-1-proteome-raw-v2
+          interventionInventory: dataset/slp-1-1-proteome-intervention-inventory-v1
+          proteinRelations: dataset/slp-1-1-proteome-protein-relations-v1
+          heldRoster: dataset/slp-1-1-held-roster-v1
+          sgdCurrentOrfs: artifact:sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192
+          sgdMappingManifest: artifact:sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c
+        config:
+          role: pretrain
+          expectedMetadataRows: 5476
+          expectedEligibleRows: 4623
+          expectedEligibleGenes: 4476
+          expectedPretrainRecords: 3811
+          expectedPretrainGenes: 3679
+          expectedTargetValues: 6865493
+          expectedMissingValues: 184857
+          expectedTrajectoryGenesSha256: a37fbd5ba56ba4f38cf4ec0655d7dd9734e4727e77f68064739c24d025d3b7e1
+          expectedTrajectoryGeneSetSha256: f6083da5b795d5653e630d41758e52855ab1e931d9a6311a1b7ae7350b59b838
+          expectedProteinReadouts: 1850
+          expectedBasalControls: 388
+          expectedBasalObservedValues: 701619
+          expectedBasalSupportedReadouts: 1843
+          expectedValidationGenes: 529
+          expectedValidationRows: 537
+          expectedFinalGenes: 268
+          expectedFinalRows: 275
+          expectedQuarantineRows: 76
+          expectedQcRows: 389
+        outputs:
+          - preparationSummary
+          - observationArchiveSha256
+          - basalArchiveSha256
+          - auditSha256
+          - records
+          - interventionGenes
+          - targetValues
+          - missingValues
+          - basalControls
+          - basalObservedValues
+          - basalSupportedReadouts
+          - excludedValidationRows
+          - excludedFinalRows
+          - excludedQuarantineRows
+          - excludedQcRows
+          - proteomeObservationCorpus
+          - proteomeBasalControl
+          - proteomePreparationAudit
