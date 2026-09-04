@@ -1,3 +1,5 @@
+# OMF 1.0 resolves dataset/<name> and pins the exact immutable revision in the
+# admitted Run; the module independently checks the materialized snapshot.
 # Admitted revision: sha256:c7cad889b43f293fe5b59e3fd2486f5dabf0b0b362964968eb4858f6917268ef.
 # Dataset manifest: sha256:97df177ff586d3409d6348926562c5ba4c4943ab4789b1823d059bf6c708fa31.
 # This workload does not reference the 5.9 GB quantitative atlas payload.
@@ -14,7 +16,7 @@ spec:
         module: modules/slp-1-1-atlas-genotype-inventory/module.yaml
         operation: run
         inputs:
-          rawAtlasSummary: omf://abiome/slp/datasetsnapshot/slp-1-1-atlas-genotype-summary-raw-v1@sha256:c7cad889b43f293fe5b59e3fd2486f5dabf0b0b362964968eb4858f6917268ef
+          rawAtlasSummary: dataset/slp-1-1-atlas-genotype-summary-raw-v1
           sgdCurrentOrfs: artifact:sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192
           sgdExternalRelations: artifact:sha256:75e0fef99bbae3bb4e4dc3e2f24cfd0ab62919c0e6e3e321e8d82f3bd557f4da
           sgdRetiredQuarantine: artifact:sha256:07ea82f877224496c24effc2aa2a2b684c01b85017e616a70f003a5363f6925f
@@ -35,3 +37,9 @@ spec:
           - uniqueCurrentInterventions
           - retiredOrMergedCandidateAssignments
           - unmatchedCandidateAssignments
+          - atlasInterventionInventory
+          - atlasInterventionRecords
+          - atlasGenotypeIdentityEvidence
+          - atlasGenotypeIdentityEvidenceRecords
+          - atlasGenotypeIdentityQuarantineRecords
+          - atlasGenotypeIdentityAudit

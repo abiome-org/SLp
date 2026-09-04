@@ -1,3 +1,6 @@
+# Contract-only smoke graph. Replace these dataset aliases only after the four
+# corpora, held roster, and protected source inventories are separately admitted
+# and verified. OMF pins their exact revisions during run admission.
 apiVersion: omf.dev/v1alpha1
 kind: WorkloadSpec
 metadata:
@@ -9,18 +12,39 @@ spec:
         module: modules/slp-1-1-corpus-audit/module.yaml
         operation: run
         inputs:
-          pretrain: dataset/slp-1-1-fixture-pretrain
-          molecularValidation: dataset/slp-1-1-fixture-validation
-          molecularReward: dataset/slp-1-1-fixture-reward
+          pretrain: dataset/audit-fixture-pretrain
+          molecularReward: dataset/audit-fixture-reward
+          molecularValidation: dataset/audit-fixture-validation
+          molecularFinal: dataset/audit-fixture-final
+          heldRoster: dataset/audit-fixture-held-roster
+          protectedInventoryAtlas: dataset/audit-fixture-protected-inventory-atlas
+          protectedInventoryProteome: dataset/audit-fixture-protected-inventory-proteome
         config:
-          strictInterventionIsolation: true
+          maxManifestBytes: 4194304
+          maxCoverageBytes: 67108864
+          maxFilesPerCorpus: 256
+          maxFileBytes: 8589934592
+          maxTotalBytesPerCorpus: 68719476736
+          maxRecordsPerCorpus: 20000000
+          maxTrajectoryGenes: 2000000
+          maxLineBytes: 4096
+          maxSources: 4096
+          maxSpecies: 128
+          maxEntities: 2000000
+          maxIdentityArrayBytes: 2147483648
+          maxRosterRecords: 2000000
+          maxCoverageExclusions: 8000000
+          maxNpzMembers: 256
+          maxInventoryFilesPerSource: 32
+          maxInventoryRecordsPerSource: 2000000
         outputs:
-          - audit
+          - auditSummary
+          - auditSha256
           - auditPassed
           - leakageViolations
           - benchmarkLabelRecords
           - pretrainRecords
-          - validationRecords
           - rewardRecords
-          - speciesCount
-          - auditReport
+          - validationRecords
+          - finalRecords
+          - corpusAudit

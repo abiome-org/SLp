@@ -1,7 +1,7 @@
 apiVersion: omf.dev/v1alpha1
 kind: Module
 metadata:
-  name: slp-1-1-molecular-eval
+  name: slp-1-1-molecular-eval-v2
 spec:
   entryPoint:
     command: [python3, main.py]
@@ -12,11 +12,21 @@ spec:
     input:
       type: object
       required:
-        - molecularReference
+        - molecularCenteringReference
         - molecularPredictions
+        - molecularTruth
+        - molecularQuery
+        - corpusAudit
+        - heldRoster
+        - modelCheckpoint
       properties:
-        molecularReference: {type: object}
+        molecularCenteringReference: {type: object}
         molecularPredictions: {type: object}
+        molecularTruth: {type: object}
+        molecularQuery: {type: object}
+        corpusAudit: {type: object}
+        heldRoster: {type: object}
+        modelCheckpoint: {type: object}
       additionalProperties: false
     output:
       type: object
@@ -31,8 +41,12 @@ spec:
         - centroidAccuracyCommonPanel
         - minimumSpeciesPerturbedCentroidPearson
         - benchmarkLabelRecords
-        - heldInterventionOverlap
-        - passed
+        - centeringHeldInterventionOverlap
+        - strictCorpusAuditPassed
+        - heldRosterValidationMatch
+        - exactTargetFreeQueryManifest
+        - exactProfilePanelJoin
+        - diagnosticPassed
         - compatibilityPassed
       properties:
         evaluationSummary: {type: object}
@@ -45,8 +59,12 @@ spec:
         centroidAccuracyCommonPanel: {type: number, minimum: 0, maximum: 1}
         minimumSpeciesPerturbedCentroidPearson: {type: number, minimum: -1, maximum: 1}
         benchmarkLabelRecords: {type: integer, minimum: 0}
-        heldInterventionOverlap: {type: integer, minimum: 0}
-        passed: {type: boolean}
+        centeringHeldInterventionOverlap: {type: integer, minimum: 0}
+        strictCorpusAuditPassed: {type: boolean}
+        heldRosterValidationMatch: {type: boolean}
+        exactTargetFreeQueryManifest: {type: boolean}
+        exactProfilePanelJoin: {type: boolean}
+        diagnosticPassed: {type: boolean}
         compatibilityPassed: {type: boolean}
       additionalProperties: false
     config:
@@ -56,20 +74,36 @@ spec:
         minimumProfileReadouts: {type: integer, minimum: 2}
         maxLineBytes: {type: integer, minimum: 1024}
         maximumAbsoluteLogScale: {type: number, exclusiveMinimum: 0}
+        expectedQueryResource:
+          type: string
+          pattern: "^omf://.+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+        expectedQueryDatasetManifestDigest:
+          type: string
+          pattern: "^sha256:[0-9a-f]{64}$"
+      required:
+        - expectedQueryResource
+        - expectedQueryDatasetManifestDigest
       additionalProperties: false
   fixtures:
     - request:
         operation: validate
         inputs:
-          molecularReference: {}
+          molecularCenteringReference: {}
           molecularPredictions: {}
-        config: {}
+          molecularTruth: {}
+          molecularQuery: {}
+          corpusAudit: {}
+          heldRoster: {}
+          modelCheckpoint: {}
+        config:
+          expectedQueryResource: "omf://fixture/datasetsnapshot/query@sha256:0000000000000000000000000000000000000000000000000000000000000000"
+          expectedQueryDatasetManifestDigest: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
         state: {}
       result:
         status: ok
         outputs:
           evaluationSummary:
-            schema: slp.molecular-evaluation-summary/v1
+            schema: slp.molecular-evaluation-summary/v2
             validationOnly: true
           evaluationReportSha256: "0000000000000000000000000000000000000000000000000000000000000000"
           molecularTargets: 0
@@ -80,6 +114,10 @@ spec:
           centroidAccuracyCommonPanel: 0.0
           minimumSpeciesPerturbedCentroidPearson: 0.0
           benchmarkLabelRecords: 0
-          heldInterventionOverlap: 0
-          passed: false
+          centeringHeldInterventionOverlap: 0
+          strictCorpusAuditPassed: false
+          heldRosterValidationMatch: false
+          exactTargetFreeQueryManifest: false
+          exactProfilePanelJoin: false
+          diagnosticPassed: false
           compatibilityPassed: false

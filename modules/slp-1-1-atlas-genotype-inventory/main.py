@@ -102,12 +102,27 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             {
                 "name": "atlasInterventionInventory",
                 "kind": "dataset",
-                "path": "atlas-genotype-inventory/intervention-inventory",
+                "path": "atlas-genotype-inventory/intervention-inventory/inventory.json",
+            },
+            {
+                "name": "atlasInterventionRecords",
+                "kind": "dataset",
+                "path": "atlas-genotype-inventory/intervention-inventory/interventions.jsonl",
             },
             {
                 "name": "atlasGenotypeIdentityEvidence",
                 "kind": "audit",
-                "path": "atlas-genotype-inventory/identity-evidence",
+                "path": "atlas-genotype-inventory/identity-evidence/manifest.json",
+            },
+            {
+                "name": "atlasGenotypeIdentityEvidenceRecords",
+                "kind": "audit",
+                "path": "atlas-genotype-inventory/identity-evidence/evidence.jsonl",
+            },
+            {
+                "name": "atlasGenotypeIdentityQuarantineRecords",
+                "kind": "audit",
+                "path": "atlas-genotype-inventory/identity-evidence/quarantine.jsonl",
             },
             {
                 "name": "atlasGenotypeIdentityAudit",

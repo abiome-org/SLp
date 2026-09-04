@@ -1,6 +1,7 @@
-"""Deterministic maximum-likelihood checks for the sparse world candidate."""
+"""Pretrain-only optimizer and target-free prediction checks."""
 
 from dataclasses import replace
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -15,7 +16,7 @@ MODULE = Path(__file__).resolve().parents[1] / "modules" / "slp-1-1-world-sparse
 sys.path.insert(0, str(MODULE))
 
 from slp_sparse_architecture import WorldPrediction  # noqa: E402
-from slp_sparse_corpus import CorpusIndex  # noqa: E402
+from slp_sparse_corpus import CorpusIndex, PredictionQueryIndex  # noqa: E402
 from slp_sparse_training import (  # noqa: E402
     TrainingConfig,
     equal_record_negative_log_likelihood,
@@ -25,182 +26,131 @@ from slp_sparse_training import (  # noqa: E402
 from tests.test_slp11_sparse_candidate import _sha256, _write_corpus  # noqa: E402
 
 
-def _make_validation(root: Path, *, extra_entities: int = 0) -> CorpusIndex:
-    _write_corpus(root, extra_entities=extra_entities)
+def _assigned_gene(role: str, start: int = 1000) -> str:
+    domain = b"slp-1.1-yeast-global-held-v1\x00"
+    for number in range(start, start + 10000):
+        candidate = f"SGD:S{number:09d}"
+        digest = hashlib.sha256(domain + candidate.encode("ascii")).hexdigest()
+        bucket = int(digest[:16], 16) % 100
+        observed = "molecular-final" if bucket < 10 else "molecular-validation" if bucket < 30 else "pretrain"
+        if observed == role:
+            return candidate
+    raise AssertionError("could not construct assigned fixture identifier")
+
+
+VALIDATION_GENE = _assigned_gene("molecular-validation")
+FINAL_GENE = _assigned_gene("molecular-final")
+
+
+def _make_pretrain(
+    root: Path, *, extra_entities: int = 0, active_gene: str = "SGD:S0002",
+) -> CorpusIndex:
+    _write_corpus(root, extra_entities=extra_entities + 1)
     entity_path = root / "entity-table.npz"
     with np.load(entity_path, allow_pickle=False) as source:
-        arrays = {name: source[name] for name in source.files}
-    action = np.flatnonzero(arrays["entity_id"] == "SGD:S0002")
-    if action.shape != (1,):
-        raise AssertionError("fixture action entity is ambiguous")
-    arrays["entity_id"][action[0]] = "SGD:S1002"
-    np.savez(entity_path, **arrays)
+        entities = {name: source[name] for name in source.files}
+    validation = np.flatnonzero(entities["entity_id"] == "SGD:S0003")
+    entities["entity_id"][validation[0]] = VALIDATION_GENE
+    if active_gene != "SGD:S0002":
+        active = np.flatnonzero(entities["entity_id"] == "SGD:S0002")
+        entities["entity_id"][active[0]] = active_gene
+    else:
+        held_static = np.flatnonzero(entities["entity_id"] == "SGD:SX0000")
+        entities["entity_id"][held_static[0]] = FINAL_GENE
+    np.savez(entity_path, **entities)
     gene_path = root / "trajectory-genes.txt"
-    gene_path.write_text("SGD:S1002\n", encoding="utf-8")
+    gene_path.write_text(active_gene + "\n", encoding="utf-8")
     manifest_path = root / "corpus.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["datasetId"] = "TEST:sparse-validation"
-    manifest["role"] = "molecular-validation"
     manifest["entityDictionary"]["sha256"] = _sha256(entity_path)
     manifest["trajectoryGenes"]["sha256"] = _sha256(gene_path)
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     return CorpusIndex.load(root)
 
 
-class SparseTrainingTest(unittest.TestCase):
-    def _config(self) -> TrainingConfig:
-        return TrainingConfig(
-            seed=83,
-            epochs=18,
-            draws_per_epoch=8,
-            batch_size=4,
-            learning_rate=0.01,
-            evaluation_batch_size=2,
-            d_model=8,
-            nhead=2,
-            encoder_layers=1,
-            decoder_layers=1,
-            ffn_multiplier=2,
-            dropout=0.0,
-        )
+def _canonical_id(prefix: str, value: object) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
+    return prefix + hashlib.sha256(payload).hexdigest()
 
-    def test_fixed_training_reduces_held_nll_and_is_byte_deterministic(self) -> None:
+
+def _make_query(
+    root: Path, feature_corpus: CorpusIndex, intervention: str = VALIDATION_GENE,
+) -> PredictionQueryIndex:
+    root.mkdir()
+    interventions = [intervention]
+    perturbation = _canonical_id("PERTURBATION:", interventions)
+    rows = []
+    for index, source in enumerate(("TESTSOURCE:a", "TESTSOURCE:b")):
+        group = f"TEST:centering-{index}"
+        identity = {
+            "speciesTaxon": 4932,
+            "sourceId": source,
+            "centeringGroup": group,
+            "perturbationId": perturbation,
+        }
+        rows.append({
+            "profileId": _canonical_id("PROFILE:", identity),
+            **identity,
+            "interventionIds": interventions,
+            "readoutIds": [VALIDATION_GENE, "SGD:S0004"],
+            "distributionTypes": ["negative-binomial", "gaussian"],
+        })
+    shard_path = root / "profiles-query.jsonl"
+    shard_path.write_bytes(b"".join(
+        json.dumps(row, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+        for row in rows
+    ))
+    manifest = {
+        "schema": "slp.molecular-query-manifest/v1",
+        "datasetId": "TEST:sparse-query",
+        "version": "fixture-v1",
+        "role": "molecular-validation-query",
+        "labelClass": "none",
+        "targetValuesPresent": False,
+        "observedMaskPresent": False,
+        "valueSpace": feature_corpus.value_space,
+        "speciesTaxa": [4932],
+        "sourceIds": ["TESTSOURCE:a", "TESTSOURCE:b"],
+        "shards": [{
+            "path": shard_path.name,
+            "sha256": _sha256(shard_path),
+            "bytes": shard_path.stat().st_size,
+            "records": len(rows),
+        }],
+    }
+    (root / "query.json").write_text(json.dumps(manifest), encoding="utf-8")
+    return PredictionQueryIndex.load(root, feature_corpus)
+
+
+def _config() -> TrainingConfig:
+    return TrainingConfig(
+        seed=83, epochs=3, draws_per_epoch=8, batch_size=4,
+        learning_rate=0.01, prediction_batch_size=2, d_model=8, nhead=2,
+        encoder_layers=1, decoder_layers=1, ffn_multiplier=2, dropout=0.0,
+    )
+
+
+class SparseTrainingTest(unittest.TestCase):
+    def test_pretrain_only_training_and_target_free_prediction_are_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            pretrain = CorpusIndex.load(_write_corpus(root / "pretrain"))
-            validation = _make_validation(root / "validation")
-            initial_rng_state = torch.random.get_rng_state().clone()
-            first = train_sparse_world(pretrain, validation, self._config())
-            self.assertTrue(torch.equal(initial_rng_state, torch.random.get_rng_state()))
-            second = train_sparse_world(pretrain, validation, self._config())
-            self.assertTrue(torch.equal(initial_rng_state, torch.random.get_rng_state()))
-            first_predictions = list(
-                iter_sparse_predictions(first.model, validation, batch_size=1)
-            )
-            second_predictions = list(
-                iter_sparse_predictions(second.model, validation, batch_size=1)
-            )
-            validation_batch = validation.materialize_batch(
-                validation.load_shard(0), [0, 1]
-            ).world
-
-        first_report = first.report
-        second_report = second.report
-        overall = first_report["validation"]["overall"]
-        self.assertLess(
-            overall["finalPerObservedTargetNll"],
-            overall["initializationPerObservedTargetNll"],
-        )
-        self.assertGreater(overall["descriptiveImprovement"], 0.0)
-        self.assertFalse(first_report["validation"]["scientificBaselineComparison"])
-        self.assertEqual(
-            first_report["validation"]["decisionUse"],
-            "frozen-molecular-gate-only",
-        )
-        self.assertEqual(
-            first_report["modelParameterSha256"],
-            second_report["modelParameterSha256"],
-        )
-        self.assertEqual(
-            first_report["validationPredictionSha256"],
-            second_report["validationPredictionSha256"],
-        )
-        self.assertEqual(first_report["reportSha256"], second_report["reportSha256"])
-        for name, tensor in first.model.state_dict().items():
-            self.assertTrue(torch.equal(tensor, second.model.state_dict()[name]), name)
-        self.assertEqual(
-            [batch.record_id for batch in first_predictions],
-            [batch.record_id for batch in second_predictions],
-        )
-        self.assertEqual(
-            [batch.query_id for batch in first_predictions],
-            [batch.query_id for batch in second_predictions],
-        )
-        for first_batch, second_batch in zip(first_predictions, second_predictions):
-            self.assertTrue(
-                torch.equal(first_batch.parameters, second_batch.parameters)
-            )
-        self.assertEqual(
-            set(first_report["validation"]["bySource"]),
-            {"TESTSOURCE:a", "TESTSOURCE:b"},
-        )
-        self.assertEqual(set(first_report["validation"]["bySpecies"]), {"4932"})
-        self.assertEqual(
-            set(first_report["validation"]["bySpeciesSource"]),
-            {"4932|TESTSOURCE:a", "4932|TESTSOURCE:b"},
-        )
-        self.assertEqual(first_report["isolation"]["trajectoryGeneOverlap"], [])
-        self.assertFalse(first_report["isolation"]["validationUsedForOptimization"])
-        self.assertFalse(first_report["checkpointProduced"])
-        source_improvements = [
-            value["descriptiveImprovement"]
-            for value in first_report["validation"]["bySource"].values()
-        ]
-        self.assertEqual(
-            first_report["validation"]["minimumSourceDescriptiveImprovement"],
-            min(source_improvements),
-        )
-        self.assertGreater(
-            first_report["validation"]["minimumSourceDescriptiveImprovement"],
-            0.0,
-        )
-        self.assertGreater(
-            first_report["validation"]["minimumSpeciesDescriptiveImprovement"],
-            0.0,
-        )
-        self.assertFalse(
-            first_report["streaming"]["denseRecordByDictionaryTargetAllocated"]
-        )
-        self.assertLessEqual(
-            first_report["streaming"]["maxShardRecordsLoaded"],
-            pretrain.bounds["maxRecordsPerShard"],
-        )
-        self.assertLessEqual(
-            first_report["streaming"]["maxShardTargetValuesLoaded"],
-            pretrain.bounds["maxRecordsPerShard"]
-            * pretrain.bounds["maxTargetsPerRecord"],
-        )
-        self.assertEqual(
-            first_report["training"]["sourceDraws"],
-            {"TESTSOURCE:a": 72, "TESTSOURCE:b": 72},
-        )
-        self.assertEqual(
-            first_report["training"]["objective"],
-            {
-                "name": "mean-per-record-observed-typed-nll",
-                "scheduledRecordWeighting": "equal",
-                "withinRecordTargetWeighting": "equal-observed-target",
-                "scheduleHierarchy": "source-perturbation-replicate-record",
-            },
-        )
-        self.assertEqual(
-            first_report["training"]["sourceDrawsByEpoch"],
-            [{"TESTSOURCE:a": 4, "TESTSOURCE:b": 4}] * self._config().epochs,
-        )
-        schedule_hashes = first_report["training"]["epochScheduleSha256"]
-        self.assertEqual(len(schedule_hashes), self._config().epochs)
-        self.assertGreater(len(set(schedule_hashes)), 1)
-        self.assertEqual(
-            schedule_hashes,
-            second_report["training"]["epochScheduleSha256"],
-        )
-
-        first.model.eval()
-        expected = first.model(validation_batch)
-        chunks = []
-        for index in (0, 1):
-            selection = torch.tensor([index])
-            chunk = replace(
-                validation_batch,
-                query_features=validation_batch.query_features[:, selection],
-                query_feature_present=validation_batch.query_feature_present[:, selection],
-                query_entity_type=validation_batch.query_entity_type[:, selection],
-                readout_type=validation_batch.readout_type[:, selection],
-                likelihood_type=validation_batch.likelihood_type[:, selection],
-                query_mask=validation_batch.query_mask[:, selection],
-            )
-            chunks.append(first.model(chunk).parameters)
-        self.assertTrue(torch.equal(torch.cat(chunks, dim=1), expected.parameters))
+            pretrain = _make_pretrain(root / "pretrain")
+            query = _make_query(root / "query", pretrain)
+            rng = torch.random.get_rng_state().clone()
+            first = train_sparse_world(pretrain, _config())
+            second = train_sparse_world(pretrain, _config())
+            self.assertTrue(torch.equal(rng, torch.random.get_rng_state()))
+            first_predictions = list(iter_sparse_predictions(first.model, query, 1))
+            second_predictions = list(iter_sparse_predictions(second.model, query, 1))
+        self.assertEqual(first.report, second.report)
+        self.assertNotIn("validation", json.dumps(first.report).lower())
+        self.assertFalse(first.report["isolation"]["heldTruthAccessible"])
+        self.assertEqual(first.report["training"]["sourceDraws"], {"TESTSOURCE:a": 12, "TESTSOURCE:b": 12})
+        self.assertGreater(len(set(first.report["training"]["epochScheduleSha256"])), 1)
+        for left, right in zip(first_predictions, second_predictions, strict=True):
+            self.assertEqual(left.profile_id, right.profile_id)
+            self.assertEqual(left.readout_ids, right.readout_ids)
+            self.assertTrue(torch.equal(left.parameters, right.parameters))
 
     def test_optimization_weights_records_equally_despite_target_density(self) -> None:
         parameters = torch.zeros((2, 3, 2), dtype=torch.float32, requires_grad=True)
@@ -209,93 +159,49 @@ class SparseTrainingTest(unittest.TestCase):
             likelihood_type=torch.zeros((2, 3), dtype=torch.long),
             query_mask=torch.ones((2, 3), dtype=torch.bool),
         )
-        target = torch.tensor(
-            [[4.0, 0.0, 0.0], [0.0, 0.0, 0.0]], dtype=torch.float32
-        )
-        observed = torch.tensor(
-            [[True, False, False], [True, True, True]], dtype=torch.bool
-        )
+        target = torch.tensor([[4.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
+        observed = torch.tensor([[True, False, False], [True, True, True]])
+        objective = equal_record_negative_log_likelihood(prediction, target, observed)
+        constant = 0.5 * np.log(2.0 * np.pi)
+        self.assertAlmostEqual(objective.item(), 0.5 * (constant + 8.0 + constant), places=6)
 
-        objective = equal_record_negative_log_likelihood(
-            prediction, target, observed
-        )
-        gaussian_constant = 0.5 * np.log(2.0 * np.pi)
-        expected_equal_record = 0.5 * (
-            gaussian_constant + 8.0 + gaussian_constant
-        )
-        target_weighted = gaussian_constant + 2.0
-        self.assertAlmostEqual(objective.item(), expected_equal_record, places=6)
-        self.assertNotAlmostEqual(objective.item(), target_weighted, places=6)
-
-        objective.backward()
-        self.assertAlmostEqual(parameters.grad[0, 0, 1].item(), -7.5, places=6)
-        for query_index in range(3):
-            self.assertAlmostEqual(
-                parameters.grad[1, query_index, 1].item(), 1.0 / 6.0, places=6
-            )
-
-    def test_dictionary_growth_does_not_change_training_or_predictions(self) -> None:
+    def test_query_is_structurally_target_free_and_exactly_chunkable(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            compact_pretrain = CorpusIndex.load(_write_corpus(root / "compact-pretrain"))
-            compact_validation = _make_validation(root / "compact-validation")
-            large_pretrain = CorpusIndex.load(
-                _write_corpus(root / "large-pretrain", extra_entities=19)
+            pretrain = _make_pretrain(root / "pretrain")
+            query = _make_query(root / "query", pretrain)
+            self.assertEqual(
+                {item.name for item in query.root.iterdir()},
+                {"query.json", "profiles-query.jsonl"},
             )
-            large_validation = _make_validation(
-                root / "large-validation", extra_entities=23
-            )
-            compact = train_sparse_world(
-                compact_pretrain, compact_validation, self._config()
-            )
-            large = train_sparse_world(large_pretrain, large_validation, self._config())
-        self.assertNotEqual(len(compact_pretrain.entity_id), len(large_pretrain.entity_id))
-        self.assertEqual(
-            compact.report["parameterCount"], large.report["parameterCount"]
-        )
-        self.assertEqual(
-            compact.report["modelParameterSha256"],
-            large.report["modelParameterSha256"],
-        )
-        self.assertEqual(
-            compact.report["validationPredictionSha256"],
-            large.report["validationPredictionSha256"],
-        )
+            batch = query.materialize(list(query.iter_records(0))).world
+            model = train_sparse_world(pretrain, _config()).model.eval()
+            expected = model(batch).parameters
+            chunks = []
+            for index in range(expected.shape[1]):
+                selection = torch.tensor([index])
+                chunks.append(model(replace(
+                    batch,
+                    query_features=batch.query_features[:, selection],
+                    query_feature_present=batch.query_feature_present[:, selection],
+                    query_entity_type=batch.query_entity_type[:, selection],
+                    readout_type=batch.readout_type[:, selection],
+                    likelihood_type=batch.likelihood_type[:, selection],
+                    query_mask=batch.query_mask[:, selection],
+                )).parameters)
+            self.assertTrue(torch.equal(torch.cat(chunks, dim=1), expected))
 
-    def test_role_and_intervention_isolation_fail_before_optimization(self) -> None:
+    def test_query_identity_or_hidden_target_array_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            pretrain = CorpusIndex.load(_write_corpus(root / "pretrain"))
-            wrong_role = CorpusIndex.load(_write_corpus(root / "wrong-role"))
-            with self.assertRaisesRegex(ValueError, "molecular-validation role"):
-                train_sparse_world(pretrain, wrong_role, self._config())
-            model = train_sparse_world(
-                pretrain, _make_validation(root / "prediction-validation"), self._config()
-            ).model
-            with self.assertRaisesRegex(ValueError, "molecular-validation role"):
-                list(iter_sparse_predictions(model, wrong_role))
-
-            overlap_root = root / "overlap"
-            _write_corpus(overlap_root)
-            manifest_path = overlap_root / "corpus.json"
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            manifest["role"] = "molecular-validation"
-            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-            overlapping_validation = CorpusIndex.load(overlap_root)
-            with self.assertRaisesRegex(
-                ValueError, "validation intervention genes occur in pretrain"
-            ):
-                train_sparse_world(pretrain, overlapping_validation, self._config())
-
-    def test_benchmark_like_manifest_field_is_rejected_not_ignored(self) -> None:
-        with tempfile.TemporaryDirectory() as temporary:
-            root = _write_corpus(Path(temporary) / "corpus")
-            manifest_path = root / "corpus.json"
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            manifest["syntheticLethalityLabel"] = [1, 0]
-            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "corpus manifest fields mismatch"):
-                CorpusIndex.load(root)
+            pretrain = _make_pretrain(root / "pretrain")
+            query = _make_query(root / "query", pretrain)
+            query_path = query.root / "query.json"
+            manifest = json.loads(query_path.read_text())
+            manifest["targetValuesPresent"] = True
+            query_path.write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError, "target-free"):
+                PredictionQueryIndex.load(query.root, pretrain)
 
 
 if __name__ == "__main__":

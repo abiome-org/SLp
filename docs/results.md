@@ -1107,3 +1107,78 @@ source facts. The inventory OMF runs and separate admission of their emitted
 bytes remain pending a clean worktree. This milestone establishes identity
 and compute boundaries only; it supplies no molecular metric, candidate
 advancement, SL benchmark result, novelty evidence, or SOTA claim.
+
+## 2026-09-04 — target-separated OMF training and evaluation boundary
+
+**Hypothesis, fixed rule, modalities, and snapshots.** Before biological
+optimization, a sparse world-model run should be able to fit and serialize a
+checkpoint without any protected molecular target being present in its process,
+and every later score should be an exact evaluator-only join against a frozen
+target-free query. This engineering milestone passed only if checkpoint,
+prediction, and report bytes were deterministic; changing protected
+validation/final corpus fingerprints could not change checkpoint bytes; the
+query covered the complete validation-roster intervention domain; every
+validation/final intervention remained absent from pretraining and reward
+trajectories; all active OMF artifacts were file-valued; and the complete test
+and OMF validation surfaces passed. Accessible modalities remained the tiny
+synthetic sparse contract fixtures plus outcome-blind identities from the exact
+SGD, Mendeley proteome, and Zenodo genotype-summary snapshots already recorded
+above. No quantitative biological corpus, molecular reward, protected truth,
+checkpoint-selection metric, or SL benchmark was opened.
+
+**Training and truth boundary.** `slp-1-1-world-sparse` now accepts exactly one
+pretraining `DatasetSnapshot`, one target-free molecular-query snapshot, one
+prior-run corpus-audit file artifact, and the outcome-blind held-roster
+snapshot. It performs fixed-epoch AdamW updates only from pretraining targets
+and emits a bounded canonical checkpoint, training report, and predictions.
+Predictions repeat exact query identities and typed distribution parameters but
+contain no target, observed mask, benchmark field, or target-derived inclusion.
+The independent evaluator v2 alone receives fitting-only centering,
+evaluator-only held truth, query, admitted audit, roster, exact prediction, and
+checkpoint artifacts. It exact-joins profile and readout panels, scores
+Gaussian and negative-binomial NLL only where truth is non-null, removes the
+fitting perturbation centroid, and reports source/species strata. Its current
+correlation thresholds are diagnostic only; they do not replace the frozen
+mean/ridge NLL advancement rule in `MODEL_CARD.md`.
+
+**Audit and OMF artifact compatibility.** Corpus-audit v1.1 independently
+reconstructs the exact QC-passing intersection from at least two protected
+source-inventory snapshots, recomputes held assignments, checks exact sparse
+NPZ members and record-level active interventions, and isolates both validation
+and final genes from pretraining and reward. Inspection of pinned OMF 1.0 found
+that directory artifact import supplies `logical_kind` twice, which raises a
+Python `TypeError`. The repository does not patch OMF or pass data through
+metadata. All active producers now emit regular files: multi-file identity and
+baseline outputs are separate immutable artifacts, the audit is one JSON file,
+and predictions are one deterministic uncompressed tar containing exactly
+`evaluation.json` then `profiles-000.jsonl` with canonical zero-time metadata.
+The evaluator verifies member order, type, ownership, permissions, sizes,
+hashes, counts, and target-free structure before streaming records.
+
+**Validation and decision.** The Windows suite passed 140 tests with three
+expected symlink-permission skips; changed Python compiled and `git diff
+--check` reported no errors. On the supported Linux OMF environment, all active
+workload and evaluation schemas validated. Module package/source-manifest pairs
+were: proteome inventory
+`sha256:166fed5cc0423a3913c677d0d2b5e5d5b4d1aa3466e294ce2f9471d8a029af7a` /
+`sha256:72ef0f3ffbb0f91524af02bb8bc804d2e03d83cc427238eb5da4ec12ae8b7bc5`;
+atlas identity inventory
+`sha256:32d867cb47c16a0dbeebd011c5b86595eeca7be6cd920fa00983869bd52162bf` /
+`sha256:95cc95a3d76bcffe2089548d9fadbe94a909605293c62468ccda3f3ad7f670ea`;
+corpus audit
+`sha256:ed5f1d93535e46b4864f83e381fdf22ee5f6ba6222a3dbf29e8159f67a39a00b` /
+`sha256:4881ac861adbe6cb2471d103900bad67de64a7167851716fda1636391b4a7dcb`;
+sparse world
+`sha256:f0cbae8d5cf35a79f9bf049b7b7dcb58670d85345d5be49a2492ea2e9e715372` /
+`sha256:b19cee10183e3de4e43361475afe2e25e1e4bb341f756a4cd3846de12ab3ac60`;
+molecular evaluator
+`sha256:54edac6b6a6d0fc0942c7a5cbb69911d1e32bf7a2aa9aa5224dc84e2835f5a3c` /
+`sha256:6e6b98eba15362ebd6f8b090812c8b9c227f4e4f27371cce347c7d77e8cf44bf`;
+and molecular baselines
+`sha256:735fa3b539f3bf6efd47b59e1438b5836fb10b4132c3ee5c27d99635fa50c41b` /
+`sha256:efee5272fba05cace33919e1f4cc6ede29855e24f5daa65d38097d92b30aeb1c`.
+The dense target-bearing prototype workloads and obsolete trainer tests are
+quarantined, with an invariant test preventing re-entry into the active graph.
+This advances the executable factory boundary only. No biological candidate,
+molecular gate, SL benchmark result, release, novelty result, or SOTA claim
+exists; identity runs and separate derived-snapshot admission remain next.

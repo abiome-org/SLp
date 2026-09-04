@@ -482,6 +482,25 @@ class ProteomeInventoryTest(unittest.TestCase):
         for digest in self.PRODUCTION_ARTIFACT_DIGESTS.values():
             self.assertIn(f"artifact:{digest}", workload_text)
         self.assertNotIn("benchmark", workload_text.casefold())
+        for artifact_name in (
+            "proteomeInterventionInventory",
+            "proteomeInterventionRecords",
+            "proteomeProteinRelations",
+            "proteomeProteinRelationRecords",
+            "proteomeIdentityAudit",
+        ):
+            self.assertIn(f"- {artifact_name}", workload_text)
+        main_text = (MODULE_ROOT / "main.py").read_text(encoding="utf-8")
+        for relative_file in (
+            "intervention-inventory/inventory.json",
+            "intervention-inventory/interventions.jsonl",
+            "protein-relations/manifest.json",
+            "protein-relations/relations.jsonl",
+            "proteome-inventory/audit.json",
+        ):
+            self.assertIn(relative_file, main_text)
+        self.assertNotIn('"path": "proteome-inventory/intervention-inventory",', main_text)
+        self.assertNotIn('"path": "proteome-inventory/protein-relations",', main_text)
 
 
 if __name__ == "__main__":

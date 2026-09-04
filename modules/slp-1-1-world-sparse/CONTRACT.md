@@ -1,79 +1,96 @@
-# Typed sparse world-candidate contract
+# Typed sparse production contract
 
-This phase-1 module validates `slp.corpus/v1.1`, constructs the corresponding
-species-aware query-decoder network, and audits a deterministic sampling
-schedule. It does not optimize parameters, select a checkpoint, or emit a
-model artifact. A successful run is engineering evidence only and returns
-`trainingImplemented: false`.
+This module fits a fixed-epoch, application-neutral world model from one
+`pretrain` `DatasetSnapshot`. It receives no molecular validation/final truth,
+benchmark record, reward signal, label, or target-bearing evaluation input.
+It is an engineering candidate, not biological or advancement evidence.
 
-The OMF input must be one copied, immutable `DatasetSnapshot` with exactly
-`resource`, `mode`, `path`, and `manifestDigest`. Both resource and manifest
-are SHA-256 pinned. The materialized directory must be the non-symlink path
-`.../inputs/corpus/<dataset-name>` matching the resource URI. Bare paths,
-mounts, aliases, missing directories, additional fields, and path/resource
-substitution fail closed.
+The other model input is a copied, revision-pinned
+`molecular-validation-query` `DatasetSnapshot`. Its `query.json` and JSONL
+records contain only canonical profile/context/intervention/readout identities
+and aligned Gaussian or negative-binomial distribution types. The exact file
+inventory is `query.json` plus its declared JSONL shards; targets, observed
+masks, labels, benchmark fields, corpus-role fingerprints, and companion arrays
+are structurally impossible. Static entity/species features and the small
+readout ontology are resolved from the independently admitted pretrain feature
+pack, without passing identifiers into the model.
 
-## Separation of identity and model inputs
+This v1 query intentionally supplies no context or continuous covariates: those
+inputs are explicitly missing during prediction. A future query revision must
+add typed, unit-bearing, presence-masked context/covariates before claims that
+depend on those values. Distribution-to-readout mapping must be unambiguous in
+the admitted pretrain ontology or loading fails. The current evaluator-v2 query
+revision is also explicitly yeast-only (`NCBI:txid4932`, systematic SGD
+intervention IDs); cross-species evaluation requires a new admitted contract.
 
-`corpus.json` references checksum-pinned entity, query, and query-panel
-dictionaries. Stable CURIEs remain in those dictionaries and per-record
-provenance. `WorldBatch` contains no entity, query, gene, or dictionary
-identifier: the network receives only numerical features, explicit presence
-masks, declared species features, and small entity/context/action/readout type
-indices. Reordering or extending a dictionary therefore cannot change the
-parameter count or a prediction when the referenced features are identical.
+Both DatasetSnapshot inputs must have OMF's exact copied input shape, immutable
+resource revisions, and outer manifest digests. Materialized paths must be
+non-symlink directories shaped as
+`.../inputs/<input-name>/<resource-name>`. The module also requires an exact OMF
+artifact for a previously admitted `slp.corpus-audit/v1.1` and a copied,
+revision-pinned DatasetSnapshot for the global held-intervention roster. Bare
+JSON or an unbound filesystem path is not accepted. The frozen run config must
+also name the exact admitted corpus-audit artifact-manifest digest; a different
+materialization fails before training.
 
-Context and action memory is permutation invariant. Queries attend only to
-the shared encoded memory and never to one another. With dropout disabled, the
-same marginal query is bitwise invariant to panel membership, ordering,
-padding, and chunking.
+The admitted audit binds pretrain, molecular reward, molecular validation, and
+molecular final corpus identities plus the roster provenance and population
+hashes. The trainer independently verifies its pretrain identity, recomputes
+the frozen roster assignment role from each identifier digest, checks the
+validation/final corpus populations against roster hashes, requires the query
+intervention domain to equal the complete nonempty validation roster, and
+rechecks that no validation or final intervention occurs in a pretraining
+quantitative trajectory. OMF prior admission is mandatory. Protected source
+inventories are independently pinned in the audit and bind the recomputed
+QC-passing intersection rather than relying on summary role strings.
 
-## Sparse records and likelihoods
+## Model and likelihood boundary
 
-Each bounded `.npz` shard contains fixed-width context/action references and a
-record-local query panel. Observed targets are represented by
-`target_indptr`, `target_query_index`, and `target_value`; the module never
-constructs a record-by-global-query target matrix. A readout explicitly
-declares Gaussian or negative-binomial likelihood, unit, and whether absence
-from the CSR list means an observed zero or an unobserved value. Missing
-features and covariates must be stored as numeric zero with a false presence
-mask.
+Stable CURIEs remain provenance only. `WorldBatch` receives numerical features,
+explicit presence masks, species features, and small ontology type indices; it
+contains no entity, query, or dictionary IDs. Parameter count is independent of
+dictionary size. Context/action memory is permutation invariant, and each query
+cross-attends only to shared encoded memory. A marginal prediction is therefore
+exactly invariant to panel membership, ordering, padding, and chunking when
+dropout is disabled.
 
-Gaussian outputs are mean and log standard deviation. Negative-binomial
-outputs are log mean and log inverse dispersion. The latter currently has no
-library-size offset, so count-bearing biological training is blocked until a
-source-appropriate offset contract is frozen.
+Observed pretraining targets use bounded CSR arrays. Missing is distinct from
+an observed zero. Each readout declares a Gaussian or negative-binomial
+likelihood. Gaussian parameters are `{mean,logScale}`; negative-binomial
+parameters are `{logMean,logInverseDispersion}`. Count-bearing biological use
+remains blocked until a source-appropriate library-size offset contract is
+frozen.
 
-## Leakage and sampling boundary
+Sampling follows explicit source weights and deterministic
+source → perturbation → replicate → record quotas. Each scheduled record first
+means its observed typed NLL, then records receive equal optimizer weight.
+Epoch schedules are seed-domain-separated. The canonical report contains only
+pretraining optimization evidence and states that held truth was inaccessible.
 
-Every active species-specific action entity across all shards must equal the
-sorted `trajectoryGenes` inventory exactly. Species-neutral chemical entities
-do not enter that gene inventory. All context, action, and query entities must
-be species-neutral or match the record taxon.
+## Artifacts and release status
 
-Sampling uses explicit positive source weights, exact deterministic quotas,
-and then cycles source → perturbation → replicate → record with a fixed seed.
-Identifiers determine grouping and audit provenance only; they are never
-model features.
+The module writes one deterministic timestamp-free checkpoint, one canonical
+training report, and one deterministic uncompressed tar file containing exactly
+`evaluation.json` and `profiles-000.jsonl`. The file-only transport avoids the
+known OMF 1.0 directory-artifact importer defect while retaining an exact,
+bounded internal file manifest. Prediction JSONL records duplicate the complete
+canonical query identities and add only aligned typed `predictionParameters`;
+they contain no targets, missingness mask, label, or target-derived inclusion.
+`evaluation.json` binds the exact query resource, outer manifest, raw
+`query.json` digest, and deterministic checkpoint file content SHA-256. A later
+evaluator must independently pin the checkpoint and protected truth and verify
+those joins before the predictions are evidence.
 
-## Bounded optimizer library
+Checkpoint loading validates canonical headers, exact total and payload byte
+sizes, dimension/layer/tensor/parameter bounds, tensor shapes and hashes before
+model or payload allocation. Payloads use canonical raw little-endian float32,
+not pickle or timestamp-bearing archives.
 
-`slp_sparse_training.py` is a pure-library implementation used to test the
-optimizer boundary before it is admitted as an OMF training operation. It
-updates only from a corpus whose role is `pretraining` and reads only a
-`molecular-validation` corpus for fixed before/after diagnostics. Every
-validation intervention gene must be absent from pretraining quantitative
-trajectories. Benchmark-like manifest fields fail closed.
-
-Each scheduled record contributes the mean NLL of its own observed queries and
-then receives equal weight in its optimizer batch, so dense panels cannot
-silently dominate sparse records. Epoch schedules are deterministically
-domain-separated and retain the exact per-source quota. Validation NLL is
-reported per observed target, overall and by source/species strata, but is
-explicitly not a scientific baseline comparison or a checkpoint-selection
-rule. The library restores caller RNG, deterministic-algorithm and thread
-state, and hashes the final parameters, predictions and canonical report.
-
-This library does not relax the module boundary above: it writes no checkpoint,
-has no OMF run entry point, has no molecular gate, and supplies no biological
-evidence.
+The empty dependency lock is retained only for this engineering milestone.
+Every result states `environmentAttestedNotPortable: true` and
+`releasePortable: false`. Release remains blocked by both a missing hash-pinned
+offline wheelhouse and the OMF 1.0 artifact-to-inference-adapter gap. It is also
+blocked until OMF policy independently proves that the pinned audit artifact
+was produced and admitted by the corpus-audit module; digest equality alone is
+not producer provenance. No network, absolute-path, import-path,
+metadata-weight, or repository-relative workaround is used.

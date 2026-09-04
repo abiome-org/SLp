@@ -477,11 +477,35 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
         workload = (
             ROOT / "workloads" / "slp-1-1-atlas-genotype-inventory.yaml"
         ).read_text()
-        self.assertIn(inventory.RAW_DATASET_RESOURCE, workload)
+        # OMF 1.0 accepts dataset/<name> in workload inputs and records the
+        # resolved immutable resource URI/revision in the admitted Run.
+        self.assertIn("rawAtlasSummary: dataset/slp-1-1-atlas-genotype-summary-raw-v1", workload)
+        self.assertIn(inventory.RAW_DATASET_RESOURCE.rpartition("@")[2], workload)
         for digest in inventory.MAPPING_ARTIFACT_DIGESTS.values():
             self.assertIn(f"artifact:{digest}", workload)
         self.assertNotIn("seus_split.RData", workload)
         self.assertNotIn("benchmark", workload.casefold())
+        for artifact_name in (
+            "atlasInterventionInventory",
+            "atlasInterventionRecords",
+            "atlasGenotypeIdentityEvidence",
+            "atlasGenotypeIdentityEvidenceRecords",
+            "atlasGenotypeIdentityQuarantineRecords",
+            "atlasGenotypeIdentityAudit",
+        ):
+            self.assertIn(f"- {artifact_name}", workload)
+        main_text = (MODULE_ROOT / "main.py").read_text(encoding="utf-8")
+        for relative_file in (
+            "intervention-inventory/inventory.json",
+            "intervention-inventory/interventions.jsonl",
+            "identity-evidence/manifest.json",
+            "identity-evidence/evidence.jsonl",
+            "identity-evidence/quarantine.jsonl",
+            "atlas-genotype-inventory/audit.json",
+        ):
+            self.assertIn(relative_file, main_text)
+        self.assertNotIn('"path": "atlas-genotype-inventory/intervention-inventory",', main_text)
+        self.assertNotIn('"path": "atlas-genotype-inventory/identity-evidence",', main_text)
 
         source = yaml.safe_load(
             (ROOT / "sources" / "yeast-single-cell-atlas-v1.yaml").read_text()

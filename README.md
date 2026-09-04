@@ -24,7 +24,7 @@ modules/slp-1-1-corpus-audit/   shard integrity and leakage firewall
 modules/slp-1-1-sgd-map/        exact SGD stable-ID relation normalizer
 modules/slp-1-1-yeast-prepare/  rights-gated species-native yeast preparation
 modules/slp-1-1-held-roster/    outcome-blind global yeast held-gene split
-modules/slp-1-1-world/          admitted dense-fixture engineering prototype
+modules/slp-1-1-world/          quarantined dense-fixture prototype source
 modules/slp-1-1-world-sparse/   typed sparse world-candidate contract
 modules/slp-1-1-molecular-baselines/ frozen context/TxPert point baselines
 modules/slp-1-1-molecular-eval/ perturbation-specific molecular evaluator
@@ -64,14 +64,20 @@ missingness masks, and small ontology-type indices. Its independent
 cross-attention query decoder supports Gaussian and negative-binomial scalar
 heads without materializing a record-by-global-query target matrix.
 
-`slp-1-1-world-sparse` now includes a deterministic bounded AdamW training
-library for Gaussian/count-compatible sparse records. Updates use pretraining
-only, weight scheduled records equally, and report molecular validation only as
-an initialization-to-final diagnostic. The OMF entry point still reports
-`trainingImplemented: false` and emits no checkpoint, so this is not yet a
-trained biological model or selectable candidate. The earlier
-`slp-1-1-world` run remains useful execution evidence, but its dense fixture
-format and toy metrics are not architecture-selection evidence.
+`slp-1-1-world-sparse` now implements deterministic bounded AdamW training for
+Gaussian/count-compatible sparse records. It consumes only pretraining,
+target-free molecular queries, an exact previous-run corpus-audit artifact,
+and the outcome-blind held-intervention roster. It emits a deterministic
+checkpoint, target-free predictions, and a training report; protected truth is
+available only to the independent evaluator. This is executable contract
+evidence, not a trained biological model or a selectable scientific candidate.
+
+The earlier dense `slp-1-1-world` source and synthetic fixture bytes are kept
+only to preserve historical engineering evidence. Its pretraining and smoke
+workloads and its obsolete trainer integration tests are retired. No active OMF
+workload references that module, and its dense format, target-bearing
+validation input, and toy metrics must not be used for architecture selection
+or as a compatibility target.
 
 Yeast data remains yeast data. Costanzo SGA and future yeast expression,
 fitness, chemical-genomics, and regulatory measurements are trained with yeast
@@ -102,32 +108,25 @@ the interpreter selected by `PATH` and does not carry `omf.sdk` into an
 unrelated interpreter. The admitted run records the resolved interpreter,
 distribution inventory and executable digest.
 
-Run the synthetic corpus-audit loop before importing biological data:
+Schema-check the contract-only corpus-audit graph before importing biological
+data. Its seven `audit-fixture-*` aliases are deliberate placeholders; the
+graph is not runnable until four corpus fixtures, one held roster, and at least
+two protected source inventories have each been admitted separately:
 
 ```bash
-.venv/bin/omf --project . --actor slp-researcher data add \
-  data/fixtures/slp11-pretrain --name slp-1-1-fixture-pretrain --mode copy \
-  --rights rights/fixture-cc0.yaml
-.venv/bin/omf --project . --actor slp-researcher data add \
-  data/fixtures/slp11-validation --name slp-1-1-fixture-validation --mode copy \
-  --rights rights/fixture-cc0.yaml
-.venv/bin/omf --project . --actor slp-researcher data add \
-  data/fixtures/slp11-reward --name slp-1-1-fixture-reward --mode copy \
-  --rights rights/fixture-cc0.yaml
-.venv/bin/omf --project . --actor slp-researcher run \
-  workloads/slp-1-1-audit-smoke.yaml --binding bindings/local-linux.yaml
+.venv/bin/omf --project . schema validate workloads/slp-1-1-audit-smoke.yaml
 ```
 
-For real training, import three separately governed snapshots using the exact
-names `slp-1-1-pretrain`, `slp-1-1-molecular-validation`, and
-`slp-1-1-molecular-reward`, apply
-`evaluations/slp-1-1-molecular.yaml`, and run
-`workloads/slp-1-1-pretrain.yaml` only after preflight succeeds. Biological
-training remains closed until the world module exports identity-keyed molecular
-predictions. OMF 1.0 cannot pin a generated artifact for a later stage in the
-same workload, so molecular evaluation must be a second admitted run whose
-input is the literal content digest produced by training; sibling-stage paths
-or weights/predictions embedded in JSON metadata are forbidden workarounds.
+Biological training has no generic checked-in workload. First admit and verify
+the separately governed pretraining, molecular-validation,
+molecular-reward, molecular-final, protected-inventory, held-roster, and
+target-free query snapshots. Run the independent corpus audit and stop on any
+failure. Only then freeze a sparse-world workload that pins the exact admitted
+audit artifact-manifest digest and every DatasetSnapshot input. Molecular
+evaluation is a second admitted run whose inputs include the literal immutable
+checkpoint and prediction artifact digests plus separately protected truth;
+sibling-stage paths or weights/predictions embedded in JSON metadata are
+forbidden workarounds.
 
 The world module's empty dependency lock currently means its executor image
 must already provide compatible PyTorch and NumPy. This is acceptable for
@@ -169,9 +168,11 @@ training corpus.
 
 ```bash
 python -m unittest tests.test_slp11_corpus_audit
-python -m unittest tests.test_slp11_architecture
 python -m unittest tests.test_slp11_sparse_candidate
 python -m unittest tests.test_slp11_sparse_training
+python -m unittest tests.test_slp11_sparse_omf_training
+python -m unittest tests.test_slp11_sparse_workload
+python -m unittest tests.test_slp11_active_workload_boundary
 python -m unittest tests.test_slp11_held_roster
 python -m unittest tests.test_slp11_molecular_baselines
 python -m unittest tests.test_slp11_sgd_map

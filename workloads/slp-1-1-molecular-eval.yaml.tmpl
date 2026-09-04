@@ -1,9 +1,9 @@
-# Template only: render after both producer artifacts are frozen. OMF does not
-# materialize a sibling stage's newly generated artifact in the same run.
+# Template only: render after the prediction, checkpoint, and five independently
+# admitted DatasetSnapshots are frozen.
 apiVersion: omf.dev/v1alpha1
 kind: WorkloadSpec
 metadata:
-  name: slp-1-1-molecular-eval-frozen
+  name: slp-1-1-molecular-eval-v2-frozen
 spec:
   evaluationRefs:
     - evaluationspec/slp-1-1-molecular-artifact
@@ -13,9 +13,16 @@ spec:
         module: modules/slp-1-1-molecular-eval/module.yaml
         operation: run
         inputs:
-          molecularReference: "@@MOLECULAR_REFERENCE_ARTIFACT@@"
+          molecularCenteringReference: "@@MOLECULAR_CENTERING_DATASET@@"
           molecularPredictions: "@@MOLECULAR_PREDICTIONS_ARTIFACT@@"
+          molecularTruth: "@@MOLECULAR_TRUTH_DATASET@@"
+          molecularQuery: "@@MOLECULAR_QUERY_DATASET@@"
+          corpusAudit: "@@CORPUS_AUDIT_DATASET@@"
+          heldRoster: "@@HELD_ROSTER_DATASET@@"
+          modelCheckpoint: "@@MODEL_CHECKPOINT@@"
         config:
+          expectedQueryResource: "@@MOLECULAR_QUERY_RESOURCE@@"
+          expectedQueryDatasetManifestDigest: "@@MOLECULAR_QUERY_MANIFEST_DIGEST@@"
           minimumReferencePerturbations: 2
           minimumProfileReadouts: 2
           maxLineBytes: 16777216
@@ -31,7 +38,11 @@ spec:
           - centroidAccuracyCommonPanel
           - minimumSpeciesPerturbedCentroidPearson
           - benchmarkLabelRecords
-          - heldInterventionOverlap
-          - passed
+          - centeringHeldInterventionOverlap
+          - strictCorpusAuditPassed
+          - heldRosterValidationMatch
+          - exactTargetFreeQueryManifest
+          - exactProfilePanelJoin
+          - diagnosticPassed
           - compatibilityPassed
           - molecularEvaluationReport

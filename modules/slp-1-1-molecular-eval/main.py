@@ -11,7 +11,7 @@ from omf.sdk import ProtocolRequest, ProtocolResult, main
 def _validation_outputs() -> dict[str, object]:
     return {
         "evaluationSummary": {
-            "schema": "slp.molecular-evaluation-summary/v1",
+            "schema": "slp.molecular-evaluation-summary/v2",
             "validationOnly": True,
         },
         "evaluationReportSha256": "0" * 64,
@@ -23,8 +23,12 @@ def _validation_outputs() -> dict[str, object]:
         "centroidAccuracyCommonPanel": 0.0,
         "minimumSpeciesPerturbedCentroidPearson": 0.0,
         "benchmarkLabelRecords": 0,
-        "heldInterventionOverlap": 0,
-        "passed": False,
+        "centeringHeldInterventionOverlap": 0,
+        "strictCorpusAuditPassed": False,
+        "heldRosterValidationMatch": False,
+        "exactTargetFreeQueryManifest": False,
+        "exactProfilePanelJoin": False,
+        "diagnosticPassed": False,
         "compatibilityPassed": False,
     }
 
@@ -34,20 +38,31 @@ def validate(_request: ProtocolRequest) -> ProtocolResult:
 
 
 def run(request: ProtocolRequest) -> ProtocolResult:
-    from evaluator import evaluate_molecular_predictions, resolve_literal_omf_artifact
-
-    reference_path, reference_artifact = resolve_literal_omf_artifact(
-        request.inputs["molecularReference"], "molecularReference"
+    from evaluator import (
+        evaluate_molecular_predictions,
+        resolve_literal_omf_artifact,
+        resolve_pinned_query_input,
     )
+
     prediction_path, prediction_artifact = resolve_literal_omf_artifact(
         request.inputs["molecularPredictions"], "molecularPredictions"
     )
-    if reference_artifact == prediction_artifact:
-        raise ValueError("molecular reference and prediction artifacts must be distinct")
+    if not Path(prediction_path).is_file():
+        raise ValueError("molecularPredictions must be the file-valued canonical tar artifact")
+    query_input = resolve_pinned_query_input(
+        request.inputs["molecularQuery"],
+        expected_resource=request.config["expectedQueryResource"],
+        expected_manifest_digest=request.config["expectedQueryDatasetManifestDigest"],
+    )
 
     report = evaluate_molecular_predictions(
-        reference_path,
+        request.inputs["molecularCenteringReference"],
         prediction_path,
+        request.inputs["molecularTruth"],
+        query_input,
+        request.inputs["corpusAudit"],
+        request.inputs["heldRoster"],
+        request.inputs["modelCheckpoint"],
         minimum_reference_perturbations=int(
             request.config.get("minimumReferencePerturbations", 2)
         ),
@@ -57,7 +72,6 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             request.config.get("maximumAbsoluteLogScale", 20.0)
         ),
     )
-    report["inputs"]["reference"]["omfArtifactManifestDigest"] = reference_artifact
     report["inputs"]["predictions"]["omfArtifactManifestDigest"] = prediction_artifact
     output_dir = Path(os.environ["OMF_RESULT_FILE"]).parent
     report_path = output_dir / "molecular-evaluation-report.json"
@@ -74,19 +88,25 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         for species in report["species"].values()
     ]
     summary = {
-        "schema": "slp.molecular-evaluation-summary/v1",
+        "schema": "slp.molecular-evaluation-summary/v2",
         "reportSha256": report_digest,
-        "modelCheckpointSha256": report["inputs"]["predictions"][
-            "modelCheckpointSha256"
-        ],
-        "referenceManifestSha256": report["inputs"]["reference"]["manifestSha256"],
+        "modelCheckpointContentSha256": report["inputs"]["modelCheckpoint"]["contentSha256"],
+        "modelCheckpointResource": report["inputs"]["modelCheckpoint"]["resource"],
+        "centeringManifestSha256": report["inputs"]["centeringReference"]["manifestSha256"],
         "predictionManifestSha256": report["inputs"]["predictions"]["manifestSha256"],
-        "referenceArtifactManifestDigest": reference_artifact,
+        "truthManifestSha256": report["inputs"]["heldTruth"]["manifestSha256"],
+        "queryResource": report["inputs"]["molecularQuery"]["resource"],
+        "queryDatasetManifestDigest": report["inputs"]["molecularQuery"]["datasetManifestDigest"],
+        "queryManifestSha256": report["inputs"]["molecularQuery"]["queryManifestSha256"],
         "predictionArtifactManifestDigest": prediction_artifact,
+        "centeringDatasetManifestDigest": report["inputs"]["centeringReference"]["datasetManifestDigest"],
+        "truthDatasetManifestDigest": report["inputs"]["heldTruth"]["datasetManifestDigest"],
+        "corpusAuditDatasetManifestDigest": report["inputs"]["corpusAudit"]["datasetManifestDigest"],
+        "heldRosterDatasetManifestDigest": report["inputs"]["heldRoster"]["datasetManifestDigest"],
         "methodClass": report["method"]["class"],
-        "decisionScope": report["decision"]["scope"],
-        "decisionThresholds": report["decision"]["thresholds"],
-        "compatibilityScope": report["decision"]["compatibilityScope"],
+        "diagnosticScope": report["diagnostic"]["scope"],
+        "diagnosticThresholds": report["diagnostic"]["thresholds"],
+        "compatibilityScope": report["diagnostic"]["compatibilityScope"],
     }
     outputs = {
         "evaluationSummary": summary,
@@ -99,9 +119,13 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         "centroidAccuracyCommonPanel": specific["centroidAccuracyCommonPanel"],
         "minimumSpeciesPerturbedCentroidPearson": min(species_pearson),
         "benchmarkLabelRecords": report["audit"]["benchmarkLabelRecords"],
-        "heldInterventionOverlap": report["audit"]["heldInterventionOverlap"],
-        "passed": report["decision"]["passed"],
-        "compatibilityPassed": report["decision"]["compatibilityPassed"],
+        "centeringHeldInterventionOverlap": report["audit"]["centeringHeldInterventionOverlap"],
+        "strictCorpusAuditPassed": report["audit"]["strictCorpusAuditPassed"],
+        "heldRosterValidationMatch": report["audit"]["heldRosterValidationMatch"],
+        "exactTargetFreeQueryManifest": report["audit"]["exactTargetFreeQueryManifest"],
+        "exactProfilePanelJoin": report["audit"]["exactProfilePanelJoin"],
+        "diagnosticPassed": report["diagnostic"]["diagnosticPassed"],
+        "compatibilityPassed": report["diagnostic"]["compatibilityPassed"],
     }
     return ProtocolResult(
         status="ok",

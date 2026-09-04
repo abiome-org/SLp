@@ -1,0 +1,50 @@
+# Template only: render after all three DatasetSnapshot aliases and the admitted
+# corpus-audit artifact manifest digest are frozen. OMF pins each dataset's exact
+# immutable revision during run admission.
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-world-sparse-frozen
+spec:
+  graph:
+    stages:
+      - name: train-world
+        module: modules/slp-1-1-world-sparse/module.yaml
+        operation: run
+        inputs:
+          pretrain: "@@PRETRAIN_DATASET@@"
+          molecularPredictionQuery: "@@MOLECULAR_PREDICTION_QUERY_DATASET@@"
+          corpusAuditEvidence: "artifact:@@CORPUS_AUDIT_ARTIFACT_MANIFEST_DIGEST@@"
+          heldRosterEvidence: "@@HELD_ROSTER_DATASET@@"
+        config:
+          expectedCorpusAuditArtifactManifestDigest: "@@CORPUS_AUDIT_ARTIFACT_MANIFEST_DIGEST@@"
+          seed: 731
+          epochs: 12
+          drawsPerEpoch: 32
+          batchSize: 8
+          learningRate: 0.01
+          weightDecay: 0.0
+          gradientClipNorm: 1.0
+          predictionBatchSize: 64
+          dModel: 16
+          nhead: 4
+          encoderLayers: 1
+          decoderLayers: 1
+          ffnMultiplier: 2
+          dropout: 0.0
+        outputs:
+          - modelState
+          - parameterCount
+          - checkpointContentSha256
+          - predictionContentSha256
+          - trainingReportContentSha256
+          - predictionRecords
+          - predictionQueries
+          - predictionsTargetFree
+          - heldTruthAccessible
+          - omfPriorAdmissionRequired
+          - environmentAttestedNotPortable
+          - releasePortable
+          - worldCheckpoint
+          - molecularValidationPredictions
+          - trainingReport

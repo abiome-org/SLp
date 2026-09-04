@@ -90,12 +90,22 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             {
                 "name": "proteomeInterventionInventory",
                 "kind": "dataset",
-                "path": "proteome-inventory/intervention-inventory",
+                "path": "proteome-inventory/intervention-inventory/inventory.json",
+            },
+            {
+                "name": "proteomeInterventionRecords",
+                "kind": "dataset",
+                "path": "proteome-inventory/intervention-inventory/interventions.jsonl",
             },
             {
                 "name": "proteomeProteinRelations",
                 "kind": "dataset",
-                "path": "proteome-inventory/protein-relations",
+                "path": "proteome-inventory/protein-relations/manifest.json",
+            },
+            {
+                "name": "proteomeProteinRelationRecords",
+                "kind": "dataset",
+                "path": "proteome-inventory/protein-relations/relations.jsonl",
             },
             {
                 "name": "proteomeIdentityAudit",

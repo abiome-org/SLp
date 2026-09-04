@@ -106,14 +106,24 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         },
         artifacts=[
             {
-                "name": "contextOnlyPredictions",
+                "name": "contextOnlyPredictionManifest",
                 "kind": "dataset",
-                "path": str(Path("molecular-baselines") / "context-only"),
+                "path": str(Path("molecular-baselines") / "context-only" / "predictions.json"),
             },
             {
-                "name": "txpertMeanAdditivePredictions",
+                "name": "contextOnlyPredictionRecords",
                 "kind": "dataset",
-                "path": str(Path("molecular-baselines") / "txpert-mean-additive"),
+                "path": str(Path("molecular-baselines") / "context-only" / "predictions.jsonl"),
+            },
+            {
+                "name": "txpertMeanAdditivePredictionManifest",
+                "kind": "dataset",
+                "path": str(Path("molecular-baselines") / "txpert-mean-additive" / "predictions.json"),
+            },
+            {
+                "name": "txpertMeanAdditivePredictionRecords",
+                "kind": "dataset",
+                "path": str(Path("molecular-baselines") / "txpert-mean-additive" / "predictions.jsonl"),
             },
             {
                 "name": "molecularBaselineReport",

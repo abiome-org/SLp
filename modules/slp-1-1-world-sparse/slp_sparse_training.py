@@ -1,8 +1,8 @@
 """Deterministic bounded maximum-likelihood training for the sparse candidate.
 
-This is a library boundary, not an OMF checkpoint boundary. It uses only the
-pretraining corpus for optimizer updates, evaluates only the molecular-
-validation corpus, and never performs validation-selected stopping.
+This library reads molecular targets only from the pretraining corpus. Held
+truth is structurally outside the production process; prediction consumes only
+an admitted target-free query snapshot.
 """
 
 from __future__ import annotations
@@ -27,12 +27,13 @@ from slp_sparse_corpus import (
     CorpusIndex,
     DeterministicHierarchicalSampler,
     MaterializedBatch,
+    PredictionQueryIndex,
     RecordLocation,
     SparseShard,
 )
 
 
-REPORT_SCHEMA = "slp.sparse-training-report/v1"
+REPORT_SCHEMA = "slp.sparse-training-report/v2"
 
 
 @dataclass(frozen=True)
@@ -44,7 +45,7 @@ class TrainingConfig:
     learning_rate: float = 0.01
     weight_decay: float = 0.0
     gradient_clip_norm: float = 1.0
-    evaluation_batch_size: int = 64
+    prediction_batch_size: int = 64
     d_model: int = 16
     nhead: int = 4
     encoder_layers: int = 1
@@ -57,7 +58,7 @@ class TrainingConfig:
             self.epochs,
             self.draws_per_epoch,
             self.batch_size,
-            self.evaluation_batch_size,
+            self.prediction_batch_size,
             self.d_model,
             self.nhead,
             self.encoder_layers,
@@ -71,11 +72,24 @@ class TrainingConfig:
             raise ValueError("training counts and model dimensions must be positive integers")
         if not isinstance(self.seed, int) or isinstance(self.seed, bool):
             raise ValueError("seed must be an integer")
-        if not math.isfinite(self.learning_rate) or self.learning_rate <= 0:
+        numeric = (
+            self.learning_rate,
+            self.weight_decay,
+            self.gradient_clip_norm,
+            self.dropout,
+        )
+        if any(
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(value)
+            for value in numeric
+        ):
+            raise ValueError("training real-valued settings must be finite numbers")
+        if self.learning_rate <= 0:
             raise ValueError("learning_rate must be positive and finite")
-        if not math.isfinite(self.weight_decay) or self.weight_decay < 0:
+        if self.weight_decay < 0:
             raise ValueError("weight_decay must be non-negative and finite")
-        if not math.isfinite(self.gradient_clip_norm) or self.gradient_clip_norm <= 0:
+        if self.gradient_clip_norm <= 0:
             raise ValueError("gradient_clip_norm must be positive and finite")
         if not 0 <= self.dropout <= 0.5:
             raise ValueError("dropout must be between zero and 0.5")
@@ -89,8 +103,13 @@ class TrainingOutcome:
 
 @dataclass(frozen=True)
 class PredictionBatch:
-    record_id: tuple[str, ...]
-    query_id: tuple[tuple[str, ...], ...]
+    profile_id: tuple[str, ...]
+    source_id: tuple[str, ...]
+    species_taxon: tuple[int, ...]
+    centering_group: tuple[str, ...]
+    perturbation_id: tuple[str, ...]
+    intervention_ids: tuple[tuple[str, ...], ...]
+    readout_ids: tuple[tuple[str, ...], ...]
     parameters: torch.Tensor
     likelihood_type: torch.Tensor
     query_mask: torch.Tensor
@@ -123,28 +142,14 @@ class _ShardAccessAudit:
         return shard
 
 
-@dataclass(frozen=True)
-class _Evaluation:
-    nll_sum: float
-    observed_targets: int
-    by_source: dict[str, tuple[float, int]]
-    by_species: dict[str, tuple[float, int]]
-    by_species_source: dict[str, tuple[float, int]]
-    prediction_sha256: str
-
-    @property
-    def per_observed_target_nll(self) -> float:
-        return self.nll_sum / self.observed_targets
-
-
 def train_sparse_world(
     pretrain: CorpusIndex,
-    molecular_validation: CorpusIndex,
     config: TrainingConfig,
 ) -> TrainingOutcome:
-    """Fit a fixed-epoch candidate and return deterministic in-memory evidence."""
+    """Fit a fixed-epoch model from pretraining targets only."""
 
-    _validate_corpus_boundary(pretrain, molecular_validation)
+    if pretrain.role != "pretrain":
+        raise ValueError("optimizer input must have the pretrain role")
     model_config = pretrain.world_config(
         d_model=config.d_model,
         nhead=config.nhead,
@@ -169,13 +174,6 @@ def train_sparse_world(
         )
         access = _ShardAccessAudit.create()
         sampler, location_source = _build_pretrain_sampler(pretrain, config.seed, access)
-        validation_before = _evaluate(
-            model,
-            molecular_validation,
-            config.evaluation_batch_size,
-            access,
-            "validation-before",
-        )
         epoch_mean_record_nll: list[float] = []
         epoch_schedule_sha256: list[str] = []
         source_draws = {source: 0 for source in pretrain.sources}
@@ -208,32 +206,21 @@ def train_sparse_world(
             if total_records != config.draws_per_epoch:
                 raise ValueError("pretraining schedule record count drifted")
             epoch_mean_record_nll.append(total_record_nll / total_records)
-        validation_after = _evaluate(
-            model,
-            molecular_validation,
-            config.evaluation_batch_size,
-            access,
-            "validation-after",
-        )
         parameter_digest = model_parameter_sha256(model)
-        validation_report = _comparison(validation_before, validation_after)
         report: dict[str, Any] = {
             "schema": REPORT_SCHEMA,
             "config": asdict(config),
             "modelConfig": model_config.as_dict(),
             "parameterCount": model.count_parameters(),
             "modelParameterSha256": parameter_digest,
-            "validationPredictionSha256": validation_after.prediction_sha256,
             "corpora": {
                 "pretrain": _corpus_identity(pretrain),
-                "molecularValidation": _corpus_identity(molecular_validation),
             },
             "isolation": {
                 "pretrainRole": pretrain.role,
-                "validationRole": molecular_validation.role,
-                "trajectoryGeneOverlap": [],
                 "benchmarkLabelsPresent": False,
-                "validationUsedForOptimization": False,
+                "heldTruthAccessible": False,
+                "predictionQueryUsedForOptimization": False,
                 "selection": "fixed-final-epoch",
             },
             "training": {
@@ -249,7 +236,6 @@ def train_sparse_world(
                 "sourceDrawsByEpoch": source_draws_by_epoch,
                 "optimizer": "AdamW",
             },
-            "validation": validation_report,
             "streaming": {
                 "denseRecordByDictionaryTargetAllocated": False,
                 "maxShardRecordsLoaded": access.max_records_loaded,
@@ -307,97 +293,55 @@ def equal_record_negative_log_likelihood(
 
 def iter_sparse_predictions(
     model: SparseTypedWorldModel,
-    molecular_validation: CorpusIndex,
+    molecular_query: PredictionQueryIndex,
     batch_size: int = 64,
 ) -> Iterable[PredictionBatch]:
-    """Yield bounded deterministic validation predictions with provenance IDs."""
+    """Yield bounded predictions from a structurally target-free query snapshot."""
 
-    if molecular_validation.role != "molecular-validation":
-        raise ValueError("prediction may read only the molecular-validation role")
     if not isinstance(batch_size, int) or isinstance(batch_size, bool) or batch_size <= 0:
         raise ValueError("prediction batch_size must be a positive integer")
     was_training = model.training
     model.eval()
     try:
         with torch.inference_mode():
-            for shard_index in range(len(molecular_validation.shards)):
-                shard = molecular_validation.load_shard(shard_index)
-                for start in range(0, shard.records, batch_size):
-                    rows = list(range(start, min(start + batch_size, shard.records)))
-                    batch = molecular_validation.materialize_batch(shard, rows)
+            for shard_index in range(len(molecular_query.shards)):
+                pending: list[dict[str, object]] = []
+                for record in molecular_query.iter_records(shard_index):
+                    pending.append(record)
+                    if len(pending) < batch_size:
+                        continue
+                    batch = molecular_query.materialize(pending)
                     prediction = model(batch.world)
-                    query_ids: list[tuple[str, ...]] = []
-                    for row in rows:
-                        panel = int(shard.arrays["query_panel_index"][row])
-                        panel_start = int(molecular_validation.panel_indptr[panel])
-                        panel_stop = int(molecular_validation.panel_indptr[panel + 1])
-                        query_ids.append(
-                            tuple(
-                                str(molecular_validation.query_id[int(item)])
-                                for item in molecular_validation.panel_query_index[
-                                    panel_start:panel_stop
-                                ]
-                            )
-                        )
                     yield PredictionBatch(
-                        record_id=batch.provenance.record_id,
-                        query_id=tuple(query_ids),
+                        profile_id=tuple(str(item["profileId"]) for item in pending),
+                        source_id=tuple(str(item["sourceId"]) for item in pending),
+                        species_taxon=tuple(int(item["speciesTaxon"]) for item in pending),
+                        centering_group=tuple(str(item["centeringGroup"]) for item in pending),
+                        perturbation_id=tuple(str(item["perturbationId"]) for item in pending),
+                        intervention_ids=tuple(tuple(item["interventionIds"]) for item in pending),
+                        readout_ids=tuple(tuple(item["readoutIds"]) for item in pending),
+                        parameters=prediction.parameters.detach().clone(),
+                        likelihood_type=prediction.likelihood_type.detach().clone(),
+                        query_mask=prediction.query_mask.detach().clone(),
+                    )
+                    pending = []
+                if pending:
+                    batch = molecular_query.materialize(pending)
+                    prediction = model(batch.world)
+                    yield PredictionBatch(
+                        profile_id=tuple(str(item["profileId"]) for item in pending),
+                        source_id=tuple(str(item["sourceId"]) for item in pending),
+                        species_taxon=tuple(int(item["speciesTaxon"]) for item in pending),
+                        centering_group=tuple(str(item["centeringGroup"]) for item in pending),
+                        perturbation_id=tuple(str(item["perturbationId"]) for item in pending),
+                        intervention_ids=tuple(tuple(item["interventionIds"]) for item in pending),
+                        readout_ids=tuple(tuple(item["readoutIds"]) for item in pending),
                         parameters=prediction.parameters.detach().clone(),
                         likelihood_type=prediction.likelihood_type.detach().clone(),
                         query_mask=prediction.query_mask.detach().clone(),
                     )
     finally:
         model.train(was_training)
-
-
-def _validate_corpus_boundary(
-    pretrain: CorpusIndex, molecular_validation: CorpusIndex
-) -> None:
-    if pretrain.role != "pretrain":
-        raise ValueError("optimizer input must have the pretrain role")
-    if molecular_validation.role != "molecular-validation":
-        raise ValueError("evaluation input must have the molecular-validation role")
-    overlap = sorted(pretrain.trajectory_genes & molecular_validation.trajectory_genes)
-    if overlap:
-        raise ValueError(
-            "validation intervention genes occur in pretrain quantitative trajectories: "
-            + ", ".join(overlap)
-        )
-    compatibility = (
-        "entity_feature_dim",
-        "species_feature_dim",
-        "entity_types",
-        "context_types",
-        "action_types",
-        "covariates",
-        "readouts",
-        "feature_pack_revision",
-        "feature_pack_sha256",
-        "normalization_id",
-        "value_space",
-    )
-    mismatches = [
-        name
-        for name in compatibility
-        if getattr(pretrain, name) != getattr(molecular_validation, name)
-    ]
-    if mismatches:
-        raise ValueError(
-            "pretrain and molecular-validation model contracts differ: "
-            + ", ".join(mismatches)
-        )
-    for taxon in sorted(
-        set(pretrain.species_taxa) & set(molecular_validation.species_taxa)
-    ):
-        if (
-            pretrain.species_feature_value[taxon]
-            != molecular_validation.species_feature_value[taxon]
-            or pretrain.species_feature_present[taxon]
-            != molecular_validation.species_feature_present[taxon]
-        ):
-            raise ValueError(
-                f"species feature contract differs for shared taxon {taxon}"
-            )
 
 
 def _build_pretrain_sampler(
@@ -506,176 +450,16 @@ def _train_batch(
     return record_nll_sum, total_records
 
 
-def _evaluate(
-    model: SparseTypedWorldModel,
-    corpus: CorpusIndex,
-    batch_size: int,
-    access: _ShardAccessAudit,
-    phase: str,
-) -> _Evaluation:
-    if corpus.role != "molecular-validation":
-        raise ValueError("evaluation may read only the molecular-validation role")
-    digest = hashlib.sha256()
-    digest.update(b"slp.sparse-predictions/v1\0")
-    total_sum = 0.0
-    total_count = 0
-    by_source: dict[str, list[float | int]] = defaultdict(lambda: [0.0, 0])
-    by_species: dict[str, list[float | int]] = defaultdict(lambda: [0.0, 0])
-    by_species_source: dict[str, list[float | int]] = defaultdict(lambda: [0.0, 0])
-    was_training = model.training
-    model.eval()
-    try:
-        with torch.inference_mode():
-            for shard_index in range(len(corpus.shards)):
-                shard = access.load(corpus, shard_index, phase)
-                for start in range(0, shard.records, batch_size):
-                    rows = list(range(start, min(start + batch_size, shard.records)))
-                    batch = corpus.materialize_batch(shard, rows)
-                    prediction = model(batch.world)
-                    terms = negative_log_likelihood_terms(
-                        prediction, batch.target_value, batch.target_observed
-                    )
-                    _update_prediction_digest(
-                        digest, corpus, shard, rows, batch, prediction.parameters
-                    )
-                    for local_row in range(len(rows)):
-                        observed = batch.target_observed[local_row]
-                        count = int(observed.sum().item())
-                        value = float(terms[local_row][observed].sum().item())
-                        source_index = int(batch.provenance.source_index[local_row].item())
-                        source = corpus.sources[source_index]
-                        species = str(
-                            int(batch.provenance.species_taxon[local_row].item())
-                        )
-                        joint = f"{species}|{source}"
-                        total_sum += value
-                        total_count += count
-                        _accumulate(by_source[source], value, count)
-                        _accumulate(by_species[species], value, count)
-                        _accumulate(by_species_source[joint], value, count)
-    finally:
-        model.train(was_training)
-    if total_count <= 0:
-        raise ValueError("molecular validation has no observed targets")
-    return _Evaluation(
-        nll_sum=total_sum,
-        observed_targets=total_count,
-        by_source=_freeze_groups(by_source),
-        by_species=_freeze_groups(by_species),
-        by_species_source=_freeze_groups(by_species_source),
-        prediction_sha256=digest.hexdigest(),
-    )
-
-
-def _update_prediction_digest(
-    digest: Any,
-    corpus: CorpusIndex,
-    shard: SparseShard,
-    rows: Sequence[int],
-    batch: MaterializedBatch,
-    parameters: torch.Tensor,
-) -> None:
-    identifiers: list[dict[str, Any]] = []
-    for row in rows:
-        panel = int(shard.arrays["query_panel_index"][row])
-        start = int(corpus.panel_indptr[panel])
-        stop = int(corpus.panel_indptr[panel + 1])
-        query_indices = corpus.panel_query_index[start:stop]
-        identifiers.append(
-            {
-                "recordId": str(shard.arrays["record_id"][row]),
-                "queryIds": [str(corpus.query_id[int(item)]) for item in query_indices],
-            }
-        )
-    digest.update(
-        json.dumps(identifiers, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    )
-    for tensor in (
-        parameters,
-        batch.world.likelihood_type,
-        batch.world.query_mask,
-    ):
-        value = tensor.detach().cpu().contiguous().numpy()
-        digest.update(value.dtype.str.encode("ascii") + b"\0")
-        digest.update(json.dumps(value.shape, separators=(",", ":")).encode("ascii"))
-        digest.update(b"\0" + value.tobytes(order="C"))
-
-
-def _comparison(before: _Evaluation, after: _Evaluation) -> dict[str, Any]:
-    if before.observed_targets != after.observed_targets:
-        raise ValueError("validation target population changed during training")
-
-    def compare_groups(
-        earlier: dict[str, tuple[float, int]], later: dict[str, tuple[float, int]]
-    ) -> dict[str, dict[str, float | int]]:
-        if set(earlier) != set(later):
-            raise ValueError("validation strata changed during training")
-        result: dict[str, dict[str, float | int]] = {}
-        for key in sorted(earlier):
-            before_sum, before_count = earlier[key]
-            after_sum, after_count = later[key]
-            if before_count != after_count or before_count <= 0:
-                raise ValueError("validation stratum target count changed")
-            initialization_nll = before_sum / before_count
-            final_nll = after_sum / after_count
-            result[key] = {
-                "observedTargets": before_count,
-                "initializationPerObservedTargetNll": initialization_nll,
-                "finalPerObservedTargetNll": final_nll,
-                "descriptiveImprovement": initialization_nll - final_nll,
-            }
-        return result
-
-    by_source = compare_groups(before.by_source, after.by_source)
-    by_species = compare_groups(before.by_species, after.by_species)
-    by_species_source = compare_groups(
-        before.by_species_source, after.by_species_source
-    )
-    return {
-        "metric": "mean-nll-per-observed-molecular-target",
-        "comparison": "descriptive-initialization-to-fixed-final-epoch",
-        "decisionUse": "frozen-molecular-gate-only",
-        "scientificBaselineComparison": False,
-        "overall": {
-            "observedTargets": before.observed_targets,
-            "initializationPerObservedTargetNll": before.per_observed_target_nll,
-            "finalPerObservedTargetNll": after.per_observed_target_nll,
-            "descriptiveImprovement": (
-                before.per_observed_target_nll - after.per_observed_target_nll
-            ),
-        },
-        "bySource": by_source,
-        "bySpecies": by_species,
-        "bySpeciesSource": by_species_source,
-        "minimumSourceDescriptiveImprovement": min(
-            float(value["descriptiveImprovement"]) for value in by_source.values()
-        ),
-        "minimumSpeciesDescriptiveImprovement": min(
-            float(value["descriptiveImprovement"]) for value in by_species.values()
-        ),
-    }
-
-
 def _corpus_identity(corpus: CorpusIndex) -> dict[str, Any]:
     return {
         "datasetId": corpus.dataset_id,
         "version": corpus.version,
         "role": corpus.role,
         "contentDigest": corpus.content_digest,
-        "trajectoryGenes": sorted(corpus.trajectory_genes),
-    }
-
-
-def _accumulate(accumulator: list[float | int], value: float, count: int) -> None:
-    accumulator[0] = float(accumulator[0]) + value
-    accumulator[1] = int(accumulator[1]) + count
-
-
-def _freeze_groups(
-    value: dict[str, list[float | int]]
-) -> dict[str, tuple[float, int]]:
-    return {
-        key: (float(items[0]), int(items[1])) for key, items in sorted(value.items())
+        "trajectoryGeneCount": len(corpus.trajectory_genes),
+        "trajectoryGeneSetSha256": _canonical_sha256(
+            sorted(corpus.trajectory_genes)
+        ),
     }
 
 

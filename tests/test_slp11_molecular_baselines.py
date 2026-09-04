@@ -23,6 +23,22 @@ from baselines import (  # noqa: E402
 
 
 class MolecularBaselineTest(unittest.TestCase):
+    def test_omf_artifacts_are_file_valued(self) -> None:
+        main_text = (MODULE / "main.py").read_text(encoding="utf-8")
+        for relative_file in (
+            '"context-only" / "predictions.json"',
+            '"context-only" / "predictions.jsonl"',
+            '"txpert-mean-additive" / "predictions.json"',
+            '"txpert-mean-additive" / "predictions.jsonl"',
+            'Path("molecular-baselines") / "baseline-report.json"',
+        ):
+            self.assertIn(relative_file, main_text)
+        self.assertNotIn('"path": str(Path("molecular-baselines") / "context-only"),', main_text)
+        self.assertNotIn(
+            '"path": str(Path("molecular-baselines") / "txpert-mean-additive"),',
+            main_text,
+        )
+
     readouts = ["RNA:r1", "RNA:r2", "RNA:r3"]
 
     def _profile(

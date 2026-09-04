@@ -4,14 +4,26 @@ metadata:
   name: slp-1-1-molecular-artifact
 spec:
   metrics:
-    - name: molecular-profile-gate
-      output: molecular.passed
+    - name: molecular-profile-diagnostic-only
+      output: molecular.diagnosticPassed
       minimum: 1
     - name: molecular-artifact-compatibility
       output: molecular.compatibilityPassed
       minimum: 1
-    - name: held-intervention-overlap
-      output: molecular.heldInterventionOverlap
+    - name: strict-corpus-audit
+      output: molecular.strictCorpusAuditPassed
+      minimum: 1
+    - name: frozen-held-roster-match
+      output: molecular.heldRosterValidationMatch
+      minimum: 1
+    - name: target-free-query-manifest-match
+      output: molecular.exactTargetFreeQueryManifest
+      minimum: 1
+    - name: exact-profile-panel-join
+      output: molecular.exactProfilePanelJoin
+      minimum: 1
+    - name: centering-held-intervention-overlap
+      output: molecular.centeringHeldInterventionOverlap
       maximum: 0
     - name: benchmark-label-records
       output: molecular.benchmarkLabelRecords
@@ -29,6 +41,8 @@ spec:
   extensions:
     benchmarkAccess: forbidden
     selectionClass: molecular-only
-    scope: separately admitted evaluation of frozen molecular artifacts
-    compatibilityScope: immutable molecular reference/prediction artifact contract only
+    scope: diagnostic-only evaluation of five separate DatasetSnapshots, one target-free prediction artifact, and exact checkpoint bytes
+    compatibilityScope: target-free typed predictions exact-joined to evaluator-only held truth with independent admitted audit and roster
+    advancementGate: false
+    advancementRequires: frozen baseline NLL deltas plus the complete MODEL_CARD rule
     doesNotAuthorize: model release or portable-inference claims

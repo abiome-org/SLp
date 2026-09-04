@@ -59,13 +59,16 @@ inputs. Checksum-pinned entity, query and panel dictionaries provide
 provenance, while the network receives feature vectors, presence masks and
 ontology-type indices. Targets are record-local CSR query/value lists rather
 than a dense record-by-global-readout tensor. Gaussian and negative-binomial
-heads share the world representation but retain distinct likelihoods. A
-deterministic bounded AdamW library now exercises the sparse candidate with
-pretraining-only updates, equal scheduled-record weighting and fixed validation
-diagnostics. It is not wired to an OMF training entry point and emits no
-checkpoint. A count-specific library-size offset is also not implemented; this
-candidate cannot be selected until the relevant likelihood contract, admitted
-biological training path and molecular comparisons pass.
+heads share the world representation but retain distinct likelihoods. Its OMF
+training entry point performs deterministic bounded AdamW fitting from the
+pretraining snapshot alone, weights scheduled records equally, and emits
+timestamp-free bounded checkpoint bytes plus target-free validation-query
+predictions. Protected validation truth is structurally absent from that run
+and is joined only by the independent evaluator. A count-specific library-size
+offset is not implemented, and the v1 target-free query omits context and
+continuous covariates. This candidate cannot be selected until those relevant
+likelihood/query contracts, the admitted biological training path, and all
+frozen molecular baseline comparisons pass.
 
 Species is an explicit continuous feature block, not inferred from gene names.
 Yeast observations retain yeast identifiers and experimental context. Orthology
@@ -117,10 +120,11 @@ also blocked until released query and action feature vectors exist.
 
 No SLp-1.1 model is released. The repository contains the OMF project boundary,
 corpus leakage auditor, outcome-blind held-intervention roster, typed sparse
-world-candidate contract and optimizer library, workload contracts, SGD
-stable-identity normalizer, molecular point baselines, and molecular evaluator.
-The sparse OMF module still validates architecture and corpus semantics only;
-it does not train or emit a checkpoint.
+world-candidate and OMF trainer, workload contracts, SGD stable-identity
+normalizer, molecular point baselines, and target-separated molecular evaluator.
+The sparse module can train and emit deterministic checkpoints and target-free
+predictions, but it has not yet run on an admitted quantitative biological
+corpus and therefore supplies no candidate-selection or performance evidence.
 
 The exact SGD 2026-08-28 identity snapshot is admitted under CC-BY-4.0, and its
 network-denied OMF normalization run produced immutable current-ORF, typed
@@ -139,9 +143,11 @@ large model artifact—to the inference adapter. A portable SLp release therefor
 requires an upstream artifact-to-adapter contract before promotion; absolute
 run paths or model weights serialized into metadata are forbidden workarounds.
 The same OMF revision also cannot pin a newly produced artifact for a dependent
-stage in the same workload. Training and molecular evaluation therefore use two
-separately admitted runs with the exact prediction-artifact digest pinned in
-the second run until that upstream contract is fixed.
+stage in the same workload. Corpus audit, training, and molecular evaluation
+therefore use separate admitted runs with exact prior artifact digests pinned
+at each boundary until that upstream contract is fixed. The current trainer
+also records a release blocker until factory policy independently proves that
+its pinned audit artifact came from the admitted corpus-audit module and run.
 Only the built-in Linux-local binding is currently declared. Scaling beyond one
 host also requires a tested `omf.executor/v1` provider; launching Modal from a
 network-denied training module is not an executor integration.

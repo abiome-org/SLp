@@ -8,13 +8,54 @@ spec:
   environment:
     dependencyLock: requirements.lock
     dependencyDigest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-  checkpoint: false
+  checkpoint: true
   contracts:
     input:
       type: object
-      required: [corpus]
+      required: [pretrain, molecularPredictionQuery, corpusAuditEvidence, heldRosterEvidence]
       properties:
-        corpus:
+        pretrain:
+          type: object
+          required: [manifestDigest, mode, path, resource]
+          properties:
+            manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            resource:
+              type: string
+              pattern: "^omf://[^/\\s]+/[^/\\s]+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+          additionalProperties: false
+        molecularPredictionQuery:
+          type: object
+          required: [manifestDigest, mode, path, resource]
+          properties:
+            manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            resource:
+              type: string
+              pattern: "^omf://[^/\\s]+/[^/\\s]+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+          additionalProperties: false
+        corpusAuditEvidence:
+          type: object
+          required: [resource, kind, artifacts, paths, path]
+          properties:
+            resource: {type: string, pattern: "^artifact:sha256:[0-9a-f]{64}$"}
+            kind: {const: artifact}
+            artifacts:
+              type: object
+              required: [payload]
+              properties:
+                payload: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+              additionalProperties: false
+            paths:
+              type: object
+              required: [payload]
+              properties: {payload: {type: string, minLength: 1}}
+              additionalProperties: false
+            path: {type: string, minLength: 1}
+          additionalProperties: false
+        heldRosterEvidence:
           type: object
           required: [manifestDigest, mode, path, resource]
           properties:
@@ -29,50 +70,123 @@ spec:
     output:
       type: object
       required:
-        - contractState
+        - modelState
         - parameterCount
-        - recordCount
-        - targetValueCount
-        - sourceScheduleCounts
+        - checkpointContentSha256
+        - predictionContentSha256
+        - trainingReportContentSha256
+        - predictionRecords
+        - predictionQueries
+        - predictionsTargetFree
+        - heldTruthAccessible
+        - omfPriorAdmissionRequired
+        - environmentAttestedNotPortable
+        - releasePortable
       properties:
-        contractState: {type: object}
+        modelState: {type: object}
         parameterCount: {type: integer, minimum: 0}
-        recordCount: {type: integer, minimum: 0}
-        targetValueCount: {type: integer, minimum: 0}
-        sourceScheduleCounts: {type: object}
+        checkpointContentSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        predictionContentSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        trainingReportContentSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        predictionRecords: {type: integer, minimum: 0}
+        predictionQueries: {type: integer, minimum: 0}
+        predictionsTargetFree: {const: true}
+        heldTruthAccessible: {const: false}
+        omfPriorAdmissionRequired: {const: true}
+        environmentAttestedNotPortable: {const: true}
+        releasePortable: {const: false}
       additionalProperties: false
     config:
       type: object
+      required: [expectedCorpusAuditArtifactManifestDigest]
       properties:
+        expectedCorpusAuditArtifactManifestDigest:
+          type: string
+          pattern: "^sha256:[0-9a-f]{64}$"
         seed: {type: integer}
-        scheduleRecords: {type: integer, minimum: 1}
-        dModel: {type: integer, minimum: 8}
-        nhead: {type: integer, minimum: 1}
-        encoderLayers: {type: integer, minimum: 1}
-        decoderLayers: {type: integer, minimum: 1}
-        ffnMultiplier: {type: integer, minimum: 1}
+        epochs: {type: integer, minimum: 1, maximum: 10000}
+        drawsPerEpoch: {type: integer, minimum: 1, maximum: 10000000}
+        batchSize: {type: integer, minimum: 1, maximum: 65536}
+        learningRate: {type: number, exclusiveMinimum: 0, maximum: 10}
+        weightDecay: {type: number, minimum: 0, maximum: 10}
+        gradientClipNorm: {type: number, exclusiveMinimum: 0, maximum: 1000000}
+        predictionBatchSize: {type: integer, minimum: 1, maximum: 65536}
+        dModel: {type: integer, minimum: 8, maximum: 2048}
+        nhead: {type: integer, minimum: 1, maximum: 256}
+        encoderLayers: {type: integer, minimum: 1, maximum: 48}
+        decoderLayers: {type: integer, minimum: 1, maximum: 48}
+        ffnMultiplier: {type: integer, minimum: 1, maximum: 16}
         dropout: {type: number, minimum: 0, maximum: 0.5}
       additionalProperties: false
     state:
-      type: object
+      oneOf:
+        - type: object
+          maxProperties: 0
+        - type: object
+          required: [schema, validationOnly]
+          properties:
+            schema: {const: slp.world-sparse-state/v2}
+            validationOnly: {const: true}
+          additionalProperties: false
+        - type: object
+          minProperties: 1
+          required:
+            - schema
+            - checkpointContentSha256
+            - predictionContentSha256
+            - predictionsTargetFree
+            - heldTruthAccessible
+            - environmentAttestedNotPortable
+            - releasePortable
+          properties:
+            schema: {const: slp.world-sparse-state/v2}
+            checkpointContentSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+            predictionContentSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+            predictionsTargetFree: {const: true}
+            heldTruthAccessible: {const: false}
+            environmentAttestedNotPortable: {const: true}
+            releasePortable: {const: false}
+          additionalProperties: true
   fixtures:
     - request:
         operation: validate
         inputs:
-          corpus:
+          pretrain:
             manifestDigest: sha256:0000000000000000000000000000000000000000000000000000000000000000
             mode: copy
             path: validation-only
-            resource: omf://abiome/slp/datasetsnapshot/validation-only@sha256:0000000000000000000000000000000000000000000000000000000000000000
-        config: {}
+            resource: omf://abiome/slp/datasetsnapshot/validation-only-pretrain@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          molecularPredictionQuery:
+            manifestDigest: sha256:1111111111111111111111111111111111111111111111111111111111111111
+            mode: copy
+            path: validation-only
+            resource: omf://abiome/slp/datasetsnapshot/validation-only-query@sha256:1111111111111111111111111111111111111111111111111111111111111111
+          corpusAuditEvidence:
+            resource: artifact:sha256:2222222222222222222222222222222222222222222222222222222222222222
+            kind: artifact
+            artifacts: {payload: sha256:2222222222222222222222222222222222222222222222222222222222222222}
+            paths: {payload: validation-only}
+            path: validation-only
+          heldRosterEvidence:
+            manifestDigest: sha256:3333333333333333333333333333333333333333333333333333333333333333
+            mode: copy
+            path: validation-only
+            resource: omf://abiome/slp/datasetsnapshot/validation-only-roster@sha256:3333333333333333333333333333333333333333333333333333333333333333
+        config:
+          expectedCorpusAuditArtifactManifestDigest: sha256:2222222222222222222222222222222222222222222222222222222222222222
         state: {}
       result:
         status: ok
         outputs:
-          contractState:
-            schema: slp.world-sparse-contract/v1.1
-            validationOnly: true
+          modelState: {schema: slp.world-sparse-state/v2, validationOnly: true}
           parameterCount: 0
-          recordCount: 0
-          targetValueCount: 0
-          sourceScheduleCounts: {}
+          checkpointContentSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          predictionContentSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          trainingReportContentSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          predictionRecords: 0
+          predictionQueries: 0
+          predictionsTargetFree: true
+          heldTruthAccessible: false
+          omfPriorAdmissionRequired: true
+          environmentAttestedNotPortable: true
+          releasePortable: false

@@ -53,7 +53,10 @@ class WorldConfig:
             self.decoder_layers,
             self.ffn_multiplier,
         )
-        if any(value <= 0 for value in positive):
+        if any(
+            not isinstance(value, int) or isinstance(value, bool) or value <= 0
+            for value in positive
+        ):
             raise ValueError("model and ontology dimensions must be positive")
         covariate_dims = (
             self.record_covariate_dim,
@@ -61,11 +64,19 @@ class WorldConfig:
             self.action_covariate_dim,
             self.observation_covariate_dim,
         )
-        if any(value < 0 for value in covariate_dims):
+        if any(
+            not isinstance(value, int) or isinstance(value, bool) or value < 0
+            for value in covariate_dims
+        ):
             raise ValueError("covariate dimensions cannot be negative")
         if self.d_model % self.nhead:
             raise ValueError("d_model must be divisible by nhead")
-        if not 0 <= self.dropout <= 0.5:
+        if (
+            not isinstance(self.dropout, (int, float))
+            or isinstance(self.dropout, bool)
+            or not math.isfinite(self.dropout)
+            or not 0 <= self.dropout <= 0.5
+        ):
             raise ValueError("dropout must be between 0 and 0.5")
 
     def as_dict(self) -> dict[str, int | float]:
