@@ -2001,3 +2001,185 @@ remained closed, and this milestone supports no transfer, performance, novelty,
 frontier, release, or SOTA claim. The next boundary is a new composite-keyed
 corpus contract and consumer; the historical bare-ID implementations remain
 frozen.
+
+## 2026-09-04 — composite-keyed proteome corpus v1.2
+
+**Hypothesis, fixed rule, modalities, and snapshots.** The falsifiable
+composition hypothesis was that the exact admitted pretraining observations,
+static sequence-statistics block, and outcome-blind held-intervention roster
+could be joined into a model-facing corpus using `(ncbiTaxon, entityId)` at
+every identity boundary without changing a quantitative target byte or static
+feature byte and without admitting any protected intervention. Advancement was
+fixed before execution: two clean governed runs had to emit byte-identical
+canonical archives and audits; protected-intervention overlap had to equal
+zero; benchmark and reward flags had to remain false; all 3,811 records,
+6,865,493 targets, 7,037 feature rows, and 3,679 trajectory interventions had
+to survive exact independent validation. Any mismatch stopped advancement.
+
+Accessible modalities were quantitative *Saccharomyces cerevisiae* proteome
+responses and the deterministic 21-dimensional protein sequence-statistics
+baseline. The module had no molecular-validation or molecular-final outcomes,
+reward records, synthetic-lethality labels, checkpoint, prediction, or external
+benchmark input. Its exact DatasetSnapshot inputs were:
+
+- fitting observations
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-observation-pretrain-v1@sha256:631f66e32a218e167af9edb60115a04514d0bcf675a13bcb244c465ffab2f751`,
+  outer manifest
+  `sha256:0bc00463f8641fc91d6fcb82266b6f41d4c55cc78275b737eaad257dd2053130`,
+  tree
+  `sha256:fc1f812308af999c601bee9b53ce21035bdd6fd9952cead11451c72b612a833f`;
+- static features
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-sequence-statistics-feature-block-v1@sha256:e9733974c551bca3af93c4cb488972f5167da5e7e3cf48ef5803348cd20d91e5`,
+  outer manifest
+  `sha256:6b4b32c794d7787b9b9076d78726ea0ad7706d64fd82b5f918f0c6da20da0d2a`,
+  tree
+  `sha256:3f4549114a181c162596d60ef1b94d222ec494282d23ece8da7e19142135cb8d`;
+- outcome-blind held roster
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450`,
+  outer manifest
+  `sha256:f8aac504a2d56fdc9e13cc9b1c9fa87a08ebc7ff2d7036c0b6b135c26d187425`,
+  tree
+  `sha256:ba62f5855f46e693f2a27f4ed06efeec046ccd99c9993c145f9983807dfed0b1`.
+
+**Implemented contracts and adversarial review.** Commit `2c2f25b` added the
+self-contained `slp-1-1-proteome-corpus-compose-v1` module, strict
+`slp.corpus/v1.2` schema, workload template, and focused tests. It requires
+exactly those three snapshots; constructs canonical action identifiers from
+composite keys; rejects opaque query identities; preserves target and feature
+bytes; and emits deterministic uncompressed NPZ members inside canonical
+USTAR. Commit `84d5552` added the independent
+`slp-1-1-training-corpus-audit-v1-4` module and hardened member paths to
+POSIX-only relative names without backslashes, whitespace, empty segments,
+drive prefixes, or `.`/`..` traversal. The audit verifies canonical entity,
+query, panel, feature, trajectory and shard structure; shapes and dtypes;
+species and covariate fields; target-panel membership; compound actions;
+exact lineage and feature-pack hashes; and a recipient-bound signed custodian
+authorization. Historical numerical modules were not modified.
+
+The final composition module package and source-artifact manifest are
+`sha256:6e46a366f9ce9768f63eff52d975052769708d63cacaa941fd4bc9eb38b88798`
+and
+`sha256:a1e43a368c10323440fcc768c1fa18a9257a9bec1714168505011c2de147834d`.
+The v1.4 audit package and source-artifact manifest are
+`sha256:870e4cd9c26cd76dec36d8717eb5e856d3296d259ef8de8b171ffd6eed45e849`
+and
+`sha256:405d3bc5a8949ff6a27b2014062fbbf11275239be0d9546fc1d045e8c90dce2e`;
+its 303-byte dependency lock has SHA-256
+`9eca4b24f57234e5479dc6b3b8c0e46039be34014d2141410a3a6bef60e7b57e`.
+Module and schema validation passed. The production trust key is intentionally
+unprovisioned, so the audit fails closed outside its ephemeral-key test fixture
+and no signed v1.4 workload or training handoff exists.
+
+The focused producer and workload suite passed 10 tests; v1.4 audit tests
+passed 25 with one skipped; combined v1.3/v1.4 audit tests passed 38 with one
+skipped; and Linux schema-plus-audit validation passed 36 tests. After the
+derived-rights test was added, the full governed `tests/` suite passed 263
+tests with 20 skipped and 17 existing PyTorch nested-tensor warnings. Ruff and
+`git diff --check` were clean apart from Git's configured LF-to-CRLF notices.
+
+**OMF execution and byte-level result.** The composition WorkloadSpec revision
+is
+`sha256:80b21b446363454f60a07499126cd16387d34fac50c6ee9085651bdf655f5bc4`,
+with spec digest
+`sha256:ad7396e20487b96f2bd50aaf276eb4941b032671b0b2dfe0bdd5d179388876df`.
+The admitted run-status workload and binding digests are
+`sha256:141f1c0aee727feee82c540fd3c2b4af03d9dc53aaba46de8421f60916d6d9de`
+and
+`sha256:5dc181c5643d2a98ec43b1c79791764e4f5ba5ad4edbd5730d7f455ced4d6e2f`.
+Preflight was ready with network denied.
+
+Runs `01a06e27-c6b8-7eee-ba08-54c27d8ada57` and
+`01a06e28-2f3f-7ccb-b71d-8b7654fc26ca` both succeeded. Their immutable results
+are respectively
+`omf://abiome/slp/runresult/result-01a06e27-c6b8-7eee-ba08-54c27d8ada57@sha256:8d4362b2d77d855abea6357b6e34abc0b2052fdc71675355548ded16390d9281`
+and
+`omf://abiome/slp/runresult/result-01a06e28-2f3f-7ccb-b71d-8b7654fc26ca@sha256:58116fb6b3a075ff188d47141d326cd55d895d43cf2f18666b35ae371501348d`.
+Both emitted the same 89,149,440-byte `corpus-v1-2.tar`, SHA-256
+`0a5322c46e15e8a15d17000e8993c0ad642fcc70bc8fff00cbba8fb2905708bf`,
+and the same 5,277-byte `corpus-compose-audit.json`, SHA-256
+`898e4069b2bd9575bd7380b57ed6214bf3d75043feb401c0fa50371972623c52`.
+Independent review confirmed that each output directory contains only those
+two regular files and that the archive has exactly 13 canonical
+`composite-corpus/` members.
+
+The two runs' corpus artifact manifests are
+`sha256:9c208900fc871b2a60ceddb1a5d72ea5670a327feea4b2bdf39f92132376a0c6`
+and
+`sha256:fb4fa62ccd06b921947bccc01f4ebb4155d4239df74a644e5105962c5cf7198f`;
+their audit manifests are
+`sha256:ae9e3fa7ee9207dae17fef63b906f218904fdf5a18d534534801dd96a7bac286`
+and
+`sha256:bf3f020466c284f2814f6cee7ed2569417ed9b7ba49258ef78e03936114c0d2e`.
+Manifest identity differs because OMF binds each run context; payload identity
+is exact.
+
+The archive contains 7,038 entities, comprising the 7,037 static biological
+entities and one taxon-4932 experimental context; 7,037 feature rows; 1,850
+queries; one panel; 3,679 trajectory interventions; 3,811 records; 6,865,493
+finite target values; and eight shards. Its corpus-manifest, entity-key-set,
+feature-entity-key-set, and feature-pack digests are respectively
+`d91cbbc0b98ea05ccbf56201f50143f57c2b71ffe53211a5a5128ce706c60ad7`,
+`9ca16d4f44ca97b4940bd389ca8bbdafe0c6fd711d557a98743218a83caeb87d`,
+`4a7e15d5aca02862a80acbd182f5a52c86c35e4dbadf8d95297c2ba47a95dce5`,
+and
+`016753a94bacd6e2b8dd299abc7906fa874c3d5926ff73605a1f9c913a12d66b`.
+Feature-present bytes, feature-value bytes, and target-value bytes were
+preserved exactly with SHA-256
+`08de1975edffb1a14cbea7d27d7fde8abedf8e2cc1899f70838d68a9b5b287af`,
+`3f51a98266c855800917ca6c7b87e205d9df7268260c44b4ba0341605840b7a0`,
+and
+`7eda2fee14728865518c1133e4a7c122a2180ac29b9c5977946518a0c3d46af6`.
+Protected-intervention overlap was zero; reward and benchmark presence were
+both false. The v1.4 parser independently loaded the production archive and
+reproduced its counts and entity/feature-pack digests. That parser check is
+format compatibility, not the missing signed authorization.
+
+The realized environment digest was
+`sha256:c2060448ac2beedca12bfe46d125cf4eeedeefb0b22ee47c6933c9031e38e1ab`.
+It used `/usr/bin/python3.12`; direct import selected NumPy 2.2.6, while the
+environment inventory exposed both NumPy 2.2.6 and 2.3.3 distribution metadata.
+This layering anomaly does not alter the reproduced payloads but prevents a
+portable runtime-closure claim and must be removed before release evidence.
+
+**Rights-bearing admission and evidence boundary.** Commit `469d0ce` pinned
+the three parent snapshots, both RunResults, all four run-specific artifact
+manifests, both payloads, exact corpus counts and semantic digests, and the
+fitting-only CC-BY-4.0 purpose boundary. OMF first admitted revision
+`sha256:432f51f3dfb5034d39fb8ccff3ef130320595ce76ffd876d8621820b4ff0c31e`
+with its default generic sample schema. Rather than rewrite it, the factory
+created and verified the current schema-corrected revision:
+
+`omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-composite-corpus-v1@sha256:e91cad825b8a2e972da293902c630331a92ab664c5d14a95a65ff38090db6c48`,
+
+typed `slp.corpus-bundle/v1.2`, with outer directory manifest
+`sha256:9029d5a97a9945fa88000366252c103d3955b4ea0670b7d27239123949f2718e`,
+tree digest
+`sha256:4d47930f2d508c1c95617a70a1544c3dbe248302c7f38bfe1c2347c7f5b623c5`,
+and spec digest
+`sha256:8b49d6db112837878bfd75e60ea49ec1a3390a82a5ba570ff1baa852db9cfc6a`.
+`omf data verify` returned valid. Knowledge revision
+`sha256:dd334e610923a7c6c1f50bb446e5f8e20d98318ed56ad995d220e7c0715fa3cb`
+supersedes the initial generic-schema observation
+`sha256:3e157594b95d48e15d3513c064dcfad7580beb40ea76a71b7818aa91fb64befb`
+and records the narrow reproduced-corpus claim.
+
+OMF lineage traversal from the RunResult did not expose the three upstream
+snapshot edges, and `data add` records the derived snapshot's content source
+rather than a first-class producing-RunResult edge. Exact parent and run
+lineage is therefore bound inside the corpus manifest, composition audit,
+rights declaration, and knowledge assertion, but native graph traversal is
+incomplete and remains a release-lineage blocker. `omf data verify` establishes
+stored-byte integrity, not semantic validity or signed clean-training
+authorization. OMF 1.0 purpose restrictions also remain documentary rather
+than independently enforced.
+
+The fixed rule passed for deterministic composite corpus construction and
+rights-bearing admission. It did not pass the next training gate: no
+independent custodian trust key or authorization snapshot exists, no v1.4
+signed audit workload has run, and the historical world consumers cannot
+consume this contract safely. No model was trained, no checkpoint or molecular
+metric was produced, and the external synthetic-lethality benchmark remained
+closed. This evidence supports no transfer, performance, novelty, frontier,
+release, or SOTA claim. The next admissible implementation step is a new
+application-neutral composite-keyed world consumer, followed only after an
+independent signed audit handoff.

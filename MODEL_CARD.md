@@ -148,7 +148,11 @@ permission follows from the mapping result.
 
 The exact SGD S288C R64.5.1 translated-ORF protein source is also admitted as
 a separately rights-bearing static-only snapshot. It covers all 6,613 current
-ORFs by stable SGD ID, but no sequence feature block has yet been produced.
+ORFs by stable SGD ID. A deterministic 21-dimensional sequence-statistics
+baseline has now been produced twice byte-identically and admitted as
+`omf://abiome/slp/datasetsnapshot/slp-1-1-sequence-statistics-feature-block-v1@sha256:e9733974c551bca3af93c4cb488972f5167da5e7e3cf48ef5803348cd20d91e5`.
+It is an intentionally weak static baseline, not a learned or frontier protein
+representation.
 The outcome-blind proteome action inventory and typed protein relations have
 been composed twice into byte-identical, relation-closed identity payloads and
 admitted as
@@ -156,10 +160,14 @@ admitted as
 That source universe contains 5,187 SGD genes and 1,850 UniProtKB proteins;
 711 genes exist only to close typed relations and are not action eligible.
 The artifact uses `(ncbiTaxon, entityId)` identities and contains no numeric
-features or train/validation/final assignments. The historical sparse corpus
-consumer still keys by bare ID, so corpus v1.2 and its consumers must migrate
-to composite joins before multi-species training. These are static data and
-identity boundaries, not training or performance evidence.
+features or train/validation/final assignments. The pretraining observations,
+static sequence baseline, and outcome-blind held roster have now been composed
+twice byte-identically into fitting-only corpus v1.2 and admitted as
+`omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-composite-corpus-v1@sha256:e91cad825b8a2e972da293902c630331a92ab664c5d14a95a65ff38090db6c48`.
+The historical sparse corpus consumer still keys by bare ID and remains frozen;
+a new world consumer must enforce composite joins before biological training.
+These are static-data, identity, and corpus-construction boundaries, not
+training or performance evidence.
 
 The source-normalized yeast proteome pretraining observations, HIS3 basal
 control, and protected molecular-validation observations are now separately
@@ -170,19 +178,22 @@ documentary purpose restrictions. The molecular-final workload has never been
 executed. A clean training factory and distinct validation/final service
 identities and stores remain prerequisites for credible held-out evaluation.
 
-A separate clean-training corpus-audit v1.3 contract is now implemented beside
-the frozen full-custodian v1.2 audit. Its interface contains no validation or
+A separate clean-training corpus-audit v1.4 contract is now implemented beside
+the frozen earlier audits. Its interface contains no validation or
 final quantitative input: it authenticates the exact composed optimizer corpus,
 outcome-blind held roster, and protected-source inventories with a recipient-
 and challenge-bound Ed25519 custodian authorization, then independently scans
-all active actions for the held union. The production public trust anchor is
-intentionally unprovisioned pending an independent key ceremony, and no
-provenance-complete composed corpus or physically separate training factory
-exists. Therefore the v1.3 biological path is deliberately fail-closed and has
-not run. Its signature is content authorization, not one-time-use enforcement,
+all active actions for the held union. The v1.4 parser independently accepted
+the production corpus structure and reproduced its counts and content digests,
+but that compatibility check is not a signed authorization. The production
+public trust anchor is intentionally unprovisioned pending an independent key
+ceremony, and no physically separate training factory exists. Therefore the
+v1.4 signed biological handoff is deliberately fail-closed and has not run.
+Its signature is content authorization, not one-time-use enforcement,
 source-to-corpus lineage, rights verification, or filesystem isolation; those
 remain independent release gates. Existing world-trainer and evaluator
-versions consume v1.2 and must not be silently adapted to v1.3.
+versions remain frozen and must not be silently adapted to the new corpus or
+audit contract.
 
 That normalization run used an empty dependency lock in an attested Python
 3.12 environment. It establishes the mapping bytes and lineage, not a portable
