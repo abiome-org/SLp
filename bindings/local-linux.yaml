@@ -6,5 +6,7 @@ spec:
   executor: local
   resources:
     timeoutSeconds: 3600
-    processes: 16
+    # RLIMIT_NPROC is per Unix user, not per OMF worker. WSL hosts desktop and
+    # tool processes under the same uid, so leave bounded headroom for them.
+    processes: 512
     fileSizeBytes: 107374182400
