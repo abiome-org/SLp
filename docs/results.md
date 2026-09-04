@@ -1972,19 +1972,32 @@ Both used CPython 3.12.3, environment digest
 `sha256:2857f0de3e6a95a520da1d0b3ba81b0974bac0a1f8c88a6d048320edff836169`,
 and the empty dependency-lock digest
 `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
-The repository suite passed 223 tests with 9 skipped, and six Linux schema
-tests passed.
+The final governed repository suite passed 226 tests with 9 skipped, and all
+six strict schema tests passed in the pinned Linux OMF environment.
 
-**Evidence boundary and next step.** Admission of this derived feature block as
-an OMF DatasetSnapshot is pending. No knowledge assertion has been added for
-it. The immutable run evidence establishes deterministic construction and
-static identity/sequence provenance only. The 21 hand-designed statistics are
-an intentionally weak baseline, not a learned protein representation, and
-static coverage of held genes does not authorize any held quantitative outcome
-for fitting or reward. The block has only yeast sequence, no human feature
-coverage, domain structure, protein-language-model representation, annotation,
-phylogeny, context, or experimental measurement. It has not yet been composed
-into corpus v1.2 or consumed by a world-model workload. No model was trained,
-no checkpoint or molecular metric was produced, the external synthetic-
-lethality benchmark remained closed, and this milestone supports no transfer,
-performance, novelty, frontier, release, or SOTA claim.
+**Admission, evidence boundary, and next step.** Commit `69dd844` bound both
+clean RunResults, their four lineage-specific output manifests, the exact
+payload digests, and both parent snapshots to the derived CC-BY-4.0 rights
+declaration. OMF admitted and verified
+`omf://abiome/slp/datasetsnapshot/slp-1-1-sequence-statistics-feature-block-v1@sha256:e9733974c551bca3af93c4cb488972f5167da5e7e3cf48ef5803348cd20d91e5`,
+directory manifest
+`sha256:6b4b32c794d7787b9b9076d78726ea0ad7706d64fd82b5f918f0c6da20da0d2a`,
+and tree digest
+`sha256:3f4549114a181c162596d60ef1b94d222ec494282d23ece8da7e19142135cb8d`.
+Immutable knowledge revision
+`sha256:4e106b60fb660e97cf291c03d439041e91c75379e49fb62750160490dccee53d`
+records the same narrow static-feature claim.
+
+This evidence establishes deterministic construction and static identity and
+sequence provenance only. The 21 hand-designed statistics are an intentionally
+weak baseline, not a learned protein representation, and static coverage of
+held genes does not authorize any held quantitative outcome for fitting or
+reward. The block has only yeast sequence: it has no human feature coverage,
+domain structure, protein-language-model representation, annotation, phylogeny,
+context, or experimental measurement. It has not yet been composed into corpus
+v1.2 or consumed by a world-model workload. No model was trained, no checkpoint
+or molecular metric was produced, the external synthetic-lethality benchmark
+remained closed, and this milestone supports no transfer, performance, novelty,
+frontier, release, or SOTA claim. The next boundary is a new composite-keyed
+corpus contract and consumer; the historical bare-ID implementations remain
+frozen.
