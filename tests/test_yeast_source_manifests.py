@@ -365,6 +365,32 @@ class YeastSourceManifestTest(unittest.TestCase):
             any("benchmark records" in item for item in rights["exclusions"])
         )
 
+    def test_proteome_protein_relation_rights_preserve_exact_typed_mapping(self) -> None:
+        rights = self._load(
+            "rights/slp-1-1-proteome-protein-relations-cc-by-4.0.yaml"
+        )
+        self.assertEqual(rights["license"], "CC-BY-4.0")
+        self.assertIs(rights["trainingAllowed"], True)
+        self.assertIs(rights["redistributionAllowed"], True)
+        self.assertEqual(
+            rights["derivedFrom"]["runResult"],
+            "omf://abiome/slp/runresult/result-01a06d02-0fa0-7b70-b202-299269125458@sha256:48f7833ef4e2122450a45978ffa88311464351ef3908ec7e11cc8ac99b26e0b7",
+        )
+        self.assertEqual(
+            rights["derivedFrom"]["artifacts"],
+            {
+                "manifest": "sha256:06bccb09587ebff9eac0d3257937f0837b07f2d885a1311543841f59175acfc5",
+                "relations": "sha256:2247344bdf0df97ecc2137c071ff706df36a83c1f3ce21a98562e2d14af8bbf4",
+            },
+        )
+        self.assertEqual(len(rights["derivedFrom"]["datasets"]), 2)
+        self.assertIn("manifest.json and relations.jsonl", rights["scope"])
+        self.assertIn("including one-to-many relations", rights["scope"])
+        self.assertIn("no quantitative proteome value", rights["scope"])
+        self.assertTrue(
+            any("arbitrary selection" in item for item in rights["exclusions"])
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

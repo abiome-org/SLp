@@ -1,0 +1,40 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: derived protein-to-gene identity relations from Mendeley Data w8jtmnszd9 version 2 and the pinned SGD 2026-08-28 object set
+evidence:
+  - https://api.datacite.org/dois/10.17632/w8jtmnszd9.2
+  - https://doi.org/10.1093/genetics/iyae185
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only manifest.json and relations.jsonl emitted by OMF run
+  01a06d02-0fa0-7b70-b202-299269125458 from the exact proteome and SGD
+  resources listed below. The derived files preserve all exact typed UniProtKB
+  accession-to-current-SGD-ORF relations, including one-to-many relations; they
+  contain no quantitative proteome value, molecular target, sample phenotype,
+  or synthetic-lethality label.
+derivedFrom:
+  datasets:
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-raw-v2@sha256:5392d4df7e962c9f59798b83fbdf8e71cd568b30c78a498702d50fabc059397e
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-sgd-map-raw-2026-08-28@sha256:061906684f67100bd855cfbd3e0ed4df2b1b3f0339ebbc34679ba8e535a214cf
+  runResult: omf://abiome/slp/runresult/result-01a06d02-0fa0-7b70-b202-299269125458@sha256:48f7833ef4e2122450a45978ffa88311464351ef3908ec7e11cc8ac99b26e0b7
+  artifacts:
+    manifest: sha256:06bccb09587ebff9eac0d3257937f0837b07f2d885a1311543841f59175acfc5
+    relations: sha256:2247344bdf0df97ecc2137c071ff706df36a83c1f3ce21a98562e2d14af8bbf4
+rightsBasis: >-
+  Both contributing source scopes are licensed CC BY 4.0 with adaptation and
+  redistribution allowed with attribution. Typed identity normalization is an
+  adaptation; it does not expand the source scopes or license excluded material.
+attribution: >-
+  Messner, Christoph; Kustatscher, Georg; Ralser, Markus (2023), The
+  Proteomic Landscape of Genome-Wide Genetic Perturbations, Mendeley Data V2,
+  https://doi.org/10.17632/w8jtmnszd9.2; and Saccharomyces Genome Database
+  (SGD), Stanford University, with Engel SR et al. (2025), GENETICS 229(3),
+  iyae185, https://doi.org/10.1093/genetics/iyae185.
+exclusions:
+  - quantitative proteome matrix values and derived molecular targets
+  - intervention inventories, quarantine, and audit outputs not named in scope
+  - one-to-one collapse or arbitrary selection from one-to-many relations
+  - linked third-party resources outside the exact parent source allowlists
+  - any future source or SGD object revision
