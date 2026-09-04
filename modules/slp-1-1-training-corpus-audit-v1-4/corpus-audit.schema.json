@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abiome.org/schemas/slp-training-corpus-audit-v1-4.schema.json",
+  "title": "SLp clean-training corpus audit v1.4",
+  "type": "object",
+  "required": [
+    "schema", "factoryRole", "rewardEnabled", "protectedTruthInputsPresent",
+    "custodianSignatureVerified", "auditPassed", "strictInterventionIsolation",
+    "leakageViolations", "leakedTrajectoryInterventions", "benchmarkLabelRecords",
+    "omfPriorAdmissionRequired", "datasets", "heldRoster",
+    "custodianBoundaryAttestation"
+  ],
+  "properties": {
+    "schema": {"const": "slp.corpus-audit/v1.4"},
+    "factoryRole": {"const": "training"},
+    "rewardEnabled": {"const": false},
+    "protectedTruthInputsPresent": {"const": false},
+    "custodianSignatureVerified": {"const": true},
+    "auditPassed": {"const": true},
+    "strictInterventionIsolation": {"const": true},
+    "leakageViolations": {"const": 0},
+    "leakedTrajectoryInterventions": {"const": []},
+    "benchmarkLabelRecords": {"const": 0},
+    "omfPriorAdmissionRequired": {"const": true},
+    "datasets": {
+      "type": "object",
+      "required": ["pretrain"],
+      "properties": {"pretrain": {"$ref": "#/$defs/corpusIdentity"}},
+      "additionalProperties": false
+    },
+    "heldRoster": {"$ref": "#/$defs/heldRosterIdentity"},
+    "custodianBoundaryAttestation": {"$ref": "#/$defs/authorizationIdentity"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "prefixedSha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "curie": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*:[^\\s]+$"},
+    "resource": {
+      "type": "string",
+      "pattern": "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"
+    },
+    "curieList": {
+      "type": "array", "items": {"$ref": "#/$defs/curie"}, "uniqueItems": true
+    },
+    "lineageFile": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "bytes": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "datasetSnapshot": {
+      "type": "object",
+      "required": ["resource", "revision", "outerManifestDigest", "treeDigest"],
+      "properties": {
+        "resource": {"$ref": "#/$defs/resource"},
+        "revision": {"$ref": "#/$defs/prefixedSha256"},
+        "outerManifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "treeDigest": {"$ref": "#/$defs/prefixedSha256"}
+      },
+      "additionalProperties": false
+    },
+    "corpusInput": {
+      "type": "object",
+      "required": ["datasetSnapshot", "semanticSha256", "files"],
+      "properties": {
+        "datasetSnapshot": {"$ref": "#/$defs/datasetSnapshot"},
+        "semanticSha256": {"$ref": "#/$defs/sha256"},
+        "files": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/lineageFile"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "corpusInputs": {
+      "type": "object",
+      "required": ["observations", "staticFeatures", "heldInterventionRoster"],
+      "properties": {
+        "observations": {"$ref": "#/$defs/corpusInput"},
+        "staticFeatures": {"$ref": "#/$defs/corpusInput"},
+        "heldInterventionRoster": {"$ref": "#/$defs/corpusInput"}
+      },
+      "additionalProperties": false
+    },
+    "featureBlock": {
+      "type": "object",
+      "required": [
+        "id", "offset", "dimension", "datasetSnapshot", "semanticSha256",
+        "entityKeySetSha256", "files"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/curie"},
+        "offset": {"type": "integer", "minimum": 0},
+        "dimension": {"type": "integer", "minimum": 1},
+        "datasetSnapshot": {"$ref": "#/$defs/datasetSnapshot"},
+        "semanticSha256": {"$ref": "#/$defs/sha256"},
+        "entityKeySetSha256": {"$ref": "#/$defs/sha256"},
+        "files": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/lineageFile"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "featurePack": {
+      "type": "object",
+      "required": [
+        "schema", "revision", "sha256", "entityFeatureDim",
+        "speciesFeatureDim", "blocks"
+      ],
+      "properties": {
+        "schema": {"const": "slp.static-feature-pack/v1"},
+        "revision": {"$ref": "#/$defs/curie"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "entityFeatureDim": {"type": "integer", "minimum": 1},
+        "speciesFeatureDim": {"type": "integer", "minimum": 1},
+        "blocks": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/featureBlock"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "counts": {
+      "type": "object",
+      "required": [
+        "entities", "featureRows", "contexts", "queries", "panels",
+        "trajectoryInterventions", "records", "targetValues", "shards"
+      ],
+      "properties": {
+        "entities": {"type": "integer", "minimum": 1},
+        "featureRows": {"type": "integer", "minimum": 0},
+        "contexts": {"type": "integer", "minimum": 0},
+        "queries": {"type": "integer", "minimum": 1},
+        "panels": {"type": "integer", "minimum": 1},
+        "trajectoryInterventions": {"type": "integer", "minimum": 0},
+        "records": {"type": "integer", "minimum": 1},
+        "targetValues": {"type": "integer", "minimum": 1},
+        "shards": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "normalization": {
+      "type": "object",
+      "required": ["id", "valueSpace"],
+      "properties": {
+        "id": {"$ref": "#/$defs/curie"},
+        "valueSpace": {"$ref": "#/$defs/curie"}
+      },
+      "additionalProperties": false
+    },
+    "corpusIdentity": {
+      "type": "object",
+      "required": [
+        "resource", "revision", "manifestDigest", "datasetId", "version", "role",
+        "corpusManifestSha256", "contentDigest", "trajectoryInterventionsSha256",
+        "trajectoryInterventionSetSha256", "trajectoryInterventionCount",
+        "entityKeySetSha256", "records", "targetValues",
+        "entityCount", "queryCount", "queryPanelCount", "shardCount", "identityKey",
+        "featurePack", "inputs", "counts", "normalization", "modalities",
+        "sourceIds", "speciesTaxa"
+      ],
+      "properties": {
+        "resource": {"$ref": "#/$defs/resource"},
+        "revision": {"$ref": "#/$defs/prefixedSha256"},
+        "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "datasetId": {"$ref": "#/$defs/curie"},
+        "version": {"type": "string", "minLength": 1},
+        "role": {"const": "pretrain"},
+        "corpusManifestSha256": {"$ref": "#/$defs/sha256"},
+        "contentDigest": {"$ref": "#/$defs/sha256"},
+        "trajectoryInterventionsSha256": {"$ref": "#/$defs/sha256"},
+        "trajectoryInterventionSetSha256": {"$ref": "#/$defs/sha256"},
+        "trajectoryInterventionCount": {"type": "integer", "minimum": 0},
+        "entityKeySetSha256": {"$ref": "#/$defs/sha256"},
+        "records": {"type": "integer", "minimum": 1},
+        "targetValues": {"type": "integer", "minimum": 1},
+        "entityCount": {"type": "integer", "minimum": 1},
+        "queryCount": {"type": "integer", "minimum": 1},
+        "queryPanelCount": {"type": "integer", "minimum": 1},
+        "shardCount": {"type": "integer", "minimum": 1},
+        "identityKey": {"const": ["ncbiTaxon", "entityId"]},
+        "featurePack": {"$ref": "#/$defs/featurePack"},
+        "inputs": {"$ref": "#/$defs/corpusInputs"},
+        "counts": {"$ref": "#/$defs/counts"},
+        "normalization": {"$ref": "#/$defs/normalization"},
+        "modalities": {"$ref": "#/$defs/curieList"},
+        "sourceIds": {"$ref": "#/$defs/curieList"},
+        "speciesTaxa": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1}
+        }
+      },
+      "additionalProperties": false
+    },
+    "sourceInventory": {
+      "type": "object",
+      "required": [
+        "resource", "revision", "artifactManifestDigest", "sourceId", "sourceRelease",
+        "identityMappingId", "identityMappingSha256", "manifestSha256", "records",
+        "duplicateRecords", "uniqueInterventions", "qcPassing", "qcFailed",
+        "intersectionCoverage"
+      ],
+      "properties": {
+        "resource": {"$ref": "#/$defs/resource"},
+        "revision": {"$ref": "#/$defs/prefixedSha256"},
+        "artifactManifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "sourceId": {"$ref": "#/$defs/curie"},
+        "sourceRelease": {"type": "string", "minLength": 1},
+        "identityMappingId": {"$ref": "#/$defs/curie"},
+        "identityMappingSha256": {"$ref": "#/$defs/sha256"},
+        "manifestSha256": {"$ref": "#/$defs/sha256"},
+        "records": {"type": "integer", "minimum": 0},
+        "duplicateRecords": {"type": "integer", "minimum": 0},
+        "uniqueInterventions": {"type": "integer", "minimum": 0},
+        "qcPassing": {"type": "integer", "minimum": 0},
+        "qcFailed": {"type": "integer", "minimum": 0},
+        "intersectionCoverage": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "heldRosterIdentity": {
+      "type": "object",
+      "required": [
+        "resource", "revision", "manifestDigest", "rosterSha256", "coverageSha256",
+        "assignmentDomainHex", "bucketRule", "identityMappingId", "identityMappingSha256",
+        "sourceInventories", "intersectionSize", "pretrainInterventionCount",
+        "validationInterventionSetSha256", "validationInterventionCount",
+        "finalInterventionSetSha256", "finalInterventionCount",
+        "unionInterventionSetSha256", "unionInterventionCount"
+      ],
+      "properties": {
+        "resource": {"$ref": "#/$defs/resource"},
+        "revision": {"$ref": "#/$defs/prefixedSha256"},
+        "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "rosterSha256": {"$ref": "#/$defs/sha256"},
+        "coverageSha256": {"$ref": "#/$defs/sha256"},
+        "assignmentDomainHex": {"type": "string", "pattern": "^[0-9a-f]+$"},
+        "bucketRule": {"const": "int(first-16-lowercase-hex,16) mod 100"},
+        "identityMappingId": {"$ref": "#/$defs/curie"},
+        "identityMappingSha256": {"$ref": "#/$defs/sha256"},
+        "sourceInventories": {
+          "type": "array", "minItems": 2, "maxItems": 64,
+          "items": {"$ref": "#/$defs/sourceInventory"}
+        },
+        "intersectionSize": {"type": "integer", "minimum": 1},
+        "pretrainInterventionCount": {"type": "integer", "minimum": 0},
+        "validationInterventionSetSha256": {"$ref": "#/$defs/sha256"},
+        "validationInterventionCount": {"type": "integer", "minimum": 1},
+        "finalInterventionSetSha256": {"$ref": "#/$defs/sha256"},
+        "finalInterventionCount": {"type": "integer", "minimum": 1},
+        "unionInterventionSetSha256": {"$ref": "#/$defs/sha256"},
+        "unionInterventionCount": {"type": "integer", "minimum": 2}
+      },
+      "additionalProperties": false
+    },
+    "authorizationIdentity": {
+      "type": "object",
+      "required": [
+        "resource", "revision", "manifestDigest", "authorizationId", "issuedAt", "keyId",
+        "recipientNamespace", "recipientFactoryIdentity", "challengeNonce",
+        "statementSha256", "signatureSha256", "publicKeyTextSha256"
+      ],
+      "properties": {
+        "resource": {"$ref": "#/$defs/resource"},
+        "revision": {"$ref": "#/$defs/prefixedSha256"},
+        "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "authorizationId": {
+          "type": "string",
+          "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "issuedAt": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+        "keyId": {"$ref": "#/$defs/prefixedSha256"},
+        "recipientNamespace": {"const": "abiome/slp"},
+        "recipientFactoryIdentity": {"$ref": "#/$defs/prefixedSha256"},
+        "challengeNonce": {"$ref": "#/$defs/sha256"},
+        "statementSha256": {"$ref": "#/$defs/sha256"},
+        "signatureSha256": {"$ref": "#/$defs/sha256"},
+        "publicKeyTextSha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

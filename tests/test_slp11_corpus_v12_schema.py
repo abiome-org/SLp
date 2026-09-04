@@ -333,6 +333,33 @@ class CorpusV12SchemaTests(unittest.TestCase):
             ):
                 self.validator.validate(document)
 
+    def test_relative_paths_accept_only_non_special_posix_segments(self) -> None:
+        document = _positive_fixture()
+        document["entityDictionary"]["path"] = "metadata/entities/dictionary.npz"
+        self.validator.validate(document)
+
+        invalid_paths = (
+            r"metadata\entities.npz",
+            "metadata/entities dictionary.npz",
+            "metadata/\tentities.npz",
+            ".",
+            "..",
+            "./entities.npz",
+            "metadata/./entities.npz",
+            "metadata/../entities.npz",
+            "metadata//entities.npz",
+            "metadata/entities.npz/",
+            "/metadata/entities.npz",
+            "C:/metadata/entities.npz",
+            r"C:\metadata\entities.npz",
+            "namespace:entities.npz",
+        )
+        for path in invalid_paths:
+            document = _positive_fixture()
+            document["entityDictionary"]["path"] = path
+            with self.subTest(path=path), self.assertRaises(ValidationError):
+                self.validator.validate(document)
+
     def test_benchmark_reward_and_non_pretrain_roles_are_rejected(self) -> None:
         for field, value in (
             ("benchmarkLabelsPresent", True),
