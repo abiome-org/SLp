@@ -71,6 +71,40 @@ class YeastSourceManifestTest(unittest.TestCase):
             "268533b10c59d3f4ca941ff31ac8b9c108b61f55f00d85792d44b3a90b3b9da8",
         )
         self.assertTrue(probe["unresolved"])
+        script_audit = probe["analysisScriptAudit"]
+        self.assertEqual(
+            script_audit["status"],
+            "schema-expectations-only-not-an-admitted-input",
+        )
+        self.assertEqual(
+            {item["name"]: item["upstreamChecksum"]
+             for item in script_audit["scripts"]},
+            {
+                "summary.genotypes_Rev.R":
+                    "md5:1b8cb9069f56101dc1d972a7300a3ac7",
+                "Figures_Rev.R":
+                    "md5:3f097ed4ce3055970b385c932b94bd91",
+                "clone.comparison_Rev.R":
+                    "md5:2fa7a992e277c6b7990c13acd2324625",
+            },
+        )
+        expected = script_audit["expectedObjectContract"]
+        self.assertEqual(expected["rootObject"], "seus")
+        self.assertEqual(expected["conditionObjects"], ["Control", "NaCl"])
+        self.assertEqual(expected["wildTypeAssignment"], "WT")
+        self.assertEqual(expected["authorsCountAccess"],
+                         "GetAssayData with assay RNA and slot counts")
+        self.assertEqual(
+            set(expected["metadataFieldsObservedInScripts"]),
+            {
+                "assignment_consensus2",
+                "kogene",
+                "kosym",
+                "condition",
+                "batch2",
+                "clone",
+            },
+        )
         self._assert_rights(
             manifest["rights"], "10.5281/zenodo.14062629"
         )
@@ -189,6 +223,8 @@ class YeastSourceManifestTest(unittest.TestCase):
         self.assertEqual(interventions["exactCurrentOneToOne"], 4476)
         self.assertEqual(interventions["strictQuarantineRows"], 76)
         self.assertEqual(interventions["strictQuarantineBeforeSourceIntersection"], 74)
+        self.assertIn("including exact YAL043C-a", interventions["policy"])
+        self.assertIn("including YML009c", interventions["policy"])
         readouts = identity_probe["readoutIdentities"]
         self.assertEqual(readouts["exactTypedAccessionsCovered"], 1850)
         self.assertEqual(readouts["oneToOneCurrentOrfRelations"], 1845)

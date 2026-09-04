@@ -81,8 +81,42 @@ metadataProbe:
     - seus_split.RData contains two separately processed Seurat objects, one control and one NaCl-treated
     - seu.RData is a merged duplicate representation and remains excluded
     - figure scripts consume third-party human and yeast datasets that remain excluded from this source
+  analysisScriptAudit:
+    date: 2026-09-04
+    status: schema-expectations-only-not-an-admitted-input
+    immutableRecord: zenodo:14062629
+    scripts:
+      - name: summary.genotypes_Rev.R
+        upstreamChecksum: md5:1b8cb9069f56101dc1d972a7300a3ac7
+      - name: Figures_Rev.R
+        upstreamChecksum: md5:3f097ed4ce3055970b385c932b94bd91
+      - name: clone.comparison_Rev.R
+        upstreamChecksum: md5:2fa7a992e277c6b7990c13acd2324625
+    expectedObjectContract:
+      rootObject: seus
+      conditionObjects: [Control, NaCl]
+      objectType: Seurat-v4
+      metadataFieldsObservedInScripts:
+        - assignment_consensus2
+        - kogene
+        - kosym
+        - condition
+        - batch2
+        - clone
+      wildTypeAssignment: WT
+      interventionAssignmentPattern: bc-<systematic-name>
+      authorsCountAccess: GetAssayData with assay RNA and slot counts
+      normalizationScope: condition objects were normalized independently
+    restrictions:
+      - these scripts define probe expectations only and are not model inputs
+      - metadata fields and count-layer semantics must be verified against the pinned payload
+      - author-derived leverage scores, clusters, differential-expression calls, fold changes, and significance calls are not targets
+      - genotype symbols and barcode assignments do not become stable identities without the pinned SGD map
   unresolved:
-    - object slot, layer, cell metadata, genotype identity, raw-count, and missingness semantics require a no-training RData structural probe
+    - verify the two Seurat-v4 objects, exact metadata fields, RNA count layer, cell names, and feature names against the pinned payload
+    - determine whether the RNA count layer is raw integer UMI counts and whether any stored cells or features were filtered before object publication
+    - map exact bc-prefixed systematic-name assignments through the immutable SGD relation artifacts without case or suffix heuristics
+    - freeze clone, genotype, condition, batch, and biological-control semantics before producing an identity inventory or quantitative corpus
 admission:
   firstOperation: metadata-and-schema-probe-only
   requireStableDeletionIdentity: true

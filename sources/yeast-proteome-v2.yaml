@@ -174,7 +174,7 @@ metadataProbe:
       differentialStatisticsAreSeparateDerivedFiles: true
   unresolved:
     - pin an SGD mapping snapshot before converting simple and suffixed systematic ORFs to SGD CURIEs
-    - resolve mixed-case YAL043C-a and YML009c only through the pinned mapping or quarantine them; do not uppercase heuristically because YML009c collides case-insensitively with a separate YML009C row
+    - resolve every value only by exact case-sensitive lookup in the pinned map; YAL043C-a is an exact current systematic name, while YML009c is unmatched and must not be uppercased to the distinct YML009C row
     - resolve Protein.Group accessions through a pinned protein-to-SGD mapping and document the quantitative normalization/value space
     - retain Detection_of_KO_proteins.csv as QC provenance only; its 959 rows and repeated ORFs do not define source-wide sample eligibility without a frozen interpretation
     - never use pooled-digest qc rows as biological basal states; only explicitly documented HIS3-complemented WT samples are candidate basal controls
@@ -202,7 +202,7 @@ rawIdentityJoinProbe:
     currentExactAmbiguities: 0
     strictQuarantineRows: 76
     strictQuarantineBeforeSourceIntersection: 74
-    policy: use only exact current one-to-one systematic-name rows; quarantine retired, merged, unmatched, mixed-case, and ambiguous identities without redirects or case normalization
+    policy: use only exact case-sensitive current one-to-one systematic-name rows, including exact YAL043C-a; quarantine retired, merged, unmatched (including YML009c), and ambiguous identities without redirects or case normalization
   readoutIdentities:
     exactInputAccessions: 1850
     typedDbxrefSource: UniProtKB
