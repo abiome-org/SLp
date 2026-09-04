@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.abiome.org/slp/molecular-baseline-snapshot/v1",
+  "title": "Pinned molecular baseline fitting or reference snapshot",
+  "type": "object",
+  "required": [
+    "schema", "datasetId", "version", "role", "taskName", "labelClass",
+    "benchmarkLabelsPresent", "valueSpace", "speciesTaxa", "sourceIds",
+    "recordsEncoding", "profileLevel", "aggregationProtocolSha256", "shards"
+  ],
+  "properties": {
+    "schema": {"const": "slp.molecular-baseline-snapshot/v1"},
+    "datasetId": {"$ref": "#/$defs/curie"},
+    "version": {"type": "string", "minLength": 1},
+    "role": {"enum": ["molecular-baseline-training", "molecular-baseline-reference"]},
+    "taskName": {
+      "enum": [
+        "intervention-gene-cold",
+        "perturbation-context-cold-with-basal-access",
+        "double-cold"
+      ]
+    },
+    "labelClass": {"const": "molecular"},
+    "benchmarkLabelsPresent": {"const": false},
+    "valueSpace": {"$ref": "#/$defs/curie"},
+    "speciesTaxa": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"type": "integer", "minimum": 1}
+    },
+    "sourceIds": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/curie"}
+    },
+    "recordsEncoding": {"const": "identity-keyed-sparse-jsonl-v1"},
+    "profileLevel": {"const": "context-perturbation-centroid-v1"},
+    "aggregationProtocolSha256": {"$ref": "#/$defs/sha256"},
+    "pairedTrainingManifestSha256": {"$ref": "#/$defs/sha256"},
+    "shards": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/shard"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"role": {"const": "molecular-baseline-reference"}}, "required": ["role"]},
+      "then": {"required": ["pairedTrainingManifestSha256"]},
+      "else": {"not": {"required": ["pairedTrainingManifestSha256"]}}
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "curie": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*:[^\\s]+$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "shard": {
+      "type": "object",
+      "required": ["path", "sha256", "records"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+\\.jsonl$"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "records": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "profileRecord": {
+      "type": "object",
+      "required": [
+        "schema", "speciesTaxon", "sourceId", "contextId", "recordRole",
+        "perturbationId", "interventionIds", "readoutIds", "values"
+      ],
+      "properties": {
+        "schema": {"const": "slp.molecular-baseline-profile/v1"},
+        "speciesTaxon": {"type": "integer", "minimum": 1},
+        "sourceId": {"$ref": "#/$defs/curie"},
+        "contextId": {"$ref": "#/$defs/curie"},
+        "recordRole": {"enum": ["basal-control", "perturbation-outcome"]},
+        "perturbationId": {"oneOf": [{"$ref": "#/$defs/curie"}, {"type": "null"}]},
+        "interventionIds": {
+          "type": "array", "uniqueItems": true,
+          "items": {"$ref": "#/$defs/curie"}
+        },
+        "readoutIds": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/curie"}
+        },
+        "values": {
+          "type": "array", "minItems": 1,
+          "items": {"type": ["number", "null"]}
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,81 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-molecular-baselines
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  contracts:
+    input:
+      type: object
+      required: [molecularTraining, molecularReference]
+      properties:
+        molecularTraining: {type: object}
+        molecularReference: {type: object}
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - baselineSummary
+        - baselineReportSha256
+        - trainingManifestSha256
+        - referenceManifestSha256
+        - contextOnlyManifestSha256
+        - txpertMeanAdditiveManifestSha256
+        - referenceProfiles
+        - contextOnlyPredictedValues
+        - txpertMeanAdditivePredictedValues
+        - evaluationCompatibility
+        - featureBilinearRidge
+      properties:
+        baselineSummary: {type: object}
+        baselineReportSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        trainingManifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        referenceManifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        contextOnlyManifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        txpertMeanAdditiveManifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        referenceProfiles: {type: integer, minimum: 0}
+        contextOnlyPredictedValues: {type: integer, minimum: 0}
+        txpertMeanAdditivePredictedValues: {type: integer, minimum: 0}
+        evaluationCompatibility: {type: object}
+        featureBilinearRidge: {type: object}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        maxShards: {type: integer, minimum: 1}
+        maxRecords: {type: integer, minimum: 1}
+        maxReadoutsPerRecord: {type: integer, minimum: 1}
+        maxLineBytes: {type: integer, minimum: 1024}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          molecularTraining: {}
+          molecularReference: {}
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          baselineSummary:
+            schema: slp.molecular-baseline-report/v1
+            validationOnly: true
+          baselineReportSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          trainingManifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          referenceManifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          contextOnlyManifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          txpertMeanAdditiveManifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          referenceProfiles: 0
+          contextOnlyPredictedValues: 0
+          txpertMeanAdditivePredictedValues: 0
+          evaluationCompatibility:
+            status: contract-blocked
+            reasonCode: prediction-log-scale-not-defined
+          featureBilinearRidge:
+            status: protocol-required-contract-blocked
+            reasonCode: feature-vectors-absent

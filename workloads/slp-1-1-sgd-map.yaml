@@ -1,0 +1,30 @@
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-sgd-map
+spec:
+  graph:
+    stages:
+      - name: normalize
+        module: modules/slp-1-1-sgd-map/module.yaml
+        operation: run
+        inputs:
+          rawSgdMapping: dataset/slp-1-1-sgd-map-raw-2026-08-28
+        config:
+          maxFeatureRecords: 20000
+          maxExternalRecords: 300000
+          maxRetiredPhysicalLines: 256
+          maxLineBytes: 4096
+          maxTargetsPerExternalKey: 1024
+          maxAssertionsPerExternalTarget: 64
+          maxDisplayAliasesPerOrf: 128
+        outputs:
+          - mappingSummary
+          - identityMappingId
+          - identityMappingSha256
+          - mappingManifestSha256
+          - currentOrfCount
+          - typedExternalRelationCount
+          - oneToManyExternalRelationCount
+          - retiredQuarantineCount
+          - retiredIrregularCount

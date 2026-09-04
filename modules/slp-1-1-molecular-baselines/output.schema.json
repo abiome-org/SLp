@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.abiome.org/slp/molecular-baseline-predictions/v1",
+  "title": "Molecular baseline point-prediction artifact",
+  "type": "object",
+  "required": [
+    "schema", "baselineName", "baselineDefinitionVersion", "role", "taskName",
+    "labelClass", "benchmarkLabelsPresent", "valueSpace", "speciesTaxa", "sourceIds",
+    "profileLevel", "aggregationProtocolSha256", "trainingManifestSha256",
+    "referenceManifestSha256", "uncertainty", "shards"
+  ],
+  "properties": {
+    "schema": {"const": "slp.molecular-baseline-predictions/v1"},
+    "baselineName": {"enum": ["context-only", "txpert-mean-additive"]},
+    "baselineDefinitionVersion": {"const": "1.0.0"},
+    "role": {"const": "molecular-baseline-point-predictions"},
+    "taskName": {
+      "enum": [
+        "intervention-gene-cold",
+        "perturbation-context-cold-with-basal-access",
+        "double-cold"
+      ]
+    },
+    "labelClass": {"const": "molecular"},
+    "benchmarkLabelsPresent": {"const": false},
+    "valueSpace": {"$ref": "#/$defs/curie"},
+    "speciesTaxa": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+    "sourceIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/curie"}},
+    "profileLevel": {"const": "context-perturbation-centroid-v1"},
+    "aggregationProtocolSha256": {"$ref": "#/$defs/sha256"},
+    "trainingManifestSha256": {"$ref": "#/$defs/sha256"},
+    "referenceManifestSha256": {"$ref": "#/$defs/sha256"},
+    "uncertainty": {
+      "type": "object",
+      "required": ["status", "reasonCode", "detail"],
+      "properties": {
+        "status": {"const": "contract-blocked"},
+        "reasonCode": {"const": "prediction-log-scale-not-defined"},
+        "detail": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "shards": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/shard"}}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "curie": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*:[^\\s]+$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "shard": {
+      "type": "object",
+      "required": ["path", "sha256", "records"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+\\.jsonl$"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "records": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "predictionRecord": {
+      "type": "object",
+      "required": [
+        "schema", "speciesTaxon", "sourceId", "contextId", "perturbationId",
+        "interventionIds", "readoutIds", "predictionMean"
+      ],
+      "properties": {
+        "schema": {"const": "slp.molecular-baseline-prediction/v1"},
+        "speciesTaxon": {"type": "integer", "minimum": 1},
+        "sourceId": {"$ref": "#/$defs/curie"},
+        "contextId": {"$ref": "#/$defs/curie"},
+        "perturbationId": {"$ref": "#/$defs/curie"},
+        "interventionIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/curie"}},
+        "readoutIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/curie"}},
+        "predictionMean": {"type": "array", "minItems": 1, "items": {"type": ["number", "null"]}}
+      },
+      "additionalProperties": false
+    }
+  }
+}

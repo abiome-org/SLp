@@ -128,6 +128,11 @@ class CorpusIndex:
     dataset_id: str
     version: str
     role: str
+    feature_pack_revision: str
+    feature_pack_sha256: str
+    normalization_id: str
+    value_space: str
+    content_digest: str
     sources: tuple[str, ...]
     source_weights: tuple[float, ...]
     species_taxa: tuple[int, ...]
@@ -212,6 +217,8 @@ class CorpusIndex:
         feature_pack = _parse_feature_pack(manifest["featurePack"])
         entity_feature_dim = feature_pack[0]
         species_feature_dim = feature_pack[1]
+        feature_pack_revision = feature_pack[2]
+        feature_pack_sha256 = feature_pack[3]
         species_taxa, species_value, species_present = _parse_species(
             manifest["species"], species_feature_dim
         )
@@ -220,7 +227,7 @@ class CorpusIndex:
         action_types = _require_unique_curies(manifest["actionTypes"], "actionTypes")
         covariates = _parse_covariates(manifest["covariates"])
         readouts = _parse_readouts(manifest["readoutTypes"])
-        _parse_normalization(manifest["normalization"])
+        normalization_id, value_space = _parse_normalization(manifest["normalization"])
         bounds = _parse_bounds(manifest["bounds"])
 
         entity_ref = _parse_file_ref(manifest["entityDictionary"], "entityDictionary")
@@ -290,12 +297,29 @@ class CorpusIndex:
         if not trajectory_genes.issubset(set(str(item) for item in entity_id)):
             raise ValueError("trajectoryGenes must resolve through the entity dictionary")
         shards = _parse_shards(manifest["shards"], root, bounds)
+        identity_document = {
+            "manifestSha256": _sha256_path(manifest_path),
+            "files": [
+                {"path": reference.path, "sha256": reference.sha256}
+                for reference in (entity_ref, query_ref, panel_ref, genes_ref, *shards)
+            ],
+        }
+        content_digest = hashlib.sha256(
+            json.dumps(
+                identity_document, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        ).hexdigest()
 
         result = cls(
             root=root,
             dataset_id=dataset_id,
             version=version,
             role=role,
+            feature_pack_revision=feature_pack_revision,
+            feature_pack_sha256=feature_pack_sha256,
+            normalization_id=normalization_id,
+            value_space=value_space,
+            content_digest=content_digest,
             sources=sources,
             source_weights=source_weights,
             species_taxa=species_taxa,
@@ -1073,18 +1097,18 @@ def _parse_sampling(value: Any, source_count: int) -> tuple[float, ...]:
     return tuple(parsed)
 
 
-def _parse_feature_pack(value: Any) -> tuple[int, int]:
+def _parse_feature_pack(value: Any) -> tuple[int, int, str, str]:
     _expect_keys(
         value,
         {"revision", "sha256", "entityFeatureDim", "speciesFeatureDim"},
         "featurePack",
     )
-    _require_curie(value["revision"], "feature pack revision")
-    _require_sha(value["sha256"], "feature pack sha256")
+    revision = _require_curie(value["revision"], "feature pack revision")
+    digest = _require_sha(value["sha256"], "feature pack sha256")
     dims = (value["entityFeatureDim"], value["speciesFeatureDim"])
     if any(not isinstance(item, int) or isinstance(item, bool) or item <= 0 for item in dims):
         raise ValueError("feature dimensions must be positive integers")
-    return dims
+    return dims[0], dims[1], revision, digest
 
 
 def _parse_species(
@@ -1167,10 +1191,12 @@ def _parse_readouts(value: Any) -> tuple[ReadoutDefinition, ...]:
     return tuple(result)
 
 
-def _parse_normalization(value: Any) -> None:
+def _parse_normalization(value: Any) -> tuple[str, str]:
     _expect_keys(value, {"id", "valueSpace"}, "normalization")
-    _require_curie(value["id"], "normalization id")
-    _require_curie(value["valueSpace"], "normalization valueSpace")
+    return (
+        _require_curie(value["id"], "normalization id"),
+        _require_curie(value["valueSpace"], "normalization valueSpace"),
+    )
 
 
 def _parse_bounds(value: Any) -> dict[str, int]:
@@ -1405,12 +1431,16 @@ def _reject_symlink_components(path: Path) -> None:
 
 
 def _verify_digest(path: Path, expected: str) -> None:
+    if _sha256_path(path) != expected:
+        raise ValueError(f"file digest mismatch: {path.name}")
+
+
+def _sha256_path(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
         while block := stream.read(1024 * 1024):
             digest.update(block)
-    if digest.hexdigest() != expected:
-        raise ValueError(f"file digest mismatch: {path.name}")
+    return digest.hexdigest()
 
 
 def _float_tensor(value: np.ndarray) -> torch.Tensor:

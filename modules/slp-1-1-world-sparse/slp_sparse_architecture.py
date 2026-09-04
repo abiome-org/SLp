@@ -541,6 +541,31 @@ def negative_log_likelihood(
 ) -> torch.Tensor:
     """Return the weighted mean typed scalar negative log likelihood."""
 
+    per_target = negative_log_likelihood_terms(
+        prediction, target, target_observed
+    )
+    if loss_weight is None:
+        weight = torch.ones_like(target)
+    else:
+        if loss_weight.shape != target.shape or not torch.is_floating_point(loss_weight):
+            raise ValueError("loss_weight must be a floating target-shaped tensor")
+        if not torch.isfinite(loss_weight).all() or (loss_weight < 0).any():
+            raise ValueError("loss weights must be finite and non-negative")
+        weight = loss_weight
+    effective_weight = weight * target_observed.to(weight.dtype)
+    denominator = effective_weight.sum()
+    if denominator.item() <= 0:
+        raise ValueError("observed targets must have positive total loss weight")
+    return (per_target * effective_weight).sum() / denominator
+
+
+def negative_log_likelihood_terms(
+    prediction: WorldPrediction,
+    target: torch.Tensor,
+    target_observed: torch.Tensor,
+) -> torch.Tensor:
+    """Return target-shaped typed NLL terms, with unobserved entries set to zero."""
+
     if target.shape != prediction.query_mask.shape:
         raise ValueError("target shape must match prediction query shape")
     if target_observed.shape != target.shape or target_observed.dtype != torch.bool:
@@ -568,7 +593,6 @@ def negative_log_likelihood(
     safe_nb_target = torch.where(nb_observed, target, torch.zeros_like(target))
     log_mean = prediction.parameters[..., 0]
     log_inverse_dispersion = prediction.parameters[..., 1]
-    mean = torch.exp(log_mean)
     inverse_dispersion = torch.exp(log_inverse_dispersion)
     log_total = torch.logaddexp(log_inverse_dispersion, log_mean)
     nb_log_probability = (
@@ -582,16 +606,4 @@ def negative_log_likelihood(
     per_target = torch.where(
         prediction.likelihood_type == NEGATIVE_BINOMIAL, nb_nll, gaussian_nll
     )
-    if loss_weight is None:
-        weight = torch.ones_like(target)
-    else:
-        if loss_weight.shape != target.shape or not torch.is_floating_point(loss_weight):
-            raise ValueError("loss_weight must be a floating target-shaped tensor")
-        if not torch.isfinite(loss_weight).all() or (loss_weight < 0).any():
-            raise ValueError("loss weights must be finite and non-negative")
-        weight = loss_weight
-    effective_weight = weight * target_observed.to(weight.dtype)
-    denominator = effective_weight.sum()
-    if denominator.item() <= 0:
-        raise ValueError("observed targets must have positive total loss weight")
-    return (per_target * effective_weight).sum() / denominator
+    return torch.where(target_observed, per_target, torch.zeros_like(per_target))

@@ -21,10 +21,12 @@ rights/                          dataset rights declarations
 sources/                         versioned source-admission plans
 schemas/                         versioned corpus contracts
 modules/slp-1-1-corpus-audit/   shard integrity and leakage firewall
+modules/slp-1-1-sgd-map/        exact SGD stable-ID relation normalizer
 modules/slp-1-1-yeast-prepare/  rights-gated species-native yeast preparation
 modules/slp-1-1-held-roster/    outcome-blind global yeast held-gene split
 modules/slp-1-1-world/          admitted dense-fixture engineering prototype
 modules/slp-1-1-world-sparse/   typed sparse world-candidate contract
+modules/slp-1-1-molecular-baselines/ frozen context/TxPert point baselines
 modules/slp-1-1-molecular-eval/ perturbation-specific molecular evaluator
 workloads/                       auditable stage graphs
 evaluations/                     molecular-only advancement gates
@@ -62,9 +64,12 @@ missingness masks, and small ontology-type indices. Its independent
 cross-attention query decoder supports Gaussian and negative-binomial scalar
 heads without materializing a record-by-global-query target matrix.
 
-`slp-1-1-world-sparse` is currently a validated architecture and corpus
-contract, not a trained biological model: its OMF module reports
-`trainingImplemented: false` and emits no checkpoint. The earlier
+`slp-1-1-world-sparse` now includes a deterministic bounded AdamW training
+library for Gaussian/count-compatible sparse records. Updates use pretraining
+only, weight scheduled records equally, and report molecular validation only as
+an initialization-to-final diagnostic. The OMF entry point still reports
+`trainingImplemented: false` and emits no checkpoint, so this is not yet a
+trained biological model or selectable candidate. The earlier
 `slp-1-1-world` run remains useful execution evidence, but its dense fixture
 format and toy metrics are not architecture-selection evidence.
 
@@ -145,13 +150,24 @@ recomputes those identities and checks that tensor-level action CURIEs match
 the inventory before constructing a model. Static public features for held
 genes are allowed and recorded separately from quantitative trajectories.
 
+Yeast identities are normalized separately from biological measurements. The
+SGD mapper accepts only the exact six-file, object-version- and SHA-256-pinned
+2026-08-28 snapshot. It emits case-sensitive current ORFs, typed external
+relations, and a retired/irregular quarantine. Symbols never resolve identity;
+one-to-many relations are retained; and no retired identifier is redirected.
+The raw snapshot can be admitted only as identity-normalizer input, not as a
+training corpus.
+
 ## Validation
 
 ```bash
 python -m unittest tests.test_slp11_corpus_audit
 python -m unittest tests.test_slp11_architecture
 python -m unittest tests.test_slp11_sparse_candidate
+python -m unittest tests.test_slp11_sparse_training
 python -m unittest tests.test_slp11_held_roster
+python -m unittest tests.test_slp11_molecular_baselines
+python -m unittest tests.test_slp11_sgd_map
 python -m unittest discover -s tests
 ```
 

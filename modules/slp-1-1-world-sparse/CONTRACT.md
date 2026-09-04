@@ -55,3 +55,25 @@ Sampling uses explicit positive source weights, exact deterministic quotas,
 and then cycles source → perturbation → replicate → record with a fixed seed.
 Identifiers determine grouping and audit provenance only; they are never
 model features.
+
+## Bounded optimizer library
+
+`slp_sparse_training.py` is a pure-library implementation used to test the
+optimizer boundary before it is admitted as an OMF training operation. It
+updates only from a corpus whose role is `pretraining` and reads only a
+`molecular-validation` corpus for fixed before/after diagnostics. Every
+validation intervention gene must be absent from pretraining quantitative
+trajectories. Benchmark-like manifest fields fail closed.
+
+Each scheduled record contributes the mean NLL of its own observed queries and
+then receives equal weight in its optimizer batch, so dense panels cannot
+silently dominate sparse records. Epoch schedules are deterministically
+domain-separated and retain the exact per-source quota. Validation NLL is
+reported per observed target, overall and by source/species strata, but is
+explicitly not a scientific baseline comparison or a checkpoint-selection
+rule. The library restores caller RNG, deterministic-algorithm and thread
+state, and hashes the final parameters, predictions and canonical report.
+
+This library does not relax the module boundary above: it writes no checkpoint,
+has no OMF run entry point, has no molecular gate, and supplies no biological
+evidence.

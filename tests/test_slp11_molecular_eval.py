@@ -364,7 +364,7 @@ class MolecularEvaluationTest(unittest.TestCase):
         canonical = json.dumps(protocol, sort_keys=True, separators=(",", ":")).encode()
         self.assertEqual(
             hashlib.sha256(canonical).hexdigest(),
-            "a0c5814907427d466a905e27d2f9a78999f4fca6b6e09fe177796c8871eb6b18",
+            "b0a18d8551a5a7464e575893d291a9c6c312116990570bf2ae4a4a210b5dc443",
         )
         self.assertEqual(protocol["schema"], "slp.molecular-architecture-comparison-protocol/v1")
         self.assertEqual(protocol["protocolVersion"], "1.0.0")
@@ -376,10 +376,16 @@ class MolecularEvaluationTest(unittest.TestCase):
                 "double-cold",
             ],
         )
+        self.assertIn(
+            "same exact NCBI taxonomy ID and source ID stratum",
+            protocol["tasks"][1]["interventionAccess"],
+        )
         self.assertEqual(
             [baseline["name"] for baseline in protocol["requiredBaselines"]],
             ["context-only", "txpert-mean-additive", "feature-bilinear-ridge"],
         )
+        txpert = protocol["requiredBaselines"][1]["definition"]
+        self.assertIn("taxonomy ID and source ID", txpert["fittingStratum"])
         blocked = protocol["protocolRequiredContractBlocked"]
         self.assertEqual(blocked["bds"]["inadmissibleAtOrBelow"], 0.5)
         self.assertEqual(blocked["bds"]["status"], "protocol-required-contract-blocked")

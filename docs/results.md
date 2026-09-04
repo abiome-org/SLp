@@ -875,3 +875,107 @@ environment and reuses a fixed module-test identity; no interpreter-path or
 metadata-payload workaround was added. This milestone admits the contracts,
 not a model. No biological metric, selected checkpoint, SL benchmark result,
 novelty result, or SOTA claim exists.
+
+## 2026-09-04 — sparse optimizer, molecular baselines, and exact SGD identity map
+
+**Hypothesis, rule, modalities, and fixed inputs.** Before admitting biological
+outcomes, the typed sparse candidate should support a deterministic
+pretraining-only optimizer, the molecular protocol should have executable
+leakage-safe simple baselines, and the exact SGD source objects should produce a
+canonical stable-identity relation map without guessing symbols, case, retired
+redirects, or one-to-many targets. This engineering milestone passes only when
+two identical sparse fixture runs have identical parameter, prediction and
+report hashes; every validation intervention is absent from pretraining
+trajectories; baseline fitting obeys its frozen task and source/species access
+rules; the six SGD objects match their exact version, byte count and SHA-256;
+and Windows, Linux and OMF validation pass. It cannot advance a biological
+candidate. Accessible modalities were synthetic sparse Gaussian molecular
+records, SGD current-feature identities, typed external-accession relations,
+retired/merged records, the already verified Mendeley proteome matrix and
+metadata, and the atlas README only. The exact biological source contracts
+were `slp-sgd-map:2026-08-28-object-set-v1`, Mendeley
+`10.17632/w8jtmnszd9.2`, and Zenodo `10.5281/zenodo.14062629`; no quantitative
+biological OMF snapshot, RData payload, reward set, final holdout, benchmark
+snapshot, or biological checkpoint was opened.
+
+**Sparse optimizer boundary.** The new pure-library AdamW loop reads only
+`pretraining` records for updates and only `molecular-validation` records for a
+fixed before/after diagnostic. Each scheduled record contributes its own mean
+observed-target NLL and then receives equal batch weight, preventing dense
+panels from dominating sparse records. Epoch schedules are independently
+domain-separated while retaining exact source quotas; benchmark-like fields,
+role drift, held-gene overlap and contract drift fail before optimization. On
+the deliberately tiny fixed fixture, 18 epochs of eight records each allocated
+72 records to each of two sources. Overall per-target validation NLL changed
+from 1.5602428317070007 to 0.5222099050879478 over three observed targets;
+source A changed from 2.0367143154144287 to 0.7435191869735718 and source B
+from 0.6072998642921448 to 0.07959134131669998. Two independent runs produced
+parameter hash
+`9880a5eaa35ddda710e7565f874901715ff87e968c2329dbbef623b39847f044`,
+prediction hash
+`d19f2ac329f1e31b829e6e4c2ced89326cb8de57da8cf974eed16995f28467a7`,
+and report hash
+`2ee5c359f7fd1b2a0f4e12457af87235387ec95053945545cfa0121c8ebb8aee`
+exactly. These are initialization-to-final engineering diagnostics, not a
+training-mean/ridge comparison, checkpoint-selection result, biological metric
+or advancement decision. The OMF sparse entry point remains validation-only
+and emits no checkpoint.
+
+**Frozen molecular point baselines.** A separate self-contained module now
+implements context-only and TxPert mean/additive predictions over immutable
+centroid-profile snapshots. It requires an aggregation-protocol digest and an
+exact fitting-manifest link. Context-cold reference interventions must occur in
+another fitting context in the same NCBI-taxon/source stratum; gene-cold and
+double-cold interventions remain absent from all fitting outcomes. Exact,
+single-intervention and global TxPert effects never cross that stratum, and
+missing inputs remain null. The outputs deliberately omit a probabilistic
+scale, so the molecular evaluator blocks them rather than manufacturing
+uncertainty. Feature-bilinear ridge remains blocked until released query and
+action features exist.
+
+**SGD acquisition and mapping.** Six exact SGD objects totaling 18,804,370
+bytes were retrieved only to untracked temporary storage and matched locally
+computed SHA-256 values recorded in
+`sources/sgd-stable-id-mapping-2026-08-28.yaml`. The rights declaration is
+CC-BY-4.0 with training and redistribution separately allowed and attribution
+required. The mapper verifies the exact file set, documentation markers,
+line/record bounds, copy-materialized DatasetSnapshot shape, symlinks, bytes
+and hashes before output. A disposable real-payload smoke emitted 6,613 current
+ORFs, 228,320 typed relation keys, 19,276 one-to-many typed keys and 105
+retired/irregular quarantine rows, including five irregular physical rows. Its
+canonical mapping digest was
+`6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a`.
+The smoke output is not retained or admitted; the digest must be reproduced
+from the admitted raw DatasetSnapshot before it may enter the global held-gene
+roster. The Mendeley protein keys remain UniProt accessions connected to all
+exact typed current-ORF relations, including five one-to-many keys; none is
+arbitrarily collapsed to a gene.
+
+**Superseding source-probe correction.** The previous section's counts of
+4,549 distinct raw knockout strings, 150 duplicates and 247 extended rows were
+produced by a case-insensitive PowerShell enumeration and are superseded. Exact
+case-sensitive counting finds 4,550 unique strings and 149 duplicate rows:
+4,451 exact uppercase simple rows, 246 exact uppercase suffixed rows and two
+noncanonical mixed-case values (`YAL043C-a` and `YML009c`). Case folding merges
+`YML009c` with a separate `YML009C` row. Therefore the admission policy keeps
+only exact current one-to-one systematic mappings and quarantines every other
+intervention row; it never uppercases an unmatched value.
+
+**Validation and decision.** Pinned OMF 1.0 again passed all eight health
+checks; the bounded context still exposes only the Linux-local executor. The
+101-test Windows suite passed with two expected symlink-permission skips, and
+the 28 focused tests passed on Ubuntu/Python 3.12 with symlink rejection active.
+The SGD workload schema validates. OMF module packages/artifact manifests were:
+sparse world
+`sha256:3f446ef45aa7af51416492450caaee7768bd95ceebbdf9e7622bb9b57fec558c` /
+`sha256:18e66120add2c0bf47146e68d411e4e776d4e2873932cfb15e823a6d7320980c`,
+molecular baselines
+`sha256:275b2e4429359c6e73c6a60079c534ab2d0ae69f587c6c6db397aed699ff4b4e` /
+`sha256:317a58382b6e6a5b09b8f9b33a7769755ab64faa46807beb748e4107ffc09e90`,
+and SGD map
+`sha256:ef19d6d6584cbc9ffd0b472989d30641bce518be52cf24920643b0689064ba50` /
+`sha256:c8970cfc56c7c0270997a42057b398b8f385259707f56ac068c5120d9083cef2`.
+No candidate advances: there is still no admitted biological corpus, OMF sparse
+training/checkpoint path, frozen probabilistic baseline scale, fixed ridge
+implementation, molecular-gate result, SL benchmark result, novelty result, or
+SOTA evidence.

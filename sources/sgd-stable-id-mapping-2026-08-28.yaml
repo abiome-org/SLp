@@ -1,0 +1,251 @@
+schema: slp.source-acquisition/v1
+id: sgd-stable-id-mapping-2026-08-28
+status: raw-snapshot-content-verified-ready-for-admission-normalized-map-not-admitted
+blocker: >-
+  The exact six-file raw snapshot is content-verified and ready for a separate
+  OMF raw DatasetSnapshot admission. Neither that raw snapshot nor a normalized
+  mapping is admitted. Normalized-map admission remains blocked until the raw
+  snapshot is admitted, converted by the reviewed deterministic normalizer,
+  and its products are admitted with complete lineage.
+organism:
+  name: Saccharomyces cerevisiae
+  ncbiTaxon: 4932
+  taxonEvidence: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=4932&mode=Info
+source:
+  publisher: Saccharomyces Genome Database
+  archiveRoot: https://downloads.yeastgenome.org/curation/chromosomal_feature/
+  documentation: https://wiki.yeastgenome.org/index.php/FTP_Site
+rights: rights/sgd-stable-id-mapping-cc-by-4.0.yaml
+mappingRelease:
+  id: slp-sgd-map:2026-08-28-object-set-v1
+  idAuthority: local OMF acquisition contract
+  identityBasis: exact path and S3 version ID for every allowlisted object
+  snapshotDate: 2026-08-28
+  upstreamGenomeAnnotationRelease: R64.5.1
+  upstreamGenomeAnnotationReleaseDate: 2024-05-29
+  genomeReleaseEvidence: https://wiki.yeastgenome.org/index.php/Details_of_2024_Reference_Genome_Annotation_Update_R64.5
+  mappingReleaseIsGenomeAnnotationRelease: false
+  exactObjectVersionQueriesVerifiedAt: 2026-09-04
+  upstreamRetentionGuarantee: not documented; re-verify availability before acquisition
+  note: >-
+    R64.5.1 identifies the reference-genome annotation named by SGD's README.
+    The mapping release identity instead names this exact, weekly curated
+    object-version set; gene records never serve as the release identity.
+normalizedMappingArtifact:
+  identityMappingId: slp-sgd-map:2026-08-28-object-set-v1
+  identityMappingSha256: null
+  status: not-admitted
+  note: >-
+    Only an immutable normalized OMF run may set this digest. A disposable
+    normalizer smoke run is not an admitted mapping artifact. The digest is not
+    inferred from one gene record, an ETag, or the genome release label.
+identity:
+  canonicalNamespace: SGD
+  canonicalCurieForm: SGD:S#########
+  canonicalPrimaryIdSource: SGD_features.tab column 1
+  speciesTaxon: 4932
+  displaySymbolsAreIdentity: false
+  standardGeneNamesAreIdentity: false
+  freeTextAliasesAreIdentity: false
+  simpleSystematicOrfRegexRequired: false
+  note: >-
+    Systematic feature names are accepted from the pinned SGD table, including
+    valid suffixed names; they are not reconstructed or filtered through a
+    simple Y[A-P][LR]###C/W regex.
+allowlist:
+  - name: SGD_features.tab
+    path: curation/chromosomal_feature/SGD_features.tab
+    versionedUrl: "https://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.tab?versionId=44vkGKd1ao1YRMz6fRDrG754T10OWpYa"
+    s3VersionId: 44vkGKd1ao1YRMz6fRDrG754T10OWpYa
+    lastModified: 2026-08-28T09:11:54Z
+    bytes: 3382715
+    upstreamEtag: 84dae91514379c00ce22394da062e2dd
+    etagIsCryptographicChecksum: false
+    sha256: 636b4fc0407dd9f4fe74dceb5f5cd056194623d36a25c620a3c1ec2394af3dcc
+    role: current-primary-identities-and-systematic-feature-names
+    payloadClass: identity-data
+  - name: SGD_features.README
+    path: curation/chromosomal_feature/SGD_features.README
+    versionedUrl: "https://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.README?versionId=1tTdGAYrXGoMlKtlkxV5OowXh6JxgBoO"
+    s3VersionId: 1tTdGAYrXGoMlKtlkxV5OowXh6JxgBoO
+    lastModified: 2024-08-08T00:51:23Z
+    bytes: 1586
+    upstreamEtag: a2b40eed77b9aab5b6db50f3008b75e6
+    etagIsCryptographicChecksum: false
+    sha256: befbd275783dda3772a19a20fadc4b1d62916dfe04e436540d4d935693a49328
+    role: pinned-column-semantics
+    payloadClass: documentation
+  - name: dbxref.tab
+    path: curation/chromosomal_feature/dbxref.tab
+    versionedUrl: "https://downloads.yeastgenome.org/curation/chromosomal_feature/dbxref.tab?versionId=vXD5MzDg0MZo06dF_8ETYCszXgJoxt3v"
+    s3VersionId: vXD5MzDg0MZo06dF_8ETYCszXgJoxt3v
+    lastModified: 2026-08-28T09:11:55Z
+    bytes: 15365158
+    upstreamEtag: 592c9eccaa423d5e6647affe8c39f89a-2
+    etagIsCryptographicChecksum: false
+    sha256: 2ff198c4127c226fa965cf514e10d10e2e2e581be228a22f4da69773fd7df5b7
+    role: typed-external-accession-to-sgd-id-relations
+    payloadClass: identity-data
+  - name: dbxref.README
+    path: curation/chromosomal_feature/dbxref.README
+    versionedUrl: "https://downloads.yeastgenome.org/curation/chromosomal_feature/dbxref.README?versionId=ony2MZCEglI3DPYUTBOW0eku2IumqQwf"
+    s3VersionId: ony2MZCEglI3DPYUTBOW0eku2IumqQwf
+    lastModified: 2024-08-08T00:51:23Z
+    bytes: 3338
+    upstreamEtag: f2719b734b6ee2ab5aafcef1630f5709
+    etagIsCryptographicChecksum: false
+    sha256: 96deaf79c0ae0bc05fdcc7cd42bf31ee34261970ad422476038e7b737250cb2c
+    role: pinned-cross-reference-column-semantics
+    payloadClass: documentation
+  - name: deleted_merged_features.tab
+    path: curation/chromosomal_feature/deleted_merged_features.tab
+    versionedUrl: "https://downloads.yeastgenome.org/curation/chromosomal_feature/deleted_merged_features.tab?versionId=s23EsjjnQG_YwR5KWED7YkWqAiE_6u6G"
+    s3VersionId: s23EsjjnQG_YwR5KWED7YkWqAiE_6u6G
+    lastModified: 2026-08-28T09:11:49Z
+    bytes: 50549
+    upstreamEtag: ac7d3618233066cd02fdf1ec0742f83b
+    etagIsCryptographicChecksum: false
+    sha256: df979ff33732eb90220ef93c7ec38f817578dffbd31ebe3eb7978c98dd3f35b2
+    role: retired-and-merged-identity-quarantine
+    payloadClass: identity-data
+  - name: deleted_merged_features.README
+    path: curation/chromosomal_feature/deleted_merged_features.README
+    versionedUrl: "https://downloads.yeastgenome.org/curation/chromosomal_feature/deleted_merged_features.README?versionId=dx5YqH2HULlldRUhERyu8.8q8xNrQD9B"
+    s3VersionId: dx5YqH2HULlldRUhERyu8.8q8xNrQD9B
+    lastModified: 2024-08-08T00:51:23Z
+    bytes: 1024
+    upstreamEtag: 2386220e4cc394e8196de5a3959b260f
+    etagIsCryptographicChecksum: false
+    sha256: b68857febe13cb07f6127e50069d80e784f01d4f3e7a48c5119848869eb4ade3
+    role: pinned-retired-feature-column-semantics
+    payloadClass: documentation
+checksumPolicy:
+  upstreamSha256Available: false
+  upstreamEtagAcceptedAsChecksum: false
+  bytesSource: HTTP Content-Length from the exact object-version URL
+  admissionRequiresLocallyComputedSha256: true
+  exactVersionedObjectsDownloadedAt: 2026-09-04
+  localStorage: untracked temporary probe only
+  everyRecordedSha256Verified: true
+  rawSnapshotReadyForAdmission: true
+  onByteOrVersionDrift: fail
+rawProbe:
+  featureTable:
+    rowsIncludingBlank: 16461
+    blankRows: 2
+    dataColumns: 16
+    currentOrfRows: 6613
+    uniqueCurrentOrfPrimaryIds: 6613
+    uniqueExactSystematicNames: 6613
+    ambiguousExactSystematicNames: 0
+    malformedPrimarySgdIds: 0
+  crossReferenceTable:
+    rows: 267097
+    columns: 6
+    note: the pinned table has a sixth display-name column although the pinned README documents five; parsing must preserve and explicitly account for it
+  deletedMergedTable:
+    rowsIncludingIrregular: 105
+    thirteenColumnRows: 100
+    note: blank and irregular rows must be classified explicitly rather than silently padded
+normalizationContract:
+  outputSchema: slp.sgd-stable-id-mapping/v1
+  releaseIdentityField: identityMappingId
+  releaseDigestField: identityMappingSha256
+  canonicalGeneRecord:
+    source: SGD_features.tab
+    identityField: canonicalSgdCurie
+    primaryIdColumn: 1
+    curieRule: "prepend SGD: to the exact primary SGDID"
+    allowedFeatureType: ORF
+    systematicNameColumn: 4
+    standardGeneNameColumn: 5
+    freeTextAliasColumn: 6
+    secondarySgdIdColumn: 8
+  systematicOrfResolution:
+    key: exact SGD_features.tab column 4 value
+    target: canonical SGD CURIE from column 1 on the same current ORF row
+    caseNormalization: none
+    onDuplicateOrMissingTarget: quarantine
+  externalAccessionResolution:
+    source: dbxref.tab
+    keyColumns:
+      accession: 1
+      accessionSource: 2
+      accessionType: 3
+    featureNameColumn: 4
+    primarySgdIdColumn: 5
+    typedKeyRequired: true
+    bareAccessionAccepted: false
+    caseNormalization: none
+    namespaceInferenceFromLexicalShape: forbidden
+    normalizationPreservesAllTypedRelations: true
+    targetMustExistAsCurrentPrimaryOrf: false
+    emittedTargetStatus:
+      - current-orf
+      - current-non-orf
+      - retired-or-merged
+      - not-in-current-feature-table
+    onMultipleCurrentTargets: emit-all-exact-relations
+    onMissingCurrentTarget: preserve-relation-with-target-status
+    collapseOrDiscardRelations: forbidden
+  downstreamUntypedAccessionPolicy:
+    exampleField: Mendeley w8jtmnszd9.2 Protein.Group
+    assumeUniProtFromSixCharacterShape: false
+    requirement: >-
+      A downstream query must declare an explicit typed relation filter and
+      admissibility policy. Lexical shape alone never supplies a namespace.
+  downstreamQueryPolicies:
+    proteomeUniProt:
+      consumer: Mendeley w8jtmnszd9.2
+      inputField: Protein.Group
+      preserveInputAccessionKey: true
+      typedRelationFilter:
+        accessionSources:
+          - EBI
+          - UniProtKB
+        accessionType: UniProtKB ID
+      eligibleTargetStatus: current-orf
+      preserveAllExactCurrentOrfRelations: true
+      onMultipleCurrentOrfRelations: retain-all-and-defer-query-specific-admissibility
+      onNoCurrentOrfRelation: quarantine-downstream-record
+      chooseFirst: false
+      note: >-
+        The proteome adapter keeps the exact UniProt accession key together
+        with every exact current-ORF relation. Any later one-gene requirement
+        is a downstream query policy, never normalization-time data loss.
+  displayMetadata:
+    standardGeneName: SGD_features.tab column 5
+    aliases: SGD_features.tab column 6
+    resolutionUse: forbidden
+  retiredIdentityPolicy:
+    source: deleted_merged_features.tab
+    deletedAndMergedIdsAreCanonicalInputs: false
+    automaticRedirectToNewPrimaryId: false
+    action: quarantine-with-source-row-and-date
+  globalAmbiguityPolicy:
+    action: quarantine
+    neverChooseFirst: true
+    neverResolveByDisplaySymbol: true
+admission:
+  allowed: false
+  rawSnapshot:
+    contentVerified: true
+    readyForAdmission: true
+    admitted: false
+  normalizedMapping:
+    readyToBuildAfterRawAdmission: true
+    admitted: false
+    disposableSmokeRunCountsAsAdmission: false
+  exactObjectsDownloadedToUntrackedTemporaryStorage: true
+  biologicalBytesStoredInGit: false
+  requiredBeforeAdmission:
+    - retrieve every exact versionedUrl, never the mutable archive path
+    - verify Content-Length and echoed x-amz-version-id
+    - verify every recorded SHA-256 for every payload
+    - reject duplicate canonical primary IDs and malformed SGDIDs
+    - quarantine conflicting systematic names
+    - preserve every exact typed external-accession relation and its target status
+    - never uppercase or otherwise normalize an unmatched systematic ORF
+    - never infer an accession namespace from lexical shape alone
+    - quarantine every retired or merged identifier without automatic redirect
+    - emit deterministic current-map, typed-relation, and quarantine artifacts with record counts and digests

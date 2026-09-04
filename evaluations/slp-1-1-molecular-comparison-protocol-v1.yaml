@@ -14,7 +14,7 @@ tasks:
   - name: perturbation-context-cold-with-basal-access
     exclusion: every perturbational outcome from the complete evaluation biological context is absent from fitting, reward, and selection
     contextIdentity: immutable tuple of NCBI taxon, biological system or strain, genotype, donor, and condition; unreported fields remain explicit rather than inferred
-    interventionAccess: evaluation interventions must have quantitative outcomes in other fitting contexts
+    interventionAccess: evaluation interventions must have quantitative outcomes in other fitting contexts within the same exact NCBI taxonomy ID and source ID stratum
     basalAccess: a matched unperturbed basal or control profile from the evaluation context is allowed and must be declared
   - name: double-cold
     exclusion: both intervention-gene-cold and perturbation-context-cold-with-basal-access exclusions apply simultaneously
@@ -29,6 +29,7 @@ requiredBaselines:
       seenIntervention: add the intervention-specific mean effect over fitting contexts to the matched evaluation-context basal or control state
       unseenIntervention: add the global fitting perturbation mean effect to the matched evaluation-context basal or control state
       combination: use an exact fitting combination when available; otherwise add constituent effects and use the global fitting perturbation mean for each unavailable constituent
+      fittingStratum: every exact, constituent, and global fallback effect table is fit only within one exact NCBI taxonomy ID and source ID stratum; absent stratum/readout values remain missing
   - name: feature-bilinear-ridge
     status: protocol-required
     definition: "prediction = intercept + context_linear_term + query_features^T W action_features"

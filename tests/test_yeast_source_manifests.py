@@ -91,6 +91,12 @@ class YeastSourceManifestTest(unittest.TestCase):
         self.assertIn("literal NA", value_space["missing"])
         self.assertEqual(value_space["processing"]["software"],
                          "DIA-NN 1.7.12 and DIA-NN R maxLFQ")
+        controls = manifest["controlSemantics"]
+        self.assertEqual(controls["HIS3"]["role"], "biological-WT-control")
+        self.assertEqual(controls["HIS3"]["count"], 388)
+        self.assertEqual(controls["qc"]["role"],
+                         "pooled-digest-analytical-QC-only")
+        self.assertEqual(controls["qc"]["count"], 389)
         files = {item["name"]: item for item in manifest["allowlist"]}
         self.assertEqual(set(files), {
             "yeast5k_noimpute_wide.csv",
@@ -115,10 +121,49 @@ class YeastSourceManifestTest(unittest.TestCase):
             "qc": 389,
             "HIS3": 388,
         })
-        self.assertEqual(probe["observations"]["uniqueKnockoutOrfStrings"], 4549)
-        self.assertEqual(probe["observations"]["replicatedKnockoutRows"], 150)
+        self.assertEqual(
+            probe["observations"]["exactCaseUniqueKnockoutOrfStrings"], 4550
+        )
+        self.assertEqual(
+            probe["observations"]["caseFoldedUniqueKnockoutOrfStrings"], 4549
+        )
+        self.assertEqual(probe["observations"]["exactDuplicateKnockoutRows"], 149)
+        self.assertEqual(
+            probe["observations"]["uniqueExactUppercaseSuffixedSystematicIds"],
+            236,
+        )
+        self.assertEqual(
+            probe["observations"]["extendedSystematicSuffixRows"],
+            {"A": 214, "B": 29, "C": 3},
+        )
+        self.assertEqual(
+            probe["observations"]["nonCanonicalCaseSystematicIds"],
+            ["YAL043C-a", "YML009c"],
+        )
+        self.assertEqual(
+            probe["observations"]["caseFoldIdentityCollisions"],
+            [{"exactValues": ["YML009C", "YML009c"]}],
+        )
+        self.assertEqual(probe["observations"]["knockoutDetectionRows"], 959)
+        self.assertEqual(
+            probe["observations"]["knockoutDetectionStatusRows"],
+            {"Missing": 838, "Not missing": 121},
+        )
+        self.assertEqual(
+            probe["observations"]["knockoutDifferentialStatusRows"],
+            {"missing": 838, "not DE": 82, "DE": 39},
+        )
+        self.assertEqual(
+            probe["observations"]["knockoutDetectionDuplicatedOrfIds"], 23
+        )
         matrix = probe["observations"]["wideMatrix"]
         self.assertEqual((matrix["rows"], matrix["columns"]), (1850, 5477))
+        self.assertEqual(matrix["uniqueReadoutIds"], 1850)
+        self.assertIn("candidate UniProt", matrix["readoutIdObservedFormat"])
+        self.assertEqual(
+            matrix["readoutIdPrefixCounts"],
+            {"A": 1, "D": 1, "O": 7, "P": 1422, "Q": 419},
+        )
         self.assertIs(matrix["sampleHeaderOrderExactlyMatchesMetadata"], True)
         self.assertEqual(matrix["missingToken"], "NA")
         self.assertEqual(matrix["missingCells"], 255715)
@@ -133,6 +178,44 @@ class YeastSourceManifestTest(unittest.TestCase):
             },
         )
         self.assertTrue(probe["unresolved"])
+        identity_probe = manifest["rawIdentityJoinProbe"]
+        self.assertEqual(
+            identity_probe["mappingReleaseId"],
+            "slp-sgd-map:2026-08-28-object-set-v1",
+        )
+        interventions = identity_probe["interventionIdentities"]
+        self.assertEqual(interventions["exactCaseUniqueInputIds"], 4550)
+        self.assertEqual(interventions["exactCurrentRows"], 4623)
+        self.assertEqual(interventions["exactCurrentOneToOne"], 4476)
+        self.assertEqual(interventions["strictQuarantineRows"], 76)
+        self.assertEqual(interventions["strictQuarantineBeforeSourceIntersection"], 74)
+        readouts = identity_probe["readoutIdentities"]
+        self.assertEqual(readouts["exactTypedAccessionsCovered"], 1850)
+        self.assertEqual(readouts["oneToOneCurrentOrfRelations"], 1845)
+        self.assertEqual(readouts["oneToManyCurrentOrfRelations"], 5)
+        self.assertEqual(
+            [item["accession"] for item in readouts["oneToManyAccessions"]],
+            [
+                "UniProtKB:P02309",
+                "UniProtKB:P02994",
+                "UniProtKB:P10081",
+                "UniProtKB:P32324",
+                "UniProtKB:P61830",
+            ],
+        )
+        target = manifest["molecularTargetProtocol"]
+        self.assertEqual(
+            target["outputValue"]["transform"],
+            "log2 of each observed input intensity with no pseudocount",
+        )
+        self.assertEqual(target["outputValue"]["additionalCentering"], "none")
+        self.assertEqual(target["sampleRoles"]["qc"],
+                         "analytical-QC-only-excluded-from-world-records")
+        self.assertIn("WT controls only", target["basalProfile"]["fittingDataUsed"])
+        self.assertIn(
+            "all knockout and WT",
+            target["prohibited"][0],
+        )
         self._assert_rights(
             manifest["rights"], "10.17632/w8jtmnszd9.2"
         )
@@ -152,6 +235,15 @@ class YeastSourceManifestTest(unittest.TestCase):
             self.assertEqual(source["manifest"], manifest_path)
             self.assertNotIn("snapshot", source)
             self.assertNotIn("revision", source)
+        mapping = sources["sgd-stable-id-mapping-2026-08-28"]
+        self.assertEqual(
+            mapping["status"],
+            "raw-snapshot-content-verified-ready-for-admission-normalized-map-not-admitted",
+        )
+        self.assertEqual(
+            mapping["manifest"],
+            "sources/sgd-stable-id-mapping-2026-08-28.yaml",
+        )
 
 
 if __name__ == "__main__":

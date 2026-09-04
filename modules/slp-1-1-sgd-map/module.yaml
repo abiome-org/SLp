@@ -1,0 +1,72 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-sgd-map
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  contracts:
+    input:
+      type: object
+      required: [rawSgdMapping]
+      properties:
+        rawSgdMapping: {type: object}
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - mappingSummary
+        - identityMappingId
+        - identityMappingSha256
+        - mappingManifestSha256
+        - currentOrfCount
+        - typedExternalRelationCount
+        - oneToManyExternalRelationCount
+        - retiredQuarantineCount
+        - retiredIrregularCount
+      properties:
+        mappingSummary: {type: object}
+        identityMappingId: {type: string}
+        identityMappingSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        mappingManifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        currentOrfCount: {type: integer, minimum: 0, maximum: 50000}
+        typedExternalRelationCount: {type: integer, minimum: 0, maximum: 500000}
+        oneToManyExternalRelationCount: {type: integer, minimum: 0, maximum: 500000}
+        retiredQuarantineCount: {type: integer, minimum: 0, maximum: 10000}
+        retiredIrregularCount: {type: integer, minimum: 0, maximum: 10000}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        maxFeatureRecords: {type: integer, minimum: 1, maximum: 50000}
+        maxExternalRecords: {type: integer, minimum: 1, maximum: 500000}
+        maxRetiredPhysicalLines: {type: integer, minimum: 1, maximum: 10000}
+        maxLineBytes: {type: integer, minimum: 128, maximum: 65536}
+        maxTargetsPerExternalKey: {type: integer, minimum: 1, maximum: 4096}
+        maxAssertionsPerExternalTarget: {type: integer, minimum: 1, maximum: 1024}
+        maxDisplayAliasesPerOrf: {type: integer, minimum: 1, maximum: 1024}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          rawSgdMapping: {}
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          mappingSummary:
+            schema: slp.sgd-stable-id-mapping/v1
+            validationOnly: true
+          identityMappingId: slp-sgd-map:2026-08-28-object-set-v1
+          identityMappingSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          mappingManifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          currentOrfCount: 0
+          typedExternalRelationCount: 0
+          oneToManyExternalRelationCount: 0
+          retiredQuarantineCount: 0
+          retiredIrregularCount: 0

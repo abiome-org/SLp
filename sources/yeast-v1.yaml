@@ -6,6 +6,16 @@ identity:
   primaryNamespace: SGD
   symbolUse: display-only
 sources:
+  - id: sgd-stable-id-mapping-2026-08-28
+    role: identity-provenance
+    status: raw-snapshot-content-verified-ready-for-admission-normalized-map-not-admitted
+    manifest: sources/sgd-stable-id-mapping-2026-08-28.yaml
+    rights: rights/sgd-stable-id-mapping-cc-by-4.0.yaml
+    modalities:
+      - stable-gene-identity
+      - typed-external-accession-relation
+      - retired-identity-quarantine
+    admissionRule: normalize the exact object-version and SHA-256-pinned tables, retain ambiguity, and admit current mappings plus quarantine with complete lineage
   - id: sgd-reference
     role: static-features
     status: admitted-for-preparation

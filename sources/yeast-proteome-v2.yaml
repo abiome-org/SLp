@@ -36,6 +36,16 @@ upstreamValueSpace:
     precursorEligibility: identified in more than 80 percent of WT samples and quantified with CV below 50 percent
     sampleEligibility: identified precursor count at least 80 percent of the maximum sample count
   methodsSource: https://pmc.ncbi.nlm.nih.gov/articles/PMC7615649/#sec4title
+controlSemantics:
+  HIS3:
+    role: biological-WT-control
+    count: 388
+    strain: his3Delta::kanMX deletion complemented by heterologous HIS3 expression
+  qc:
+    role: pooled-digest-analytical-QC-only
+    count: 389
+    perPlate: 7
+  source: https://pmc.ncbi.nlm.nih.gov/articles/PMC7615649/
 scale:
   knockoutStrains: 4699
   meanProteinsPerStrain: 2520
@@ -98,10 +108,23 @@ metadataProbe:
       qc: 389
       HIS3: 388
     plates: 57
-    uniqueKnockoutOrfStrings: 4549
-    replicatedKnockoutRows: 150
-    simpleSystematicKnockoutRows: 4452
-    extendedSystematicKnockoutRows: 247
+    exactCaseUniqueKnockoutOrfStrings: 4550
+    caseFoldedUniqueKnockoutOrfStrings: 4549
+    exactDuplicateKnockoutRows: 149
+    exactUppercaseSimpleSystematicRows: 4451
+    exactUppercaseSuffixedSystematicRows: 246
+    uniqueExactUppercaseSuffixedSystematicIds: 236
+    extendedSystematicSuffixRows:
+      A: 214
+      B: 29
+      C: 3
+    nonCanonicalCaseSystematicIds:
+      - YAL043C-a
+      - YML009c
+    caseFoldIdentityCollisions:
+      - exactValues:
+          - YML009C
+          - YML009c
     his3ControlOrf: YOR202W
     metadataColumns:
       - Filename
@@ -115,10 +138,27 @@ metadataProbe:
       - genename
       - Detection of KO Protein
       - differential expression of KO protein
+    knockoutDetectionRows: 959
+    knockoutDetectionStatusRows:
+      Missing: 838
+      Not missing: 121
+    knockoutDifferentialStatusRows:
+      missing: 838
+      not DE: 82
+      DE: 39
+    knockoutDetectionDuplicatedOrfIds: 23
     wideMatrix:
       rows: 1850
       columns: 5477
       readoutIdColumn: Protein.Group
+      uniqueReadoutIds: 1850
+      readoutIdObservedFormat: all values are unique uppercase alphanumeric strings of length 6; treat as candidate UniProt accessions until a pinned mapping proves the namespace
+      readoutIdPrefixCounts:
+        A: 1
+        D: 1
+        O: 7
+        P: 1422
+        Q: 419
       sampleColumns: 5476
       sampleHeaderOrderExactlyMatchesMetadata: true
       uniqueSampleHeaders: 5476
@@ -134,10 +174,92 @@ metadataProbe:
       differentialStatisticsAreSeparateDerivedFiles: true
   unresolved:
     - pin an SGD mapping snapshot before converting simple and suffixed systematic ORFs to SGD CURIEs
+    - resolve mixed-case YAL043C-a and YML009c only through the pinned mapping or quarantine them; do not uppercase heuristically because YML009c collides case-insensitively with a separate YML009C row
     - resolve Protein.Group accessions through a pinned protein-to-SGD mapping and document the quantitative normalization/value space
+    - retain Detection_of_KO_proteins.csv as QC provenance only; its 959 rows and repeated ORFs do not define source-wide sample eligibility without a frozen interpretation
+    - never use pooled-digest qc rows as biological basal states; only explicitly documented HIS3-complemented WT samples are candidate basal controls
     - freeze a leakage-safe model target transform using fitting data and WT controls only; published all-KO centering cannot include held interventions
     - treat growth-like filename suffixes as untrusted provenance until documented, never as an implicit model feature or target
     - parse the matrix with RFC-compatible CSV handling because one sample header contains the gene label DUR1,2
+rawIdentityJoinProbe:
+  date: 2026-09-04
+  status: probe-only-not-admitted
+  mappingSource: sources/sgd-stable-id-mapping-2026-08-28.yaml
+  mappingReleaseId: slp-sgd-map:2026-08-28-object-set-v1
+  mappingPayloads:
+    SGD_features.tab: 636b4fc0407dd9f4fe74dceb5f5cd056194623d36a25c620a3c1ec2394af3dcc
+    dbxref.tab: 2ff198c4127c226fa965cf514e10d10e2e2e581be228a22f4da69773fd7df5b7
+    deleted_merged_features.tab: df979ff33732eb90220ef93c7ec38f817578dffbd31ebe3eb7978c98dd3f35b2
+  interventionIdentities:
+    inputRows: 4699
+    exactCaseUniqueInputIds: 4550
+    exactCurrentRows: 4623
+    exactCurrentOneToOne: 4476
+    exactRetiredOrMergedRows: 36
+    exactRetiredOrMerged: 34
+    unmatchedExactRows: 40
+    unmatchedExact: 40
+    currentExactAmbiguities: 0
+    strictQuarantineRows: 76
+    strictQuarantineBeforeSourceIntersection: 74
+    policy: use only exact current one-to-one systematic-name rows; quarantine retired, merged, unmatched, mixed-case, and ambiguous identities without redirects or case normalization
+  readoutIdentities:
+    exactInputAccessions: 1850
+    typedDbxrefSource: UniProtKB
+    typedDbxrefType: UniProtKB ID
+    exactTypedAccessionsCovered: 1850
+    oneToOneCurrentOrfRelations: 1845
+    oneToManyCurrentOrfRelations: 5
+    oneToManyAccessions:
+      - accession: UniProtKB:P02309
+        genes: [SGD:S000000213, SGD:S000004975]
+      - accession: UniProtKB:P02994
+        genes: [SGD:S000000322, SGD:S000006284]
+      - accession: UniProtKB:P10081
+        genes: [SGD:S000001767, SGD:S000003674]
+      - accession: UniProtKB:P32324
+        genes: [SGD:S000002793, SGD:S000005659]
+      - accession: UniProtKB:P61830
+        genes: [SGD:S000000214, SGD:S000004976]
+    policy: preserve every readout as its UniProtKB CURIE and attach all exact typed SGD relations; never collapse a shared protein accession to an arbitrary gene
+molecularTargetProtocol:
+  id: slp-value:mendeley-w8jtmnszd9-v2-log2-relative-intensity-v1
+  status: frozen-before-roster-and-outcome-conversion
+  sourcePayloadSha256: 69a9df05b6db011f595a4e0b3ce25c1cc247f22cbdd066c79e6da9a706aa1df9
+  biologicalContext:
+    id: slp-context:mendeley-w8jtmnszd9-v2-prototrophic-sm
+    taxon: 4932
+    system: prototrophic derivative of the yeast gene deletion collection
+    medium: synthetic minimal medium without amino-acid or nucleobase supplementation
+    source: https://pmc.ncbi.nlm.nih.gov/articles/PMC7615649/
+  sampleRoles:
+    ko: individual-perturbation-outcome
+    HIS3: biological-WT-control
+    qc: analytical-QC-only-excluded-from-world-records
+  inputValue:
+    quantity: upstream batch-corrected MaxLFQ relative intensity
+    required: finite and strictly positive when observed
+    missingToken: NA
+  outputValue:
+    transform: log2 of each observed input intensity with no pseudocount
+    valueSpace: slp-value:log2-batch-corrected-maxlfq-relative-intensity
+    likelihood: gaussian
+    missing: unobserved; preserve as missing and never impute or convert to zero
+    additionalCentering: none
+  basalProfile:
+    aggregation: arithmetic mean of observed log2 values over the 388 documented HIS3-complemented biological WT controls, independently per readout
+    minimumObservedFraction: 0.8
+    fittingDataUsed: biological WT controls only; no knockout outcome contributes
+  technicalCovariates:
+    plate: audit-only because the upstream payload is already plate corrected; never a biological context or learnable world feature
+    filenameSuffixes: untrusted-provenance-only
+  interventionPolicy: include only rows with exact current one-to-one systematic-name mapping; preserve duplicate rows as replicates; quarantine every other row before held-roster intersection
+  readoutPolicy: use UniProtKB CURIE identity for all 1850 proteins and preserve typed one-to-many gene relations
+  prohibited:
+    - published centering across all knockout and WT samples
+    - imputed matrix or differential-statistics files
+    - growth-rate or filename-derived targets and features
+    - pooled-digest QC profiles as basal biological states
 admission:
   firstOperation: metadata-and-schema-probe-only
   requireStableDeletionIdentity: true

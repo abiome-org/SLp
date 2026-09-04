@@ -60,9 +60,12 @@ provenance, while the network receives feature vectors, presence masks and
 ontology-type indices. Targets are record-local CSR query/value lists rather
 than a dense record-by-global-readout tensor. Gaussian and negative-binomial
 heads share the world representation but retain distinct likelihoods. A
-count-specific library-size offset and biological training loop are not yet
-implemented; this candidate cannot be selected until both the relevant
-likelihood contract and molecular comparisons pass.
+deterministic bounded AdamW library now exercises the sparse candidate with
+pretraining-only updates, equal scheduled-record weighting and fixed validation
+diagnostics. It is not wired to an OMF training entry point and emits no
+checkpoint. A count-specific library-size offset is also not implemented; this
+candidate cannot be selected until the relevant likelihood contract, admitted
+biological training path and molecular comparisons pass.
 
 Species is an explicit continuous feature block, not inferred from gene names.
 Yeast observations retain yeast identifiers and experimental context. Orthology
@@ -102,13 +105,22 @@ accuracy by source and species. Scaling claims require fixed data mixtures
 evaluated at multiple token budgets; parameter growth alone is not a scientific
 result.
 
+The frozen context-only and TxPert mean/additive implementations operate on
+separately pinned fitting and reference profile snapshots. TxPert effects never
+cross a source/species stratum, and context-cold access requires each reference
+intervention to have fitting outcomes in another context of that same stratum.
+These v1 baselines emit point predictions only and remain evaluation-blocked
+until a probabilistic scale is frozen. The feature-bilinear ridge baseline is
+also blocked until released query and action feature vectors exist.
+
 ## Release status
 
 No SLp-1.1 model is released. The repository contains the OMF project boundary,
 corpus leakage auditor, outcome-blind held-intervention roster, typed sparse
-world-candidate contract, workload contracts, and molecular evaluator. The
-sparse module currently validates architecture and corpus semantics only; it
-does not train or emit a checkpoint.
+world-candidate contract and optimizer library, workload contracts, SGD
+stable-identity normalizer, molecular point baselines, and molecular evaluator.
+The sparse OMF module still validates architecture and corpus semantics only;
+it does not train or emit a checkpoint.
 
 OpenModelFactory 1.0 is supported for its local lifecycle on Linux x86-64, not
 this Windows checkout. It also passes JSON protocol state—but not a materialized

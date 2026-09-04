@@ -1,0 +1,34 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://downloads.yeastgenome.org/curation/chromosomal_feature/
+evidence: https://doi.org/10.1093/genetics/iyae185
+evidenceMirror: https://wiki.yeastgenome.org/images/1/18/Engel_2025_PMID_39530598.pdf
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  SGD-authored information and materials in the exact object-version-pinned
+  SGD_features.tab, dbxref.tab, deleted_merged_features.tab, and accompanying
+  README files declared by sources/sgd-stable-id-mapping-2026-08-28.yaml only
+rightsBasis: >-
+  The SGD project's 2025 GENETICS update states that all information and
+  materials provided by SGD are available under CC BY 4.0 and expressly
+  permits distribution, remixing, adaptation, and commercial use with
+  attribution. Model training is treated as an allowed adaptation.
+technicalAccessIsRightsEvidence: false
+technicalAccessEvidence:
+  host: https://downloads.yeastgenome.org/
+  mechanism: Amazon S3 object-version URL
+  verifiedAt: 2026-09-04
+  note: >-
+    Successful access to a versioned object is recorded separately and does
+    not establish license permission.
+attribution: >-
+  Saccharomyces Genome Database (SGD), Stanford University; Engel SR et al.
+  (2025), Saccharomyces Genome Database: Advances in Genome Annotation,
+  Expanded Biochemical Pathways, and Other Key Enhancements, GENETICS 229(3),
+  iyae185. https://doi.org/10.1093/genetics/iyae185
+exclusions:
+  - linked third-party resources and payloads not authored or distributed by SGD
+  - mutable unversioned responses outside the exact source allowlist
+  - any future SGD object version until its rights and provenance are reviewed
