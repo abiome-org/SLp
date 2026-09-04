@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abiome-org.github.io/OpenModelFactory/schemas/slp-static-entity-universe-audit-v1.schema.json",
+  "title": "SLp static entity universe audit v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "inputs",
+    "source",
+    "identityMapping",
+    "semanticSetHashes",
+    "outputs",
+    "counts",
+    "oneToManyRelations",
+    "accessBoundary",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {"const": "slp.static-entity-universe-audit/v1"},
+    "inputs": {
+      "type": "object",
+      "required": ["interventionInventory", "proteinRelations"],
+      "properties": {
+        "interventionInventory": {"$ref": "#/$defs/pinnedInput"},
+        "proteinRelations": {"$ref": "#/$defs/pinnedInput"}
+      },
+      "additionalProperties": false
+    },
+    "source": {"$ref": "#/$defs/source"},
+    "identityMapping": {"$ref": "#/$defs/identityMapping"},
+    "semanticSetHashes": {"$ref": "#/$defs/semanticSetHashes"},
+    "outputs": {
+      "type": "object",
+      "required": [
+        "archiveSha256",
+        "manifestSha256",
+        "entitySetSha256",
+        "relationSetSha256"
+      ],
+      "properties": {
+        "archiveSha256": {"$ref": "#/$defs/sha256"},
+        "manifestSha256": {"$ref": "#/$defs/sha256"},
+        "entitySetSha256": {"$ref": "#/$defs/sha256"},
+        "relationSetSha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "counts": {
+      "type": "object",
+      "required": [
+        "interventionRecords",
+        "duplicateInterventionRecords",
+        "actionEntities",
+        "readoutQueryEntities",
+        "totalEntities",
+        "relationRecords",
+        "relationEdges",
+        "oneToManyRelations",
+        "relationTargetGenes",
+        "relationTargetsInUniverse",
+        "relationTargetsInActionUniverse",
+        "relationSupportGenes",
+        "relationSupportOnly",
+        "currentModelEligibleKeys"
+      ],
+      "properties": {
+        "interventionRecords": {"$ref": "#/$defs/count"},
+        "duplicateInterventionRecords": {"$ref": "#/$defs/count"},
+        "actionEntities": {"$ref": "#/$defs/count"},
+        "readoutQueryEntities": {"$ref": "#/$defs/count"},
+        "totalEntities": {"$ref": "#/$defs/count"},
+        "relationRecords": {"$ref": "#/$defs/count"},
+        "relationEdges": {"$ref": "#/$defs/count"},
+        "oneToManyRelations": {"$ref": "#/$defs/count"},
+        "relationTargetGenes": {"$ref": "#/$defs/count"},
+        "relationTargetsInUniverse": {"$ref": "#/$defs/count"},
+        "relationTargetsInActionUniverse": {"$ref": "#/$defs/count"},
+        "relationSupportGenes": {"$ref": "#/$defs/count"},
+        "relationSupportOnly": {"$ref": "#/$defs/count"},
+        "currentModelEligibleKeys": {"$ref": "#/$defs/count"}
+      },
+      "additionalProperties": false
+    },
+    "oneToManyRelations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["ncbiTaxon", "proteinId", "currentOrfRelations"],
+        "properties": {
+          "ncbiTaxon": {"type": "integer", "minimum": 1},
+          "proteinId": {
+            "type": "string",
+            "pattern": "^UniProtKB:[A-Z0-9][A-Z0-9-]{0,31}$"
+          },
+          "currentOrfRelations": {
+            "type": "array",
+            "minItems": 2,
+            "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^SGD:S[0-9]{9}$"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "accessBoundary": {
+      "type": "object",
+      "required": [
+        "inputSnapshots",
+        "heldRosterConsumed",
+        "outcomesOrLabelsConsumed",
+        "trainingPartitionAssignmentsConsumed",
+        "numericFeaturesConsumed",
+        "displaySymbolsConsumed",
+        "identifiersMergedAcrossTaxa"
+      ],
+      "properties": {
+        "inputSnapshots": {"const": ["interventionInventory", "proteinRelations"]},
+        "heldRosterConsumed": {"const": false},
+        "outcomesOrLabelsConsumed": {"const": false},
+        "trainingPartitionAssignmentsConsumed": {"const": false},
+        "numericFeaturesConsumed": {"const": false},
+        "displaySymbolsConsumed": {"const": false},
+        "identifiersMergedAcrossTaxa": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {"const": "identity and typed relations only; this artifact is not a numeric static feature pack"},
+        {"const": "711 relation-support-only genes close the source relation graph but are not action eligible"},
+        {"const": "this artifact assigns no pretraining, validation, final, benchmark, or reward roles"}
+      ],
+      "items": false
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "prefixedSha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "trimmedString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "release", "ncbiTaxon"],
+      "properties": {
+        "id": {"$ref": "#/$defs/trimmedString"},
+        "release": {"$ref": "#/$defs/trimmedString"},
+        "ncbiTaxon": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "identityMapping": {
+      "type": "object",
+      "required": ["id", "sha256"],
+      "properties": {
+        "id": {"$ref": "#/$defs/trimmedString"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "pinnedInput": {
+      "type": "object",
+      "required": [
+        "resource",
+        "revision",
+        "manifestDigest",
+        "innerManifestSha256",
+        "recordsSha256",
+        "records"
+      ],
+      "properties": {
+        "resource": {
+          "type": "string",
+          "pattern": "^omf://(?:[^/@\\s]+/)+datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+        },
+        "revision": {"$ref": "#/$defs/prefixedSha256"},
+        "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "innerManifestSha256": {"$ref": "#/$defs/sha256"},
+        "recordsSha256": {"$ref": "#/$defs/sha256"},
+        "records": {"$ref": "#/$defs/count"}
+      },
+      "additionalProperties": false
+    },
+    "semanticDigest": {
+      "type": "object",
+      "required": ["basis", "sha256"],
+      "properties": {
+        "basis": {"type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "semanticSetHashes": {
+      "type": "object",
+      "required": [
+        "framing",
+        "actionIdSet",
+        "proteinIdSet",
+        "relationEdgeSet",
+        "fullEntityIdSet",
+        "fullEntityKeySet"
+      ],
+      "properties": {
+        "framing": {"const": "unique-ASCII-items-ordinal-sort-LF-terminated"},
+        "actionIdSet": {
+          "allOf": [
+            {"$ref": "#/$defs/semanticDigest"},
+            {"properties": {"basis": {"const": "interventionId"}}}
+          ]
+        },
+        "proteinIdSet": {
+          "allOf": [
+            {"$ref": "#/$defs/semanticDigest"},
+            {"properties": {"basis": {"const": "proteinId"}}}
+          ]
+        },
+        "relationEdgeSet": {
+          "allOf": [
+            {"$ref": "#/$defs/semanticDigest"},
+            {"properties": {"basis": {"const": "proteinId-TAB-currentOrfRelation"}}}
+          ]
+        },
+        "fullEntityIdSet": {
+          "type": "object",
+          "required": ["basis", "ncbiTaxon", "sha256"],
+          "properties": {
+            "basis": {
+              "const": "union-of-action-protein-and-relation-target-IDs-under-one-bound-ncbiTaxon"
+            },
+            "ncbiTaxon": {"type": "integer", "minimum": 1},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          },
+          "additionalProperties": false
+        },
+        "fullEntityKeySet": {
+          "allOf": [
+            {"$ref": "#/$defs/semanticDigest"},
+            {"properties": {"basis": {"const": "ncbiTaxon-TAB-entityId"}}}
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

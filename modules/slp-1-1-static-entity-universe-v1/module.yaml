@@ -1,0 +1,129 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-static-entity-universe-v1
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  contracts:
+    input:
+      type: object
+      required: [interventionInventory, proteinRelations]
+      properties:
+        interventionInventory:
+          type: object
+          required: [resource, mode, path, manifestDigest]
+          properties:
+            resource: {type: string, const: "omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            manifestDigest: {const: "sha256:a1f5222f3dca31d2ca68ca46a271d39cdca3425a903b5dceb7373481450ada36"}
+          additionalProperties: false
+        proteinRelations:
+          type: object
+          required: [resource, mode, path, manifestDigest]
+          properties:
+            resource: {type: string, const: "omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-protein-relations-v1@sha256:acad3427907644f8ab8af38ed36066a6e1148ef92557b727351b0a4fba2b446c"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            manifestDigest: {const: "sha256:c159573f4f7a2e41b18930d724dea9fb297452a659bdf6050e4718efc1a6c58a"}
+          additionalProperties: false
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - auditSummary
+        - archiveSha256
+        - auditSha256
+        - manifestSha256
+        - entitySetSha256
+        - relationSetSha256
+        - actionIdSetSha256
+        - proteinIdSetSha256
+        - relationEdgeSetSha256
+        - fullEntityIdSetSha256
+        - fullEntityKeySetSha256
+        - actionEntities
+        - readoutQueryEntities
+        - totalEntities
+        - relationRecords
+        - relationEdges
+        - relationTargetGenes
+        - relationTargetsInUniverse
+        - relationSupportOnly
+        - oneToManyRelations
+      properties:
+        auditSummary: {type: object}
+        archiveSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        auditSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        manifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        entitySetSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        relationSetSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        actionIdSetSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        proteinIdSetSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        relationEdgeSetSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        fullEntityIdSetSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        fullEntityKeySetSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        actionEntities: {type: integer, minimum: 0, maximum: 10000000}
+        readoutQueryEntities: {type: integer, minimum: 0, maximum: 10000000}
+        totalEntities: {type: integer, minimum: 0, maximum: 20000000}
+        relationRecords: {type: integer, minimum: 0, maximum: 10000000}
+        relationEdges: {type: integer, minimum: 0, maximum: 100000000}
+        relationTargetGenes: {type: integer, minimum: 0, maximum: 10000000}
+        relationTargetsInUniverse: {type: integer, minimum: 0, maximum: 10000000}
+        relationSupportOnly: {type: integer, minimum: 0, maximum: 10000000}
+        oneToManyRelations: {type: integer, minimum: 0, maximum: 10000000}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        maxManifestBytes: {type: integer, minimum: 256, maximum: 16777216}
+        maxLineBytes: {type: integer, minimum: 128, maximum: 1048576}
+        maxInterventionRecords: {type: integer, minimum: 1, maximum: 10000000}
+        maxRelationRecords: {type: integer, minimum: 1, maximum: 10000000}
+        maxArchiveBytes: {type: integer, minimum: 1024, maximum: 1073741824}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          interventionInventory:
+            resource: "omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9"
+            mode: copy
+            path: /fixture/inputs/interventionInventory/slp-1-1-proteome-intervention-inventory-v1
+            manifestDigest: "sha256:a1f5222f3dca31d2ca68ca46a271d39cdca3425a903b5dceb7373481450ada36"
+          proteinRelations:
+            resource: "omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-protein-relations-v1@sha256:acad3427907644f8ab8af38ed36066a6e1148ef92557b727351b0a4fba2b446c"
+            mode: copy
+            path: /fixture/inputs/proteinRelations/slp-1-1-proteome-protein-relations-v1
+            manifestDigest: "sha256:c159573f4f7a2e41b18930d724dea9fb297452a659bdf6050e4718efc1a6c58a"
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          auditSummary:
+            schema: slp.static-entity-universe-validation/v1
+            validationOnly: true
+          archiveSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          auditSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          manifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          entitySetSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          relationSetSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          actionIdSetSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          proteinIdSetSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          relationEdgeSetSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          fullEntityIdSetSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          fullEntityKeySetSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          actionEntities: 0
+          readoutQueryEntities: 0
+          totalEntities: 0
+          relationRecords: 0
+          relationEdges: 0
+          relationTargetGenes: 0
+          relationTargetsInUniverse: 0
+          relationSupportOnly: 0
+          oneToManyRelations: 0

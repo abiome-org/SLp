@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abiome-org.github.io/OpenModelFactory/schemas/slp-static-entity-universe-v1.schema.json",
+  "title": "SLp static entity universe v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "version",
+    "identityKey",
+    "ordering",
+    "source",
+    "identityMapping",
+    "semanticSetHashes",
+    "inputs",
+    "entities",
+    "relations",
+    "contentPolicy"
+  ],
+  "properties": {
+    "schema": {"const": "slp.static-entity-universe/v1"},
+    "version": {"const": 1},
+    "identityKey": {"const": ["ncbiTaxon", "entityId"]},
+    "ordering": {"const": "ascending-ncbiTaxon-then-codepoint-entityId"},
+    "source": {"$ref": "#/$defs/source"},
+    "identityMapping": {"$ref": "#/$defs/identityMapping"},
+    "semanticSetHashes": {"$ref": "#/$defs/semanticSetHashes"},
+    "inputs": {
+      "type": "object",
+      "required": ["interventionInventory", "proteinRelations"],
+      "properties": {
+        "interventionInventory": {"$ref": "#/$defs/pinnedInput"},
+        "proteinRelations": {"$ref": "#/$defs/pinnedInput"}
+      },
+      "additionalProperties": false
+    },
+    "entities": {
+      "type": "object",
+      "required": ["format", "file", "counts"],
+      "properties": {
+        "format": {"const": "slp.static-entity/v1"},
+        "file": {
+          "allOf": [
+            {"$ref": "#/$defs/fileReference"},
+            {"properties": {"path": {"const": "entities.jsonl"}}}
+          ]
+        },
+        "counts": {
+          "type": "object",
+          "required": [
+            "genes",
+            "proteins",
+            "actionEligible",
+            "readoutQueryEligible",
+            "relationSupport",
+            "relationSupportOnly",
+            "currentModelEligibleKeys",
+            "totalSourceUniverse"
+          ],
+          "properties": {
+            "genes": {"$ref": "#/$defs/count"},
+            "proteins": {"$ref": "#/$defs/count"},
+            "actionEligible": {"$ref": "#/$defs/count"},
+            "readoutQueryEligible": {"$ref": "#/$defs/count"},
+            "relationSupport": {"$ref": "#/$defs/count"},
+            "relationSupportOnly": {"$ref": "#/$defs/count"},
+            "currentModelEligibleKeys": {"$ref": "#/$defs/count"},
+            "totalSourceUniverse": {"$ref": "#/$defs/count"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "relations": {
+      "type": "object",
+      "required": [
+        "format",
+        "file",
+        "relationSetSha256",
+        "edges",
+        "oneToManyRecords",
+        "chooseFirstAllowed",
+        "targetGenes",
+        "targetsInUniverse"
+      ],
+      "properties": {
+        "format": {"const": "slp.proteome-protein-relation/v1"},
+        "file": {
+          "allOf": [
+            {"$ref": "#/$defs/fileReference"},
+            {"properties": {"path": {"const": "relations.jsonl"}}}
+          ]
+        },
+        "relationSetSha256": {"$ref": "#/$defs/sha256"},
+        "edges": {"$ref": "#/$defs/count"},
+        "oneToManyRecords": {"$ref": "#/$defs/count"},
+        "chooseFirstAllowed": {"const": false},
+        "targetGenes": {"$ref": "#/$defs/count"},
+        "targetsInUniverse": {"$ref": "#/$defs/count"}
+      },
+      "additionalProperties": false
+    },
+    "contentPolicy": {
+      "type": "object",
+      "required": [
+        "containsDisplaySymbols",
+        "containsNumericFeatures",
+        "containsOutcomesOrLabels",
+        "containsTrainingPartitionAssignments",
+        "crossTaxonIdentityMerge"
+      ],
+      "properties": {
+        "containsDisplaySymbols": {"const": false},
+        "containsNumericFeatures": {"const": false},
+        "containsOutcomesOrLabels": {"const": false},
+        "containsTrainingPartitionAssignments": {"const": false},
+        "crossTaxonIdentityMerge": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "prefixedSha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "trimmedString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "release", "ncbiTaxon"],
+      "properties": {
+        "id": {"$ref": "#/$defs/trimmedString"},
+        "release": {"$ref": "#/$defs/trimmedString"},
+        "ncbiTaxon": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "identityMapping": {
+      "type": "object",
+      "required": ["id", "sha256"],
+      "properties": {
+        "id": {"$ref": "#/$defs/trimmedString"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "pinnedInput": {
+      "type": "object",
+      "required": [
+        "resource",
+        "revision",
+        "manifestDigest",
+        "innerManifestSha256",
+        "recordsSha256",
+        "records"
+      ],
+      "properties": {
+        "resource": {
+          "type": "string",
+          "pattern": "^omf://(?:[^/@\\s]+/)+datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+        },
+        "revision": {"$ref": "#/$defs/prefixedSha256"},
+        "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "innerManifestSha256": {"$ref": "#/$defs/sha256"},
+        "recordsSha256": {"$ref": "#/$defs/sha256"},
+        "records": {"$ref": "#/$defs/count"}
+      },
+      "additionalProperties": false
+    },
+    "semanticDigest": {
+      "type": "object",
+      "required": ["basis", "sha256"],
+      "properties": {
+        "basis": {"type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "semanticSetHashes": {
+      "type": "object",
+      "required": [
+        "framing",
+        "actionIdSet",
+        "proteinIdSet",
+        "relationEdgeSet",
+        "fullEntityIdSet",
+        "fullEntityKeySet"
+      ],
+      "properties": {
+        "framing": {"const": "unique-ASCII-items-ordinal-sort-LF-terminated"},
+        "actionIdSet": {
+          "allOf": [
+            {"$ref": "#/$defs/semanticDigest"},
+            {"properties": {"basis": {"const": "interventionId"}}}
+          ]
+        },
+        "proteinIdSet": {
+          "allOf": [
+            {"$ref": "#/$defs/semanticDigest"},
+            {"properties": {"basis": {"const": "proteinId"}}}
+          ]
+        },
+        "relationEdgeSet": {
+          "allOf": [
+            {"$ref": "#/$defs/semanticDigest"},
+            {"properties": {"basis": {"const": "proteinId-TAB-currentOrfRelation"}}}
+          ]
+        },
+        "fullEntityIdSet": {
+          "type": "object",
+          "required": ["basis", "ncbiTaxon", "sha256"],
+          "properties": {
+            "basis": {
+              "const": "union-of-action-protein-and-relation-target-IDs-under-one-bound-ncbiTaxon"
+            },
+            "ncbiTaxon": {"type": "integer", "minimum": 1},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          },
+          "additionalProperties": false
+        },
+        "fullEntityKeySet": {
+          "allOf": [
+            {"$ref": "#/$defs/semanticDigest"},
+            {"properties": {"basis": {"const": "ncbiTaxon-TAB-entityId"}}}
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "fileReference": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes", "records"],
+      "properties": {
+        "path": {"type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "bytes": {"$ref": "#/$defs/count"},
+        "records": {"$ref": "#/$defs/count"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
