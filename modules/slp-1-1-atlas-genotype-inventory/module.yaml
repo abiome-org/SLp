@@ -1,0 +1,81 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-atlas-genotype-inventory
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:fddb8df4097a73fa51e0a00835971f23ec060780f28af74a628a6da1ff445c20
+  contracts:
+    input:
+      type: object
+      required:
+        - rawAtlasSummary
+        - sgdCurrentOrfs
+        - sgdExternalRelations
+        - sgdRetiredQuarantine
+        - sgdMappingManifest
+      properties:
+        rawAtlasSummary: {type: object}
+        sgdCurrentOrfs: {type: object}
+        sgdExternalRelations: {type: object}
+        sgdRetiredQuarantine: {type: object}
+        sgdMappingManifest: {type: object}
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - inventorySummary
+        - auditSha256
+        - inventoryManifestSha256
+        - evidenceManifestSha256
+        - candidateNonWildTypeIntersection
+        - uniqueCurrentInterventions
+        - retiredOrMergedCandidateAssignments
+        - unmatchedCandidateAssignments
+      properties:
+        inventorySummary: {type: object}
+        auditSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        inventoryManifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        evidenceManifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        candidateNonWildTypeIntersection: {type: integer, minimum: 0, maximum: 10000}
+        uniqueCurrentInterventions: {type: integer, minimum: 0, maximum: 10000}
+        retiredOrMergedCandidateAssignments: {type: integer, minimum: 0, maximum: 10000}
+        unmatchedCandidateAssignments: {type: integer, minimum: 0, maximum: 10000}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        maxFrameRows: {type: integer, minimum: 1, maximum: 100000}
+        maxAssignmentBytes: {type: integer, minimum: 4, maximum: 4096}
+        maxMappingRecords: {type: integer, minimum: 1, maximum: 1000000}
+        maxMappingArtifactBytes: {type: integer, minimum: 1, maximum: 536870912}
+        maxLineBytes: {type: integer, minimum: 128, maximum: 16777216}
+        maxEvidenceRecords: {type: integer, minimum: 1, maximum: 100000}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          rawAtlasSummary: {}
+          sgdCurrentOrfs: {}
+          sgdExternalRelations: {}
+          sgdRetiredQuarantine: {}
+          sgdMappingManifest: {}
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          inventorySummary:
+            schema: slp.atlas-genotype-identity-audit/v1
+            validationOnly: true
+          auditSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          inventoryManifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          evidenceManifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          candidateNonWildTypeIntersection: 0
+          uniqueCurrentInterventions: 0
+          retiredOrMergedCandidateAssignments: 0
+          unmatchedCandidateAssignments: 0

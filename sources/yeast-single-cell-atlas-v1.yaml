@@ -37,13 +37,23 @@ scale:
   profiledCells: 1061865
   assignedQcCells: 710952
   deletionGenotypesLowerBound: 3500
+identityOnlyAllowlist:
+  - name: ptb_summary.Rdata
+    bytes: 345032
+    upstreamChecksum: md5:5b04718fa4b2025c4ec2a464ffed6ab1
+    localSha256: 01c2d54ac838179be29694ed300cb17edac47dd4db23a4018407546e0651b165
+    url: https://zenodo.org/api/records/14062629/files/ptb_summary.Rdata/content
+    role: genotype-assignment-and-cell-count-identity-summary-only
+    containsPhenotypeColumns: true
+    adapterUsesPhenotypeValues: false
+    admissionPurpose: outcome-blind-identity-derivation
 allowlist:
   - name: seus_split.RData
     bytes: 5907877873
     upstreamChecksum: md5:65bb56efd8120f32f65c044de5f040aa
+    localSha256: da99869c11d1a6c034454568098aa50bc3313cd4508dbd506d43241b0fb4695d
     url: https://zenodo.org/api/records/14062629/files/seus_split.RData/content
     role: candidate-quantitative-payload
-    localSha256Required: true
   - name: README.txt
     bytes: 2050
     upstreamChecksum: md5:1fa718ad98d6eacbf6134372299f2b83
@@ -64,7 +74,6 @@ excludedFiles:
   - fitness.data.perm.test_Rev.R
   - Mutant_Fitness_Conditions_MN.xlsx
   - perm.test_Rev.R
-  - ptb_summary.Rdata
   - replogue_K562_6days_Essential.txt
   - replogue_K562_8days.txt
   - sc1conf.rds
@@ -77,10 +86,77 @@ metadataProbe:
     - name: README.txt
       localSha256: 268533b10c59d3f4ca941ff31ac8b9c108b61f55f00d85792d44b3a90b3b9da8
       upstreamChecksumVerified: true
+    - name: ptb_summary.Rdata
+      bytes: 345032
+      upstreamChecksum: md5:5b04718fa4b2025c4ec2a464ffed6ab1
+      localSha256: 01c2d54ac838179be29694ed300cb17edac47dd4db23a4018407546e0651b165
+      upstreamChecksumVerified: true
+      probeRuntime: rdata==1.1.0
+    - name: seus_split.RData
+      bytes: 5907877873
+      upstreamChecksum: md5:65bb56efd8120f32f65c044de5f040aa
+      localSha256: da99869c11d1a6c034454568098aa50bc3313cd4508dbd506d43241b0fb4695d
+      upstreamChecksumVerified: true
+      gzipIntegrityVerified: true
+      decompressedSerializationBytes: 21596869016
+      localParseStatus: blocked-before-object-expansion
+      localRamEnvelopeBytes: 16106127360
   observations:
     - seus_split.RData contains two separately processed Seurat objects, one control and one NaCl-treated
     - seu.RData is a merged duplicate representation and remains excluded
     - figure scripts consume third-party human and yeast datasets that remain excluded from this source
+    - ptb_summary.Rdata contains exactly one ptbs object with control and nacl data frames
+    - each frame has exactly nine columns; identity admission accesses only assignment_consensus2 and cell_number
+  genotypeIdentityProbe:
+    date: 2026-09-04
+    status: exact-small-payload-probed-and-admitted-for-identity-derivation
+    inputFile: ptb_summary.Rdata
+    rootObject: ptbs
+    conditionObjects: [control, nacl]
+    exactColumns:
+      - assignment_consensus2
+      - cell_number
+      - avg_lvscoreFU2
+      - var_lvscoreFU2
+      - std_lvscoreFU2
+      - avg_lvscore_scaledFU2
+      - var_lvscore_scaledFU2
+      - sd_lvscore_scaledFU2
+      - Stucked
+    adapterAccessedColumns: [assignment_consensus2, cell_number]
+    phenotypeColumnsPresent:
+      - avg_lvscoreFU2
+      - var_lvscoreFU2
+      - std_lvscoreFU2
+      - avg_lvscore_scaledFU2
+      - var_lvscore_scaledFU2
+      - sd_lvscore_scaledFU2
+      - Stucked
+    phenotypeValuesUsed: false
+    cellNumberRule: every row must contain a non-null integer greater than 5
+    counts:
+      controlRows: 3207
+      controlNonWildType: 3206
+      naclRows: 3204
+      naclNonWildType: 3203
+      allAssignmentIntersectionIncludingWildType: 3152
+      allAssignmentUnionIncludingWildType: 3259
+      candidateNonWildTypeIntersection: 3151
+      candidateNonWildTypeUnion: 3258
+      exactCurrentCandidateAssignments: 2941
+      uniqueCurrentInterventions: 2941
+      retiredOrMergedCandidateAssignments: 19
+      unmatchedCandidateAssignments: 191
+      ambiguousCurrentCandidateAssignments: 0
+    identityPolicy:
+      candidateDefinition: exact non-WT assignment_consensus2 intersection across control and nacl
+      prefixRemoval: strip one literal bc- prefix only
+      mapping: exact case-sensitive current systematic-name lookup
+      retiredClassification: exact match in the pinned retired-quarantine artifact only
+      redirectsAllowed: false
+      displaySymbolLookupAllowed: false
+    mappingReleaseId: slp-sgd-map:2026-08-28-object-set-v1
+    mappingReleaseSha256: 6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a
   analysisScriptAudit:
     date: 2026-09-04
     status: schema-expectations-only-not-an-admitted-input
@@ -115,7 +191,7 @@ metadataProbe:
   unresolved:
     - verify the two Seurat-v4 objects, exact metadata fields, RNA count layer, cell names, and feature names against the pinned payload
     - determine whether the RNA count layer is raw integer UMI counts and whether any stored cells or features were filtered before object publication
-    - map exact bc-prefixed systematic-name assignments through the immutable SGD relation artifacts without case or suffix heuristics
+    - run the frozen genotype identity adapter against the admitted ptb_summary.Rdata snapshot, then admit its exact inventory bytes before constructing the global held roster
     - freeze clone, genotype, condition, batch, and biological-control semantics before producing an identity inventory or quantitative corpus
 admission:
   firstOperation: metadata-and-schema-probe-only
@@ -124,6 +200,25 @@ admission:
   requireObservedCountSemantics: true
   requireCellAndSampleProvenance: true
   onAmbiguity: quarantine
+  genotypeIdentitySnapshot:
+    status: admitted-and-verified
+    exactFileSet: [ptb_summary.Rdata]
+    sampleSchema: slp.raw-zenodo-atlas-genotype-summary/v1
+    resource: omf://abiome/slp/datasetsnapshot/slp-1-1-atlas-genotype-summary-raw-v1@sha256:c7cad889b43f293fe5b59e3fd2486f5dabf0b0b362964968eb4858f6917268ef
+    manifestDigest: sha256:97df177ff586d3409d6348926562c5ba4c4943ab4789b1823d059bf6c708fa31
+    module: modules/slp-1-1-atlas-genotype-inventory/module.yaml
+    workload: workloads/slp-1-1-atlas-genotype-inventory.yaml
+    containsPhenotypeColumns: true
+    adapterUsesPhenotypeValues: false
+    admissionPurpose: outcome-blind-identity-derivation
+    protectedMolecularTruthSnapshot: false
+    prohibitedUses: [fitting, reward, molecular-evaluation]
+  quantitativeAtlasSnapshot:
+    status: contract-blocked
+    file: seus_split.RData
+    blocker: slp.corpus/v1.1 typed sparse context, action, readout, units, and missingness contract
+    localExecutionConstraint: decompressed serialization is 21596869016 bytes before Seurat/R object expansion, exceeding the 16106127360-byte local RAM envelope
+    requiredExecutionPath: admitted remote executor or source-native streaming conversion
 modeling:
   preserveCloneAndGenotypeIdentity: true
   preserveCellLevelMissingness: true
