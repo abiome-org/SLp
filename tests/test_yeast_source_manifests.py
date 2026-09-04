@@ -299,6 +299,39 @@ class YeastSourceManifestTest(unittest.TestCase):
             "sources/sgd-stable-id-mapping-2026-08-28.yaml",
         )
 
+    def test_derived_identity_inventory_rights_are_exact_and_outcome_blind(self) -> None:
+        expectations = {
+            "rights/slp-1-1-proteome-intervention-inventory-cc-by-4.0.yaml": {
+                "run": "01a06d02-0fa0-7b70-b202-299269125458",
+                "inventory": "sha256:88773fa08823a7eb1de21ce269a5e5a9668b02bf6ff3d6f9ef3e80b9fb409cd3",
+                "interventions": "sha256:cc9e9a6479d8e789b59f9544b47da4c67540679786723e86b2ca2cb94442663d",
+                "forbidden": "quantitative proteome matrix values",
+            },
+            "rights/slp-1-1-atlas-intervention-inventory-cc-by-4.0.yaml": {
+                "run": "01a06d02-b27f-7d1b-a6bd-ce1658c586cb",
+                "inventory": "sha256:eedc782ac4088b5d106119349879258bd3fca109baabf8ba269e505874451f6f",
+                "interventions": "sha256:de3e56b05692bcce07f174f2e8108d29eed585cf1bd80ee5a60f61d0b3887eb4",
+                "forbidden": "phenotype columns, phenotype values, and transcriptomic matrix values",
+            },
+        }
+        for relative, expected in expectations.items():
+            with self.subTest(relative=relative):
+                rights = self._load(relative)
+                self.assertEqual(rights["license"], "CC-BY-4.0")
+                self.assertIs(rights["trainingAllowed"], True)
+                self.assertIs(rights["redistributionAllowed"], True)
+                self.assertIs(rights["attributionRequired"], True)
+                self.assertIn(expected["run"], rights["scope"])
+                self.assertEqual(rights["derivedFrom"]["artifacts"]["inventory"], expected["inventory"])
+                self.assertEqual(
+                    rights["derivedFrom"]["artifacts"]["interventions"],
+                    expected["interventions"],
+                )
+                self.assertTrue(
+                    any(expected["forbidden"] in item for item in rights["exclusions"])
+                )
+                self.assertEqual(len(rights["derivedFrom"]["datasets"]), 2)
+
 
 if __name__ == "__main__":
     unittest.main()

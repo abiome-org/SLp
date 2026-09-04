@@ -1,0 +1,39 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: derived identity-only inventory from Zenodo record 14062629 and the pinned SGD 2026-08-28 object set
+evidence:
+  - https://zenodo.org/api/records/14062629
+  - https://doi.org/10.1093/genetics/iyae185
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only inventory.json and interventions.jsonl emitted by OMF run
+  01a06d02-b27f-7d1b-a6bd-ce1658c586cb from the exact atlas genotype-summary
+  and SGD resources listed below. The derived files contain exact genotype
+  assignments, stable SGD CURIEs, taxonomy, and identity/cell-count
+  admissibility metadata; no quantitative phenotype or transcriptomic value is
+  included.
+derivedFrom:
+  datasets:
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-atlas-genotype-summary-raw-v1@sha256:c7cad889b43f293fe5b59e3fd2486f5dabf0b0b362964968eb4858f6917268ef
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-sgd-map-raw-2026-08-28@sha256:061906684f67100bd855cfbd3e0ed4df2b1b3f0339ebbc34679ba8e535a214cf
+  runResult: omf://abiome/slp/runresult/result-01a06d02-b27f-7d1b-a6bd-ce1658c586cb@sha256:607fcc0a63a8fb7eefa6adad29ef574d2bb9397d1e26544e0efd7140b4c37069
+  artifacts:
+    inventory: sha256:eedc782ac4088b5d106119349879258bd3fca109baabf8ba269e505874451f6f
+    interventions: sha256:de3e56b05692bcce07f174f2e8108d29eed585cf1bd80ee5a60f61d0b3887eb4
+rightsBasis: >-
+  Both contributing source scopes are licensed CC BY 4.0 with adaptation and
+  redistribution allowed with attribution. Identity normalization is an
+  adaptation; it does not expand the source scopes or license excluded material.
+attribution: >-
+  Nadal-Ribelles, Mariona et al., A single-cell resolved genotype-phenotype map
+  using genome-wide genetic and environmental perturbations, Zenodo,
+  https://doi.org/10.5281/zenodo.14062629; and Saccharomyces Genome Database
+  (SGD), Stanford University, with Engel SR et al. (2025), GENETICS 229(3),
+  iyae185, https://doi.org/10.1093/genetics/iyae185.
+exclusions:
+  - phenotype columns, phenotype values, and transcriptomic matrix values
+  - quarantine and identity-evidence outputs not named in scope
+  - linked third-party resources outside the exact parent source allowlists
+  - any future source or SGD object revision
