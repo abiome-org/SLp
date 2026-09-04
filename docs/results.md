@@ -1455,3 +1455,33 @@ still need to be prepared and access-controlled, then all three roles must pass
 the corpus audit before training. No world-model checkpoint or molecular
 metric exists from this work, and the external SL benchmark remains closed.
 There is no performance, novelty, frontier, release, or SOTA claim.
+
+**Rights-bearing admission.** Commit `bd011ea` pinned each derived rights
+scope to one named tar file, all four input snapshots, both SGD input artifacts,
+the primary RunResult and artifact manifest, the reproduction RunResult and
+artifact manifest, and the shared content hash. The exact staged files were
+rehash-checked before admission. OMF admitted and verified them separately as:
+
+- fitting-only proteome observations:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-observation-pretrain-v1@sha256:631f66e32a218e167af9edb60115a04514d0bcf675a13bcb244c465ffab2f751`,
+  directory manifest
+  `sha256:0bc00463f8641fc91d6fcb82266b6f41d4c55cc78275b737eaad257dd2053130`;
+- HIS3 basal control:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-basal-control-v1@sha256:5abaa79409a9e342785ce610083908ffe5054353ddc1c728ab91ddaa704e112a`,
+  directory manifest
+  `sha256:930b156dc5f97f27b6283439931ae1fef943d5900c2b18eabd81eb31b21bd4dc`.
+
+Both `omf data verify` calls returned valid. The immutable OMF knowledge record
+`slp-1-1-proteome-pretraining-boundary-v1` revision
+`sha256:8fca68ef568673559920447ee65b337130e14e8dbdec2f6d29dc9822f0808305`
+links both runs and both snapshots while explicitly limiting the assertion to
+quantitative data-boundary evidence. This satisfies the admission portion of
+the fixed rule; the larger corpus-construction step remains open. Independent
+OMF graph verification passed for all six run-output artifact graphs and traced
+each immutable RunResult or artifact reference through the producing stage to
+the exact input snapshots and SGD artifacts. OMF 1.0 does not automatically
+create a first-class DatasetSnapshot-to-producing-RunResult lineage edge when
+admitting a restored file; the snapshot graph records only the staging-source
+digest. The exact producer lineage is retained in the rights declaration and
+knowledge record, but this platform limitation remains a release-lineage
+blocker rather than being papered over.
