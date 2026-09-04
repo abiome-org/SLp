@@ -1485,3 +1485,126 @@ admitting a restored file; the snapshot graph records only the staging-source
 digest. The exact producer lineage is retained in the rights declaration and
 knowledge record, but this platform limitation remains a release-lineage
 blocker rather than being papered over.
+
+## 2026-09-04 — protected proteome molecular-validation observations
+
+**Hypothesis, fixed rule, modalities, and snapshots.** The falsifiable
+engineering hypothesis was that the frozen molecular-validation partition of
+the same proteome release could be normalized reproducibly without converting,
+semantically validating, or emitting any pretraining, molecular-final,
+quarantine, analytical-QC, or HIS3-control quantitative column. Advancement
+required two successful executions from clean commit `da810b4`, byte-identical
+observation and audit files, exactly 537 records over 529 validation genes,
+967,019 observed and 26,431 missing values, all frozen identity/order digests,
+and one-file rights-bearing admission. Any role crossing, extra file, count,
+hash, lineage, or byte mismatch would reject the preparation. Accessible
+modalities were the raw MaxLFQ proteome matrix and metadata, the outcome-blind
+intervention inventory, typed UniProtKB-to-SGD relations, the held-gene roster,
+and the SGD identity artifacts. No model checkpoint, prediction, reward,
+synthetic-lethality label, or benchmark datum was accessible to the decision.
+The exact input snapshots were:
+
+- raw proteome:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-raw-v2@sha256:5392d4df7e962c9f59798b83fbdf8e71cd568b30c78a498702d50fabc059397e`;
+- intervention inventory:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9`;
+- typed protein relations:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-protein-relations-v1@sha256:acad3427907644f8ab8af38ed36066a6e1148ef92557b727351b0a4fba2b446c`;
+- held roster:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450`.
+
+`omf doctor` was ready, both protected workload documents passed `omf schema
+validate`, the local Linux binding preflight passed, and all four dataset
+snapshots reverified before compute. The molecular-final document received
+schema validation only; its workload was not executed.
+
+**Executed validation preparation.** Runs
+`01a06d60-6e5c-7552-b9ce-01cf6d046c31` and
+`01a06d60-e6d5-7326-a0ed-2c2dda05a18b` both succeeded. Their immutable results
+are respectively
+`omf://abiome/slp/runresult/result-01a06d60-6e5c-7552-b9ce-01cf6d046c31@sha256:3efaf6bf8db78894f478badc4b46b54432b54008556aefb9cbe3844760424dde`
+and
+`omf://abiome/slp/runresult/result-01a06d60-e6d5-7326-a0ed-2c2dda05a18b@sha256:2eff9f50be60e4dd80be3dcd2915c08cc1d33ec272777d544563f25ad0c1be96`.
+Each selected exactly 537 validation records over 529 stable SGD intervention
+genes and emitted 967,019 finite observed log2 values; 26,431 assay-missing
+values remained absent sparse entries. It reported all 4,939 unselected rows as
+not numerically decoded: 3,811 pretraining, 275 molecular-final, 76 quarantine,
+389 analytical-QC, and 388 HIS3-control rows. The ordered trajectory-list,
+trajectory-set, metadata-order action-sequence, and raw-locator-sequence
+digests were respectively
+`32ea7b84790202f0b9a87c95e31434c9aba3d8588a68a090964ce9edd2373558`,
+`932a2750d3ae3cff3bbbcc165f985bcefbef6f3fa3cf369512fa6d71b217fa76`,
+`4d5bb70c6c2fb22f1a938a7134f15601a9251cf771a3cdc92096e5aa8320cdc4`,
+and `f226453f029b8fa789acdc1e5ac264136e07584c57bebba8443264988efac2ed`.
+
+Independent file hashing and byte comparison showed identical 8,939,520-byte
+archives with SHA-256
+`f8263d4813282799625182e8286a0af42311d5e76d58c84071ae9071e8a4bc69`
+and identical preparation audits with SHA-256
+`26e304410b66e6c7ec0562297854ef0854f7160bbce20f11f51bb0c6babcf85b`.
+The primary observation and audit artifact manifests are
+`sha256:c2ae4c787504f39f01e78e88e46c3009e32542002adb00b802b6c98e2611d87c`
+and
+`sha256:0dce17c1fe51f2ce1d265173303ff7b339f3f6a63e02ae74e006bdbdf1563c5d`;
+the reproduction manifests are
+`sha256:36f6edcdf585319553093e172b05412bfe5b80377bdd6964fd411f5a4ce08d52`
+and
+`sha256:38dc5d89a2cac5670e4325337edbbc5d454bd27cae196d55167c5d6b8fa52cba`.
+Their differing manifest digests bind distinct run contexts; their underlying
+files are byte-identical. Upstream graph inspection for all four artifacts
+reached the producing stage, exact four dataset revisions, protected module
+source, both SGD artifacts, and the SGD normalization lineage.
+
+The protected module package and source-artifact manifest are
+`sha256:df9ffa44415c60035de045028fa81a17d4bd3e40d2b4e2e68f05e8854d534894`
+and
+`sha256:6363bdd341b990e77500da06a112945872fc8a526ab797f9cdb59e4919ba894b`.
+The validation workload semantic and WorkloadSpec manifest digests are
+`sha256:6fbd1bfdbd1b69f50c3d20c619cad61df2273e7e6d58287fce3a0738a6814070`
+and
+`sha256:b86c393c0c3e1268adc38a1113739b8f2e23be9cdcb7c1c986657e4b0004408c`.
+The binding, realized environment, and dependency-lock digests are
+`sha256:5dc181c5643d2a98ec43b1c79791764e4f5ba5ad4edbd5730d7f455ced4d6e2f`,
+`sha256:c2060448ac2beedca12bfe46d125cf4eeedeefb0b22ee47c6933c9031e38e1ab`,
+and
+`sha256:2b8837ecc5287dd25a4100a7ed4e30c60ae8aaf6c1273c4ffd3fa3ebb39372d9`.
+The environment used CPython 3.12.3 and NumPy 2.2.6, but still used the package
+index without an offline wheelhouse and exposed interpreter-site-package
+layering. It is host-reproducible evidence, not a portable release closure.
+
+**Rights-bearing admission and access limitation.** Commit `0eafd14` bound one
+named `observation-corpus.tar` to both RunResults, both observation artifact
+manifests, the common content hash, the four input snapshots, and both SGD
+artifacts. The rights manifest distinguishes legal `trainingAllowed: true`,
+which OMF requires for admission, from operational authorization: fitting,
+reward, final-holdout use, and current-factory evaluation are false. It also
+states that OMF 1.0 does not enforce those purpose restrictions. After an exact
+staging rehash, OMF admitted and verified:
+
+`omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-observation-molecular-validation-v1@sha256:6bdefb2ff86c56a5d86fadcf9ffd8c6e3d759183fde6a706d18086a6e2f2341a`,
+
+with directory-manifest digest
+`sha256:e25b93ac4ab0ce5f018881f8515f6b1005fd1e026356b18d6ea46b96d44ebe10`.
+The immutable knowledge record
+`slp-1-1-proteome-molecular-validation-boundary-v1` revision
+`sha256:d8408f110fe58cc4e73c8f0a2d4844560b6b688def6689e52d3063215c35914b`
+records the same narrow evidence and limitations.
+
+This execution occurred in the full-source custodian factory, not a physically
+isolated validation service. The wide CSV parser necessarily materialized each
+row's cells as strings before converting only selected validation columns; the
+valid claim is therefore that other roles were not numerically converted,
+semantically validated, or emitted, not that molecular-final truth was
+physically inaccessible. OMF 1.0 actor strings, policies, and the local
+executor do not supply that confidentiality boundary. The admitted archive
+must never be copied into the clean training factory; a distinct OS/service
+identity and store are required before evaluation. The final workload remains
+unexecuted until candidate and decision-rule lock under independent control.
+
+The fixed rule passed for protected validation-source preparation and admission
+only. The artifact is `slp.source-observation-archive/v1`, not an evaluator-ready
+`slp.molecular-evaluation/v2` truth set or composed `slp.corpus/v1.1`. The
+governed `tests/` suite passed 170 tests with 3 skipped. No model was trained,
+no checkpoint or molecular metric was produced, and the SL benchmark remained
+closed. This evidence supports no performance, novelty, frontier, release, or
+SOTA claim.

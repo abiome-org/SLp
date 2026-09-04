@@ -146,6 +146,15 @@ external-relation, mapping-manifest and retired-quarantine artifacts. This is
 identity provenance only. No biological outcome snapshot or model-fitting
 permission follows from the mapping result.
 
+The source-normalized yeast proteome pretraining observations, HIS3 basal
+control, and protected molecular-validation observations are now separately
+admitted as rights-bearing snapshots. The validation snapshot exists only in
+the current custodian factory: its rights record forbids fitting, reward,
+calibration and current-factory evaluation, but OMF 1.0 does not enforce those
+documentary purpose restrictions. The molecular-final workload has never been
+executed. A clean training factory and distinct validation/final service
+identities and stores remain prerequisites for credible held-out evaluation.
+
 That normalization run used an empty dependency lock in an attested Python
 3.12 environment. It establishes the mapping bytes and lineage, not a portable
 runtime closure; release-eligible workloads still require retained, fully
