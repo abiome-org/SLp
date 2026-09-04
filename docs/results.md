@@ -1048,3 +1048,62 @@ records this as identity provenance with no biological-model claim. The exact
 mapping digest may now bind source-specific identity inventories, but the
 mapping artifacts are not biological pretraining, validation, reward, final or
 benchmark snapshots. No model or benchmark gate was opened.
+
+## 2026-09-04 — yeast source admissions and outcome-blind identities
+
+**Hypothesis, rule, modalities, and fixed inputs.** Before any biological
+optimization, independently published yeast proteome and single-cell sources
+should yield one stable-ID intervention population without reading molecular
+outcomes or resolving by symbols, case normalization, retired redirects, or
+one-to-many guesses. This milestone passes only when immutable rights-bearing
+raw snapshots verify, both identity adapters reproduce their preregistered
+counts and mapping digest, phenotype/quantitative mutations cannot alter the
+identity outputs, and the emitted inventories remain separate from fitting,
+reward, truth, and benchmark data. Accessible modalities were proteome sample
+metadata plus protein accessions, the atlas genotype/cell-count summary, and
+the admitted SGD relation artifacts. No biological outcome was admitted as a
+training, reward, validation, final, or benchmark corpus.
+
+**Raw DatasetSnapshots.** The four-file Mendeley proteome release was copied
+under its reviewed CC-BY-4.0 declaration as
+`omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-raw-v2@sha256:5392d4df7e962c9f59798b83fbdf8e71cd568b30c78a498702d50fabc059397e`
+with manifest digest
+`sha256:7f25f6e11d3deb73624d1c59f7aead59aef77641be6a54b8d0ee838e305f2213`;
+`omf data verify` returned valid. The exact one-file Zenodo
+`ptb_summary.Rdata` snapshot was copied under its reviewed CC-BY-4.0
+declaration as
+`omf://abiome/slp/datasetsnapshot/slp-1-1-atlas-genotype-summary-raw-v1@sha256:c7cad889b43f293fe5b59e3fd2486f5dabf0b0b362964968eb4858f6917268ef`
+with manifest digest
+`sha256:97df177ff586d3409d6348926562c5ba4c4943ab4789b1823d059bf6c708fa31`;
+it also verified. The atlas summary physically contains phenotype columns, so
+its authorization is narrower than its bytes: the identity adapter may access
+only exact genotype assignments and non-null integer cell counts above five,
+and the snapshot is prohibited from fitting, reward, or molecular evaluation.
+
+**Identity contracts.** The proteome adapter admits 4,623 knockout rows over
+4,476 exact current SGD interventions and quarantines 76 rows; it retains all
+1,850 UniProt readouts and all five exact one-to-many SGD relations. Its binary
+matrix scan decodes only the header and first identity field, and tests show
+that changing quantitative bytes cannot change identity artifacts. The atlas
+adapter takes the exact non-WT intersection of control and NaCl assignments:
+3,151 candidates produce 2,941 current SGD interventions, while 19 retired or
+merged and 191 unmatched assignments remain quarantined. Its `rdata==1.1.0`
+runtime converts the small frames, but the adapter never indexes, inspects,
+uses, or emits the seven phenotype fields; mutation tests hold all emitted
+identity bytes fixed. The dependency lock is hash-pinned but is not an offline
+wheelhouse or portable release closure.
+
+**Quantitative atlas constraint and decision.** The separately downloaded,
+untracked `seus_split.RData` matched 5,907,877,873 bytes, upstream MD5
+`65bb56efd8120f32f65c044de5f040aa`, and local SHA-256
+`da99869c11d1a6c034454568098aa50bc3313cd4508dbd506d43241b0fb4695d`.
+A streaming gzip integrity check passed and measured 21,596,869,016
+uncompressed serialization bytes before R/Seurat object expansion. That
+already exceeds the 15 GiB local memory envelope, so local full parsing is
+forbidden; quantitative conversion requires an admitted remote executor or a
+source-native streaming path. Commits `f88f11f`, `88a2e63`, `8af455c`, and
+`4aa8315` record the reviewed adapters, admissions, pinned workloads, and
+source facts. The inventory OMF runs and separate admission of their emitted
+bytes remain pending a clean worktree. This milestone establishes identity
+and compute boundaries only; it supplies no molecular metric, candidate
+advancement, SL benchmark result, novelty evidence, or SOTA claim.
