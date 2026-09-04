@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abiome-org.github.io/OpenModelFactory/schemas/slp-sequence-statistics-feature-block-v1.schema.json",
+  "title": "SLp sequence-statistics feature block v1",
+  "type": "object",
+  "required": [
+    "schema", "version", "identityKey", "ordering", "featureDefinition",
+    "source", "identityMapping", "inputs", "files", "counts",
+    "semanticHashes", "contentPolicy"
+  ],
+  "properties": {
+    "schema": {"type": "string", "const": "slp.sequence-statistics-feature-block/v1"},
+    "version": {"type": "integer", "const": 1},
+    "identityKey": {"type": "array", "const": ["ncbiTaxon", "entityId"]},
+    "ordering": {"type": "string", "const": "ascending-ncbiTaxon-then-codepoint-entityId"},
+    "featureDefinition": {"$ref": "#/$defs/featureDefinition"},
+    "source": {"$ref": "#/$defs/source"},
+    "identityMapping": {"$ref": "#/$defs/identityMapping"},
+    "inputs": {"$ref": "#/$defs/inputs"},
+    "files": {
+      "type": "object",
+      "required": ["entities", "excludedNonCurrent", "present", "sequenceProvenance", "values"],
+      "properties": {
+        "entities": {
+          "$ref": "#/$defs/fileRefWithRecords",
+          "properties": {
+            "path": {"const": "entities.jsonl"},
+            "sha256": {"const": "e487f428c6eb1eb58de0d3e8ca74f016841713c3014cc55370048eb3e8304572"},
+            "bytes": {"const": 727401},
+            "records": {"const": 7037}
+          }
+        },
+        "excludedNonCurrent": {
+          "$ref": "#/$defs/fileRefWithRecords",
+          "properties": {
+            "path": {"const": "excluded-non-current.jsonl"},
+            "sha256": {"const": "aeb6be983ff828c517aaed9def31d9401a111b312e344e8349678eae75e7972f"},
+            "bytes": {"const": 42781},
+            "records": {"const": 109}
+          }
+        },
+        "present": {
+          "$ref": "#/$defs/fileRef",
+          "properties": {
+            "path": {"const": "present.npy"},
+            "sha256": {"const": "c6a282c63fc45d94a4dd932c4b064d345b02939e4e40c84dd4b70d871dc96716"},
+            "bytes": {"const": 147905}
+          }
+        },
+        "sequenceProvenance": {
+          "$ref": "#/$defs/fileRefWithRecords",
+          "properties": {
+            "path": {"const": "sequence-provenance.jsonl"},
+            "sha256": {"const": "5955ae6f8503b87370bf5116fdae8699ced9c4e3a0a378fd3843baaa7c2965fe"},
+            "bytes": {"const": 2869698},
+            "records": {"const": 7037}
+          }
+        },
+        "values": {
+          "$ref": "#/$defs/fileRef",
+          "properties": {
+            "path": {"const": "values.npy"},
+            "sha256": {"const": "3f1bd1c02d56fb6b9ab100d95fb567a931fed39f6d8b6352a6389a8cae301f05"},
+            "bytes": {"const": 591236}
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "counts": {"$ref": "#/$defs/counts"},
+    "semanticHashes": {
+      "type": "object",
+      "required": ["entityKeySetSha256", "featureDefinitionSha256", "sequenceProvenanceSha256"],
+      "properties": {
+        "entityKeySetSha256": {"const": "82b8e2885939577fe6946e3b974a10cb947834118f2070e1bcbe4c2f2e6a5fd9"},
+        "featureDefinitionSha256": {"const": "2e2152471d3cb487775159d91ff5073c8b19997b62a5a09f94be637efeb75620"},
+        "sequenceProvenanceSha256": {"const": "5955ae6f8503b87370bf5116fdae8699ced9c4e3a0a378fd3843baaa7c2965fe"}
+      },
+      "additionalProperties": false
+    },
+    "contentPolicy": {"$ref": "#/$defs/contentPolicy"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fileRef": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "bytes": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "fileRefWithRecords": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes", "records"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "records": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "featureDefinition": {
+      "type": "object",
+      "required": [
+        "names", "dimension", "dtype", "layout", "floatSemantics", "formula",
+        "lengthScale", "aminoAcidOrder", "stopPolicy", "normalization",
+        "clipping", "fitted", "parameterCount", "identifierFeatures", "missingness"
+      ],
+      "properties": {
+        "names": {
+          "type": "array",
+          "const": [
+            "protein_length_div_4096", "aa_fraction_A", "aa_fraction_C",
+            "aa_fraction_D", "aa_fraction_E", "aa_fraction_F", "aa_fraction_G",
+            "aa_fraction_H", "aa_fraction_I", "aa_fraction_K", "aa_fraction_L",
+            "aa_fraction_M", "aa_fraction_N", "aa_fraction_P", "aa_fraction_Q",
+            "aa_fraction_R", "aa_fraction_S", "aa_fraction_T", "aa_fraction_V",
+            "aa_fraction_W", "aa_fraction_Y"
+          ]
+        },
+        "dimension": {"type": "integer", "const": 21},
+        "dtype": {"type": "string", "const": "little-endian-float32"},
+        "layout": {"type": "string", "const": "C-row-major"},
+        "floatSemantics": {"type": "string", "const": "IEEE-754-binary32-round-to-nearest-ties-to-even"},
+        "formula": {"type": "string", "const": "[len(peptide)/4096] + [count(aa)/len(peptide) for aa in aminoAcidOrder]"},
+        "lengthScale": {"type": "integer", "const": 4096},
+        "aminoAcidOrder": {"type": "string", "const": "ACDEFGHIKLMNPQRSTVWY"},
+        "stopPolicy": {"type": "string", "const": "feature-bearing-current-ORFs-require-and-strip-exactly-one-terminal-stop"},
+        "normalization": {"type": "string", "const": "none-beyond-declared-ratios"},
+        "clipping": {"type": "boolean", "const": false},
+        "fitted": {"type": "boolean", "const": false},
+        "parameterCount": {"type": "integer", "const": 0},
+        "identifierFeatures": {"type": "boolean", "const": false},
+        "missingness": {"type": "string", "const": "all-values-present"}
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["speciesTaxon", "strainTaxon", "release"],
+      "properties": {
+        "speciesTaxon": {"type": "integer", "const": 4932},
+        "strainTaxon": {"type": "integer", "const": 559292},
+        "release": {"type": "string", "const": "R64.5.1"}
+      },
+      "additionalProperties": false
+    },
+    "identityMapping": {
+      "type": "object",
+      "required": ["id", "sha256"],
+      "properties": {
+        "id": {"type": "string", "const": "slp-sgd-map:2026-08-28-object-set-v1"},
+        "sha256": {"type": "string", "const": "6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a"}
+      },
+      "additionalProperties": false
+    },
+    "inputs": {
+      "type": "object",
+      "required": ["staticEntityUniverse", "sgdProteinSequences", "sgdCurrentOrfs", "sgdMappingManifest"],
+      "properties": {
+        "staticEntityUniverse": {"$ref": "#/$defs/staticEntityUniverse"},
+        "sgdProteinSequences": {"$ref": "#/$defs/sgdProteinSequences"},
+        "sgdCurrentOrfs": {"$ref": "#/$defs/sgdCurrentOrfs"},
+        "sgdMappingManifest": {"$ref": "#/$defs/sgdMappingManifest"}
+      },
+      "additionalProperties": false
+    },
+    "staticEntityUniverse": {
+      "type": "object",
+      "required": ["resource", "revision", "manifestDigest", "treeDigest", "archive", "audit", "innerManifestSha256", "entityKeySetSha256"],
+      "properties": {
+        "resource": {"const": "omf://abiome/slp/datasetsnapshot/slp-1-1-static-entity-universe-v1@sha256:de3efddf5a9e4f66496a1edda14b04de774e972bc7b9efd30964644de2a56cac"},
+        "revision": {"const": "sha256:de3efddf5a9e4f66496a1edda14b04de774e972bc7b9efd30964644de2a56cac"},
+        "manifestDigest": {"const": "sha256:a65f94081c0b60a8b486ed968b58fc4d021ba3ea7f5f11425d3a1635cbb10684"},
+        "treeDigest": {"const": "sha256:7ec354f427cfd8a2fcc3de1004c7e4ac77402a78b5cc0a0b5ef89ba24656fd3f"},
+        "archive": {
+          "$ref": "#/$defs/fileRef",
+          "properties": {
+            "path": {"const": "entity-universe.tar"},
+            "sha256": {"const": "d947bf618b854dd33a7157ac0f0380c544e9a4377bddb00806c9ca07f689a544"},
+            "bytes": {"const": 1525760}
+          }
+        },
+        "audit": {
+          "$ref": "#/$defs/fileRef",
+          "properties": {
+            "path": {"const": "entity-universe-audit.json"},
+            "sha256": {"const": "339412ea008cf383db2258d0788d71c2cf357183b331d49f4168aa7f113f1a0f"},
+            "bytes": {"const": 4880}
+          }
+        },
+        "innerManifestSha256": {"const": "19e309855c9ecd16500244890a24a5d0954724e250120cb3e1bb7cba4adfd149"},
+        "entityKeySetSha256": {"const": "82b8e2885939577fe6946e3b974a10cb947834118f2070e1bcbe4c2f2e6a5fd9"}
+      },
+      "additionalProperties": false
+    },
+    "sgdProteinSequences": {
+      "type": "object",
+      "required": ["resource", "revision", "manifestDigest", "treeDigest", "files", "decompressedFasta", "source", "sourceClassCounts"],
+      "properties": {
+        "resource": {"const": "omf://abiome/slp/datasetsnapshot/slp-1-1-sgd-protein-sequences-r64-5-1@sha256:3b76017f5ac74d8d96efb1db52d14af91c9fb15995062110558ce4651cf3ba0c"},
+        "revision": {"const": "sha256:3b76017f5ac74d8d96efb1db52d14af91c9fb15995062110558ce4651cf3ba0c"},
+        "manifestDigest": {"const": "sha256:8f88480196b5cd8f3c15d65dbdbc09f83305c371fb476c70a38825dad2be4283"},
+        "treeDigest": {"const": "sha256:823a18ed8039ee44ee44b860551fea749b9012c941e6b9cd5163938da19b168a"},
+        "files": {
+          "type": "array",
+          "const": [
+            {"path": "dates_of_genome_releases.tab", "sha256": "cc5d40722442a605d1d6dcf9a36442d87076829a04f776f87b3de0020f92f9e7", "bytes": 2050},
+            {"path": "orf_protein.README", "sha256": "b53064bef6424f0e9b5c5a6af88602bb15949e68bedb397b6731b094ebca5be9", "bytes": 930},
+            {"path": "orf_trans_all_R64-5-1_20240529.fasta.gz", "sha256": "17e8b47e1ae23178c6000fbc4ab548f102d1b250ef9dff5d811feb3f03dd2c5b", "bytes": 2689634}
+          ]
+        },
+        "decompressedFasta": {
+          "type": "object",
+          "required": ["bytes", "sha256", "records"],
+          "properties": {
+            "bytes": {"type": "integer", "const": 5511467},
+            "sha256": {"const": "e01f9e1ef7e5a01ff7cd0ee7a843e6d1c1da8c3777fdfac3a5293711d4c56518"},
+            "records": {"type": "integer", "const": 6722}
+          },
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "object",
+          "required": ["speciesTaxon", "strainTaxon", "release", "headerRelease"],
+          "properties": {
+            "speciesTaxon": {"type": "integer", "const": 4932},
+            "strainTaxon": {"type": "integer", "const": 559292},
+            "release": {"const": "R64.5.1"},
+            "headerRelease": {"const": "64-5-1"}
+          },
+          "additionalProperties": false
+        },
+        "sourceClassCounts": {
+          "type": "object",
+          "required": ["blocked-reading-frame", "dubious-orf", "pseudogene", "transposable-element-gene", "uncharacterized-orf", "verified-orf"],
+          "properties": {
+            "blocked-reading-frame": {"type": "integer", "const": 6},
+            "dubious-orf": {"type": "integer", "const": 683},
+            "pseudogene": {"type": "integer", "const": 12},
+            "transposable-element-gene": {"type": "integer", "const": 91},
+            "uncharacterized-orf": {"type": "integer", "const": 659},
+            "verified-orf": {"type": "integer", "const": 5271}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "sgdCurrentOrfs": {
+      "type": "object",
+      "required": ["resource", "artifactManifestDigest", "payload"],
+      "properties": {
+        "resource": {"const": "artifact:sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192"},
+        "artifactManifestDigest": {"const": "sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192"},
+        "payload": {
+          "$ref": "#/$defs/fileRefWithRecords",
+          "properties": {
+            "path": {"const": "payload"},
+            "sha256": {"const": "df7b717cad88dc3672f72f8148f6a9132d12abe6ba020b220b091a8da8f7004d"},
+            "bytes": {"const": 2135394},
+            "records": {"const": 6613}
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sgdMappingManifest": {
+      "type": "object",
+      "required": ["resource", "artifactManifestDigest", "payload", "identityMappingId", "identityMappingSha256"],
+      "properties": {
+        "resource": {"const": "artifact:sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c"},
+        "artifactManifestDigest": {"const": "sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c"},
+        "payload": {
+          "$ref": "#/$defs/fileRef",
+          "properties": {
+            "path": {"const": "payload"},
+            "sha256": {"const": "570557ab1201913a18de9790f8adc5ee2e3cb56c6bb0e8d588fe43660c0214e1"},
+            "bytes": {"const": 3818}
+          }
+        },
+        "identityMappingId": {"const": "slp-sgd-map:2026-08-28-object-set-v1"},
+        "identityMappingSha256": {"const": "6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a"}
+      },
+      "additionalProperties": false
+    },
+    "counts": {
+      "type": "object",
+      "required": ["rows", "genes", "proteins", "featuresPerRow", "presentValues", "excludedNonCurrentSequences", "currentOrfsOutsideUniverse", "multiTargetProteinConsensus", "missingEntities", "ambiguousEntities", "trainableParameters"],
+      "properties": {
+        "rows": {"type": "integer", "const": 7037},
+        "genes": {"type": "integer", "const": 5187},
+        "proteins": {"type": "integer", "const": 1850},
+        "featuresPerRow": {"type": "integer", "const": 21},
+        "presentValues": {"type": "integer", "const": 147777},
+        "excludedNonCurrentSequences": {"type": "integer", "const": 109},
+        "currentOrfsOutsideUniverse": {"type": "integer", "const": 1426},
+        "multiTargetProteinConsensus": {"type": "integer", "const": 5},
+        "missingEntities": {"type": "integer", "const": 0},
+        "ambiguousEntities": {"type": "integer", "const": 0},
+        "trainableParameters": {"type": "integer", "const": 0}
+      },
+      "additionalProperties": false
+    },
+    "contentPolicy": {
+      "type": "object",
+      "required": ["containsIdentifiersAsValues", "containsOutcomesOrLabels", "containsTrainingPartitionAssignments", "containsBenchmarkData", "containsFreeTextDescriptions", "crossTaxonIdentityMerge"],
+      "properties": {
+        "containsIdentifiersAsValues": {"type": "boolean", "const": false},
+        "containsOutcomesOrLabels": {"type": "boolean", "const": false},
+        "containsTrainingPartitionAssignments": {"type": "boolean", "const": false},
+        "containsBenchmarkData": {"type": "boolean", "const": false},
+        "containsFreeTextDescriptions": {"type": "boolean", "const": false},
+        "crossTaxonIdentityMerge": {"type": "boolean", "const": false}
+      },
+      "additionalProperties": false
+    }
+  }
+}

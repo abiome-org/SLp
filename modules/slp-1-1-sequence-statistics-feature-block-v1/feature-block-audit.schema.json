@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abiome-org.github.io/OpenModelFactory/schemas/slp-sequence-statistics-feature-block-audit-v1.schema.json",
+  "title": "SLp sequence-statistics feature-block audit v1",
+  "type": "object",
+  "required": [
+    "schema", "inputs", "source", "identityMapping", "featureDefinition",
+    "outputs", "counts", "multiTargetPeptideConsensus", "accessBoundary",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {"type": "string", "const": "slp.sequence-statistics-feature-block-audit/v1"},
+    "inputs": {
+      "$ref": "https://abiome-org.github.io/OpenModelFactory/schemas/slp-sequence-statistics-feature-block-v1.schema.json#/$defs/inputs"
+    },
+    "source": {
+      "$ref": "https://abiome-org.github.io/OpenModelFactory/schemas/slp-sequence-statistics-feature-block-v1.schema.json#/$defs/source"
+    },
+    "identityMapping": {
+      "$ref": "https://abiome-org.github.io/OpenModelFactory/schemas/slp-sequence-statistics-feature-block-v1.schema.json#/$defs/identityMapping"
+    },
+    "featureDefinition": {
+      "$ref": "https://abiome-org.github.io/OpenModelFactory/schemas/slp-sequence-statistics-feature-block-v1.schema.json#/$defs/featureDefinition"
+    },
+    "outputs": {
+      "type": "object",
+      "required": [
+        "archive", "manifestSha256", "entityRowsSha256",
+        "excludedNonCurrentSha256", "presentNpySha256",
+        "sequenceProvenanceSha256", "valuesNpySha256"
+      ],
+      "properties": {
+        "archive": {
+          "type": "object",
+          "required": ["path", "sha256", "bytes"],
+          "properties": {
+            "path": {"type": "string", "const": "sequence-feature-block.tar"},
+            "sha256": {"type": "string", "const": "1b0aaec738b10ad3baa082d907d0c962c35c9b159b89fffca893fa1ecf5a7bed"},
+            "bytes": {"type": "integer", "const": 4392960}
+          },
+          "additionalProperties": false
+        },
+        "manifestSha256": {"type": "string", "const": "5cfd73bb2c55ca0bfc381b6d9e883fcc7d4ab793ee9dfc94ef5f3f02cab5ff65"},
+        "entityRowsSha256": {"type": "string", "const": "e487f428c6eb1eb58de0d3e8ca74f016841713c3014cc55370048eb3e8304572"},
+        "excludedNonCurrentSha256": {"type": "string", "const": "aeb6be983ff828c517aaed9def31d9401a111b312e344e8349678eae75e7972f"},
+        "presentNpySha256": {"type": "string", "const": "c6a282c63fc45d94a4dd932c4b064d345b02939e4e40c84dd4b70d871dc96716"},
+        "sequenceProvenanceSha256": {"type": "string", "const": "5955ae6f8503b87370bf5116fdae8699ced9c4e3a0a378fd3843baaa7c2965fe"},
+        "valuesNpySha256": {"type": "string", "const": "3f1bd1c02d56fb6b9ab100d95fb567a931fed39f6d8b6352a6389a8cae301f05"}
+      },
+      "additionalProperties": false
+    },
+    "counts": {
+      "$ref": "https://abiome-org.github.io/OpenModelFactory/schemas/slp-sequence-statistics-feature-block-v1.schema.json#/$defs/counts"
+    },
+    "multiTargetPeptideConsensus": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {"$ref": "#/$defs/p02309Consensus"},
+        {"$ref": "#/$defs/p02994Consensus"},
+        {"$ref": "#/$defs/p10081Consensus"},
+        {"$ref": "#/$defs/p32324Consensus"},
+        {"$ref": "#/$defs/p61830Consensus"}
+      ],
+      "items": false
+    },
+    "accessBoundary": {
+      "type": "object",
+      "required": [
+        "inputNames", "heldRosterConsumed", "quantitativeOutcomesConsumed",
+        "trainingPartitionAssignmentsConsumed", "benchmarkDataConsumed",
+        "freeTextDescriptionUsedAsFeature", "identifiersUsedAsNumericFeatures",
+        "identifiersMergedAcrossTaxa"
+      ],
+      "properties": {
+        "inputNames": {
+          "type": "array",
+          "const": ["staticEntityUniverse", "sgdProteinSequences", "sgdCurrentOrfs", "sgdMappingManifest"]
+        },
+        "heldRosterConsumed": {"type": "boolean", "const": false},
+        "quantitativeOutcomesConsumed": {"type": "boolean", "const": false},
+        "trainingPartitionAssignmentsConsumed": {"type": "boolean", "const": false},
+        "benchmarkDataConsumed": {"type": "boolean", "const": false},
+        "freeTextDescriptionUsedAsFeature": {"type": "boolean", "const": false},
+        "identifiersUsedAsNumericFeatures": {"type": "boolean", "const": false},
+        "identifiersMergedAcrossTaxa": {"type": "boolean", "const": false}
+      },
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "const": [
+        "twenty-one hand-designed sequence statistics are a weak deterministic baseline, not a learned protein representation",
+        "static sequences cover held entities but no held quantitative intervention outcome is consumed",
+        "all five ambiguous protein mappings require identical related peptides; no target is selected"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "consensus": {
+      "type": "object",
+      "required": ["proteinId", "canonicalPeptideSha256"],
+      "properties": {
+        "proteinId": {"type": "string"},
+        "canonicalPeptideSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "p02309Consensus": {
+      "$ref": "#/$defs/consensus",
+      "properties": {
+        "proteinId": {"const": "UniProtKB:P02309"},
+        "canonicalPeptideSha256": {"const": "a2b741dd2f24cf766d7b0526d2b81778c13477e3f95659a736eb8c60dac74212"}
+      }
+    },
+    "p02994Consensus": {
+      "$ref": "#/$defs/consensus",
+      "properties": {
+        "proteinId": {"const": "UniProtKB:P02994"},
+        "canonicalPeptideSha256": {"const": "a6836830f169bb95a0b0a54ebcdc9d919ef6d454b34a7c5fbc38950c5e1b33b9"}
+      }
+    },
+    "p10081Consensus": {
+      "$ref": "#/$defs/consensus",
+      "properties": {
+        "proteinId": {"const": "UniProtKB:P10081"},
+        "canonicalPeptideSha256": {"const": "8299c66c9dc688af630ffdee0674a5c699c0e384c694c7223e87ae9b403d5083"}
+      }
+    },
+    "p32324Consensus": {
+      "$ref": "#/$defs/consensus",
+      "properties": {
+        "proteinId": {"const": "UniProtKB:P32324"},
+        "canonicalPeptideSha256": {"const": "0444c3f2b1cdcf680f2786991645fb0fd96eb95520bb3df1a09201a35e001e51"}
+      }
+    },
+    "p61830Consensus": {
+      "$ref": "#/$defs/consensus",
+      "properties": {
+        "proteinId": {"const": "UniProtKB:P61830"},
+        "canonicalPeptideSha256": {"const": "95590309e518c62ddd5611164d5628f84fd56f4c7c1dd2483ea145b6c57a8535"}
+      }
+    }
+  }
+}
