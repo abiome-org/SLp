@@ -435,7 +435,7 @@ class ProteomeInventoryTest(unittest.TestCase):
             with self.assertRaisesRegex(inventory.ProteomeInventoryError, "copied"):
                 inventory.resolve_pinned_raw_dataset({**dataset, "mode": "reference"})
 
-            artifact_path = root / "inputs" / "sgdCurrentOrfs" / "payload"
+            artifact_path = root / "inputs" / "sgdCurrentOrfs" / "payload" / "payload"
             artifact_path.parent.mkdir(parents=True)
             artifact_path.write_text("payload")
             digest = self.ARTIFACT_DIGESTS["sgdCurrentOrfs"]
@@ -450,6 +450,20 @@ class ProteomeInventoryTest(unittest.TestCase):
                 artifact, "sgdCurrentOrfs", digest
             )
             self.assertEqual(resolved_artifact.path, artifact_path.resolve())
+            legacy_path = root / "inputs" / "sgdCurrentOrfs" / "payload-legacy"
+            legacy_path.write_text("payload")
+            with self.assertRaisesRegex(
+                inventory.ProteomeInventoryError, "OMF materialization"
+            ):
+                inventory.resolve_literal_artifact(
+                    {
+                        **artifact,
+                        "paths": {"payload": str(legacy_path)},
+                        "path": str(legacy_path),
+                    },
+                    "sgdCurrentOrfs",
+                    digest,
+                )
             with self.assertRaisesRegex(inventory.ProteomeInventoryError, "does not match"):
                 inventory.resolve_literal_artifact(
                     {**artifact, "resource": "artifact:sha256:" + "f" * 64},

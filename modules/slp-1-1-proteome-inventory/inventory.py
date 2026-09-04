@@ -286,7 +286,12 @@ def resolve_literal_artifact(
     if paths["payload"] != value["path"]:
         raise ProteomeInventoryError(f"{input_name}.path is inconsistent with paths.payload")
     path = _resolved_path(value["path"], f"{input_name}.path", directory=False)
-    if path.name != "payload" or path.parent.name != input_name or path.parent.parent.name != "inputs":
+    if (
+        path.name != "payload"
+        or path.parent.name != "payload"
+        or path.parent.parent.name != input_name
+        or path.parent.parent.parent.name != "inputs"
+    ):
         raise ProteomeInventoryError(f"{input_name}.path is inconsistent with OMF materialization")
     return LiteralArtifact(path, digest)
 

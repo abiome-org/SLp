@@ -399,7 +399,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
                     {**dataset, "manifestDigest": "sha256:" + "f" * 64}
                 )
 
-            artifact_path = root / "inputs" / "sgdCurrentOrfs" / "payload"
+            artifact_path = root / "inputs" / "sgdCurrentOrfs" / "payload" / "payload"
             artifact_path.parent.mkdir(parents=True)
             artifact_path.write_text("payload")
             digest = self.ARTIFACT_DIGESTS["sgdCurrentOrfs"]
@@ -414,6 +414,20 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
                 inventory.resolve_literal_artifact(artifact, "sgdCurrentOrfs", digest).path,
                 artifact_path.resolve(),
             )
+            legacy_path = root / "inputs" / "sgdCurrentOrfs" / "payload-legacy"
+            legacy_path.write_text("payload")
+            with self.assertRaisesRegex(
+                inventory.AtlasInventoryError, "OMF materialization"
+            ):
+                inventory.resolve_literal_artifact(
+                    {
+                        **artifact,
+                        "paths": {"payload": str(legacy_path)},
+                        "path": str(legacy_path),
+                    },
+                    "sgdCurrentOrfs",
+                    digest,
+                )
             with self.assertRaisesRegex(inventory.AtlasInventoryError, "does not match"):
                 inventory.resolve_literal_artifact(
                     {**artifact, "resource": "artifact:sha256:" + "f" * 64},
