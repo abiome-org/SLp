@@ -1182,3 +1182,147 @@ quarantined, with an invariant test preventing re-entry into the active graph.
 This advances the executable factory boundary only. No biological candidate,
 molecular gate, SL benchmark result, release, novelty result, or SOTA claim
 exists; identity runs and separate derived-snapshot admission remain next.
+
+## 2026-09-04 — executed identity boundary and frozen yeast held roster
+
+**Hypothesis, fixed rule, modalities, and snapshots.** The preregistered
+engineering hypothesis was that the two outcome-blind adapters would reproduce
+their frozen identity populations through OMF's supported file-artifact path,
+and that their exact intersection would deterministically reproduce one global
+held-gene roster. Advancement required successful terminal state and lineage,
+the exact preregistered counts and content digests, and a separately admitted
+rights-bearing roster snapshot; any mismatch stopped the sequence. Accessible
+modalities were proteome sample metadata and protein accessions, atlas genotype
+assignments and cell-count identity summaries, and the exact SGD identity map.
+The quantitative proteome matrix, atlas phenotype fields, atlas transcriptomic
+matrix, molecular targets, reward data, and SL benchmarks were inaccessible to
+this decision. Before execution, OMF doctor reported all eight checks ready,
+the only admitted executor was local Linux, and every run used a clean Git
+worktree.
+
+**Failed probes and corrections.** Proteome run
+`01a06cfb-8140-7929-a242-4fa22430b762` failed because the adapter rejected the
+actual OMF file materialization shape `inputs/<name>/payload/payload`; commit
+`dc15a90` corrected both identity adapters and added rejection of the obsolete
+shape. Run `01a06cfe-0553-75cb-ad02-1463ac3634d0` then stopped on the frozen
+retired-row count. An independent exact-case reconstruction found 35, not 36,
+retired rows: `YKR099C-A` occurs in a 12-column SGD row where 13 columns are
+mandatory, so the mapper had correctly retained it as a malformed source row
+without inferring a systematic identity. Commit `1615a51` reconciled the
+partition to 35 retired and 41 unmatched rows while preserving 76 quarantined
+rows. Neither failed run was used as advancement evidence.
+
+**Outcome-blind identity executions.** Proteome run
+`01a06d02-0fa0-7b70-b202-299269125458` succeeded from clean commit `1615a51`;
+its immutable result is
+`omf://abiome/slp/runresult/result-01a06d02-0fa0-7b70-b202-299269125458@sha256:48f7833ef4e2122450a45978ffa88311464351ef3908ec7e11cc8ac99b26e0b7`.
+It admitted 4,623 knockout rows over 4,476 exact current SGD interventions,
+with 76 quarantined rows, and retained 1,850 protein accessions including five
+exact one-to-many relations. The inventory and intervention-record content
+digests are respectively
+`dd683a2585a15377282e669f61dce38c44ea9d3d9d55be71b24842048c05f3e5`
+and
+`15e011d9f3bbea2e034f47dd06b260f834475ffee8adb452046dbb2701ead497`;
+their file-artifact manifests are
+`sha256:88773fa08823a7eb1de21ce269a5e5a9668b02bf6ff3d6f9ef3e80b9fb409cd3`
+and
+`sha256:cc9e9a6479d8e789b59f9544b47da4c67540679786723e86b2ca2cb94442663d`.
+The module package digest was
+`sha256:25ea27935195662a32be1ce5b1c18ac10b9df5c151f504d76b97e6ea3e9c8e6b`
+and its admitted source-artifact manifest was
+`sha256:e43684e71c1703155b75f5d114c7f177668684c7be25cf2af3fa86a0e0ed2a5e`;
+the workload semantic digest was
+`sha256:e80c5e34beb1f419431e6a89bce1e21e75edd8abf6fbd1c1c8638ac95f4dd2a1`
+and its WorkloadSpec revision was
+`sha256:1fb38a29caafd0d01fd018078c081c277e16be85602a2f4fb69a74bf94492893`.
+The admitted environment digest was
+`sha256:2857f0de3e6a95a520da1d0b3ba81b0974bac0a1f8c88a6d048320edff836169`.
+
+Atlas run `01a06d02-b27f-7d1b-a6bd-ce1658c586cb` also succeeded; its immutable
+result is
+`omf://abiome/slp/runresult/result-01a06d02-b27f-7d1b-a6bd-ce1658c586cb@sha256:607fcc0a63a8fb7eefa6adad29ef574d2bb9397d1e26544e0efd7140b4c37069`.
+The exact non-WT intersection of control and NaCl assignments contained 3,151
+candidates: 2,941 exact current SGD interventions, 19 retired or merged
+assignments, and 191 unmatched assignments. The inventory and record content
+digests are
+`a722677a61996f89a3a402d096d0bceedaf34d1439c3ae4ce72c491729b07774`
+and
+`5d71c846aa8740f4eb7284ccbcc7cbf857f209c80064d1bbeb823fde9dada66a`;
+their file-artifact manifests are
+`sha256:eedc782ac4088b5d106119349879258bd3fca109baabf8ba269e505874451f6f`
+and
+`sha256:de3e56b05692bcce07f174f2e8108d29eed585cf1bd80ee5a60f61d0b3887eb4`.
+The module package and admitted source-artifact digests were
+`sha256:c66b224a20e50d16345a752328ed4343b2ad5595c3df5cf0ed0fc9e8e5af4bef`
+and
+`sha256:43ce78f7e4b3da83e5124f5855c6a5e2ef001ad968169c87d63a75aa66ae01f7`;
+the workload semantic digest was
+`sha256:af9f476aa5f4d9300ea22624e8663204754993aceafe307e0cedbe715174dbdc`
+and its WorkloadSpec revision was
+`sha256:2d43786b17af4a0089ad02c1843c572d348a6ef56f85154929be8c8b2734d328`.
+The admitted environment digest was
+`sha256:2dc5606a6dca6e2f3e22f00586ebc49c9a1d2eba5cefd0239de8a7847a3a43dc`.
+The adapter converted only the bounded genotype-summary frames and accessed
+only genotype assignments and cell counts; it never indexed or emitted a
+phenotype field.
+
+**Derived identity snapshots.** Commit `779c6e5` pinned source-specific rights
+to the two successful RunResults and their selected file artifacts. The exact
+restored bytes were independently hashed, admitted, and verified as separate
+OMF datasets:
+
+- proteome identity inventory:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9`,
+  directory manifest
+  `sha256:a1f5222f3dca31d2ca68ca46a271d39cdca3425a903b5dceb7373481450ada36`;
+- atlas identity inventory:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-atlas-intervention-inventory-v1@sha256:3d48478089105b77431f9a7459df3d84bfc41aefe2e2906e6f057b1a6399ae41`,
+  directory manifest
+  `sha256:9fcf5373923c83e93d5a1d6a7dedce6cfd57bd7aadfad4debb7665436c13bd2a`.
+
+Both `omf data verify` calls returned valid. These are identity inventories,
+not pretraining, reward, validation, final, or benchmark corpora.
+
+**Global held-roster execution and admission.** The exact protected-source
+intersection contained 2,700 stable SGD CURIEs. The frozen domain-separated
+hash rule assigned 1,903 to pretraining eligibility, 529 to molecular
+validation, and 268 to molecular final holdout. The headerless, sorted roster
+is 248,524 bytes with content SHA-256
+`c27eb11a20f593235131f28fc29d8fbd69735f8a0aea88736104850bb875117a`;
+coverage is 262,302 bytes with SHA-256
+`c746218cbe5a8312e4d00f771d2155ab902d33795381b8c14ada1f9a876e1cbf`.
+Run `01a06d0b-bd40-7663-a7a3-b1dfb1c1ebbd` succeeded from clean commit
+`71c0c1ba1678567fa5de2879f099c741aa9dba48`; its immutable result is
+`omf://abiome/slp/runresult/result-01a06d0b-bd40-7663-a7a3-b1dfb1c1ebbd@sha256:f6ce5a5383e144c1db788419c8d257ec4ce864042b98b03f11f9fc622466e22b`.
+It collapsed 147 identical duplicate intervention records, excluded 2,017
+identities absent from at least one protected source, and observed zero source
+QC failures. The roster and coverage file-artifact manifests are
+`sha256:857db5a2ced03b7dc5a88de96406e1f706fdc317e56bf7f5a3fbf951884bf5e2`
+and
+`sha256:2b54117856cb239cf4614f919872cca10e2d43a7e5cf88415f88240f0f628895`.
+Module package and source-artifact digests were
+`sha256:5a6e36170b6cc619b36c42afccd818135132d01daed642e97ed412300b77be0a`
+and
+`sha256:98084356b839dcd3026c7725c1be0517dcf1d949627acf88e98f103126f852dd`;
+workload semantic and manifest digests were
+`sha256:12776faff683c028514f0d5288c0bab6d9a2c346082b35f116de9825f323c4fb`
+and
+`sha256:cb3062f3645d4c98ac1a21547337e830ff87b7caf9342445e157e5c208d3e05b`.
+The binding and admitted-environment digests remained
+`sha256:5dc181c5643d2a98ec43b1c79791764e4f5ba5ad4edbd5730d7f455ced4d6e2f`
+and
+`sha256:2857f0de3e6a95a520da1d0b3ba81b0974bac0a1f8c88a6d048320edff836169`.
+
+Commit `9f523bf` narrowed derived rights to the roster and coverage files. Their
+independently restored bytes reproduced both content hashes and the exact
+2,700-row role partition before admission as
+`omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450`,
+with directory manifest
+`sha256:f8aac504a2d56fdc9e13cc9b1c9fa87a08ebc7ff2d7036c0b6b135c26d187425`.
+`omf data verify` returned valid. The advancement rule passed for the identity
+and split boundary only. No quantitative biological corpus has been admitted,
+no world model has been trained on these sources, no molecular metric has been
+measured, and the SL benchmark remains closed; there is therefore no model,
+novelty, frontier, or SOTA performance claim. All three execution environments
+are attested but remain nonportable release closures: the empty locks have no
+realization, while the atlas lock does not provide an offline wheelhouse.
