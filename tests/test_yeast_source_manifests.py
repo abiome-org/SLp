@@ -238,7 +238,7 @@ class YeastSourceManifestTest(unittest.TestCase):
         mapping = sources["sgd-stable-id-mapping-2026-08-28"]
         self.assertEqual(
             mapping["status"],
-            "raw-snapshot-content-verified-ready-for-admission-normalized-map-not-admitted",
+            "raw-snapshot-admitted-normalized-map-produced",
         )
         self.assertEqual(
             mapping["manifest"],

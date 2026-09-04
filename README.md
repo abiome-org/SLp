@@ -90,10 +90,17 @@ On a Linux host:
 git clone https://github.com/abiome-org/OpenModelFactory.git /tmp/OpenModelFactory
 git -C /tmp/OpenModelFactory checkout ef26eea2cb694596f7680a4bce400371738cbb4b
 python3.11 -m venv .venv
-.venv/bin/pip install /tmp/OpenModelFactory
-.venv/bin/omf --project . bootstrap
-.venv/bin/omf --project . doctor
+. .venv/bin/activate
+pip install /tmp/OpenModelFactory
+omf --project . bootstrap
+omf --project . doctor
 ```
+
+Keep that environment activated for every OMF command. Module entry points use
+the relative executable `python3`; an empty dependency lock intentionally runs
+the interpreter selected by `PATH` and does not carry `omf.sdk` into an
+unrelated interpreter. The admitted run records the resolved interpreter,
+distribution inventory and executable digest.
 
 Run the synthetic corpus-audit loop before importing biological data:
 

@@ -8,7 +8,7 @@ identity:
 sources:
   - id: sgd-stable-id-mapping-2026-08-28
     role: identity-provenance
-    status: raw-snapshot-content-verified-ready-for-admission-normalized-map-not-admitted
+    status: raw-snapshot-admitted-normalized-map-produced
     manifest: sources/sgd-stable-id-mapping-2026-08-28.yaml
     rights: rights/sgd-stable-id-mapping-cc-by-4.0.yaml
     modalities:

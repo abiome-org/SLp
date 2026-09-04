@@ -122,6 +122,17 @@ stable-identity normalizer, molecular point baselines, and molecular evaluator.
 The sparse OMF module still validates architecture and corpus semantics only;
 it does not train or emit a checkpoint.
 
+The exact SGD 2026-08-28 identity snapshot is admitted under CC-BY-4.0, and its
+network-denied OMF normalization run produced immutable current-ORF, typed
+external-relation, mapping-manifest and retired-quarantine artifacts. This is
+identity provenance only. No biological outcome snapshot or model-fitting
+permission follows from the mapping result.
+
+That normalization run used an empty dependency lock in an attested Python
+3.12 environment. It establishes the mapping bytes and lineage, not a portable
+runtime closure; release-eligible workloads still require retained, fully
+hash-pinned wheels and offline dependency realization.
+
 OpenModelFactory 1.0 is supported for its local lifecycle on Linux x86-64, not
 this Windows checkout. It also passes JSON protocol state—but not a materialized
 large model artifact—to the inference adapter. A portable SLp release therefore

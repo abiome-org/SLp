@@ -979,3 +979,72 @@ No candidate advances: there is still no admitted biological corpus, OMF sparse
 training/checkpoint path, frozen probabilistic baseline scale, fixed ridge
 implementation, molecular-gate result, SL benchmark result, novelty result, or
 SOTA evidence.
+
+## 2026-09-04 — admitted SGD identity normalization
+
+**Admission and fixed acceptance rule.** The exact six-file SGD object set was
+admitted only as an identity-normalizer input under the reviewed CC-BY-4.0
+rights declaration. DatasetSnapshot
+`omf://abiome/slp/datasetsnapshot/slp-1-1-sgd-map-raw-2026-08-28@sha256:061906684f67100bd855cfbd3e0ed4df2b1b3f0339ebbc34679ba8e535a214cf`
+has manifest digest
+`sha256:70af3a16a69895580d96243e3da1667b9a9a2fe3d6fe72a86542241730922da0`;
+`omf data verify` returned valid. The run could pass only if its canonical
+mapping digest exactly reproduced the preregistered disposable-smoke digest,
+all pinned input and output counts/hashes matched, and current, ambiguous and
+retired relations remained distinct. It could not authorize model fitting or
+advance a model.
+
+**Failures retained.** Run `01a06b56-3e29-716f-ab9b-e70eb102d289` failed
+before module execution because an absolute invocation of the OMF CLI without
+activating its environment let relative `python3` resolve to unsupported
+CPython 3.13.12 without `omf.sdk`. OMF's documented contract is to activate its
+supported Python 3.11/3.12 environment; no `PYTHONPATH`, absolute module
+interpreter, or dependency-lock workaround was added. With the pinned Python
+3.12 environment activated, run `01a06b57-de6b-706b-bc77-6bcbc3b69ce3`
+reached the module and exposed an actual entry-point defect: OMF 1.0
+`ProtocolRequest` has no `outputs_dir` attribute. Commit `4c79246` corrected
+artifact placement to the directory containing the documented
+`OMF_RESULT_FILE` and added a regression guard. Both failed runs remain
+immutable failed evidence.
+
+**Successful execution and lineage.** The clean, pushed Git revision was
+`4c7924663010409a7aaaec644afd33fa2e865c9a`. Module validation produced package
+digest
+`sha256:aca55394cf2853bdb0daa60da347f23968d5b3eda697c85203e361f67db4bc88`
+and source artifact
+`sha256:1f9cae8a1c44adcba888ef30bbcd7f3dd41308276b357f9e312d8e93b52aca65`.
+The binding digest was
+`sha256:5dc181c5643d2a98ec43b1c79791764e4f5ba5ad4edbd5730d7f455ced4d6e2f`,
+the workload digest was
+`sha256:56f4bdb3d5a76e3fff72c24bec33fb76c2bf0cc9abb73ee4a06f99cc8f7f00ff`,
+and the admitted environment digest was
+`sha256:2857f0de3e6a95a520da1d0b3ba81b0974bac0a1f8c88a6d048320edff836169`.
+It records CPython 3.12.3, `open-model-factory==1.0.0`, the exact interpreter
+digest, and network isolation. Its empty lock has `realization: null` and the
+SDK is an editable installation from the pinned temporary OMF checkout, so the
+runtime is attested but is not a portable dependency closure or release
+environment. Run `01a06b59-cd6a-748c-9347-79b515d0a622` succeeded with RunResult
+`omf://abiome/slp/runresult/result-01a06b59-cd6a-748c-9347-79b515d0a622@sha256:0283aa638d96dc06ab48f0cb775402f4b7018639fb03ea419f240c658c56fc6b`.
+Upstream lineage contains the exact DatasetSnapshot and module source; four
+generated edges lead to the current-ORF, typed-relation, quarantine and mapping
+manifest artifacts.
+
+**Outputs and decision.** The admitted run reproduced canonical identity digest
+`6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a`
+exactly. The mapping manifest content SHA-256 is
+`570557ab1201913a18de9790f8adc5ee2e3cb56c6bb0e8d588fe43660c0214e1`.
+OMF artifact digests are current ORFs
+`sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192`,
+typed external relations
+`sha256:75e0fef99bbae3bb4e4dc3e2f24cfd0ab62919c0e6e3e321e8d82f3bd557f4da`,
+retired/irregular quarantine
+`sha256:07ea82f877224496c24effc2aa2a2b684c01b85017e616a70f003a5363f6925f`,
+and mapping manifest
+`sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c`.
+Counts remain 6,613 current ORFs, 228,320 typed keys, 19,276 one-to-many keys,
+100 retired/merged rows and five irregular rows. OMF Knowledge revision
+`sha256:2d1e731b274d373904b45d951cb4a31cf84606224435847f37390ba69d6204c9`
+records this as identity provenance with no biological-model claim. The exact
+mapping digest may now bind source-specific identity inventories, but the
+mapping artifacts are not biological pretraining, validation, reward, final or
+benchmark snapshots. No model or benchmark gate was opened.

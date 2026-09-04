@@ -1,12 +1,11 @@
 schema: slp.source-acquisition/v1
 id: sgd-stable-id-mapping-2026-08-28
-status: raw-snapshot-content-verified-ready-for-admission-normalized-map-not-admitted
+status: raw-snapshot-admitted-normalized-map-produced
 blocker: >-
-  The exact six-file raw snapshot is content-verified and ready for a separate
-  OMF raw DatasetSnapshot admission. Neither that raw snapshot nor a normalized
-  mapping is admitted. Normalized-map admission remains blocked until the raw
-  snapshot is admitted, converted by the reviewed deterministic normalizer,
-  and its products are admitted with complete lineage.
+  The normalized relation artifacts are identity provenance, not a biological
+  training corpus. Proteome and transcriptome adapters must pin the exact
+  artifact digests, apply source-specific admissibility, and emit separately
+  governed identity inventories before the global held roster can be frozen.
 organism:
   name: Saccharomyces cerevisiae
   ncbiTaxon: 4932
@@ -33,12 +32,24 @@ mappingRelease:
     object-version set; gene records never serve as the release identity.
 normalizedMappingArtifact:
   identityMappingId: slp-sgd-map:2026-08-28-object-set-v1
-  identityMappingSha256: null
-  status: not-admitted
+  identityMappingSha256: 6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a
+  status: produced-by-immutable-omf-run
+  runResult: omf://abiome/slp/runresult/result-01a06b59-cd6a-748c-9347-79b515d0a622@sha256:0283aa638d96dc06ab48f0cb775402f4b7018639fb03ea419f240c658c56fc6b
+  mappingManifestSha256: 570557ab1201913a18de9790f8adc5ee2e3cb56c6bb0e8d588fe43660c0214e1
+  outputs:
+    currentOrfs: sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192
+    externalAccessionRelations: sha256:75e0fef99bbae3bb4e4dc3e2f24cfd0ab62919c0e6e3e321e8d82f3bd557f4da
+    retiredMergedQuarantine: sha256:07ea82f877224496c24effc2aa2a2b684c01b85017e616a70f003a5363f6925f
+    mappingManifest: sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c
+  counts:
+    currentOrfs: 6613
+    typedExternalRelations: 228320
+    oneToManyTypedExternalRelations: 19276
+    retiredAndIrregularQuarantineRows: 105
   note: >-
-    Only an immutable normalized OMF run may set this digest. A disposable
-    normalizer smoke run is not an admitted mapping artifact. The digest is not
-    inferred from one gene record, an ETag, or the genome release label.
+    The canonical mapping digest was reproduced from the admitted raw snapshot.
+    It is not inferred from one gene record, an ETag, the genome release label,
+    or the earlier disposable smoke output.
 identity:
   canonicalNamespace: SGD
   canonicalCurieForm: SGD:S#########
@@ -227,18 +238,21 @@ normalizationContract:
     neverChooseFirst: true
     neverResolveByDisplaySymbol: true
 admission:
-  allowed: false
+  trainingCorpusAllowed: false
   rawSnapshot:
     contentVerified: true
     readyForAdmission: true
-    admitted: false
+    admitted: true
+    resource: omf://abiome/slp/datasetsnapshot/slp-1-1-sgd-map-raw-2026-08-28@sha256:061906684f67100bd855cfbd3e0ed4df2b1b3f0339ebbc34679ba8e535a214cf
+    manifestDigest: sha256:70af3a16a69895580d96243e3da1667b9a9a2fe3d6fe72a86542241730922da0
   normalizedMapping:
-    readyToBuildAfterRawAdmission: true
-    admitted: false
+    produced: true
+    admittedAsDatasetSnapshot: false
+    representedAsContentAddressedRunArtifacts: true
     disposableSmokeRunCountsAsAdmission: false
   exactObjectsDownloadedToUntrackedTemporaryStorage: true
   biologicalBytesStoredInGit: false
-  requiredBeforeAdmission:
+  requiredForReplacementOrReadmission:
     - retrieve every exact versionedUrl, never the mutable archive path
     - verify Content-Length and echoed x-amz-version-id
     - verify every recorded SHA-256 for every payload

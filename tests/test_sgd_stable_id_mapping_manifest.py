@@ -40,7 +40,7 @@ class SgdStableIdMappingManifestTest(unittest.TestCase):
         self.assertIn("dbxref.tab", self.rights["scope"])
         self.assertIn("deleted_merged_features.tab", self.rights["scope"])
 
-    def test_snapshot_is_exactly_object_version_pinned_but_not_admitted(self) -> None:
+    def test_snapshot_and_normalized_artifacts_have_exact_omf_lineage(self) -> None:
         self.assertEqual(self.source["schema"], "slp.source-acquisition/v1")
         self.assertEqual(self.source["organism"]["ncbiTaxon"], 4932)
         self.assertEqual(
@@ -59,18 +59,37 @@ class SgdStableIdMappingManifestTest(unittest.TestCase):
         self.assertEqual(
             normalized["identityMappingId"], self.source["mappingRelease"]["id"]
         )
-        self.assertIsNone(normalized["identityMappingSha256"])
-        self.assertEqual(normalized["status"], "not-admitted")
-        self.assertIs(self.source["admission"]["allowed"], False)
+        self.assertEqual(
+            normalized["identityMappingSha256"],
+            "6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a",
+        )
+        self.assertEqual(normalized["status"], "produced-by-immutable-omf-run")
+        self.assertIn("@sha256:", normalized["runResult"])
+        self.assertEqual(normalized["counts"]["currentOrfs"], 6613)
+        self.assertEqual(normalized["counts"]["typedExternalRelations"], 228320)
+        self.assertEqual(
+            normalized["counts"]["oneToManyTypedExternalRelations"], 19276
+        )
+        self.assertEqual(
+            normalized["counts"]["retiredAndIrregularQuarantineRows"], 105
+        )
+        self.assertIs(self.source["admission"]["trainingCorpusAllowed"], False)
         self.assertIs(
             self.source["admission"]["rawSnapshot"]["contentVerified"], True
         )
         self.assertIs(
             self.source["admission"]["rawSnapshot"]["readyForAdmission"], True
         )
-        self.assertIs(self.source["admission"]["rawSnapshot"]["admitted"], False)
+        self.assertIs(self.source["admission"]["rawSnapshot"]["admitted"], True)
+        self.assertIn(
+            "@sha256:", self.source["admission"]["rawSnapshot"]["resource"]
+        )
         self.assertIs(
-            self.source["admission"]["normalizedMapping"]["admitted"], False
+            self.source["admission"]["normalizedMapping"]["produced"], True
+        )
+        self.assertIs(
+            self.source["admission"]["normalizedMapping"]["admittedAsDatasetSnapshot"],
+            False,
         )
         self.assertIs(
             self.source["admission"]["normalizedMapping"]
