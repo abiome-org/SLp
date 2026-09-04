@@ -2183,3 +2183,91 @@ closed. This evidence supports no transfer, performance, novelty, frontier,
 release, or SOTA claim. The next admissible implementation step is a new
 application-neutral composite-keyed world consumer, followed only after an
 independent signed audit handoff.
+
+## 2026-09-04 — packaged clean-training audit v1.5 correction
+
+**Discovered integration failure and fixed rule.** Independent consumer review
+found that frozen audit v1.4 could parse a direct corpus or a snapshot whose
+sole file was `corpus-v1-2.tar`, while the rights-correct admitted pretraining
+DatasetSnapshot contains exactly two files: `corpus-v1-2.tar` and
+`corpus-compose-audit.json`. The earlier v1.4 compatibility check had passed a
+tar payload directly and therefore did not test the actual OMF handoff shape.
+A production v1.4 workload would fail before corpus parsing. Re-admitting a
+tar-only snapshot would discard the companion evidence and was rejected as a
+workaround; v1.4 remains immutable.
+
+The falsifiable correction hypothesis was that a new audit could consume the
+exact admitted two-file bundle while treating the producer's companion as an
+assertion to reconstruct, not as proof. Advancement required: exact bundle
+loading; independent agreement on archive, manifest, inputs, counts, composite
+identity, feature and target bytes; actual canonical USTAR verification; signed
+binding of both outer payload hashes; strict boolean and integer types; no
+change to v1.4; and green schema, OMF, focused, combined, and full-suite checks.
+The only quantitative modality opened by this compatibility check was the
+already admitted fitting-only yeast proteome corpus
+`omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-composite-corpus-v1@sha256:e91cad825b8a2e972da293902c630331a92ab664c5d14a95a65ff38090db6c48`.
+No validation/final truth, reward, benchmark, or production authorization was
+accessible.
+
+**Immutable v1.5 implementation.** Commit `ce80904` added
+`slp-1-1-training-corpus-audit-v1-5` without modifying v1.4. The new boundary
+requires exactly the two admitted top-level regular files and rejects direct,
+tar-only, missing, renamed, extra, nested, or symlinked layouts. It parses the
+companion with duplicate-key rejection, bounded UTF-8, exact fields, and the
+producer's sorted pretty-JSON representation. It then independently binds the
+actual tar name, byte count and SHA-256; inner corpus manifest and input
+lineage; counts; composite entity and feature key sets; context identity;
+feature-pack digest; recomputed feature-value, feature-presence and target-value
+bytes; zero protected overlap; and false reward/benchmark declarations.
+
+The audit also verifies that the archive itself—not merely its `formats`
+string—has exact sorted regular-file USTAR members, canonical mode/owner/time
+headers, contiguous offsets, zero member padding, canonical 10,240-byte record
+rounding, and an all-zero trailer. Companion counts reject Boolean-as-integer
+confusion, and leakage flags require exact Boolean identity plus an exact
+integer zero overlap. The v1.5 corpus identity adds
+`bundleArchiveSha256`, `compositionAuditSha256`,
+`compositionAuditSchema`, `compositionCompanionValidated: true`, and
+`sourcePreservationIndependentlyRecomputed: false`. The signed pretrain claim
+now binds both bundle hashes in addition to the inner manifest and content
+digests. Source-side preservation strings must match reconstructed composed
+bytes, but the audit correctly refuses to claim it independently recomputed
+parents that are absent from the clean-training boundary.
+
+Final OMF validation returned valid with package digest
+`sha256:df9a16a207e5ad64ff0d5123a33a921eda8e75d13aa272ac6b4be4bebf6dcb0b`
+and source-artifact manifest
+`sha256:8b574838f6700cea1a271165a930824d1f43ef15c2c0f528d534a5a9a87452ed`.
+The 303-byte dependency lock remains
+`sha256:9eca4b24f57234e5479dc6b3b8c0e46039be34014d2141410a3a6bef60e7b57e`.
+Eight focused tests passed with one optional Windows schema skip; combined
+v1.4/v1.5 tests passed 33 with two skips; all nine v1.5 tests passed in the
+pinned Linux environment; Ruff and compile checks passed. The full governed
+repository suite passed 271 tests with 21 skipped and 17 existing PyTorch
+nested-tensor warnings.
+
+An independent read of the exact production bundle through v1.5 reproduced
+3,811 records, 6,865,493 target values, entity-key-set SHA-256
+`9ca16d4f44ca97b4940bd389ca8bbdafe0c6fd711d557a98743218a83caeb87d`,
+feature-pack SHA-256
+`016753a94bacd6e2b8dd299abc7906fa874c3d5926ff73605a1f9c913a12d66b`,
+archive SHA-256
+`0a5322c46e15e8a15d17000e8993c0ad642fcc70bc8fff00cbba8fb2905708bf`,
+and companion SHA-256
+`898e4069b2bd9575bd7380b57ed6214bf3d75043feb401c0fa50371972623c52`.
+This passes the packaging and semantic compatibility rule only. Immutable OMF
+lesson revision
+`sha256:e5446a64bb97f60fe3d32a1270c00f3b5a3486bd487d7284f1b569982adf6e09`
+records why v1.5, rather than frozen v1.4, is required for the packaged handoff
+while making no training or performance claim.
+
+The production public trust anchor remains intentionally unprovisioned, so no
+signed v1.5 audit workload or authorization artifact exists and no training
+consumer may treat this parser result as permission. A future consumer must
+independently reverify the original signature and full corpus/roster/inventory
+identities before importing Torch or allocating a model. Native OMF producer
+lineage, one-time authorization consumption, freshness, rights enforcement,
+and physical clean-factory isolation also remain separate gates. No model was
+trained, no checkpoint or molecular metric was produced, and the external
+synthetic-lethality benchmark remained closed. This correction supports no
+transfer, performance, novelty, frontier, release, or SOTA claim.

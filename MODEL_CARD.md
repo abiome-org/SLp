@@ -178,17 +178,24 @@ documentary purpose restrictions. The molecular-final workload has never been
 executed. A clean training factory and distinct validation/final service
 identities and stores remain prerequisites for credible held-out evaluation.
 
-A separate clean-training corpus-audit v1.4 contract is now implemented beside
+A separate clean-training corpus-audit v1.5 contract is now implemented beside
 the frozen earlier audits. Its interface contains no validation or
 final quantitative input: it authenticates the exact composed optimizer corpus,
 outcome-blind held roster, and protected-source inventories with a recipient-
 and challenge-bound Ed25519 custodian authorization, then independently scans
-all active actions for the held union. The v1.4 parser independently accepted
-the production corpus structure and reproduced its counts and content digests,
-but that compatibility check is not a signed authorization. The production
-public trust anchor is intentionally unprovisioned pending an independent key
-ceremony, and no physically separate training factory exists. Therefore the
-v1.4 signed biological handoff is deliberately fail-closed and has not run.
+all active actions for the held union. Frozen v1.4 accepted a direct or tar-only
+corpus but could not consume the admitted two-file DatasetSnapshot. V1.5 now
+requires exactly `corpus-v1-2.tar` and `corpus-compose-audit.json`, verifies the
+actual canonical USTAR representation, independently reconstructs the composed
+entity, feature, target, count and lineage facts, and binds both bundle hashes
+in the signed claim. It explicitly records that source-side byte preservation
+cannot be independently recomputed without the deliberately inaccessible
+parent arrays. Direct production-bundle loading reproduced the expected counts
+and content digests, but that compatibility check is not signed authorization.
+The production public trust anchor is intentionally unprovisioned pending an
+independent key ceremony, and no physically separate training factory exists.
+Therefore the
+v1.5 signed biological handoff is deliberately fail-closed and has not run.
 Its signature is content authorization, not one-time-use enforcement,
 source-to-corpus lineage, rights verification, or filesystem isolation; those
 remain independent release gates. Existing world-trainer and evaluator
