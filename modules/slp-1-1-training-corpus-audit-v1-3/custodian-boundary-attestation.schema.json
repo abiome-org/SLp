@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abiome.org/schemas/slp-training-corpus-handoff-v1.schema.json",
+  "title": "SLp recipient-bound training corpus handoff",
+  "type": "object",
+  "required": [
+    "schema", "authorizationId", "issuedAt", "issuer", "recipient",
+    "purpose", "protocol", "datasets"
+  ],
+  "properties": {
+    "schema": {"const": "slp.training-corpus-handoff/v1"},
+    "authorizationId": {
+      "type": "string",
+      "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "issuedAt": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "issuer": {
+      "type": "object",
+      "required": ["name", "keyId"],
+      "properties": {
+        "name": {"const": "abiome-protected-data-custodian"},
+        "keyId": {"$ref": "#/$defs/prefixedSha256"}
+      },
+      "additionalProperties": false
+    },
+    "recipient": {
+      "type": "object",
+      "required": ["namespace", "factoryIdentity", "challengeNonce"],
+      "properties": {
+        "namespace": {"const": "abiome/slp"},
+        "factoryIdentity": {"$ref": "#/$defs/prefixedSha256"},
+        "challengeNonce": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "purpose": {"const": "slp-1.1-clean-training-boundary"},
+    "protocol": {
+      "type": "object",
+      "required": [
+        "auditSchema", "rewardEnabled", "protectedQuantitativeTruthIncluded",
+        "benchmarkLabelsIncluded"
+      ],
+      "properties": {
+        "auditSchema": {"const": "slp.corpus-audit/v1.3"},
+        "rewardEnabled": {"const": false},
+        "protectedQuantitativeTruthIncluded": {"const": false},
+        "benchmarkLabelsIncluded": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "datasets": {
+      "type": "object",
+      "required": ["pretrain", "heldRoster", "protectedInventories"],
+      "properties": {
+        "pretrain": {"$ref": "#/$defs/pretrain"},
+        "heldRoster": {"$ref": "#/$defs/heldRoster"},
+        "protectedInventories": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 64,
+          "items": {"$ref": "#/$defs/inventory"}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "prefixedSha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "resource": {
+      "type": "string",
+      "pattern": "^omf://abiome/slp/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+    },
+    "pretrain": {
+      "type": "object",
+      "required": ["resource", "manifestDigest", "corpusManifestSha256", "contentDigest"],
+      "properties": {
+        "resource": {"$ref": "#/$defs/resource"},
+        "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "corpusManifestSha256": {"$ref": "#/$defs/sha256"},
+        "contentDigest": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "heldRoster": {
+      "type": "object",
+      "required": ["resource", "manifestDigest", "rosterSha256", "coverageSha256"],
+      "properties": {
+        "resource": {"$ref": "#/$defs/resource"},
+        "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "rosterSha256": {"$ref": "#/$defs/sha256"},
+        "coverageSha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "inventory": {
+      "type": "object",
+      "required": ["inputName", "resource", "manifestDigest", "inventoryManifestSha256"],
+      "properties": {
+        "inputName": {
+          "type": "string",
+          "pattern": "^protectedInventory[A-Za-z0-9_-]+$"
+        },
+        "resource": {"$ref": "#/$defs/resource"},
+        "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
+        "inventoryManifestSha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

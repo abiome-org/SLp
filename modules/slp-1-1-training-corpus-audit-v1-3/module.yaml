@@ -1,0 +1,132 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-training-corpus-audit-v1-3
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:9eca4b24f57234e5479dc6b3b8c0e46039be34014d2141410a3a6bef60e7b57e
+  contracts:
+    input:
+      type: object
+      minProperties: 5
+      maxProperties: 67
+      required: [pretrain, heldRoster, custodianBoundaryAttestation]
+      properties:
+        pretrain:
+          type: object
+          required: [resource, mode, path, manifestDigest]
+          properties:
+            resource: {type: string, pattern: "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+          additionalProperties: false
+        heldRoster:
+          type: object
+          required: [resource, mode, path, manifestDigest]
+          properties:
+            resource: {type: string, pattern: "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+          additionalProperties: false
+        custodianBoundaryAttestation:
+          type: object
+          required: [resource, mode, path, manifestDigest]
+          properties:
+            resource: {type: string, pattern: "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+          additionalProperties: false
+      patternProperties:
+        "^protectedInventory[A-Za-z0-9_-]+$":
+          type: object
+          required: [resource, mode, path, manifestDigest]
+          properties:
+            resource: {type: string, pattern: "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+          additionalProperties: false
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - auditSummary
+        - auditSha256
+        - rewardEnabled
+        - auditPassed
+        - leakageViolations
+        - benchmarkLabelRecords
+        - pretrainRecords
+        - protectedTruthInputsPresent
+        - custodianSignatureVerified
+        - protectedInventorySources
+      properties:
+        auditSummary: {type: object}
+        auditSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        rewardEnabled: {const: false}
+        auditPassed: {type: integer, minimum: 0, maximum: 1}
+        leakageViolations: {type: integer, minimum: 0, maximum: 0}
+        benchmarkLabelRecords: {type: integer, minimum: 0, maximum: 0}
+        pretrainRecords: {type: integer, minimum: 0}
+        protectedTruthInputsPresent: {const: false}
+        custodianSignatureVerified: {type: boolean}
+        protectedInventorySources: {type: integer, minimum: 0, maximum: 64}
+      additionalProperties: false
+    config:
+      type: object
+      required: [rewardEnabled, recipientFactoryIdentity, challengeNonce]
+      properties:
+        rewardEnabled: {const: false}
+        recipientFactoryIdentity: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+        challengeNonce: {type: string, pattern: "^[0-9a-f]{64}$"}
+        maxManifestBytes: {type: integer, minimum: 1024, maximum: 67108864}
+        maxCoverageBytes: {type: integer, minimum: 1024, maximum: 536870912}
+        maxFilesPerCorpus: {type: integer, minimum: 5, maximum: 4096}
+        maxFileBytes: {type: integer, minimum: 1, maximum: 137438953472}
+        maxTotalBytesPerCorpus: {type: integer, minimum: 1, maximum: 549755813888}
+        maxRecordsPerCorpus: {type: integer, minimum: 1, maximum: 1000000000}
+        maxTrajectoryGenes: {type: integer, minimum: 1, maximum: 20000000}
+        maxLineBytes: {type: integer, minimum: 64, maximum: 1048576}
+        maxSources: {type: integer, minimum: 1, maximum: 100000}
+        maxSpecies: {type: integer, minimum: 1, maximum: 10000}
+        maxEntities: {type: integer, minimum: 1, maximum: 20000000}
+        maxIdentityArrayBytes: {type: integer, minimum: 1024, maximum: 68719476736}
+        maxRosterRecords: {type: integer, minimum: 1, maximum: 20000000}
+        maxCoverageExclusions: {type: integer, minimum: 0, maximum: 100000000}
+        maxNpzMembers: {type: integer, minimum: 8, maximum: 4096}
+        maxInventoryFilesPerSource: {type: integer, minimum: 1, maximum: 256}
+        maxInventoryRecordsPerSource: {type: integer, minimum: 1, maximum: 20000000}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          pretrain: {}
+          heldRoster: {}
+          custodianBoundaryAttestation: {}
+          protectedInventoryOne: {}
+          protectedInventoryTwo: {}
+        config:
+          rewardEnabled: false
+          recipientFactoryIdentity: sha256:0000000000000000000000000000000000000000000000000000000000000000
+          challengeNonce: "0000000000000000000000000000000000000000000000000000000000000000"
+        state: {}
+      result:
+        status: ok
+        outputs:
+          auditSummary: {schema: slp.corpus-audit/v1.3, validationOnly: true}
+          auditSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          rewardEnabled: false
+          auditPassed: 0
+          leakageViolations: 0
+          benchmarkLabelRecords: 0
+          pretrainRecords: 0
+          protectedTruthInputsPresent: false
+          custodianSignatureVerified: false
+          protectedInventorySources: 0

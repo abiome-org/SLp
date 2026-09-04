@@ -1,0 +1,35 @@
+# Render only in a physically separate clean training factory after all five
+# input classes are admitted and verified. Protected validation/final truth,
+# molecular reward, and benchmark snapshots are forbidden.
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-training-corpus-audit-v1-3
+spec:
+  graph:
+    stages:
+      - name: audit-training-corpus
+        module: modules/slp-1-1-training-corpus-audit-v1-3/module.yaml
+        operation: run
+        inputs:
+          pretrain: "@@PRETRAIN_DATASET@@"
+          heldRoster: "@@HELD_ROSTER_DATASET@@"
+          custodianBoundaryAttestation: "@@CUSTODIAN_ATTESTATION_DATASET@@"
+          protectedInventoryAtlas: "@@ATLAS_INVENTORY_DATASET@@"
+          protectedInventoryProteome: "@@PROTEOME_INVENTORY_DATASET@@"
+        config:
+          rewardEnabled: false
+          recipientFactoryIdentity: "@@TRAINING_FACTORY_IDENTITY@@"
+          challengeNonce: "@@AUTHORIZATION_CHALLENGE_NONCE@@"
+        outputs:
+          - auditSummary
+          - auditSha256
+          - rewardEnabled
+          - auditPassed
+          - leakageViolations
+          - benchmarkLabelRecords
+          - pretrainRecords
+          - protectedTruthInputsPresent
+          - custodianSignatureVerified
+          - protectedInventorySources
+          - trainingCorpusAudit
