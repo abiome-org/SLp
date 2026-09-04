@@ -1723,3 +1723,133 @@ checkpoint, metric, evaluation, or knowledge claim was created from the v1.3
 module. This milestone is executable boundary engineering, not training or
 scientific performance evidence, and supports no novelty, frontier, release,
 or SOTA claim.
+
+## 2026-09-04 — exact SGD sequence source and relation-closed static universe
+
+**Hypothesis, fixed rule, modalities, and snapshots.** The falsifiable data-
+engineering hypothesis was that the current outcome-blind yeast identity
+sources could yield one deterministic, species-native, relation-closed entity
+universe suitable for later static features without consuming held assignments
+or quantitative outcomes. Advancement required two clean OMF executions to
+produce identical payload bytes while preserving every typed one-to-many
+relation; exact source, outer-manifest, inner-manifest, record-set, mapping,
+count, identity-set, composite-key-set, and relation-edge drift had to fail
+closed. The resulting artifact also had to validate independently rather than
+trusting hashes declared by its own manifest.
+
+The accessible modalities were stable SGD and UniProtKB identities, NCBI
+taxonomy, typed protein-to-current-ORF relations, and static SGD protein
+sequence. No quantitative observation, held roster, reward, checkpoint,
+prediction, or benchmark input was accessible to the universe module. Its two
+inputs were exactly:
+
+- `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9`,
+  outer manifest
+  `sha256:a1f5222f3dca31d2ca68ca46a271d39cdca3425a903b5dceb7373481450ada36`;
+- `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-protein-relations-v1@sha256:acad3427907644f8ab8af38ed36066a6e1148ef92557b727351b0a4fba2b446c`,
+  outer manifest
+  `sha256:c159573f4f7a2e41b18930d724dea9fb297452a659bdf6050e4718efc1a6c58a`.
+
+Separately, the release-labelled SGD object
+`orf_trans_all_R64-5-1_20240529.fasta.gz` was pinned by S3 VersionId
+`GRiDuJlE44rFsMHE63VZUFxVcA4GBun6`, compressed SHA-256
+`17e8b47e1ae23178c6000fbc4ab548f102d1b250ef9dff5d811feb3f03dd2c5b`,
+and decompressed SHA-256
+`e01f9e1ef7e5a01ff7cd0ee7a843e6d1c1da8c3777fdfac3a5293711d4c56518`.
+All 6,722 headers carry Genome Release 64-5-1; all 6,613 current ORFs are
+covered and 109 non-current records are explicitly accounted for. Its exact
+three-file source snapshot is
+`omf://abiome/slp/datasetsnapshot/slp-1-1-sgd-protein-sequences-r64-5-1@sha256:3b76017f5ac74d8d96efb1db52d14af91c9fb15995062110558ce4651cf3ba0c`,
+outer manifest
+`sha256:8f88480196b5cd8f3c15d65dbdbc09f83305c371fb476c70a38825dad2be4283`.
+It is admitted for static feature construction only; it is not a quantitative
+training corpus or a sequence representation.
+
+**Implemented and reviewed contract.** Commits `e591dc5` and `c657223` added
+the self-contained `slp-1-1-static-entity-universe-v1` module, strict schemas,
+workload, and adversarial tests. Independent review found that the initial
+archive validator trusted self-declared inner hashes, omitted composite taxon
+from its semantic entity hash, allowed noncanonical JSONL, hashed records
+before enforcing byte bounds, incompletely checked ancestor symlinks, and
+misstated the absence of roles despite emitting action/readout usages. All
+were corrected before biological execution. The final validator reconstructs
+canonical USTAR bytes; parses canonical entity and relation rows; recomputes
+counts, exact relation closure and all semantic hashes; rejects extra fields
+and label-like keys; and binds the authoritative `(ncbiTaxon, entityId)` set.
+
+The relation-closed result contains 7,037 entities: 5,187 SGD genes and 1,850
+UniProtKB proteins. Of the genes, 4,476 are action eligible; 1,855 are relation
+targets, 1,144 of those overlap the action set, and 711 are relation-support
+only. All 1,855 typed edges and all five two-target protein records are
+preserved without selecting a first target. The current model-facing action
+plus readout interface remains 6,326 keys. The composite entity-key digest is
+`82b8e2885939577fe6946e3b974a10cb947834118f2070e1bcbe4c2f2e6a5fd9`;
+the ID-only compatibility digest is
+`e7231d3bb859ca4818364c76d9aa9fee54d6b1d9a64050c2d3ab8af81a9b3eb9`;
+the relation-edge digest is
+`8a75c42d5a0f24a86be16ecea2616d6d13d25d90de18a80d3dd22cd188afc6d1`.
+
+**OMF execution and reproducibility.** OMF doctor was ready with signing
+identity
+`sha256:115da768a6712a5ab58a128c9f6809fbb0ce7df2c69981ca35e21c44daf166bc`.
+The module and workload schemas validated. An initial attempt using full
+`omf://` DatasetSnapshot URIs failed at input-contract admission in run
+`01a06db9-a4dc-7b84-8261-4e99f45097d8`: OMF 1.0 recognizes DatasetSnapshot
+workload inputs only as `dataset/<name>`. The workload now uses that supported
+grammar; OMF pins the immutable revision at admission and the module separately
+requires the compiled full resource URI and outer digest. A later run
+`01a06dbc-f81f-7cd6-ac7f-e92256023415` failed at `import omf` because the host
+Conda interpreter, not the dedicated OMF environment, was selected. No module
+source or biological input was read in the first failure and no source was
+read past module import in the second; neither emitted an artifact. Activating
+the same dedicated OMF runtime used by prior factory runs resolved the executor
+selection without changing data or numerical behavior.
+
+Clean runs `01a06dbd-82ad-7755-951c-7ac08a13f5e8` and
+`01a06dbd-b980-7909-a2e4-fa336a598ecc` succeeded from commit `c657223`. Their
+immutable RunResults are respectively
+`omf://abiome/slp/runresult/result-01a06dbd-82ad-7755-951c-7ac08a13f5e8@sha256:b6afd306c6db582d7f1ee64ac76952d995bbcee1541c51933b40677532bc83eb`
+and
+`omf://abiome/slp/runresult/result-01a06dbd-b980-7909-a2e4-fa336a598ecc@sha256:a8230ea2171b696734dcaf4388485032758c356cb1e1740ee1b2e62c7d70a22d`.
+Both emitted the same 1,525,760-byte archive with SHA-256
+`d947bf618b854dd33a7157ac0f0380c544e9a4377bddb00806c9ca07f689a544`
+and the same 4,880-byte audit with SHA-256
+`339412ea008cf383db2258d0788d71c2cf357183b331d49f4168aa7f113f1a0f`.
+Their OMF artifact manifests differ because they bind distinct run contexts:
+archive manifests `sha256:5df1dc1b535f3ec5c58d9a0fb94a3c0144a4ca23ec575e730eee2c83f93df2d8`
+and `sha256:0c8e3ea3a13415b9593151195c270ff601c2d1336d4084474a87b5ad7c67b644`,
+and audit manifests `sha256:d6967eec1b6669515fe7713fb7e3dca75bac3df42f6f44ffce723b7cd90a4f49`
+and `sha256:92e855df2626a3bf20275c5a09bb3efd656d3b0d26c57705e22a1db312e67560`.
+The workload, workload-resource, binding, environment, and empty dependency-
+lock digests were respectively
+`sha256:f89909b2563c30008e11092ff14b9c039e114840448f12df21ac33dd78d3b33c`,
+`sha256:c4610c2fb0b9e139e782234736c531b65ab59ca00a9b2ffb9342bfcce6a0b127`,
+`sha256:5dc181c5643d2a98ec43b1c79791764e4f5ba5ad4edbd5730d7f455ced4d6e2f`,
+`sha256:2857f0de3e6a95a520da1d0b3ba81b0974bac0a1f8c88a6d048320edff836169`,
+and `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+The runtime was CPython 3.12.3; the empty lock is host-reproducible evidence,
+not an offline portable runtime closure.
+
+**Admission, evidence, and next boundary.** Commit `3a52b83` bound the exact
+two output files, both RunResults, all four run-specific artifact manifests,
+and both parent DatasetSnapshots to the CC-BY-4.0 derived rights declaration.
+OMF admitted and verified
+`omf://abiome/slp/datasetsnapshot/slp-1-1-static-entity-universe-v1@sha256:de3efddf5a9e4f66496a1edda14b04de774e972bc7b9efd30964644de2a56cac`,
+directory manifest
+`sha256:a65f94081c0b60a8b486ed968b58fc4d021ba3ea7f5f11425d3a1635cbb10684`.
+Knowledge revision
+`sha256:ec2b7bda50256739d4ba7c6dda1b63fe0291dacb361128a1579e35f69b13803c`
+records the same narrow identity-boundary claim.
+
+The next fixed step is an outcome-blind 21-dimensional sequence-statistics
+feature block—protein length divided by 4096 plus amino-acid fractions—joined
+by composite key across this universe and the admitted SGD sequence source.
+It is intentionally a weak deterministic baseline for later protein-language-
+model, domain, and phylogeny blocks, not the proposed frontier representation.
+The historical corpus v1.1 and sparse consumer use globally unique bare IDs;
+they remain frozen and cannot honestly consume multi-species identities. A
+new corpus v1.2, audit v1.4, signed handoff, and world consumer must enforce
+composite joins before biological training. The external synthetic-lethality
+benchmark remained closed. No model was trained, no checkpoint or molecular
+metric was produced, and this evidence supports no transfer, performance,
+novelty, frontier, release, or SOTA claim.

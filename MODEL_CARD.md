@@ -146,6 +146,21 @@ external-relation, mapping-manifest and retired-quarantine artifacts. This is
 identity provenance only. No biological outcome snapshot or model-fitting
 permission follows from the mapping result.
 
+The exact SGD S288C R64.5.1 translated-ORF protein source is also admitted as
+a separately rights-bearing static-only snapshot. It covers all 6,613 current
+ORFs by stable SGD ID, but no sequence feature block has yet been produced.
+The outcome-blind proteome action inventory and typed protein relations have
+been composed twice into byte-identical, relation-closed identity payloads and
+admitted as
+`omf://abiome/slp/datasetsnapshot/slp-1-1-static-entity-universe-v1@sha256:de3efddf5a9e4f66496a1edda14b04de774e972bc7b9efd30964644de2a56cac`.
+That source universe contains 5,187 SGD genes and 1,850 UniProtKB proteins;
+711 genes exist only to close typed relations and are not action eligible.
+The artifact uses `(ncbiTaxon, entityId)` identities and contains no numeric
+features or train/validation/final assignments. The historical sparse corpus
+consumer still keys by bare ID, so corpus v1.2 and its consumers must migrate
+to composite joins before multi-species training. These are static data and
+identity boundaries, not training or performance evidence.
+
 The source-normalized yeast proteome pretraining observations, HIS3 basal
 control, and protected molecular-validation observations are now separately
 admitted as rights-bearing snapshots. The validation snapshot exists only in
