@@ -18,7 +18,8 @@ file hashes are fixed. Full `omf://abiome/slp/...` resource URIs, OMF request
 objects, and materialized paths are checked literally. Symlinks, foreign
 namespaces, mutable references, extra inputs, extra files, and legacy
 file-artifact paths fail. The exact typed UniProtKB accession object and current
-SGD relation targets are revalidated.
+SGD relation targets are revalidated, including the frozen nuclear and
+mitochondrial systematic-name forms in the current-ORF object set.
 
 ## Partition and access
 

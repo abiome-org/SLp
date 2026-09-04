@@ -57,7 +57,7 @@ SHA256 = re.compile(r"^[0-9a-f]{64}$")
 SGD_CURIE = re.compile(r"^SGD:S[0-9]{9}$")
 RESOURCE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 INPUT_NAME = re.compile(r"^[A-Za-z][A-Za-z0-9]{0,127}$")
-SYSTEMATIC_NAME = re.compile(r"^Y[A-P][LR][0-9]{3}[CW](?:-[A-Za-z])?$")
+SYSTEMATIC_NAME = re.compile(r"^(?:Y[A-P][LR][0-9]{3}[CW](?:-[A-Za-z])?|Q[0-9]{4})$")
 METADATA_COLUMNS = (
     "Filename",
     "Injection nr",

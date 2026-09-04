@@ -432,6 +432,12 @@ def _npz_arrays(payload: bytes) -> dict[str, np.ndarray]:
 
 
 class ProteomeObservationPreparationTest(unittest.TestCase):
+    def test_systematic_name_contract_includes_exact_mitochondrial_orfs(self) -> None:
+        self.assertIsNotNone(prepare.SYSTEMATIC_NAME.fullmatch("Q0010"))
+        self.assertIsNotNone(prepare.SYSTEMATIC_NAME.fullmatch("Q0297"))
+        for invalid in ("q0010", "Q010", "Q00010", "R0010", "Q00A0"):
+            self.assertIsNone(prepare.SYSTEMATIC_NAME.fullmatch(invalid))
+
     def test_happy_path_preserves_sparse_targets_basal_and_partition(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             fixture = Fixture(Path(temporary) / "fixture")
