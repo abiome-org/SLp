@@ -1326,3 +1326,132 @@ measured, and the SL benchmark remains closed; there is therefore no model,
 novelty, frontier, or SOTA performance claim. All three execution environments
 are attested but remain nonportable release closures: the empty locks have no
 realization, while the atlas lock does not provide an offline wheelhouse.
+
+## 2026-09-04 — leakage-separated proteome pretraining observations
+
+**Hypothesis, fixed rule, modalities, and snapshots.** The falsifiable
+engineering hypothesis was that the admitted Mendeley proteome release could
+be transformed into a deterministic, source-normalized, fitting-only
+pretraining observation corpus while never numerically decoding a molecular
+validation, molecular final, quarantine, or analytical-QC knockout column.
+Advancement required two successful executions from the same clean commit,
+identical bytes for every emitted file, exact protected-role exclusions, and
+separate rights-bearing admission of the pretraining observations and basal
+control. Any byte, count, identity, provenance, or access-boundary mismatch
+would stop advancement. Accessible modalities were the pinned raw proteome
+matrix and metadata, the admitted intervention inventory, typed UniProtKB-to-
+SGD protein relations, the frozen held-gene roster, and the separately decoded
+HIS3 controls. Atlas quantitative values, validation and final target values,
+molecular reward, SL labels, and all benchmark data were inaccessible to this
+decision. The exact input snapshots were:
+
+- raw proteome:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-raw-v2@sha256:5392d4df7e962c9f59798b83fbdf8e71cd568b30c78a498702d50fabc059397e`;
+- intervention inventory:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9`;
+- typed protein relations:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-protein-relations-v1@sha256:acad3427907644f8ab8af38ed36066a6e1148ef92557b727351b0a4fba2b446c`;
+- held roster:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450`.
+
+The protein-relation snapshot above contains 1,850 accessions and preserves
+all five exact one-to-many relations. Its content-manifest and record digests
+are `8d559638f48ee4516f7e6fce9e0248e9a1762d58803fe2ed761eff8734f45f86`
+and `c72996b4ddc6870a3ab722060eef2fa2747fa9dd121d3e70514dd196c5283b8d`;
+its admitted directory-manifest digest is
+`sha256:c159573f4f7a2e41b18930d724dea9fb297452a659bdf6050e4718efc1a6c58a`.
+
+**Reward and access contracts.** Commit `d7ede41` advanced the corpus-audit
+schema to `slp.corpus-audit/v1.2`. Active training now requires the exact three
+roles `pretrain`, `molecularValidation`, and `molecularFinal` plus
+`rewardEnabled: false`; it rejects a reward input, reward identity, a missing
+flag, a true flag, or an older audit schema. The world trainer and molecular
+evaluator accept only this v1.2 contract. This is an enforced absence of
+molecular reward, not a zero-valued reward workaround. The final admitted
+corpus-audit module package and source-artifact manifest are
+`sha256:3a6b431fec4f7c8cb7efe2c21b2ddac4d0ee115d099a41eed003de5a4d3ebe02`
+and
+`sha256:ff4366c67de4914e24e4f1430c9a6e2716565b4c7b9dedc64008df6a1eeb50c4`.
+
+The self-contained proteome preparation module reconstructs each raw matrix
+column from exact metadata coordinates and current SGD identity rather than
+assuming row order. It parses the shared readout header, then converts only
+the 3,811 pretraining columns and 388 HIS3 control columns to numbers. It does
+not convert or validate the 537 molecular-validation, 275 molecular-final, 76
+quarantine, or 389 analytical-QC columns. Positive finite abundances are
+represented as log2 values without a pseudocount; missing values remain absent
+from record-local CSR targets. Raw filenames and raw ORF strings are omitted
+from the output shards. The HIS3-derived basal profile is a separate artifact,
+is not subtracted from targets, and uses no knockout or QC outcome.
+
+**Failed execution and bounded correction.** Run
+`01a06d40-6bd3-7751-b5de-2c2f9e25da93` stopped at source line 6,137 because
+the adapter's current-ORF syntax admitted nuclear systematic names but rejected
+the legitimate mitochondrial current SGD identifier `Q0010`. An exhaustive
+audit found exactly 28 current mitochondrial systematic names, all matching
+`Q[0-9]{4}`. Commit `ff15ded` added that exact alternative and adversarially
+rejected lowercase, short, long, nonnumeric, and wrong-prefix variants. It did
+not loosen any expected count, role, or source revision. The failed run was not
+used as advancement evidence.
+
+**Successful executions.** Runs
+`01a06d42-8493-7cd5-8c57-779dc8512436` and
+`01a06d43-4260-707f-8fa5-4beee63c7856` both succeeded from clean commit
+`ff15ded`. Their immutable results are respectively
+`omf://abiome/slp/runresult/result-01a06d42-8493-7cd5-8c57-779dc8512436@sha256:6ec04e07cd917b66e16274a04f565844fa7acc1b538fb460c408f9276b5f694c`
+and
+`omf://abiome/slp/runresult/result-01a06d43-4260-707f-8fa5-4beee63c7856@sha256:d81d5c4f8a790542f3b2c16ed6d0954b27907784aa946e157cee76406c3b22a6`.
+Both emitted 3,811 records over 3,679 stable intervention genes with 6,865,493
+observed log2 targets and 184,857 missing values. The separate basal artifact
+contains 388 controls and 701,619 observed values, with 1,843 of 1,850
+readouts supported. The ordered trajectory-list, trajectory-set, and basal-
+locator-set digests are
+`a37fbd5ba56ba4f38cf4ec0655d7dd9734e4727e77f68064739c24d025d3b7e1`,
+`f6083da5b795d5653e630d41758e52855ab1e931d9a6311a1b7ae7350b59b838`,
+and `aa012c10e56552108051049fa86c5782461cfd2114ccc6ce4171f947471a6d27`.
+
+Independent `sha256sum` and byte comparisons reproduced identical files from
+the two run directories: observation archive
+`1f533d7dfb5bd76489b5b4576268e5d5b58fc6200416362876b5a2301c611f0b`,
+basal archive
+`9be4596a59f3730e7b16995ba562e6561b8f424f46f99aecaeaee78ffe536a71`,
+and preparation audit
+`9a651c55700644d2522065e4fae48a56188862c3e65aeb92ddc649c09be6463d`.
+The first run's OMF artifact-manifest digests were
+`sha256:da147a203b93a89e0807e624a43b51cd4037d6e80169fd1601f40a5b3a4250ab`,
+`sha256:e3e011fcb5543c714a1b7d2032e6493f4026da54dc865ef4de848b6bde53380a`,
+and
+`sha256:7fb263f10f6e4b24fa4cdff9861ea22501f94d2ed72ad784059a3371f18892db`;
+the second run's corresponding manifests were
+`sha256:102c6b48e0e48f1fcdde2fe56790d6f3a0edde23e092b307110e1c75d8a8949d`,
+`sha256:0bf29c0b15dd8909496fa2ff3f704c9a89b32f24f4767410ec23a2ce77e33a51`,
+and
+`sha256:62ce3d3e4cbacc2746eab1068f944d7d7fde993bcfc23ea45bad2ca529829366`.
+Manifest digests differ because OMF binds run context; the underlying file
+bytes are identical.
+
+The final module package and source-artifact manifest are
+`sha256:8803da89c98e103d9fb0dce203cebf9219097a42fb2fd6e5a11c87e81c10384b`
+and
+`sha256:1c0d9d12989017b6853ee9064026e90ce91da827708a6868111de7a4b480b3f3`.
+The workload semantic and WorkloadSpec manifest digests are
+`sha256:fd4546ec6bb493312c8015d4682d29af74ff36cdd822d8da30fbc7caa861e0a2`
+and
+`sha256:f49fc7c9ebf55cfbbb6a25362e79b0e5cf612511446f0c656878ae6aabcb57bd`;
+the binding and realized environment digests are
+`sha256:5dc181c5643d2a98ec43b1c79791764e4f5ba5ad4edbd5730d7f455ced4d6e2f`
+and
+`sha256:c2060448ac2beedca12bfe46d125cf4eeedeefb0b22ee47c6933c9031e38e1ab`.
+The module imported Python 3.12.3 and pinned NumPy 2.2.6, but realization still
+used the package index with no offline wheelhouse and the attestation exposes
+interpreter-site-package layering. It is therefore reproducible evidence for
+this host, not a portable or release-eligible environment closure.
+
+The fixed dual-run rule passed for pretraining observation preparation only.
+The artifacts are source-normalized observations, not yet an admitted
+`slp.corpus/v1.1`; they contain no static gene features or model-facing query
+tensors. Separate protected molecular-validation and molecular-final snapshots
+still need to be prepared and access-controlled, then all three roles must pass
+the corpus audit before training. No world-model checkpoint or molecular
+metric exists from this work, and the external SL benchmark remains closed.
+There is no performance, novelty, frontier, release, or SOTA claim.

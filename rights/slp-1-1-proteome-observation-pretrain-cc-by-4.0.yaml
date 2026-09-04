@@ -1,0 +1,59 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: derived fitting-only proteome observations from Mendeley Data w8jtmnszd9 version 2 under the frozen SGD and cross-source held-roster boundary
+evidence:
+  - https://api.datacite.org/dois/10.17632/w8jtmnszd9.2
+  - https://zenodo.org/api/records/14062629
+  - https://doi.org/10.1093/genetics/iyae185
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Exactly one file named observation-corpus.tar emitted as
+  proteomeObservationCorpus by OMF run 01a06d42-8493-7cd5-8c57-779dc8512436
+  from the exact resources listed below. The archive contains 3,811
+  fitting-only Saccharomyces cerevisiae knockout observations over 3,679
+  stable SGD intervention identities and 1,850 typed UniProtKB readouts, with
+  6,865,493 observed positive-intensity values transformed by log2 without a
+  pseudocount. It contains no molecular-validation, molecular-final,
+  quarantine, analytical-QC, reward, or synthetic-lethality record.
+derivedFrom:
+  datasets:
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-raw-v2@sha256:5392d4df7e962c9f59798b83fbdf8e71cd568b30c78a498702d50fabc059397e
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-protein-relations-v1@sha256:acad3427907644f8ab8af38ed36066a6e1148ef92557b727351b0a4fba2b446c
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450
+  inputArtifacts:
+    sgdCurrentOrfs: sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192
+    sgdMappingManifest: sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c
+  runResult: omf://abiome/slp/runresult/result-01a06d42-8493-7cd5-8c57-779dc8512436@sha256:6ec04e07cd917b66e16274a04f565844fa7acc1b538fb460c408f9276b5f694c
+  artifacts:
+    observationCorpus: sha256:da147a203b93a89e0807e624a43b51cd4037d6e80169fd1601f40a5b3a4250ab
+  contentSha256: 1f533d7dfb5bd76489b5b4576268e5d5b58fc6200416362876b5a2301c611f0b
+reproducedBy:
+  runResult: omf://abiome/slp/runresult/result-01a06d43-4260-707f-8fa5-4beee63c7856@sha256:d81d5c4f8a790542f3b2c16ed6d0954b27907784aa946e157cee76406c3b22a6
+  artifact: sha256:102c6b48e0e48f1fcdde2fe56790d6f3a0edde23e092b307110e1c75d8a8949d
+  contentSha256: 1f533d7dfb5bd76489b5b4576268e5d5b58fc6200416362876b5a2301c611f0b
+rightsBasis: >-
+  The quantitative source and every identity or split input contributing to
+  this adaptation are covered by the exact CC BY 4.0 source scopes cited
+  above, with adaptation and redistribution allowed with attribution. The
+  protected-source intersection is used only to exclude held interventions;
+  this scope does not authorize any excluded outcome-bearing material.
+attribution: >-
+  Messner, Christoph; Kustatscher, Georg; Ralser, Markus (2023), The
+  Proteomic Landscape of Genome-Wide Genetic Perturbations, Mendeley Data V2,
+  https://doi.org/10.17632/w8jtmnszd9.2; Nadal-Ribelles, Mariona et al., A
+  single-cell resolved genotype-phenotype map using genome-wide genetic and
+  environmental perturbations, Zenodo,
+  https://doi.org/10.5281/zenodo.14062629; and Saccharomyces Genome Database
+  (SGD), Stanford University, with Engel SR et al. (2025), GENETICS 229(3),
+  iyae185, https://doi.org/10.1093/genetics/iyae185.
+exclusions:
+  - basal-control.tar, preparation-audit.json, and every OMF output not named in scope
+  - molecular-validation and molecular-final intervention outcomes
+  - quarantine and analytical-QC outcomes
+  - reward records, reward outputs, and synthetic-lethality labels
+  - imputed proteome tables, differential-expression tables, and growth phenotypes
+  - linked third-party resources outside the exact parent source allowlists
+  - any future source, identity, roster, module, workload, or output revision
