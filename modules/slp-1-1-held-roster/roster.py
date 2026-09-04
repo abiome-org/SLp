@@ -74,6 +74,11 @@ class RosterBounds:
     max_files_per_source: int = 32
     max_records_per_source: int = 200_000
     max_line_bytes: int = 4_096
+    expected_intersection_size: int | None = None
+    expected_pretrain_count: int | None = None
+    expected_validation_count: int | None = None
+    expected_final_count: int | None = None
+    expected_roster_sha256: str | None = None
 
     def __post_init__(self) -> None:
         for name, value, minimum, maximum in (
@@ -85,6 +90,41 @@ class RosterBounds:
         ):
             if not isinstance(value, int) or isinstance(value, bool) or not minimum <= value <= maximum:
                 raise HeldRosterError(f"{name} must be an integer in [{minimum}, {maximum}]")
+        expected_counts = (
+            self.expected_intersection_size,
+            self.expected_pretrain_count,
+            self.expected_validation_count,
+            self.expected_final_count,
+        )
+        expected_values = (*expected_counts, self.expected_roster_sha256)
+        if any(value is not None for value in expected_values):
+            if any(value is None for value in expected_values):
+                raise HeldRosterError("frozen roster expectations must be supplied together")
+            assert self.expected_intersection_size is not None
+            assert self.expected_pretrain_count is not None
+            assert self.expected_validation_count is not None
+            assert self.expected_final_count is not None
+            assert self.expected_roster_sha256 is not None
+            for name, value in (
+                ("expectedIntersectionSize", self.expected_intersection_size),
+                ("expectedPretrainCount", self.expected_pretrain_count),
+                ("expectedValidationCount", self.expected_validation_count),
+                ("expectedFinalCount", self.expected_final_count),
+            ):
+                if (
+                    not isinstance(value, int)
+                    or isinstance(value, bool)
+                    or not 0 <= value <= 100_000
+                ):
+                    raise HeldRosterError(f"{name} must be an integer in [0, 100000]")
+            if self.expected_intersection_size < self.minimum_intersection_size:
+                raise HeldRosterError(
+                    "expectedIntersectionSize must be at least minimumIntersectionSize"
+                )
+            if sum(expected_counts[1:]) != self.expected_intersection_size:
+                raise HeldRosterError("expected role counts must sum to expectedIntersectionSize")
+            if SHA256.fullmatch(self.expected_roster_sha256) is None:
+                raise HeldRosterError("expectedRosterSha256 must be a lowercase SHA-256")
 
 
 @dataclass(frozen=True)
@@ -522,6 +562,25 @@ def build_held_roster(
         role: sum(item.role == role for item in assignments)
         for role in ("pretrain", "molecular-validation", "molecular-final")
     }
+    if bounds.expected_intersection_size is not None:
+        expected = {
+            "intersectionSize": bounds.expected_intersection_size,
+            "pretrainCount": bounds.expected_pretrain_count,
+            "validationCount": bounds.expected_validation_count,
+            "finalCount": bounds.expected_final_count,
+            "rosterSha256": bounds.expected_roster_sha256,
+        }
+        observed = {
+            "intersectionSize": len(intersection),
+            "pretrainCount": role_counts["pretrain"],
+            "validationCount": role_counts["molecular-validation"],
+            "finalCount": role_counts["molecular-final"],
+            "rosterSha256": roster_sha256,
+        }
+        if observed != expected:
+            raise HeldRosterError(
+                f"frozen roster expectation mismatch: expected={expected}, observed={observed}"
+            )
     rejection_counts = {
         "qcFailed": sum(len(item.qc_failed) for item in loaded),
         "notPassingAllProtectedSources": sum(

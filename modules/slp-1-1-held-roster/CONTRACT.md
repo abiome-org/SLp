@@ -57,6 +57,11 @@ bytes `slp-1.1-yeast-global-held-v1\x00<SGD-CURIE>`. Interpret the first 16 hex
 digits as an unsigned integer and reduce modulo 100. Buckets 0–9 are
 `molecular-final`, 10–29 are `molecular-validation`, and 30–99 are `pretrain`.
 An empty or configured-undersized intersection fails; there is no reroll.
+Production invocations also supply the independently reconstructed exact
+intersection size, three role counts, and roster digest. These five frozen
+expectations are all-or-none and must agree internally. Any mismatch is fatal;
+the producer does not accept a larger population, rebalance roles, or reroll the
+hash domain.
 
 The output `held-intervention-roster.tsv` has no header and contains exactly
 `SGD-CURIE<TAB>role<TAB>hash`, path-sorted by CURIE with LF line endings.

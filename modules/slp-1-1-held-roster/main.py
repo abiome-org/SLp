@@ -45,6 +45,11 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         max_files_per_source=config.get("maxFilesPerSource", 32),
         max_records_per_source=config.get("maxRecordsPerSource", 200_000),
         max_line_bytes=config.get("maxLineBytes", 4_096),
+        expected_intersection_size=config["expectedIntersectionSize"],
+        expected_pretrain_count=config["expectedPretrainCount"],
+        expected_validation_count=config["expectedValidationCount"],
+        expected_final_count=config["expectedFinalCount"],
+        expected_roster_sha256=config["expectedRosterSha256"],
     )
     output_root = Path(os.environ["OMF_RESULT_FILE"]).parent
     roster_root = output_root / "held-roster"

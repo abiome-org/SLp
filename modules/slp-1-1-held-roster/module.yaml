@@ -39,9 +39,20 @@ spec:
       additionalProperties: false
     config:
       type: object
-      required: [minimumIntersectionSize]
+      required:
+        - minimumIntersectionSize
+        - expectedIntersectionSize
+        - expectedPretrainCount
+        - expectedValidationCount
+        - expectedFinalCount
+        - expectedRosterSha256
       properties:
         minimumIntersectionSize: {type: integer, minimum: 1, maximum: 100000}
+        expectedIntersectionSize: {type: integer, minimum: 1, maximum: 100000}
+        expectedPretrainCount: {type: integer, minimum: 0, maximum: 100000}
+        expectedValidationCount: {type: integer, minimum: 0, maximum: 100000}
+        expectedFinalCount: {type: integer, minimum: 0, maximum: 100000}
+        expectedRosterSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
         maxSources: {type: integer, minimum: 2, maximum: 64}
         maxFilesPerSource: {type: integer, minimum: 1, maximum: 256}
         maxRecordsPerSource: {type: integer, minimum: 1, maximum: 2000000}
@@ -55,6 +66,11 @@ spec:
           inventoryTwo: {}
         config:
           minimumIntersectionSize: 1
+          expectedIntersectionSize: 1
+          expectedPretrainCount: 1
+          expectedValidationCount: 0
+          expectedFinalCount: 0
+          expectedRosterSha256: "0000000000000000000000000000000000000000000000000000000000000000"
         state: {}
       result:
         status: ok

@@ -8,8 +8,11 @@ import sys
 import tempfile
 import unittest
 
+import yaml
+
 
 MODULE = Path(__file__).resolve().parents[1] / "modules" / "slp-1-1-held-roster"
+WORKLOAD = Path(__file__).resolve().parents[1] / "workloads" / "slp-1-1-held-roster.yaml"
 sys.path.insert(0, str(MODULE))
 
 from roster import (  # noqa: E402
@@ -162,6 +165,65 @@ class HeldRosterTest(unittest.TestCase):
                 alpha_exclusions,
             )
             self.assertIn(("SGD:S000000003", "qc-failed"), alpha_exclusions)
+
+    def test_frozen_expectations_accept_exact_roster_and_reject_drift(self) -> None:
+        common = [f"SGD:S{index:09d}" for index in range(1, 9)]
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            alpha = self._inventory(root, "alpha", [self._record(item) for item in common])
+            beta = self._inventory(root, "beta", [self._record(item) for item in common])
+            observed = build_held_roster([alpha, beta], root / "observed", self._bounds(8))
+            counts = observed["roleCounts"]
+            frozen = RosterBounds(
+                minimum_intersection_size=8,
+                expected_intersection_size=8,
+                expected_pretrain_count=counts["pretrain"],
+                expected_validation_count=counts["molecular-validation"],
+                expected_final_count=counts["molecular-final"],
+                expected_roster_sha256=observed["rosterSha256"],
+            )
+            build_held_roster([alpha, beta], root / "accepted", frozen)
+            with self.assertRaisesRegex(HeldRosterError, "frozen roster expectation mismatch"):
+                build_held_roster(
+                    [alpha, beta],
+                    root / "rejected",
+                    RosterBounds(
+                        minimum_intersection_size=8,
+                        expected_intersection_size=8,
+                        expected_pretrain_count=counts["pretrain"],
+                        expected_validation_count=counts["molecular-validation"],
+                        expected_final_count=counts["molecular-final"],
+                        expected_roster_sha256="0" * 64,
+                    ),
+                )
+
+    def test_production_workload_freezes_exact_outcome_blind_inputs_and_roster(self) -> None:
+        workload = yaml.safe_load(WORKLOAD.read_text(encoding="utf-8"))
+        stage = workload["spec"]["graph"]["stages"][0]
+        self.assertEqual(stage["module"], "modules/slp-1-1-held-roster/module.yaml")
+        self.assertEqual(
+            stage["inputs"],
+            {
+                "proteomeInventory": "dataset/slp-1-1-proteome-intervention-inventory-v1",
+                "atlasInventory": "dataset/slp-1-1-atlas-intervention-inventory-v1",
+            },
+        )
+        self.assertEqual(
+            stage["config"],
+            {
+                "minimumIntersectionSize": 2700,
+                "expectedIntersectionSize": 2700,
+                "expectedPretrainCount": 1903,
+                "expectedValidationCount": 529,
+                "expectedFinalCount": 268,
+                "expectedRosterSha256": "c27eb11a20f593235131f28fc29d8fbd69735f8a0aea88736104850bb875117a",
+                "maxSources": 2,
+                "maxFilesPerSource": 1,
+                "maxRecordsPerSource": 5000,
+                "maxLineBytes": 4096,
+            },
+        )
+        self.assertNotIn("benchmark", WORKLOAD.read_text(encoding="utf-8").casefold())
 
     def test_protected_sources_must_share_the_exact_identity_mapping(self) -> None:
         for field in ("id", "digest"):

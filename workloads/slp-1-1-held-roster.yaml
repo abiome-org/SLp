@@ -1,0 +1,39 @@
+# Outcome-blind protected-gene roster. OMF resolves each dataset alias to an
+# immutable revision during admission; the module revalidates both inventories
+# and the independently reconstructed exact roster before emitting any split.
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-held-roster
+spec:
+  graph:
+    stages:
+      - name: roster
+        module: modules/slp-1-1-held-roster/module.yaml
+        operation: run
+        inputs:
+          proteomeInventory: dataset/slp-1-1-proteome-intervention-inventory-v1
+          atlasInventory: dataset/slp-1-1-atlas-intervention-inventory-v1
+        config:
+          minimumIntersectionSize: 2700
+          expectedIntersectionSize: 2700
+          expectedPretrainCount: 1903
+          expectedValidationCount: 529
+          expectedFinalCount: 268
+          expectedRosterSha256: c27eb11a20f593235131f28fc29d8fbd69735f8a0aea88736104850bb875117a
+          maxSources: 2
+          maxFilesPerSource: 1
+          maxRecordsPerSource: 5000
+          maxLineBytes: 4096
+        outputs:
+          - rosterSummary
+          - rosterSha256
+          - coverageSha256
+          - sourceCount
+          - intersectionSize
+          - pretrainCount
+          - validationCount
+          - finalCount
+          - heldInterventionRoster
+          - heldRosterCoverage
+          - heldRosterSummary
