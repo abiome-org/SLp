@@ -14,6 +14,7 @@ __pycache__/
 *.whl
 *.pt
 *.npz
+!/data/fixtures/**/*.npz
 *.npy
 *.pkl
 *.parquet
