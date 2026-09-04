@@ -7,7 +7,7 @@ spec:
     command: [python3, main.py]
   environment:
     dependencyLock: requirements.lock
-    dependencyDigest: sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+    dependencyDigest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   checkpoint: true
   contracts:
     input:
