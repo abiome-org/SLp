@@ -9,6 +9,12 @@ bytes, SGD mapping ID, and SGD mapping digest match the constants compiled into
 this module. A held roster is deliberately absent: this operation cannot know
 or emit pretraining, validation, final, reward, or benchmark assignments.
 
+OMF 1.0 workload syntax accepts DatasetSnapshots only as `dataset/<name>`
+references. OMF pins the current immutable revision during admission; the
+module then independently requires the compiled resource URI and outer digest.
+If the named resource advances or is revoked, execution fails rather than
+silently accepting the new revision.
+
 Input directories contain exactly the two files named by their source
 contracts. Symlinks, traversal, non-regular files, extra files, malformed
 CURIEs, conflicting duplicates, untyped accessions, cardinality drift, and

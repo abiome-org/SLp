@@ -643,6 +643,21 @@ class StaticEntityUniverseTest(unittest.TestCase):
         workload = yaml.safe_load(workload_text)
         stage = workload["spec"]["graph"]["stages"][0]
         self.assertEqual(set(stage["inputs"]), {"interventionInventory", "proteinRelations"})
+        self.assertEqual(
+            stage["inputs"],
+            {
+                "interventionInventory": "dataset/slp-1-1-proteome-intervention-inventory-v1",
+                "proteinRelations": "dataset/slp-1-1-proteome-protein-relations-v1",
+            },
+        )
+        self.assertEqual(
+            input_contract["properties"]["interventionInventory"]["properties"]["resource"]["const"],
+            universe.PRODUCTION_CONTRACT.intervention.resource,
+        )
+        self.assertEqual(
+            input_contract["properties"]["proteinRelations"]["properties"]["resource"]["const"],
+            universe.PRODUCTION_CONTRACT.relations.resource,
+        )
         self.assertNotIn("@@", workload_text)
         self.assertNotIn("aliases:", workload_text)
         for forbidden in ("heldRoster", "observation", "benchmark", "reward"):

@@ -14,9 +14,9 @@ consumer still keys by bare entity ID and must not be used as evidence of
 multi-species support.
 
 The production input identities are compiled into the module. The workload
-template names those immutable DatasetSnapshot revisions directly. Running it
-would create a new identity artifact and therefore still requires the normal
-clean-Git, rights, validation, and admission protocol; this repository change
-does not run or admit that biological artifact.
+uses OMF 1.0's supported `dataset/<name>` grammar; OMF pins the immutable
+revision at admission and the module rejects it unless its complete resource
+URI and outer digest match the compiled contract. Running it still requires
+the normal clean-Git, rights, validation, and admission protocol.
 
 See `CONTRACT.md` for the normative byte and trust boundary.
