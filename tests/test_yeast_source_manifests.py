@@ -178,6 +178,24 @@ class YeastSourceManifestTest(unittest.TestCase):
             probe["observations"]["caseFoldIdentityCollisions"],
             [{"exactValues": ["YML009C", "YML009c"]}],
         )
+        identity_probe = manifest["rawIdentityJoinProbe"]
+        self.assertEqual(identity_probe["interventionIdentities"]["exactCurrentRows"], 4623)
+        self.assertEqual(
+            identity_probe["interventionIdentities"]["exactRetiredOrMergedRows"], 35
+        )
+        self.assertEqual(identity_probe["interventionIdentities"]["unmatchedExactRows"], 41)
+        self.assertEqual(
+            identity_probe["interventionIdentities"]["malformedSgdRowsNotTreatedAsIdentity"],
+            [
+                {
+                    "rawFirstField": "YKR099C-A",
+                    "sourceLine": 35,
+                    "observedColumns": 12,
+                    "requiredColumns": 13,
+                    "downstreamClassification": "unmatched-exact-systematic-name",
+                }
+            ],
+        )
         self.assertEqual(probe["observations"]["knockoutDetectionRows"], 959)
         self.assertEqual(
             probe["observations"]["knockoutDetectionStatusRows"],

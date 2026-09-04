@@ -183,7 +183,7 @@ metadataProbe:
     - parse the matrix with RFC-compatible CSV handling because one sample header contains the gene label DUR1,2
 rawIdentityJoinProbe:
   date: 2026-09-04
-  status: probe-only-not-admitted
+  status: reconciled-with-admitted-sgd-artifacts-not-admitted
   mappingSource: sources/sgd-stable-id-mapping-2026-08-28.yaml
   mappingReleaseId: slp-sgd-map:2026-08-28-object-set-v1
   mappingPayloads:
@@ -195,14 +195,21 @@ rawIdentityJoinProbe:
     exactCaseUniqueInputIds: 4550
     exactCurrentRows: 4623
     exactCurrentOneToOne: 4476
-    exactRetiredOrMergedRows: 36
-    exactRetiredOrMerged: 34
-    unmatchedExactRows: 40
-    unmatchedExact: 40
+    exactRetiredOrMergedRows: 35
+    exactRetiredOrMerged: 33
+    unmatchedExactRows: 41
+    unmatchedExact: 41
+    malformedSgdRowsNotTreatedAsIdentity:
+      - rawFirstField: YKR099C-A
+        sourceLine: 35
+        observedColumns: 12
+        requiredColumns: 13
+        downstreamClassification: unmatched-exact-systematic-name
     currentExactAmbiguities: 0
     strictQuarantineRows: 76
     strictQuarantineBeforeSourceIntersection: 74
     policy: use only exact case-sensitive current one-to-one systematic-name rows, including exact YAL043C-a; quarantine retired, merged, unmatched (including YML009c), and ambiguous identities without redirects or case normalization
+    reconciliation: YKR099C-A appears in the raw first field of a malformed 12-column deleted_merged_features.tab row. The admitted SGD mapping preserves that whole row as malformed evidence without exposing a systematic identity, so downstream code must classify the proteome row as unmatched rather than infer a retired identity from a structurally invalid record.
   readoutIdentities:
     exactInputAccessions: 1850
     typedDbxrefSource: UniProtKB

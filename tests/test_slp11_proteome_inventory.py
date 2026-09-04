@@ -480,6 +480,8 @@ class ProteomeInventoryTest(unittest.TestCase):
         self.assertEqual(inventory.EXPECTED_COUNTS["eligibleKnockoutRows"], 4623)
         self.assertEqual(inventory.EXPECTED_COUNTS["eligibleInterventions"], 4476)
         self.assertEqual(inventory.EXPECTED_COUNTS["quarantineRows"], 76)
+        self.assertEqual(inventory.EXPECTED_COUNTS["retiredOrMergedRows"], 35)
+        self.assertEqual(inventory.EXPECTED_COUNTS["unmatchedRows"], 41)
         module = yaml.safe_load((MODULE_ROOT / "module.yaml").read_text(encoding="utf-8"))
         required = set(module["spec"]["contracts"]["input"]["required"])
         self.assertEqual(required, {"rawProteome", *self.ARTIFACT_DIGESTS})
