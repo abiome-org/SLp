@@ -663,6 +663,40 @@ class StaticEntityUniverseTest(unittest.TestCase):
         for forbidden in ("heldRoster", "observation", "benchmark", "reward"):
             self.assertNotIn(forbidden, json.dumps(stage))
 
+    def test_derived_rights_bind_exact_inputs_runs_and_payloads(self) -> None:
+        rights = yaml.safe_load(
+            (
+                ROOT
+                / "rights"
+                / "slp-1-1-static-entity-universe-v1-cc-by-4.0.yaml"
+            ).read_text()
+        )
+        self.assertTrue(rights["trainingAllowed"])
+        self.assertTrue(rights["redistributionAllowed"])
+        self.assertEqual(
+            rights["derivedFrom"]["datasets"],
+            [
+                universe.PRODUCTION_CONTRACT.intervention.resource,
+                universe.PRODUCTION_CONTRACT.relations.resource,
+            ],
+        )
+        self.assertEqual(len(rights["derivedFrom"]["runResults"]), 2)
+        self.assertEqual(
+            rights["derivedFrom"]["payloads"],
+            {
+                "entityUniverseTar": {
+                    "bytes": 1_525_760,
+                    "sha256": "d947bf618b854dd33a7157ac0f0380c544e9a4377bddb00806c9ca07f689a544",
+                },
+                "entityUniverseAudit": {
+                    "bytes": 4_880,
+                    "sha256": "339412ea008cf383db2258d0788d71c2cf357183b331d49f4168aa7f113f1a0f",
+                },
+            },
+        )
+        for forbidden in ("quantitative", "molecular target", "benchmark", "embedding"):
+            self.assertIn(forbidden, " ".join(rights["exclusions"]).casefold())
+
     def test_output_schemas_close_every_emitted_object_shape(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -1,0 +1,54 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: derived outcome-blind yeast entity universe from the pinned proteome identity inventories
+evidence:
+  - https://api.datacite.org/dois/10.17632/w8jtmnszd9.2
+  - https://doi.org/10.1093/genetics/iyae185
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only entity-universe.tar and entity-universe-audit.json emitted by OMF run
+  01a06dbd-82ad-7755-951c-7ac08a13f5e8 from the exact identity-only
+  DatasetSnapshots listed below. The archive contains canonical stable SGD and
+  UniProtKB identifiers, NCBI taxonomy 4932, action/readout/relation-support
+  usages, and typed protein-to-current-ORF relations. It contains no numeric
+  molecular values, held-role assignments, benchmark labels, or learned
+  features.
+derivedFrom:
+  datasets:
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-protein-relations-v1@sha256:acad3427907644f8ab8af38ed36066a6e1148ef92557b727351b0a4fba2b446c
+  runResults:
+    - omf://abiome/slp/runresult/result-01a06dbd-82ad-7755-951c-7ac08a13f5e8@sha256:b6afd306c6db582d7f1ee64ac76952d995bbcee1541c51933b40677532bc83eb
+    - omf://abiome/slp/runresult/result-01a06dbd-b980-7909-a2e4-fa336a598ecc@sha256:a8230ea2171b696734dcaf4388485032758c356cb1e1740ee1b2e62c7d70a22d
+  omfArtifacts:
+    firstArchive: sha256:5df1dc1b535f3ec5c58d9a0fb94a3c0144a4ca23ec575e730eee2c83f93df2d8
+    firstAudit: sha256:d6967eec1b6669515fe7713fb7e3dca75bac3df42f6f44ffce723b7cd90a4f49
+    replicationArchive: sha256:0c8e3ea3a13415b9593151195c270ff601c2d1336d4084474a87b5ad7c67b644
+    replicationAudit: sha256:92e855df2626a3bf20275c5a09bb3efd656d3b0d26c57705e22a1db312e67560
+  payloads:
+    entityUniverseTar:
+      bytes: 1525760
+      sha256: d947bf618b854dd33a7157ac0f0380c544e9a4377bddb00806c9ca07f689a544
+    entityUniverseAudit:
+      bytes: 4880
+      sha256: 339412ea008cf383db2258d0788d71c2cf357183b331d49f4168aa7f113f1a0f
+rightsBasis: >-
+  Both contributing identity snapshots are CC BY 4.0 adaptations with
+  redistribution and training allowed with attribution. Relation closure and
+  deterministic serialization are further adaptations that do not expand the
+  parent scopes or introduce excluded quantitative material.
+attribution: >-
+  Messner, Christoph; Kustatscher, Georg; Ralser, Markus (2023), The
+  Proteomic Landscape of Genome-Wide Genetic Perturbations, Mendeley Data V2,
+  https://doi.org/10.17632/w8jtmnszd9.2; and Saccharomyces Genome Database
+  (SGD), Stanford University, with Engel SR et al. (2025), GENETICS 229(3),
+  iyae185, https://doi.org/10.1093/genetics/iyae185.
+exclusions:
+  - quantitative proteome measurements and derived molecular targets
+  - held-roster assignments, molecular reward, molecular final, and benchmark data
+  - static sequence vectors, embeddings, annotations, domains, orthology, and phylogeny
+  - arbitrary first-target selection from one-to-many relations
+  - linked third-party resources outside the exact parent source allowlists
+  - any future parent DatasetSnapshot or module revision
