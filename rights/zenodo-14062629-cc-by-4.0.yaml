@@ -1,0 +1,14 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.5281/zenodo.14062629
+evidence: https://zenodo.org/api/records/14062629
+scope: files explicitly allowlisted from immutable Zenodo record 14062629 only
+attribution: >-
+  Nadal-Ribelles, Mariona; Posas, Francesc; de Nadal, Eulalia; Solé Serra,
+  Carme; Matas González, Yaima; Steinmetz, Lars; Díez-Villanueva, Anna;
+  Stephan-Otto Attolini, Camille. A single-cell resolved genotype-phenotype
+  map using genome-wide genetic and environmental perturbations. Zenodo.
+  https://doi.org/10.5281/zenodo.14062629
+

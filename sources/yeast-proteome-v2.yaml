@@ -1,0 +1,78 @@
+schema: slp.source-acquisition/v1
+id: mendeley-w8jtmnszd9-v2-yeast-proteome
+status: contract-blocked
+blocker: slp.corpus/v1.1 typed sparse readout, value-space, units, and missingness contract
+organism:
+  name: Saccharomyces cerevisiae
+  ncbiTaxon: 4932
+identity:
+  primaryNamespace: SGD
+  displaySymbolsAreIdentity: false
+source:
+  accession: mendeley:w8jtmnszd9
+  version: 2
+  versionDoi: 10.17632/w8jtmnszd9.2
+  primaryUrl: https://data.mendeley.com/datasets/w8jtmnszd9/2
+  metadataUrl: https://data.mendeley.com/public-api/datasets/w8jtmnszd9/files?folder_id=root&version=2
+  articleDoi: 10.1016/j.cell.2023.03.026
+  publishedAt: 2023-11-22T06:58:00.663Z
+  rawMassSpectrometryAccession: ProteomeXchange:PXD036062
+rights: rights/mendeley-w8jtmnszd9-v2-cc-by-4.0.yaml
+modalities:
+  - quantitative-proteome
+interventions:
+  - constitutive-gene-deletion
+endpoint: relative-protein-intensity-with-observed-missingness
+scale:
+  knockoutStrains: 4699
+  meanProteinsPerStrain: 2520
+  peptideQuantitationsLowerBound: 100000000
+  proteinQuantitationsLowerBound: 9000000
+allowlist:
+  - name: yeast5k_noimpute_wide.csv
+    uuid: 1c1d147b-2ba0-4b56-95db-f03c45796ce7
+    bytes: 167754298
+    sha256: 69a9df05b6db011f595a4e0b3ce25c1cc247f22cbdd066c79e6da9a706aa1df9
+    role: quantitative-targets
+  - name: yeast5k_metadata.csv
+    uuid: 8bdc9685-1af9-45d5-8eb5-b252eebbc807
+    bytes: 377047
+    sha256: 48864282c82d516ae929dc87aff7fae9e05e9b922e316c001f3d29dce0ff878b
+    role: sample-batch-strain-orf-mapping
+  - name: Detection_of_KO_proteins.csv
+    uuid: 6a6cc1ec-35cc-4f52-864b-8f07433453ed
+    bytes: 30260
+    sha256: ca7c8f2ac33272df3763807add7b8982b8a8b52d4276bd929a61ecf19e0ae405
+    role: qc-and-provenance-only
+  - name: summary_fileupload.pdf
+    uuid: 39148f5a-17a9-440b-b1e0-b5794f268c46
+    bytes: 65558
+    sha256: 4078289dc86dd6b526d9b0c963e6df61d53acdfdf6260abdeae307588623f828
+    role: file-semantics-and-provenance-only
+excludedFiles:
+  - CRG_scores.csv.gz
+  - GO_enrichment_i_PP.csv.gz
+  - GO_enrichment_ii_RPP.csv.gz
+  - GO_enrichment_iii_PPS.csv.gz
+  - GO_enrichment_iv_CRG.csv.gz
+  - PPS_scores.csv.gz
+  - UMAP_xy_CRG.csv.gz
+  - UMAP_xy_PPSresp.csv.gz
+  - yeast5k_dataset_long.csv
+  - yeast5k_growthrates_byORF.csv
+  - yeast5k_impute_wide.csv
+  - yeast5k_stat_DE.csv
+  - yeast5k_stat_DE_bySTRAIN.csv
+admission:
+  firstOperation: metadata-and-schema-probe-only
+  requireStableDeletionIdentity: true
+  requireNonImputedValues: true
+  requireMissingnessSemantics: true
+  requireSampleBatchStrainProvenance: true
+  onAmbiguity: quarantine
+modeling:
+  preserveMissingAsUnobserved: true
+  useDifferentialExpressionStatisticsAsTargets: false
+  useSimilarityScoresAsTargets: false
+  useGrowthPhenotypesAsMolecularTargets: false
+

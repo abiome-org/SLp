@@ -38,6 +38,22 @@ sources:
       positiveInteractionsApproximate: 350000
     admissionRule: verify explicit training and redistribution terms for the downloadable matrix bytes
     modelingRule: preserve allele, temperature, array type, direction, replicate uncertainty, and yeast identity
+  - id: zenodo-14062629-yeast-transcriptome
+    role: molecular-pretraining-validation-and-final
+    status: contract-blocked
+    manifest: sources/yeast-single-cell-atlas-v1.yaml
+    rights: rights/zenodo-14062629-cc-by-4.0.yaml
+    modalities:
+      - single-cell-transcriptome
+    admissionRule: complete the typed sparse v1.1 contract and a no-training schema probe before acquiring the allowlisted payload
+  - id: mendeley-w8jtmnszd9-v2-yeast-proteome
+    role: molecular-pretraining-validation-and-final
+    status: contract-blocked
+    manifest: sources/yeast-proteome-v2.yaml
+    rights: rights/mendeley-w8jtmnszd9-v2-cc-by-4.0.yaml
+    modalities:
+      - quantitative-proteome
+    admissionRule: complete the typed sparse v1.1 contract and a no-training schema probe before acquiring the allowlisted payloads
   - id: spell-expression
     role: molecular-pretraining
     status: per-dataset-rights-review

@@ -1,0 +1,86 @@
+schema: slp.source-acquisition/v1
+id: zenodo-14062629-yeast-transcriptome
+status: contract-blocked
+blocker: slp.corpus/v1.1 typed sparse context, action, readout, units, and missingness contract
+organism:
+  name: Saccharomyces cerevisiae
+  ncbiTaxon: 4932
+identity:
+  primaryNamespace: SGD
+  displaySymbolsAreIdentity: false
+source:
+  accession: zenodo:14062629
+  versionDoi: 10.5281/zenodo.14062629
+  conceptDoi: 10.5281/zenodo.14062628
+  primaryUrl: https://zenodo.org/records/14062629
+  metadataUrl: https://zenodo.org/api/records/14062629
+  rawSequencingAccession: ArrayExpress:E-MTAB-14004
+  articleDoi: 10.1038/s41467-025-57600-4
+  createdAt: 2025-02-13T23:19:19.891256-08:00
+  updatedAt: 2025-02-13T23:19:20.518841-08:00
+rights: rights/zenodo-14062629-cc-by-4.0.yaml
+modalities:
+  - single-cell-transcriptome
+interventions:
+  - constitutive-gene-deletion
+contexts:
+  - id: slp:untreated-control
+  - id: CHEBI:26710
+    label: sodium chloride
+    concentration:
+      value: 0.4
+      unit: UCUM:mol/L
+    duration:
+      value: 15
+      unit: UCUM:min
+scale:
+  profiledCells: 1061865
+  assignedQcCells: 710952
+  deletionGenotypesLowerBound: 3500
+allowlist:
+  - name: seus_split.RData
+    bytes: 5907877873
+    upstreamChecksum: md5:65bb56efd8120f32f65c044de5f040aa
+    url: https://zenodo.org/api/records/14062629/files/seus_split.RData/content
+    role: candidate-quantitative-payload
+    localSha256Required: true
+  - name: README.txt
+    bytes: 2050
+    upstreamChecksum: md5:1fa718ad98d6eacbf6134372299f2b83
+    url: https://zenodo.org/api/records/14062629/files/README.txt/content
+    role: schema-and-provenance-only
+    localSha256Required: true
+excludedFiles:
+  - 20240405_triplicates_alkmedia.xlsx
+  - 20241028_FIT3_HUG1_SAG1_revisionxlsx.xlsx
+  - CC_gresham.csv
+  - clone.comparison_Rev.R
+  - cluster_markers_res1_Control.xlsx
+  - DEG.Rdata
+  - DEGs_summary.R
+  - deleteome_all_mutants_controls.txt
+  - FC_genotype.Rdata
+  - Figures_Rev.R
+  - fitness.data.perm.test_Rev.R
+  - Mutant_Fitness_Conditions_MN.xlsx
+  - perm.test_Rev.R
+  - ptb_summary.Rdata
+  - replogue_K562_6days_Essential.txt
+  - replogue_K562_8days.txt
+  - sc1conf.rds
+  - seu.RData
+  - summary.genotypes_Rev.R
+  - summary240_237.xlsx
+admission:
+  firstOperation: metadata-and-schema-probe-only
+  requireStableDeletionIdentity: true
+  requireConditionIdentity: true
+  requireObservedCountSemantics: true
+  requireCellAndSampleProvenance: true
+  onAmbiguity: quarantine
+modeling:
+  preserveCloneAndGenotypeIdentity: true
+  preserveCellLevelMissingness: true
+  useSignificanceCallsAsTargets: false
+  encodeConditionOnlyInMetadata: false
+

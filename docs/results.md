@@ -696,3 +696,80 @@ manifests validate against pinned OMF 1.0 on Ubuntu/Python 3.12. The
 seven-study public perturbation-atlas history from the concurrent main branch
 was retained, but it is not silently admitted as an SLp-1.1 snapshot. No
 biological model, checkpoint, molecular result or SL benchmark was produced.
+
+## 2026-09-03 — first admitted OMF audit-to-world execution
+
+**Hypothesis and fixed smoke rule.** The new factory should execute an
+audit-to-training DAG from three immutable, rights-bearing molecular snapshots
+without a repository-relative module import, unpinned input, hidden benchmark
+record or intervention-gene overlap. This engineering smoke passes only if all
+three snapshot payloads verify, the audit reports zero leakage and zero
+benchmark records, both synthetic taxa 4932 and 9606 are represented, the run
+terminates successfully, and the checkpoint file hash equals the digest
+reported by the world module. It cannot advance a biological model regardless
+of its toy metrics.
+
+**Exact admission.** OMF 1.0 source commit
+`ef26eea2cb694596f7680a4bce400371738cbb4b` admitted Git commit
+`e52a0af4164a6c9404527077f92cf6eb60090c78`. The workload resource revision is
+`sha256:a944b6ef699216a416ee9391d7551380f8aa1719a87f3e940c1f302aba7ea6c7`;
+the audit and world module artifacts are
+`sha256:d9a63134c6082691d89079b555e7fb1e73e52deb0dfb682cf0239b3e14dd56f1`
+and
+`sha256:f059e9ec9bc7e3b958040595e3ae12dcf0acb055032e5d786e7630a46e38ddba`.
+The CC0 synthetic snapshot revisions are pretrain
+`sha256:a17db98246ee3f9185d3809347e3354eaa5e0c09be101fe5c0c523dbe6319927`,
+validation
+`sha256:0ac5b846cffde156d949033f8d2586eb6a8b5d0b0e971824f55990a2ee9a082e`
+and reward
+`sha256:43fb342a3e655196f9e79888ff2882a82dbb7a39f4bf0a47157dd87d74af8152`.
+Every snapshot contains eight synthetic records split evenly across the two
+taxa, with globally disjoint intervention genes.
+
+**Execution evidence.** Executor preflight returned ready with no missing
+capabilities. Run `01a06b0c-9477-7982-9e22-f9e2313a7ccd` reached `Succeeded`
+at result revision
+`sha256:f80ce282fb11164a7cb76774ca4d6a564703a579fb2bc0b1927cdf412afe720a`.
+The audit attested all six corpus-file digests, 24 records, two species, zero
+leakage and zero benchmark-label records. The one-epoch CPU training stage used
+Python 3.12.3, NumPy 2.3.3 and PyTorch 2.8.0+cpu as recorded in OMF's runtime
+inventory, created 1,450 trainable parameters, and emitted a 27,098-byte
+checkpoint. Its file SHA-256 is
+`3374a0397c18f6c5d9337d4593ec225261ad89ae466e0f1e5c1f7409b6e464d4`,
+exactly matching `checkpointSha256`; OMF wrapped it in immutable checkpoint
+artifact
+`sha256:3ed1d807c73640ed8e401e66285fd4d42bdaa3daf82e7111038c0fe57f0e327c`.
+Stage-level lineage links both module artifacts and all three dataset revisions
+to both audit and training activities, and links each dataset to its imported
+source digest.
+
+**Decision and failures retained.** The aggregate toy NLL improved by 0.12899
+nats (7.88%) and the raw toy effect Pearson was 0.28138, but the worst-species
+NLL delta was -0.43494 nats (-53.44%). The scientific advancement rule therefore
+fails even on this deliberately tiny fixture; no checkpoint is selected and no
+benchmark is opened. No immutable `EvaluationResult` was created because this
+workload tests execution compatibility rather than the frozen biological
+evaluation. The run also exposed three operational defects that are now fixed:
+newline-only dependency locks incorrectly triggered isolation, a per-user
+`RLIMIT_NPROC` of 16 could not spawn under shared WSL, and two validation
+fixtures violated their own required input contracts. OMF's module-test runner
+also reuses `module-0` for every manifest named `module.yaml`; tests were
+isolated by clearing only that ephemeral run directory until upstream supplies
+unique test identities. All four isolated OMF module fixtures and all 45 local
+tests pass. The empty dependency lock and disposable CPU environment remain
+ineligible for release; a hash-pinned wheelhouse is still required.
+
+**First biological acquisition decision.** Primary-source and repository
+rights review identifies the CC-BY-4.0 yeast deletion single-cell atlas
+(`E-MTAB-14004`, versioned Zenodo DOI `10.5281/zenodo.14062629`) as the first
+transcriptomic source: 1,061,865 profiled cells, 710,952 assigned/QC cells and
+more than 3,500 deletion genotypes in control and 0.4 M NaCl at 15 minutes. The
+CC-BY-4.0 genome-wide knockout proteome (Mendeley Data version 2,
+`10.17632/w8jtmnszd9.2`) is second: 4,699 strains with an average of 2,520
+proteins per strain. No bytes were downloaded or admitted. The current v1
+contract cannot make NaCl, time, medium, temperature, chemical identities,
+metabolite readouts or morphology traits model-visible with stable namespaces
+and units. Encoding them as fake SGD identifiers, source strings or anonymous
+numeric covariates is rejected. A typed context/action/readout v1.1 contract is
+the next prerequisite; only then will one global held-intervention roster be
+frozen across transcriptome and proteome snapshots.
