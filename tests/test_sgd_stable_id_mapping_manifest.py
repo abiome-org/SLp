@@ -33,6 +33,9 @@ class SgdStableIdMappingManifestTest(unittest.TestCase):
             "https://doi.org/10.1093/genetics/iyae185",
         )
         self.assertIs(self.rights["technicalAccessIsRightsEvidence"], False)
+        self.assertEqual(
+            self.rights["technicalAccessEvidence"]["verifiedAt"], "2026-09-04"
+        )
         self.assertIn("SGD_features.tab", self.rights["scope"])
         self.assertIn("dbxref.tab", self.rights["scope"])
         self.assertIn("deleted_merged_features.tab", self.rights["scope"])

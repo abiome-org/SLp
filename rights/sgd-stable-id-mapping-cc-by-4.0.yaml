@@ -19,7 +19,7 @@ technicalAccessIsRightsEvidence: false
 technicalAccessEvidence:
   host: https://downloads.yeastgenome.org/
   mechanism: Amazon S3 object-version URL
-  verifiedAt: 2026-09-04
+  verifiedAt: "2026-09-04"
   note: >-
     Successful access to a versioned object is recorded separately and does
     not establish license permission.
