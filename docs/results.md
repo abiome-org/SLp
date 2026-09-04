@@ -1608,3 +1608,118 @@ governed `tests/` suite passed 170 tests with 3 skipped. No model was trained,
 no checkpoint or molecular metric was produced, and the SL benchmark remained
 closed. This evidence supports no performance, novelty, frontier, release, or
 SOTA claim.
+
+## 2026-09-04 — signed clean-training audit contract v1.3
+
+**Hypothesis, fixed rule, modalities, and intended snapshots.** The falsifiable
+engineering hypothesis was that a training factory can prove complete held-
+intervention exclusion without receiving either molecular-validation or
+molecular-final quantitative truth. The proposed proof uses the exact composed
+optimizer corpus, the outcome-blind held roster, every outcome-blind protected-
+source inventory, and a recipient-bound custodian signature. Advancement was
+fixed before implementation: an ephemeral-key positive fixture had to produce
+byte-identical audit files, while any signature, canonicalization, key,
+recipient, challenge, protocol, DatasetSnapshot identity, inner-content, held-
+roster, inventory, reward, benchmark, or active-held-action drift had to fail
+closed. The production path had to remain non-runnable until an independently
+controlled key ceremony and a physically separate clean training factory
+exist.
+
+The accessible biological modalities were only the already admitted fitting-
+only proteome observations and outcome-blind intervention identities. Their
+exact intended safe-source snapshots were:
+
+- pretraining observations:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-observation-pretrain-v1@sha256:631f66e32a218e167af9edb60115a04514d0bcf675a13bcb244c465ffab2f751`,
+  directory manifest
+  `sha256:0bc00463f8641fc91d6fcb82266b6f41d4c55cc78275b737eaad257dd2053130`;
+- held roster:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450`,
+  directory manifest
+  `sha256:f8aac504a2d56fdc9e13cc9b1c9fa87a08ebc7ff2d7036c0b6b135c26d187425`;
+- atlas inventory:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-atlas-intervention-inventory-v1@sha256:3d48478089105b77431f9a7459df3d84bfc41aefe2e2906e6f057b1a6399ae41`,
+  directory manifest
+  `sha256:9fcf5373923c83e93d5a1d6a7dedce6cfd57bd7aadfad4debb7665436c13bd2a`;
+- proteome inventory:
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9`,
+  directory manifest
+  `sha256:a1f5222f3dca31d2ca68ca46a271d39cdca3425a903b5dceb7373481450ada36`.
+
+No static sequence/protein/annotation/phylogeny feature snapshot, composed
+optimizer `slp.corpus/v1.1` snapshot, signed authorization snapshot, validation
+service, or final service exists. Consequently these sources were not composed
+or passed to the new module, and no biological workload was run.
+
+**Implemented boundary.** Commits `48dda03` and `261a8a5` added the separate,
+self-contained `slp-1-1-training-corpus-audit-v1-3` module while leaving the
+historical v1.2 module byte-identical. Its input schema admits exactly one
+pretrain corpus, one held roster, one custodian authorization, and two to 64
+`protectedInventory*` snapshots. The interface cannot name validation truth,
+final truth, reward, raw-source, checkpoint, prediction, or benchmark inputs.
+The report schema is `slp.corpus-audit/v1.3`; it contains only the pretrain
+identity, outcome-blind roster/inventory identities and protected-set hashes,
+and signature identity.
+
+The authorization is canonical JSON plus a detached Ed25519 signature over the
+domain-separated, length-framed exact statement bytes. It binds an immutable
+UUID, issuer key, recipient namespace, clean-factory signing identity, 256-bit
+challenge, training-safe protocol flags, the exact DatasetSnapshot resource and
+outer manifest for every safe input, and independently recomputable inner
+corpus, roster, coverage, and inventory-manifest digests. The verifier derives
+the key ID from the raw public key and requires both a compiled key ID and the
+compiled SHA-256 of the canonical public-key text file. Runtime input and
+configuration expose no trust-root override. The source-pinned production key
+and digest constants are intentionally absent, so every production call fails
+before reading the large corpus. Positive tests generate ephemeral keys only;
+no private key or signing helper was committed.
+
+After signature verification, the module scans every sparse record action and
+the complete trajectory-gene list, recomputes the protected-source intersection
+and deterministic held assignments, and rejects any validation/final active
+action. Held genes remain permitted as static-only entity rows. The signature
+authenticates the exact final corpus bytes but does not independently establish
+their source-to-corpus derivation. A biological run therefore also requires a
+provenance-complete composition report and verified OMF lineage from the exact
+observation, static-feature, roster, and basal snapshots. Stateless Ed25519
+verification also cannot prove one-time consumption for the same recipient and
+inputs; the coordinator needs a consumed-authorization-ID ledger.
+
+**Verification and limitations.** OMF was ready and exposed signing identity
+`sha256:115da768a6712a5ab58a128c9f6809fbb0ce7df2c69981ca35e21c44daf166bc`.
+From clean commit `261a8a51339874de7ecb3295feffc0fc8f90fe67`, module validation passed with
+package digest
+`sha256:3b1c1690814aed30efbb59fa156ab679a12a96da7323d44b23dce14967f2ed58`
+and source-artifact manifest
+`sha256:23ddd0e5574cc321a47b5f94449d8ece40c94b3a07646a9d85e166ac2cac73c4`.
+The intended validation-only fixture worker later wrote exit code zero and the
+exact expected v1.3 output, including `auditPassed: 0` and
+`custodianSignatureVerified: false`; it did not pretend to verify biological
+inputs. However, the `omf module test` command is not accepted as clean
+compatibility evidence. OMF 1.0 derives every fixture directory from the
+manifest filename stem, so every repository `module.yaml` reuses
+`.omf/runs/module-tests/module-0`. It does not clear prior completion/result
+files before submission and can return a previous module's result while the
+intended worker is still running. This invocation first surfaced a stale held-
+roster failure despite the correct v1.3 request subsequently completing. No
+repository or `.omf` workaround was added; collision-free upstream module-test
+identity remains a platform blocker. The completed worker used dependency-lock digest
+`sha256:9eca4b24f57234e5479dc6b3b8c0e46039be34014d2141410a3a6bef60e7b57e`,
+environment digest
+`sha256:4904ffa109a662919b3ae18bdd5e8d2cac38c2ebf9c0f5e7bea18f883e0b4afd`,
+and argv digest
+`sha256:7e3a0a25bb475aa43dec53f554af2c2202e165ba2259e7caf367938d01105ae3`.
+The lock pins `cryptography==46.0.7`, `cffi==2.1.1`, and `pycparser==3.0` by
+exact wheel hashes, but realization still used the package index, no retained
+offline wheelhouse, and an inherited interpreter site-package layer. It is not
+a release-eligible runtime closure.
+
+The governed `tests/` suite passed 183 tests with 3 skipped. The v1.3-focused
+suite contributed 13 passing adversarial tests. The initial compatibility
+fixture used empty placeholder inputs and was correctly rejected by the strict
+nested contract; `261a8a5` replaced them with syntactically valid immutable
+dummy objects before the recorded pass. No DatasetSnapshot, Run, RunResult,
+checkpoint, metric, evaluation, or knowledge claim was created from the v1.3
+module. This milestone is executable boundary engineering, not training or
+scientific performance evidence, and supports no novelty, frontier, release,
+or SOTA claim.

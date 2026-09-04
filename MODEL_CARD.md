@@ -155,6 +155,20 @@ documentary purpose restrictions. The molecular-final workload has never been
 executed. A clean training factory and distinct validation/final service
 identities and stores remain prerequisites for credible held-out evaluation.
 
+A separate clean-training corpus-audit v1.3 contract is now implemented beside
+the frozen full-custodian v1.2 audit. Its interface contains no validation or
+final quantitative input: it authenticates the exact composed optimizer corpus,
+outcome-blind held roster, and protected-source inventories with a recipient-
+and challenge-bound Ed25519 custodian authorization, then independently scans
+all active actions for the held union. The production public trust anchor is
+intentionally unprovisioned pending an independent key ceremony, and no
+provenance-complete composed corpus or physically separate training factory
+exists. Therefore the v1.3 biological path is deliberately fail-closed and has
+not run. Its signature is content authorization, not one-time-use enforcement,
+source-to-corpus lineage, rights verification, or filesystem isolation; those
+remain independent release gates. Existing world-trainer and evaluator
+versions consume v1.2 and must not be silently adapted to v1.3.
+
 That normalization run used an empty dependency lock in an attested Python
 3.12 environment. It establishes the mapping bytes and lineage, not a portable
 runtime closure; release-eligible workloads still require retained, fully
@@ -176,6 +190,12 @@ from evaluation access, and its local executor can read other host-accessible
 factory files. Separate service identities, stores, and execution sandboxes are
 therefore additional release blockers; custom unsupported policy keys are not
 accepted as a workaround.
+OMF 1.0 module compatibility tests also reuse a single `module-0` fixture
+directory for every manifest named `module.yaml` without clearing stale
+completion files. The v1.3 worker produced the expected validation-only output,
+but the CLI first returned a stale prior-module failure. Collision-free module-
+test identity is an upstream compatibility blocker; no duplicate-manifest or
+runtime-state workaround is part of the release path.
 Only the built-in Linux-local binding is currently declared. Scaling beyond one
 host also requires a tested `omf.executor/v1` provider; launching Modal from a
 network-denied training module is not an executor integration.
