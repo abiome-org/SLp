@@ -24,6 +24,11 @@ from mapper import (  # noqa: E402
 
 
 class SgdMapTest(unittest.TestCase):
+    def test_entrypoint_uses_the_omf_result_directory_contract(self) -> None:
+        source = (MODULE / "main.py").read_text(encoding="utf-8")
+        self.assertIn('os.environ["OMF_RESULT_FILE"]', source)
+        self.assertNotIn("request.outputs_dir", source)
+
     @staticmethod
     def _feature(
         primary: str,

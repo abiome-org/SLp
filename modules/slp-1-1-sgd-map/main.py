@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from omf.sdk import ProtocolRequest, ProtocolResult, main
@@ -55,7 +56,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     )
     result = normalize_sgd_snapshot(
         resolved.path,
-        Path(request.outputs_dir) / "sgd-map",
+        Path(os.environ["OMF_RESULT_FILE"]).parent / "sgd-map",
         bounds,
         source_provenance=SourceProvenance(
             resource=resolved.resource,
