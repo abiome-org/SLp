@@ -1,0 +1,47 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: derived outcome-blind held-intervention roster from the admitted Mendeley proteome and Zenodo atlas identity inventories
+evidence:
+  - https://api.datacite.org/dois/10.17632/w8jtmnszd9.2
+  - https://zenodo.org/api/records/14062629
+  - https://doi.org/10.1093/genetics/iyae185
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only held-intervention-roster.tsv and coverage.json emitted by OMF run
+  01a06d0b-bd40-7663-a7a3-b1dfb1c1ebbd from the exact admitted identity
+  inventories listed below. The derived files contain stable SGD CURIEs,
+  deterministic pretrain/validation/final role assignments, source-coverage
+  evidence, taxonomy, and provenance; they contain no quantitative molecular
+  outcome, target, phenotype, transcriptomic value, proteomic value, or
+  synthetic-lethality label.
+derivedFrom:
+  datasets:
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-atlas-intervention-inventory-v1@sha256:3d48478089105b77431f9a7459df3d84bfc41aefe2e2906e6f057b1a6399ae41
+  runResult: omf://abiome/slp/runresult/result-01a06d0b-bd40-7663-a7a3-b1dfb1c1ebbd@sha256:f6ce5a5383e144c1db788419c8d257ec4ce864042b98b03f11f9fc622466e22b
+  artifacts:
+    roster: sha256:857db5a2ced03b7dc5a88de96406e1f706fdc317e56bf7f5a3fbf951884bf5e2
+    coverage: sha256:2b54117856cb239cf4614f919872cca10e2d43a7e5cf88415f88240f0f628895
+rightsBasis: >-
+  Both admitted parent identity snapshots are CC BY 4.0 adaptations with
+  attribution and redistribution allowed. Deterministic intersection and role
+  assignment are further adaptations; they do not expand either parent scope
+  or authorize excluded outcome-bearing material.
+attribution: >-
+  Messner, Christoph; Kustatscher, Georg; Ralser, Markus (2023), The
+  Proteomic Landscape of Genome-Wide Genetic Perturbations, Mendeley Data V2,
+  https://doi.org/10.17632/w8jtmnszd9.2; Nadal-Ribelles, Mariona et al., A
+  single-cell resolved genotype-phenotype map using genome-wide genetic and
+  environmental perturbations, Zenodo,
+  https://doi.org/10.5281/zenodo.14062629; and Saccharomyces Genome Database
+  (SGD), Stanford University, with Engel SR et al. (2025), GENETICS 229(3),
+  iyae185, https://doi.org/10.1093/genetics/iyae185.
+exclusions:
+  - held-roster-summary.json and every OMF output not named in scope
+  - quantitative proteome matrix values and derived molecular targets
+  - phenotype columns, phenotype values, and transcriptomic matrix values
+  - all fitting, reward, protected truth, final-holdout, and benchmark records
+  - linked third-party resources outside the exact parent source allowlists
+  - any future identity-inventory, source, mapping, or roster revision

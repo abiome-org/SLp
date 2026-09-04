@@ -332,6 +332,39 @@ class YeastSourceManifestTest(unittest.TestCase):
                 )
                 self.assertEqual(len(rights["derivedFrom"]["datasets"]), 2)
 
+    def test_held_roster_rights_bind_only_exact_outcome_blind_outputs(self) -> None:
+        rights = self._load("rights/slp-1-1-held-roster-cc-by-4.0.yaml")
+        self.assertEqual(rights["license"], "CC-BY-4.0")
+        self.assertIs(rights["trainingAllowed"], True)
+        self.assertIs(rights["redistributionAllowed"], True)
+        self.assertIs(rights["attributionRequired"], True)
+        self.assertEqual(
+            rights["derivedFrom"]["datasets"],
+            [
+                "omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9",
+                "omf://abiome/slp/datasetsnapshot/slp-1-1-atlas-intervention-inventory-v1@sha256:3d48478089105b77431f9a7459df3d84bfc41aefe2e2906e6f057b1a6399ae41",
+            ],
+        )
+        self.assertEqual(
+            rights["derivedFrom"]["runResult"],
+            "omf://abiome/slp/runresult/result-01a06d0b-bd40-7663-a7a3-b1dfb1c1ebbd@sha256:f6ce5a5383e144c1db788419c8d257ec4ce864042b98b03f11f9fc622466e22b",
+        )
+        self.assertEqual(
+            rights["derivedFrom"]["artifacts"],
+            {
+                "roster": "sha256:857db5a2ced03b7dc5a88de96406e1f706fdc317e56bf7f5a3fbf951884bf5e2",
+                "coverage": "sha256:2b54117856cb239cf4614f919872cca10e2d43a7e5cf88415f88240f0f628895",
+            },
+        )
+        self.assertIn("held-intervention-roster.tsv and coverage.json", rights["scope"])
+        self.assertIn("no quantitative molecular", rights["scope"])
+        self.assertTrue(
+            any("held-roster-summary.json" in item for item in rights["exclusions"])
+        )
+        self.assertTrue(
+            any("benchmark records" in item for item in rights["exclusions"])
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
