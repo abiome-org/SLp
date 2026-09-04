@@ -1,0 +1,87 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-proteome-protected-observation-prepare-v1
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:2b8837ecc5287dd25a4100a7ed4e30c60ae8aaf6c1273c4ffd3fa3ebb39372d9
+  contracts:
+    input:
+      type: object
+      required:
+        - rawProteome
+        - interventionInventory
+        - proteinRelations
+        - heldRoster
+        - sgdCurrentOrfs
+        - sgdMappingManifest
+      properties:
+        rawProteome: {type: object}
+        interventionInventory: {type: object}
+        proteinRelations: {type: object}
+        heldRoster: {type: object}
+        sgdCurrentOrfs: {type: object}
+        sgdMappingManifest: {type: object}
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - preparationSummary
+        - observationArchiveSha256
+        - auditSha256
+        - role
+        - records
+        - interventionGenes
+        - targetValues
+        - missingValues
+        - unselectedRowsNotDecoded
+      properties:
+        preparationSummary: {type: object}
+        observationArchiveSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        auditSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        role:
+          enum: [molecular-validation, molecular-final]
+        records: {type: integer, minimum: 0, maximum: 100000}
+        interventionGenes: {type: integer, minimum: 0, maximum: 100000}
+        targetValues: {type: integer, minimum: 0, maximum: 20000000}
+        missingValues: {type: integer, minimum: 0, maximum: 20000000}
+        unselectedRowsNotDecoded: {type: integer, minimum: 0, maximum: 100000}
+      additionalProperties: false
+    config:
+      type: object
+      required: [role]
+      properties:
+        role:
+          enum: [molecular-validation, molecular-final]
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          rawProteome: {}
+          interventionInventory: {}
+          proteinRelations: {}
+          heldRoster: {}
+          sgdCurrentOrfs: {}
+          sgdMappingManifest: {}
+        config:
+          role: molecular-validation
+        state: {}
+      result:
+        status: ok
+        outputs:
+          preparationSummary:
+            schema: slp.proteome-protected-observation-preparation-audit/v1
+            role: molecular-validation
+            validationOnly: true
+          observationArchiveSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          auditSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          role: molecular-validation
+          records: 0
+          interventionGenes: 0
+          targetValues: 0
+          missingValues: 0
+          unselectedRowsNotDecoded: 0

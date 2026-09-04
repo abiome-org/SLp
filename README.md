@@ -117,16 +117,19 @@ two protected source inventories have each been admitted separately:
 .venv/bin/omf --project . schema validate workloads/slp-1-1-audit-smoke.yaml
 ```
 
-Biological training has no generic checked-in workload. First admit and verify
-the separately governed pretraining, molecular-validation,
-molecular-reward, molecular-final, protected-inventory, held-roster, and
-target-free query snapshots. Run the independent corpus audit and stop on any
-failure. Only then freeze a sparse-world workload that pins the exact admitted
-audit artifact-manifest digest and every DatasetSnapshot input. Molecular
-evaluation is a second admitted run whose inputs include the literal immutable
-checkpoint and prediction artifact digests plus separately protected truth;
-sibling-stage paths or weights/predictions embedded in JSON metadata are
-forbidden workarounds.
+Biological training has no generic checked-in workload. Molecular reward is
+disabled. A custodian boundary first admits and verifies the separately
+governed pretraining, molecular-validation, molecular-final,
+protected-inventory, held-roster, and target-free query snapshots, runs the
+independent corpus audit, and stops on any failure. The clean training factory
+receives only the pretraining corpus, target-free query, held identities, and a
+hash-bound audit attestation; it must never contain the full raw source or held
+truth. Only then freeze a sparse-world workload that pins every exact input.
+Validation and final evaluation run in physically separate stores under
+distinct service identities, using literal immutable checkpoint/prediction
+digests and only the appropriate protected truth. Sibling-stage paths,
+weights/predictions embedded in JSON metadata, freely chosen CLI actor strings,
+or unsupported policy match keys are forbidden workarounds.
 
 The world module's empty dependency lock currently means its executor image
 must already provide compatible PyTorch and NumPy. This is acceptable for

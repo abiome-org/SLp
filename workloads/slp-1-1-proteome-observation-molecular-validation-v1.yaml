@@ -1,0 +1,33 @@
+# Data-steward preparation of molecular-validation truth. This is not a
+# training workload and emits only the validation role as a regular file.
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-proteome-observation-molecular-validation-v1
+spec:
+  graph:
+    stages:
+      - name: prepare
+        module: modules/slp-1-1-proteome-protected-observation-prepare-v1/module.yaml
+        operation: run
+        inputs:
+          rawProteome: dataset/slp-1-1-proteome-raw-v2
+          interventionInventory: dataset/slp-1-1-proteome-intervention-inventory-v1
+          proteinRelations: dataset/slp-1-1-proteome-protein-relations-v1
+          heldRoster: dataset/slp-1-1-held-roster-v1
+          sgdCurrentOrfs: artifact:sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192
+          sgdMappingManifest: artifact:sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c
+        config:
+          role: molecular-validation
+        outputs:
+          - preparationSummary
+          - observationArchiveSha256
+          - auditSha256
+          - role
+          - records
+          - interventionGenes
+          - targetValues
+          - missingValues
+          - unselectedRowsNotDecoded
+          - proteomeMolecularValidationObservation
+          - proteomeMolecularValidationPreparationAudit

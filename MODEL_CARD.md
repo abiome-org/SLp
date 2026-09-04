@@ -78,15 +78,29 @@ never relabeled as human interaction measurements.
 ## Data boundaries
 
 OMF `DatasetSnapshot` resources separately identify pretraining, molecular
-validation, reward, and final-holdout corpora. Every snapshot carries rights,
+validation, and final-holdout corpora. Molecular reward is disabled and no
+reward snapshot is part of the current protocol. Every snapshot carries rights,
 content hashes, source versions, stable entity identifiers, species, assay and
 protocol metadata, normalization provenance, and its accessible modalities.
 
-The pretraining and reward snapshots may contain only molecular measurements.
-Every quantitative trajectory involving a molecular-validation or final-holdout
+The pretraining snapshot may contain only molecular measurements. Every
+quantitative trajectory involving a molecular-validation or final-holdout
 intervention gene is excluded. Static sequence and annotation features may be
 available for held genes because cold start means unseen intervention outcomes,
-not absence of public molecular identity.
+not absence of public molecular identity. If molecular reward is introduced in
+a future protocol, it must receive its own snapshot and the same held-gene
+exclusions before the active corpus contract can be revised.
+
+OMF 1.0 provides immutable resources, rights checks, declared-input
+materialization, and lineage, but it does not provide actor-scoped snapshot
+ACLs or filesystem isolation for the local executor. Dataset names, CLI actor
+strings, and governed adapter behavior are not confidentiality boundaries. A
+credible held-out claim therefore requires a custodian factory for the full
+raw source, a physically separate clean training factory/store that never
+contains held truth, a validation factory under a distinct OS/service identity,
+and an independently controlled final factory opened only after candidate
+lock. Until those boundaries exist, local role separation is integrity and
+process evidence only.
 
 SL benchmark labels live in independent snapshots that no training or reward
 workload references. A supervised SL decoder, if later added, is a distinct OMF
@@ -148,6 +162,11 @@ therefore use separate admitted runs with exact prior artifact digests pinned
 at each boundary until that upstream contract is fixed. The current trainer
 also records a release blocker until factory policy independently proves that
 its pinned audit artifact came from the admitted corpus-audit module and run.
+OMF 1.0 policy cannot authorize individual snapshots or distinguish fitting
+from evaluation access, and its local executor can read other host-accessible
+factory files. Separate service identities, stores, and execution sandboxes are
+therefore additional release blockers; custom unsupported policy keys are not
+accepted as a workaround.
 Only the built-in Linux-local binding is currently declared. Scaling beyond one
 host also requires a tested `omf.executor/v1` provider; launching Modal from a
 network-denied training module is not an executor integration.
