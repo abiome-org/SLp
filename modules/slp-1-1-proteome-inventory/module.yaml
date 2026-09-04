@@ -1,0 +1,80 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-proteome-inventory
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  contracts:
+    input:
+      type: object
+      required:
+        - rawProteome
+        - sgdCurrentOrfs
+        - sgdExternalRelations
+        - sgdRetiredQuarantine
+        - sgdMappingManifest
+      properties:
+        rawProteome: {type: object}
+        sgdCurrentOrfs: {type: object}
+        sgdExternalRelations: {type: object}
+        sgdRetiredQuarantine: {type: object}
+        sgdMappingManifest: {type: object}
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - inventorySummary
+        - auditSha256
+        - inventoryManifestSha256
+        - proteinManifestSha256
+        - eligibleInterventions
+        - quarantineRows
+        - proteinRecords
+        - oneToManyProteinRelations
+      properties:
+        inventorySummary: {type: object}
+        auditSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        inventoryManifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        proteinManifestSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        eligibleInterventions: {type: integer, minimum: 0, maximum: 10000}
+        quarantineRows: {type: integer, minimum: 0, maximum: 10000}
+        proteinRecords: {type: integer, minimum: 0, maximum: 10000}
+        oneToManyProteinRelations: {type: integer, minimum: 0, maximum: 10000}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        maxMetadataRows: {type: integer, minimum: 1, maximum: 100000}
+        maxProteinRows: {type: integer, minimum: 1, maximum: 100000}
+        maxMappingRecords: {type: integer, minimum: 1, maximum: 1000000}
+        maxLineBytes: {type: integer, minimum: 128, maximum: 16777216}
+        maxQuarantineRows: {type: integer, minimum: 1, maximum: 100000}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          rawProteome: {}
+          sgdCurrentOrfs: {}
+          sgdExternalRelations: {}
+          sgdRetiredQuarantine: {}
+          sgdMappingManifest: {}
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          inventorySummary:
+            schema: slp.proteome-identity-audit/v1
+            validationOnly: true
+          auditSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          inventoryManifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          proteinManifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          eligibleInterventions: 0
+          quarantineRows: 0
+          proteinRecords: 0
+          oneToManyProteinRelations: 0
