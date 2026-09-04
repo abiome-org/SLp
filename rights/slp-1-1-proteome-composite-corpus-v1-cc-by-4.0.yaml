@@ -1,0 +1,112 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: derived fitting-only composite-keyed yeast proteome corpus from the pinned pretraining observations, sequence-statistics feature block, and outcome-blind held-intervention roster
+evidence:
+  - https://api.datacite.org/dois/10.17632/w8jtmnszd9.2
+  - https://zenodo.org/api/records/14062629
+  - https://doi.org/10.1093/genetics/iyae185
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only corpus-v1-2.tar and corpus-compose-audit.json emitted by OMF run
+  01a06e27-c6b8-7eee-ba08-54c27d8ada57 and reproduced byte for byte by run
+  01a06e28-2f3f-7ccb-b71d-8b7654fc26ca from the exact immutable
+  DatasetSnapshots listed below. The archive is a fitting-only slp.corpus/v1.2
+  yeast proteome corpus containing 3,811 intervention records, 6,865,493
+  observed molecular target values, 3,679 composite-keyed trajectory
+  interventions, 1,850 readout queries, 7,037 static-feature rows, and one
+  non-gene context entity. It contains no protected quantitative outcome,
+  reward record, synthetic-lethality label, or benchmark record.
+derivedFrom:
+  datasets:
+    observations:
+      resource: omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-observation-pretrain-v1@sha256:631f66e32a218e167af9edb60115a04514d0bcf675a13bcb244c465ffab2f751
+      outerManifestDigest: sha256:0bc00463f8641fc91d6fcb82266b6f41d4c55cc78275b737eaad257dd2053130
+      treeDigest: sha256:fc1f812308af999c601bee9b53ce21035bdd6fd9952cead11451c72b612a833f
+    staticFeatures:
+      resource: omf://abiome/slp/datasetsnapshot/slp-1-1-sequence-statistics-feature-block-v1@sha256:e9733974c551bca3af93c4cb488972f5167da5e7e3cf48ef5803348cd20d91e5
+      outerManifestDigest: sha256:6b4b32c794d7787b9b9076d78726ea0ad7706d64fd82b5f918f0c6da20da0d2a
+      treeDigest: sha256:3f4549114a181c162596d60ef1b94d222ec494282d23ece8da7e19142135cb8d
+    heldInterventionRoster:
+      resource: omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450
+      outerManifestDigest: sha256:f8aac504a2d56fdc9e13cc9b1c9fa87a08ebc7ff2d7036c0b6b135c26d187425
+      treeDigest: sha256:ba62f5855f46e693f2a27f4ed06efeec046ccd99c9993c145f9983807dfed0b1
+  runResults:
+    primary: omf://abiome/slp/runresult/result-01a06e27-c6b8-7eee-ba08-54c27d8ada57@sha256:8d4362b2d77d855abea6357b6e34abc0b2052fdc71675355548ded16390d9281
+    replication: omf://abiome/slp/runresult/result-01a06e28-2f3f-7ccb-b71d-8b7654fc26ca@sha256:58116fb6b3a075ff188d47141d326cd55d895d43cf2f18666b35ae371501348d
+  omfArtifactManifests:
+    primaryCorpus: sha256:9c208900fc871b2a60ceddb1a5d72ea5670a327feea4b2bdf39f92132376a0c6
+    primaryAudit: sha256:ae9e3fa7ee9207dae17fef63b906f218904fdf5a18d534534801dd96a7bac286
+    replicationCorpus: sha256:fb4fa62ccd06b921947bccc01f4ebb4155d4239df74a644e5105962c5cf7198f
+    replicationAudit: sha256:bf3f020466c284f2814f6cee7ed2569417ed9b7ba49258ef78e03936114c0d2e
+  payloads:
+    compositeCorpusTar:
+      path: corpus-v1-2.tar
+      bytes: 89149440
+      sha256: 0a5322c46e15e8a15d17000e8993c0ad642fcc70bc8fff00cbba8fb2905708bf
+    compositionAudit:
+      path: corpus-compose-audit.json
+      bytes: 5277
+      sha256: 898e4069b2bd9575bd7380b57ed6214bf3d75043feb401c0fa50371972623c52
+corpusContract:
+  schema: slp.corpus/v1.2
+  rightsRevision: slp-rights:proteome-composite-corpus-v1-cc-by-4.0
+  role: pretrain
+  identityKey:
+    - ncbiTaxon
+    - entityId
+  rewardEnabled: false
+  counts:
+    entities: 7038
+    featureRows: 7037
+    contexts: 1
+    queries: 1850
+    panels: 1
+    trajectoryInterventions: 3679
+    records: 3811
+    targetValues: 6865493
+    shards: 8
+  digests:
+    corpusManifestSha256: d91cbbc0b98ea05ccbf56201f50143f57c2b71ffe53211a5a5128ce706c60ad7
+    entityKeySetSha256: 9ca16d4f44ca97b4940bd389ca8bbdafe0c6fd711d557a98743218a83caeb87d
+    featureEntityKeySetSha256: 4a7e15d5aca02862a80acbd182f5a52c86c35e4dbadf8d95297c2ba47a95dce5
+    featurePackSha256: 016753a94bacd6e2b8dd299abc7906fa874c3d5926ff73605a1f9c913a12d66b
+    featurePresentBytesSha256: 08de1975edffb1a14cbea7d27d7fde8abedf8e2cc1899f70838d68a9b5b287af
+    featureValueBytesSha256: 3f51a98266c855800917ca6c7b87e205d9df7268260c44b4ba0341605840b7a0
+    targetValueBytesSha256: 7eda2fee14728865518c1133e4a7c122a2180ac29b9c5977946518a0c3d46af6
+rightsBasis: >-
+  The quantitative Mendeley proteome pretraining snapshot, the SGD-derived
+  static sequence-feature snapshot, and the outcome-blind held-roster snapshot
+  are exact CC BY 4.0 adaptations with redistribution and training allowed
+  with attribution. Composite-key joining, deterministic serialization, and
+  exclusion checking are further adaptations that do not expand those parent
+  scopes or authorize protected outcomes, reward data, or benchmark material.
+attribution: >-
+  Messner, Christoph; Kustatscher, Georg; Ralser, Markus (2023), The
+  Proteomic Landscape of Genome-Wide Genetic Perturbations, Mendeley Data V2,
+  https://doi.org/10.17632/w8jtmnszd9.2; Saccharomyces Genome Database (SGD),
+  Stanford University, with Engel SR et al. (2025), GENETICS 229(3), iyae185,
+  https://doi.org/10.1093/genetics/iyae185; and Nadal-Ribelles, Mariona et al.,
+  A single-cell resolved genotype-phenotype map using genome-wide genetic and
+  environmental perturbations, Zenodo,
+  https://doi.org/10.5281/zenodo.14062629, used only through the outcome-blind
+  held-intervention roster provenance.
+purposeRestrictions:
+  worldModelPretrainingFitting: true
+  molecularValidation: false
+  molecularReward: false
+  molecularFinalHoldout: false
+  worldModelArchitectureSelection: false
+  calibration: false
+  syntheticLethalityLabels: false
+  benchmarkDevelopment: false
+exclusions:
+  - every molecular-validation and molecular-final quantitative outcome; the outcome-blind roster was consumed only to exclude protected interventions
+  - held-intervention roster files and role assignments as model inputs or targets
+  - basal-control, quarantine, analytical-QC, reward, and synthetic-lethality records
+  - benchmark labels, benchmark-derived thresholds, calibration, checkpoint selection, and architecture selection
+  - static features other than the exact admitted 21-dimensional sequence-statistics block
+  - human outcome relabeling, cross-taxon identity merging, and learned gene-identity features
+  - model checkpoints, predictions, evaluation results, and performance claims
+  - any future parent DatasetSnapshot, artifact, module, workload, run, or output revision
