@@ -1,0 +1,154 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-proteome-corpus-compose-v1
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:2b8837ecc5287dd25a4100a7ed4e30c60ae8aaf6c1273c4ffd3fa3ebb39372d9
+  contracts:
+    input:
+      type: object
+      required: [observations, staticFeatures, heldInterventionRoster]
+      properties:
+        observations:
+          type: object
+          required: [resource, mode, path, manifestDigest]
+          properties:
+            resource: {const: "omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-observation-pretrain-v1@sha256:631f66e32a218e167af9edb60115a04514d0bcf675a13bcb244c465ffab2f751"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            manifestDigest: {const: "sha256:0bc00463f8641fc91d6fcb82266b6f41d4c55cc78275b737eaad257dd2053130"}
+          additionalProperties: false
+        staticFeatures:
+          type: object
+          required: [resource, mode, path, manifestDigest]
+          properties:
+            resource: {const: "omf://abiome/slp/datasetsnapshot/slp-1-1-sequence-statistics-feature-block-v1@sha256:e9733974c551bca3af93c4cb488972f5167da5e7e3cf48ef5803348cd20d91e5"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            manifestDigest: {const: "sha256:6b4b32c794d7787b9b9076d78726ea0ad7706d64fd82b5f918f0c6da20da0d2a"}
+          additionalProperties: false
+        heldInterventionRoster:
+          type: object
+          required: [resource, mode, path, manifestDigest]
+          properties:
+            resource: {const: "omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            manifestDigest: {const: "sha256:f8aac504a2d56fdc9e13cc9b1c9fa87a08ebc7ff2d7036c0b6b135c26d187425"}
+          additionalProperties: false
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - auditSummary
+        - archiveSha256
+        - auditSha256
+        - manifestSha256
+        - featurePackSha256
+        - entityKeySetSha256
+        - featureEntityKeySetSha256
+        - targetValueBytesSha256
+        - entities
+        - featureRows
+        - contexts
+        - queries
+        - panels
+        - trajectoryInterventions
+        - records
+        - targetValues
+        - shards
+      properties:
+        auditSummary:
+          oneOf:
+            - type: object
+              required: [schema, validationOnly]
+              properties:
+                schema: {const: slp.proteome-corpus-compose-validation/v1}
+                validationOnly: {const: true}
+              additionalProperties: false
+            - type: object
+              required: [schema, validationOnly, inputNames, role, identityKey, protectedInterventionOverlap, benchmarkLabelsConsumed, rewardDataConsumed, targetValuesBytePreserved]
+              properties:
+                schema: {const: slp.proteome-corpus-compose-summary/v1}
+                validationOnly: {const: false}
+                inputNames: {const: [heldInterventionRoster, observations, staticFeatures]}
+                role: {const: pretrain}
+                identityKey: {const: [ncbiTaxon, entityId]}
+                protectedInterventionOverlap: {const: 0}
+                benchmarkLabelsConsumed: {const: false}
+                rewardDataConsumed: {const: false}
+                targetValuesBytePreserved: {const: true}
+              additionalProperties: false
+        archiveSha256: &digest {type: string, pattern: "^[0-9a-f]{64}$"}
+        auditSha256: *digest
+        manifestSha256: *digest
+        featurePackSha256: *digest
+        entityKeySetSha256: *digest
+        featureEntityKeySetSha256: *digest
+        targetValueBytesSha256: *digest
+        entities: {type: integer, minimum: 0, maximum: 100000}
+        featureRows: {type: integer, minimum: 0, maximum: 100000}
+        contexts: {type: integer, minimum: 0, maximum: 1000}
+        queries: {type: integer, minimum: 0, maximum: 100000}
+        panels: {type: integer, minimum: 0, maximum: 10000}
+        trajectoryInterventions: {type: integer, minimum: 0, maximum: 100000}
+        records: {type: integer, minimum: 0, maximum: 100000}
+        targetValues: {type: integer, minimum: 0, maximum: 20000000}
+        shards: {type: integer, minimum: 0, maximum: 10000}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        maxManifestBytes: {type: integer, minimum: 256, maximum: 33554432}
+        maxLineBytes: {type: integer, minimum: 128, maximum: 4194304}
+        maxArchiveBytes: {type: integer, minimum: 1024, maximum: 4294967296}
+        maxRecords: {type: integer, minimum: 1, maximum: 20000000}
+        maxEntities: {type: integer, minimum: 1, maximum: 20000000}
+        maxReadouts: {type: integer, minimum: 1, maximum: 20000000}
+        maxTargetValues: {type: integer, minimum: 1, maximum: 2000000000}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          observations:
+            resource: "omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-observation-pretrain-v1@sha256:631f66e32a218e167af9edb60115a04514d0bcf675a13bcb244c465ffab2f751"
+            mode: copy
+            path: /fixture/inputs/observations/slp-1-1-proteome-observation-pretrain-v1
+            manifestDigest: "sha256:0bc00463f8641fc91d6fcb82266b6f41d4c55cc78275b737eaad257dd2053130"
+          staticFeatures:
+            resource: "omf://abiome/slp/datasetsnapshot/slp-1-1-sequence-statistics-feature-block-v1@sha256:e9733974c551bca3af93c4cb488972f5167da5e7e3cf48ef5803348cd20d91e5"
+            mode: copy
+            path: /fixture/inputs/staticFeatures/slp-1-1-sequence-statistics-feature-block-v1
+            manifestDigest: "sha256:6b4b32c794d7787b9b9076d78726ea0ad7706d64fd82b5f918f0c6da20da0d2a"
+          heldInterventionRoster:
+            resource: "omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450"
+            mode: copy
+            path: /fixture/inputs/heldInterventionRoster/slp-1-1-held-roster-v1
+            manifestDigest: "sha256:f8aac504a2d56fdc9e13cc9b1c9fa87a08ebc7ff2d7036c0b6b135c26d187425"
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          auditSummary: {schema: slp.proteome-corpus-compose-validation/v1, validationOnly: true}
+          archiveSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          auditSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          manifestSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          featurePackSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          entityKeySetSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          featureEntityKeySetSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          targetValueBytesSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          entities: 0
+          featureRows: 0
+          contexts: 0
+          queries: 0
+          panels: 0
+          trajectoryInterventions: 0
+          records: 0
+          targetValues: 0
+          shards: 0

@@ -1,0 +1,47 @@
+# Fitting-only composite-key corpus composition. OMF 1.0 resolves dataset/name
+# references to immutable revisions at workload admission; the module contract
+# additionally requires the exact revisions 631f66e3...2f751 (observations),
+# e9733974...0d91e5 (features), and 1b9a4800...63450 (roster). No protected
+# quantitative, reward, checkpoint, prediction, or benchmark input is present.
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-proteome-corpus-compose-v1
+spec:
+  graph:
+    stages:
+      - name: compose
+        module: modules/slp-1-1-proteome-corpus-compose-v1/module.yaml
+        operation: run
+        inputs:
+          observations: dataset/slp-1-1-proteome-observation-pretrain-v1
+          staticFeatures: dataset/slp-1-1-sequence-statistics-feature-block-v1
+          heldInterventionRoster: dataset/slp-1-1-held-roster-v1
+        config:
+          maxManifestBytes: 2097152
+          maxLineBytes: 65536
+          maxArchiveBytes: 268435456
+          maxRecords: 100000
+          maxEntities: 100000
+          maxReadouts: 100000
+          maxTargetValues: 20000000
+        outputs:
+          - auditSummary
+          - archiveSha256
+          - auditSha256
+          - manifestSha256
+          - featurePackSha256
+          - entityKeySetSha256
+          - featureEntityKeySetSha256
+          - targetValueBytesSha256
+          - entities
+          - featureRows
+          - contexts
+          - queries
+          - panels
+          - trajectoryInterventions
+          - records
+          - targetValues
+          - shards
+          - proteomeCompositeCorpus
+          - proteomeCompositeCorpusAudit
