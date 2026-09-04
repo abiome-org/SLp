@@ -1,11 +1,11 @@
 schema: slp.source-acquisition/v1
 id: sgd-protein-sequences-r64-5-1
-status: exact-source-pinned-admission-pending
+status: raw-snapshot-admitted-feature-generation-pending
 blocker: >-
-  This source is not an admitted DatasetSnapshot yet. It may not be used by a
-  feature generator until the three exact objects below are re-downloaded,
-  rehashed, staged without extra files, admitted with the matching narrow
-  rights declaration, and verified by OMF.
+  The exact sequence source is admitted and verified, but no sequence feature
+  block or static feature pack has been produced. A feature generator must
+  still verify the complete FASTA/content contract and exact current-ORF and
+  typed protein-relation joins before any model-facing use.
 organism:
   name: Saccharomyces cerevisiae S288C
   speciesTaxon: 4932
@@ -119,6 +119,22 @@ validation:
   requireExactRecordCounts: true
   requireFullCurrentOrfCoverage: true
   failOnReadmeContentDrift: true
+admission:
+  exactObjectsDownloadedToUntrackedOmfStaging: true
+  biologicalBytesStoredInGit: false
+  rawSnapshot:
+    admitted: true
+    contentVerified: true
+    actor: slp-researcher
+    resource: omf://abiome/slp/datasetsnapshot/slp-1-1-sgd-protein-sequences-r64-5-1@sha256:3b76017f5ac74d8d96efb1db52d14af91c9fb15995062110558ce4651cf3ba0c
+    manifestDigest: sha256:8f88480196b5cd8f3c15d65dbdbc09f83305c371fb476c70a38825dad2be4283
+    treeDigest: sha256:823a18ed8039ee44ee44b860551fea749b9012c941e6b9cd5163938da19b168a
+    sampleSchema: slp.sgd-protein-sequence-source/v1
+    verifiedAt: 2026-09-04
+  staticFeatureBlock:
+    produced: false
+    admitted: false
+  trainingCorpusAllowed: false
 limitations:
   - >-
     The pinned README's companion-file prose says orf_trans.fasta.gz excludes

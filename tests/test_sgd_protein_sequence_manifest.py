@@ -25,7 +25,7 @@ class SgdProteinSequenceManifestTest(unittest.TestCase):
     def test_exact_release_objects_are_immutable_and_checksum_pinned(self) -> None:
         self.assertEqual(self.source["schema"], "slp.source-acquisition/v1")
         self.assertEqual(
-            self.source["status"], "exact-source-pinned-admission-pending"
+            self.source["status"], "raw-snapshot-admitted-feature-generation-pending"
         )
         release = self.source["release"]
         self.assertEqual(release["upstreamGenomeAnnotationRelease"], "R64.5.1")
@@ -121,6 +121,29 @@ class SgdProteinSequenceManifestTest(unittest.TestCase):
         self.assertFalse(self.rights["purposeRestrictions"]["syntheticLethalityLabels"])
         self.assertIn("exact", self.rights["scope"])
         self.assertIn("future SGD object version", self.rights["exclusions"][-1])
+
+        admission = self.source["admission"]
+        self.assertIs(admission["biologicalBytesStoredInGit"], False)
+        raw = admission["rawSnapshot"]
+        self.assertIs(raw["admitted"], True)
+        self.assertIs(raw["contentVerified"], True)
+        self.assertEqual(raw["actor"], "slp-researcher")
+        self.assertEqual(
+            raw["resource"],
+            "omf://abiome/slp/datasetsnapshot/"
+            "slp-1-1-sgd-protein-sequences-r64-5-1@"
+            "sha256:3b76017f5ac74d8d96efb1db52d14af91c9fb15995062110558ce4651cf3ba0c",
+        )
+        self.assertEqual(
+            raw["manifestDigest"],
+            "sha256:8f88480196b5cd8f3c15d65dbdbc09f83305c371fb476c70a38825dad2be4283",
+        )
+        self.assertEqual(
+            raw["treeDigest"],
+            "sha256:823a18ed8039ee44ee44b860551fea749b9012c941e6b9cd5163938da19b168a",
+        )
+        self.assertIs(admission["staticFeatureBlock"]["produced"], False)
+        self.assertIs(admission["trainingCorpusAllowed"], False)
 
 
 if __name__ == "__main__":
