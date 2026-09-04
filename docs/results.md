@@ -186,6 +186,16 @@ The same 11.92M model was retrained once on this enlarged state corpus and selec
 
 A context-conditioned successor adds a 128-dimensional basal DepMap state to the transition. K562 and THP-1 use exact models, RPE1 uses the mean of five available engineered derivatives and hESC remains explicitly unknown. The model has 11,968,864 parameters and uses 50% context dropout so unknown-context inference remains defined. Held-gene expression-state loss reaches 0.3795 and held-double loss 0.5557; reinforcement learning does not improve the fixed validation objective and is rolled back. This candidate is rejected on MuSL CV3: unknown-context sequential scoring gives 0.4592 AUROC / 0.4836 AP, while averaging over 32 fixed DepMap basal-state representatives gives 0.4711/0.4873. Motivated by the later cell-specific Sanger result, top-three and maximum context aggregation were also tested without fitting; they fall further to 0.4537/0.4726 and 0.4353/0.4628. Thus an exact matched state, not marginalization or context search, is required.
 
+## Supervised-readout relation-topology ablation
+
+The fold-local MuSL CV3 readout stack (`embed_pairs` + `pair_summary` + `observed_relations`) was refit with the observed-relation block removed, holding the checkpoint, folds, seeds, ensemble and metrics fixed. On the released 59.7M SLp-1 checkpoint the ten-fold mean falls from 0.8154/0.8208 AUROC/AP to 0.7298/0.7298 (paired Δ +0.086 ± 0.008 AUROC, +0.091 ± 0.012 AP; all ten folds drop). The compact 11.92M intervention-isolated checkpoint replicates the direction at smaller magnitude (0.8300→0.7557 under the same rebuilt feature pack). Roughly the entire supervised margin above the 0.73–0.76 world-state-only floor is relation topology rather than learned transition geometry.
+
+This is a diagnostic, not a byte-level reproduction. Local input artifacts had been cleaned after the August publication pass, so the feature pack was reconstructed from pinned public sources: MuSL folds and metadata at commit `f8021cfc618fafae8c330b694d0fa7c46db5f1a5`, Geneformer-V2-104M and SE-600M embeddings from their original releases, with the Geneformer, protein and PTGNN blocks verified against the surviving conditional pack to float16 precision (per-column |corr| = 1.000, identical coverage masks). The spectral views were rebuilt with the current tracked recipe; the original pack's exact 192 spectral columns derive from an older graph construction, so absolute levels are reconstruction-level. Both arms of each pair share identical conditions, which is what the deltas require. The conclusion is that further MuSL optimization of this readout family is benchmark-specific tuning rather than progress toward the label-free objective.
+
+A provenance audit of this ablation also found that the scaled directory's plain `musl_cv3_calibrated.json` is byte-identical to the compact run's file; the plain deterministic readout had not previously been executed on SLp-1. The 0.89339 AUROC cited on the SLp-1 card comes from the later stacked variant with six additional public relation features and inner-fold simplex weighting, which is a further instance of the same relation-topology dependence.
+
+The ablation's fold-level outputs are published at `results/ablations/musl-cv3-relation-topology-v1/` on `potteryrage/SLp`: the four result JSONs (SLp-1 and compact, each with and without the observed-relation block) and an audit with input checksums, reconstruction verification levels and the paired deltas. The compact checkpoint is SHA-256 `7832b1108d30f3d66b5e1d09f3e2771f1280227575a35bad445535070c208691`; the SLp-1 checkpoint is the released `177991d2c0aec316985e3f47949fdcdf381e71ef24d9c0adcf6d1bde1e0d3b78`.
+
 ## External experimental tests
 
 The four-source sequential score was locked before downloading outcomes from Harle et al. 2025 (`10.6084/m9.figshare.25954027.v4`). The official hit rule is `mean_norm_gi < -0.5`, FDR below 0.01 and neither gene singly depleted. The intervention-cold primary set contains 157 paralog pairs, 3,496 pair-cell-line measurements and 400 hits. The fixed score correlates in the wrong direction with mean negative interaction strength (Spearman rho **-0.2531**, pair-bootstrap 95% CI -0.4020 to -0.1011; two-sided permutation p=0.00150) and gives 0.4819 macro AUROC. No sign reversal was permitted. This locked confirmation failed.
@@ -305,6 +315,21 @@ A prespecified signed target based on within-study log recovered-cell abundance 
 Explicitly supervising expression non-additivity was also rejected. All 180 measured doubles have source-matched singles, including the 16 fully gene-cold validation doubles, but adding their residual loss reduces K562 state ranking to 0.1020/0.2376 and Jurkat to 0.0683/0.2349. The retained objective therefore predicts endpoint state and computes non-additivity only at inference.
 
 SLAMR scenario 3 also supplies fold-local SL training and validation data. A frozen LightGBM ranking probe over world-state pair features is therefore reported separately from emergence. It is trained on each fold's training pairs, stopped on that fold's validation queries and evaluated once on its test queries. The cold-joint features reach 0.1240 MRR / 0.3845 Recall@20 on Jurkat and 0.1086 / 0.2599 on K562. Exposing the independent gene-aligned DepMap measurements changes these to 0.1046 / 0.3365 and 0.1247 / 0.3116, respectively. Fold-local validation selection between the label-free model and the text prior reaches 0.1285 / 0.3331 on Jurkat and 0.1127 / 0.2298 on K562. These supervised readouts show that the frozen state is useful, especially for recall, but they are not evidence that SL performance emerged without benchmark labels.
+
+## Hard molecular generalization gate
+
+A source-only validation change adds deterministic five-fold exact-action-set,
+composition-gene, intervention-gene, context, source, condition and compound
+source-plus-gene protocols. Each fold records exclusions and evidence counts,
+and refuses missing provenance rather than substituting source, context or
+condition identifiers. Perturbation-delta outcomes are scored against
+cardinality-matched mean and matched-single additive baselines. The aggregate
+Perturb-seq builder now preserves complete upstream context and experimental
+condition metadata and records when either axis is incomplete. Seven focused
+NumPy tests pass; the two PyTorch contract tests remain skipped in the local
+environment because PyTorch is absent. No model was trained, no SL benchmark
+was opened and no performance claim changes. Existing generated packs must be
+regenerated and pass the gate before they can support a new benchmark run.
 
 ## Exact label-free CV3 matrix
 
@@ -558,3 +583,47 @@ and fixes the molecular advancement rule plus the no-benchmark-selection,
 species-provenance, pinning and release constraints. All eight initial OMF
 manifests validate against the pinned 1.0 schemas. No workload or biological
 compute was allocated.
+## Public multi-study perturbation atlas v1
+
+To address the corpus limitation that blocked composition-cold selection (102
+distinct fitting pairs, four both-genes-new selection pairs, all from Norman),
+seven public GEO perturbation-expression deposits were acquired with
+checksum-pinned manifests and converted to one canonical action/mode/dose
+schema. `src/training/merge_perturbation_corpora.py` builds
+`data/perturbation-atlas/public-multi-study-v1` from the seven constituent
+packs, each with its own audit:
+
+| accession | population | modality | rows | action targets |
+| --- | --- | --- | ---: | ---: |
+| GSE220974 | K562 | CRISPRa/i singles and pairs | 256 | 22 |
+| GSE221321 | THP-1 + LPS, compressed composite | knockout/repression | 53,735 | 599 |
+| GSE337988 | DLD1 CRISPRi, six MOIs | repression | 3,056 | 35 |
+| GSE213957 | THP-1 Cas13d CaRPool | RNA knockdown | 3,122 | 28 |
+| GSE200201 | MOLM13 mSWI/SNF knockout | knockout, up to 8 actions | 761 | 28 |
+| GSE208240 | Calu-3 CRISPRi host-factor screen | repression | 370 | 183 |
+| GSE278572 | primary CD4 T-cell CRISPRi | repression | 437 | 28 |
+
+Merged over the exact 124-gene expression-feature intersection: 61,737 rows
+(27,900 single-action, 20,980 two-action, 9,857 three-plus-action), 853 unique
+action targets, eight contexts, and study-balancing weights. Each pack keeps
+source, biological context and perturbation condition as separate explicit
+fields; unreported axes (donor, activation, infection, duration) are recorded
+as unreported rather than inferred. No SL benchmark label was applied to this
+corpus, and the merge performs no cross-study normalization, projection or
+imputation.
+
+On the preregistered hard molecular gate
+(`src/training/validate_generalization.py`, five folds, seed 731) the atlas is
+eligible in every fold for pair-cold, composition-gene-cold,
+intervention-gene-cold, context-cold, source-cold and condition-cold
+protocols, but source-gene-cold is eligible in only 2 of 5 folds because the
+four smallest sources (256-761 rows) cannot satisfy the 32-row/16-action-set/
+8-gene test minimums once held out with their genes. The gate therefore fails
+closed: this corpus supports molecular training and six hard validation
+protocols, and does not yet support a source-gene-cold claim.
+
+Engineering note: the GSE278572 matrix (1.03 billion entries) is streamed in
+newline-aligned binary blocks because buffered CSV chunking over a text stream
+split lines and silently corrupted coordinates; the builder asserts coordinate
+ranges and a clean end-of-stream. Constituent packs remain untracked generated
+artifacts; the data-preparation scripts are tracked source.

@@ -25,6 +25,16 @@ modules/slp-1-1-world/          fresh species-aware query-decoder model
 workloads/                       auditable stage graphs
 evaluations/                     molecular-only advancement gates
 MODEL_CARD.md                    supported intent and limits
+
+model/v1/                       frozen SLp-1 model and checkpoint contract
+modules/{training,decoders}/    historical SLp-1 experiment code
+modules/evaluation/             historical evaluation utilities and guards
+src/training/                   historical preparation and experiment programs
+src/benchmarks/                 historical downstream benchmark programs
+docs/model-card.md              frozen SLp-1 claims and limitations
+docs/{litreview,results}.md     literature and immutable evidence ledger
+data/                           fixtures only in Git; biological data stay external
+results/                        local artifacts; only .gitkeep is committed
 ```
 
 Git holds code and versioned intent. OMF's ignored `.omf/` directory holds
@@ -134,3 +144,18 @@ acceptable workarounds.
 The canonical artifact home remains
 [`potteryrage/SLp`](https://huggingface.co/potteryrage/SLp) until an explicitly
 versioned replacement is chosen. Existing paths are never overwritten.
+
+## Historical SLp-1 reproduction boundary
+
+The legacy `src/training/run_modal.py` and
+`src/training/validate_generalization.py` paths remain available only to
+reproduce the evidence recorded for SLp-1. They are not SLp-1.1 executors or
+advancement gates. Their source-, context-, condition-, intervention- and
+composition-holdout checks remain useful audit references while equivalent
+contracts are implemented as self-contained OMF modules. Any historical run
+must preserve its original inputs and decision rule and must not update an
+SLp-1.1 candidate.
+
+## Repository policy
+
+The public repository contains only lean, relevant source and scientific documentation. Datasets, checkpoints, experiment products, caches, the local ontology, and third-party model copies remain untracked. See [AGENTS.md](AGENTS.md) before making changes.
