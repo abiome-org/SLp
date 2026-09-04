@@ -1,0 +1,60 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-corpus-audit
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+  contracts:
+    input:
+      type: object
+      properties:
+        pretrain: {type: object}
+        molecularValidation: {type: object}
+        molecularReward: {type: object}
+    output:
+      type: object
+      required:
+        - audit
+        - auditPassed
+        - leakageViolations
+        - benchmarkLabelRecords
+        - pretrainRecords
+        - validationRecords
+        - rewardRecords
+        - speciesCount
+      properties:
+        audit: {type: object}
+        auditPassed: {type: integer, minimum: 0, maximum: 1}
+        leakageViolations: {type: integer, minimum: 0}
+        benchmarkLabelRecords: {type: integer, minimum: 0}
+        pretrainRecords: {type: integer, minimum: 0}
+        validationRecords: {type: integer, minimum: 0}
+        rewardRecords: {type: integer, minimum: 0}
+        speciesCount: {type: integer, minimum: 0}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        strictInterventionIsolation: {type: boolean}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs: {}
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          audit: {schema: slp.corpus-audit/v1, validationOnly: true, auditPassed: true}
+          auditPassed: 1
+          leakageViolations: 0
+          benchmarkLabelRecords: 0
+          pretrainRecords: 0
+          validationRecords: 0
+          rewardRecords: 0
+          speciesCount: 0

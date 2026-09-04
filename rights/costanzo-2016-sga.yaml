@@ -1,0 +1,5 @@
+license: unverified
+trainingAllowed: false
+redistributionAllowed: false
+source: https://thecellmap.org/yeast/costanzo2016/
+reason: explicit dataset redistribution and model-training terms must be verified before OMF admission

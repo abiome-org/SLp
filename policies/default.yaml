@@ -1,0 +1,25 @@
+apiVersion: omf.dev/v1alpha1
+kind: Policy
+metadata:
+  name: default
+spec:
+  rules:
+    - name: allow-slp-operator
+      effect: allow
+      match:
+        actor: slp-researcher
+        resource: abiome/slp
+    - name: deny-unapproved-network
+      effect: deny
+      match:
+        action: network.egress
+        purpose: unapproved
+  config:
+    dirtyWorktree: deny
+    unsignedModules: deny
+    sync:
+      requirePlan: true
+      allowDelete: false
+    promotion:
+      requireEvaluationPass: true
+      requireCompleteLineage: true

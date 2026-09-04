@@ -1,0 +1,28 @@
+apiVersion: omf.dev/v1alpha1
+kind: EvaluationSpec
+metadata:
+  name: slp-1-1-molecular
+spec:
+  metrics:
+    - name: strict-corpus-audit
+      output: audit.auditPassed
+      minimum: 1
+    - name: held-intervention-leakage
+      output: audit.leakageViolations
+      maximum: 0
+    - name: benchmark-label-records
+      output: audit.benchmarkLabelRecords
+      maximum: 0
+    - name: validation-nll-improvement
+      output: train.validationNllImprovement
+      minimum: 0.02
+    - name: validation-effect-pearson
+      output: train.validationEffectPearson
+      minimum: 0.10
+    - name: worst-species-nll-improvement
+      output: train.minimumSpeciesNllImprovement
+      minimum: 0.0
+  extensions:
+    benchmarkAccess: forbidden
+    selectionClass: molecular-only
+    advancementRule: all metrics must pass in one frozen run

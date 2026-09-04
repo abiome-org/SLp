@@ -1,0 +1,53 @@
+schema: slp.source-plan/v1
+species:
+  name: Saccharomyces cerevisiae
+  ncbiTaxon: 4932
+identity:
+  primaryNamespace: SGD
+  symbolUse: display-only
+sources:
+  - id: sgd-reference
+    role: static-features
+    status: admitted-for-preparation
+    rights: rights/sgd-cc-by-4.0.yaml
+    modalities:
+      - reference-sequence
+      - gene-annotation
+      - phenotype-annotation
+      - regulation-annotation
+    releaseRule: pin the SGD or Alliance release and checksum every downloaded file
+  - id: biogrid-yeast
+    role: molecular-pretraining
+    status: admitted-for-preparation
+    rights: rights/biogrid-mit.yaml
+    modalities:
+      - physical-interaction
+      - genetic-interaction-annotation
+    releaseRule: use an immutable BioGRID release, never a LATEST alias in an OMF snapshot
+  - id: costanzo-2016-sga
+    role: molecular-pretraining-and-reward
+    status: rights-quarantine
+    rights: rights/costanzo-2016-sga.yaml
+    modalities:
+      - single-mutant-fitness
+      - double-mutant-fitness
+      - quantitative-genetic-interaction
+    scale:
+      doubleMutantsApproximate: 23000000
+      negativeInteractionsApproximate: 550000
+      positiveInteractionsApproximate: 350000
+    admissionRule: verify explicit training and redistribution terms for the downloadable matrix bytes
+    modelingRule: preserve allele, temperature, array type, direction, replicate uncertainty, and yeast identity
+  - id: spell-expression
+    role: molecular-pretraining
+    status: per-dataset-rights-review
+    modalities:
+      - transcriptome
+    admissionRule: each underlying study is a separate OMF snapshot with its own accession and rights
+splits:
+  unit: intervention-gene
+  rule: molecular-validation genes are absent from all quantitative pretraining and reward trajectories
+  staticFeatureOverlapAllowed: true
+transfer:
+  rule: align yeast and human through sequence, annotation, phylogeny, and versioned orthology relations
+  forbidden: do not replace yeast identifiers or outcomes with human symbols or labels

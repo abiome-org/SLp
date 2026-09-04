@@ -470,3 +470,91 @@ A second benchmark-closed test learns one 602,291-parameter gene state jointly f
 Tahoe-x1 supplies the requested public 50–100M-scale alternative: its Apache-2.0 Tx1-70M checkpoint has 70,996,993 parameters, maps 9,842 of the 9,845 fixed genes, and runs locally with 586 MB peak GPU allocation for a fixed 32-cell panel. Its proposed gene-state transfer does not pass molecular admission. The ordered static representation reaches **0.02348/0.02253**, **0.14062/0.13928** and **0.01125/0.01090** Pearson/Spearman on held-gene co-dependency, TCGA and expression-silencing relations. Contextual hidden states improve these to **0.06175/0.05817**, **0.17639/0.17298** and **0.01861/0.01832**, but still miss every all-source threshold. The lower aggregate Huber is not treated as success; the branch is rejected without double-perturbation data, SL labels or benchmark exposure.
 
 The public Tahoe-100M drug metadata offers a separate action-level alternative. Exact inhibitor/antagonist filtering and frozen action matching yield 197 drugs over 198 fixed-universe targets, compared with 36 supported drugs in the earlier projection. A checksum-registered model fits 100 drugs across 159 targets and evaluates 97 held drugs over the same 32 contexts. Held mean cosine/Spearman reach **0.10825/0.10583**; on 31 drugs whose complete target sets never occur in fitting, they fall to **0.04207/0.03500**. The public source is admitted, but the cold-target action claim is rejected. No gene atlas, reinforcement stage or SL score is emitted.
+
+## 2026-09-03 — SLp-1.1 OpenModelFactory reset
+
+**Hypothesis.** A species-aware query-decoder trained on separately versioned
+human and yeast molecular trajectories will predict perturbation-specific
+effects for intervention genes absent from every fitting and reward trajectory
+better than both a training-set mean and fixed ridge baseline. The fixed first advancement rule is
+zero leakage and benchmark-label records, at least 2% validation Gaussian-NLL
+improvement, at least 0.10 effect Pearson correlation, and non-negative NLL
+improvement in every represented species.
+
+**SLp-1 audit.** The proof-of-concept established several boundaries worth
+retaining: a data-free frozen model package, explicit benchmark-opening guards,
+quantitative rather than binary molecular targets, intervention-gene exclusion,
+and a record that preserves rejected results. It also exposed structural limits
+that are not carried forward. `model/v1/world.py` assumes one fixed 1,816-wide
+feature layout and six hard-coded relation slices. `modules/training/world.py`
+is a 181,395-byte experiment accumulation containing more than 70 fitting and
+evaluation paths. `src/training/run_modal.py` binds dozens of local artifacts,
+model choices and benchmark evaluators into one 59,636-byte deployment script.
+The architecture emits one small fixed latent state rather than answering
+versioned sparse molecular queries. The historical yeast path first collapses
+Costanzo SGA through strict one-to-one human orthology; its reciprocal mapped
+measurements reached 0.34348 Pearson but only 0.16861 Spearman, failed its
+registered source criterion, and was never fitted. These facts reject using
+SLp-1 as the scaffold for a larger corpus.
+
+**Factory protocol.** The project was mapped to OpenModelFactory 1.0 source
+commit `ef26eea2cb694596f7680a4bce400371738cbb4b`. New versioned resources define
+the project, Linux-local binding, admission policy, molecular evaluation, and
+pretraining graph. A new corpus schema requires stable CURIE identifiers,
+explicit NCBI taxonomy IDs, roles, modalities, intervention-gene inventories,
+record counts and SHA-256 shard identities. Pretraining, molecular validation
+and molecular reward are three independent OMF snapshots. The first stage
+verifies every shard and rejects benchmark-bearing data or any validation
+intervention gene found in pretraining or reward.
+
+**Fresh model contract.** `modules/slp-1-1-world` contains a new PyTorch model,
+not a modification of `model/v1`. It encodes variable-size context and action
+sets without positional information and decodes sparse readout queries. Every
+entity is supplied through versioned molecular features; there is no learned
+gene-ID embedding or fixed gene universe. Species is an explicit continuous
+feature block. Yeast remains species-native and may align to human through
+separate sequence or orthology evidence, never by relabeling a yeast phenotype
+as a human outcome. Maximum-likelihood pretraining and a molecular-only
+self-critical continuation stream bounded shards; every reinforcement epoch is
+discarded unless held-gene NLL improves without worsening the worst species.
+
+**Validation.** The three focused corpus-audit tests pass, including positive
+two-species isolation, exact held-gene leakage rejection, and digest-drift
+failure. The two architecture tests pass, including context/action permutation
+invariance and absence of gene-named parameters. A one-epoch, two-species CPU
+trainer smoke test produces finite held-molecular evidence. Eight initial OMF resources
+validate against the exact 1.0 schema, the pretraining workload passes semantic
+graph projection, and both module contracts and dependency digests validate.
+The fixture audit reports zero leakage, zero benchmark records and NCBI taxa
+4932 and 9606. No biological dataset, GPU training, checkpoint selection, or SL
+benchmark was opened.
+
+**Decision and limits.** The repository advances to the SLp-1.1 factory and
+architecture-contract phase; it does not advance a biological model. The
+Costanzo rights document remains quarantined with `trainingAllowed: false`
+until explicit training and redistribution terms are verified. The world
+module currently relies on an operator-provided PyTorch/NumPy runtime and is
+not release-eligible until its dependency lock is hash-pinned. OMF 1.0 supports
+local execution only on Linux x86-64 and passes JSON protocol state, but not a
+materialized large checkpoint artifact, to its independently captured
+inference adapter. Portable SLp release promotion is therefore closed until an
+upstream artifact-to-adapter contract is implemented and tested; absolute run
+paths and weights serialized into metadata are explicitly rejected.
+Only the Linux-local executor is bound. Historical Modal launch code is not an
+OMF executor integration, so large remote training is also closed until a
+provider implements and passes the `omf.executor/v1` transport, cancellation,
+recovery and scale checks.
+
+**Factory runtime verification.** The reset was bootstrapped on Ubuntu 24.04
+under Python 3.12 from the pinned OpenModelFactory source revision. The
+bootstrap plan contained only untracked `.omf/` runtime state. `omf doctor`
+passed all eight checks, including Git, policy, signing identity, database and
+artifact-store integrity. Bounded agent context reported zero datasets, runs,
+deployments or blockers, and capability discovery exposed only the built-in
+local POSIX executor; no remote executor was inferred. The active signed OMF
+goal `slp-1-1-frontier` has revision
+`sha256:12fd72391c72993761245698f64da2db9ff15c3495055822ff41d89f50efa338`
+and fixes the molecular advancement rule plus the no-benchmark-selection,
+species-provenance, pinning and release constraints. All eight initial OMF
+manifests validate against the pinned 1.0 schemas. No workload or biological
+compute was allocated.

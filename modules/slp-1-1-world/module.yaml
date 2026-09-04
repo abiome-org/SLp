@@ -1,0 +1,79 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-world
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+  checkpoint: true
+  contracts:
+    input:
+      type: object
+      properties:
+        pretrain: {type: object}
+        molecularValidation: {type: object}
+        molecularReward: {type: object}
+        corpusAudit: {type: object}
+    output:
+      type: object
+      required:
+        - modelState
+        - checkpointSha256
+        - validationNll
+        - validationBaselineNll
+        - validationNllImprovement
+        - validationEffectPearson
+        - minimumSpeciesNllImprovement
+        - rlRetained
+        - parameterCount
+      properties:
+        modelState: {type: object}
+        checkpointSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        validationNll: {type: number}
+        validationBaselineNll: {type: number}
+        validationNllImprovement: {type: number}
+        validationEffectPearson: {type: number, minimum: -1, maximum: 1}
+        minimumSpeciesNllImprovement: {type: number}
+        rlRetained: {type: integer, minimum: 0, maximum: 1}
+        parameterCount: {type: integer, minimum: 0}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        seed: {type: integer}
+        epochs: {type: integer, minimum: 1}
+        reinforcementEpochs: {type: integer, minimum: 0}
+        batchSize: {type: integer, minimum: 1}
+        learningRate: {type: number, exclusiveMinimum: 0}
+        reinforcementLearningRate: {type: number, exclusiveMinimum: 0}
+        reinforcementAnchorWeight: {type: number, minimum: 0}
+        dModel: {type: integer, minimum: 8}
+        nhead: {type: integer, minimum: 1}
+        encoderLayers: {type: integer, minimum: 1}
+        decoderLayers: {type: integer, minimum: 1}
+        ffnMultiplier: {type: integer, minimum: 1}
+        dropout: {type: number, minimum: 0, maximum: 0.5}
+      additionalProperties: false
+    state:
+      type: object
+  fixtures:
+    - request:
+        operation: validate
+        inputs: {}
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          modelState: {schema: slp.world/v1.1, validationOnly: true}
+          checkpointSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          validationNll: 0.0
+          validationBaselineNll: 0.0
+          validationNllImprovement: 0.0
+          validationEffectPearson: 0.0
+          minimumSpeciesNllImprovement: 0.0
+          rlRetained: 0
+          parameterCount: 0

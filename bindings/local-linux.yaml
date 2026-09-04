@@ -1,0 +1,10 @@
+apiVersion: omf.dev/v1alpha1
+kind: Binding
+metadata:
+  name: local-linux
+spec:
+  executor: local
+  resources:
+    timeoutSeconds: 3600
+    processes: 16
+    fileSizeBytes: 107374182400

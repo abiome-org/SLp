@@ -1,0 +1,21 @@
+{
+  "schema": "slp.corpus/v1",
+  "datasetId": "slp11-synthetic-validation",
+  "version": "fixture-v1",
+  "role": "molecular-validation",
+  "labelClass": "molecular",
+  "benchmarkLabelsPresent": false,
+  "speciesTaxa": [4932, 9606],
+  "modalities": ["synthetic-fixture"],
+  "trajectoryGenes": "trajectory-genes.txt",
+  "entityFeatureDim": 8,
+  "speciesFeatureDim": 2,
+  "readoutTypes": ["synthetic-effect"],
+  "shards": [
+    {
+      "path": "shard-000.jsonl",
+      "sha256": "62fbde9045294a81e66432911bc4f007b23a2887f8071f7ddda169b03393df97",
+      "records": 1
+    }
+  ]
+}

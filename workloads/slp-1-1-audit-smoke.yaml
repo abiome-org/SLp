@@ -1,0 +1,26 @@
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-audit-smoke
+spec:
+  graph:
+    stages:
+      - name: audit
+        module: modules/slp-1-1-corpus-audit/module.yaml
+        operation: run
+        inputs:
+          pretrain: dataset/slp-1-1-fixture-pretrain
+          molecularValidation: dataset/slp-1-1-fixture-validation
+          molecularReward: dataset/slp-1-1-fixture-reward
+        config:
+          strictInterventionIsolation: true
+        outputs:
+          - audit
+          - auditPassed
+          - leakageViolations
+          - benchmarkLabelRecords
+          - pretrainRecords
+          - validationRecords
+          - rewardRecords
+          - speciesCount
+          - auditReport

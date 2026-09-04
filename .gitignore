@@ -1,8 +1,11 @@
-/data/
+/data/*
+!/data/fixtures/
+!/data/fixtures/**
 /ontology/
 /results/*
 !/results/.gitkeep
 /.cursor/
+/.omf/
 
 .venv/
 .wandb/

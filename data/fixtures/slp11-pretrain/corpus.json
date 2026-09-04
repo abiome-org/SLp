@@ -1,0 +1,21 @@
+{
+  "schema": "slp.corpus/v1",
+  "datasetId": "slp11-synthetic-pretrain",
+  "version": "fixture-v1",
+  "role": "pretrain",
+  "labelClass": "molecular",
+  "benchmarkLabelsPresent": false,
+  "speciesTaxa": [4932, 9606],
+  "modalities": ["synthetic-fixture"],
+  "trajectoryGenes": "trajectory-genes.txt",
+  "entityFeatureDim": 8,
+  "speciesFeatureDim": 2,
+  "readoutTypes": ["synthetic-effect"],
+  "shards": [
+    {
+      "path": "shard-000.jsonl",
+      "sha256": "16e61a2371bf9aa219c956291759c55d35591d44b4b016d54bdc81ffa1e67185",
+      "records": 1
+    }
+  ]
+}

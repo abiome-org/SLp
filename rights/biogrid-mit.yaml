@@ -1,0 +1,7 @@
+license: MIT
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://downloads.thebiogrid.org/
+evidence: https://downloads.thebiogrid.org/BioGRID-ORCS/
+scope: data distributed from the BioGRID download repository; preserve upstream citations

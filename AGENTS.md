@@ -1,87 +1,141 @@
-# Agent instructions
+# Operating the SLp Open Model Factory
 
 ## Objective
 
-Advance state of the art in cold-start synthetic-lethality prediction, especially the two-new-gene setting, while keeping every claim reproducible and scientifically narrow. The central question is whether intervention-conditioned cellular-state modeling transfers to unseen genes; benchmark-supervised prediction is a separate secondary track.
+Build a perpetual, reproducible factory for species-aware genomics world
+models. The primary scientific question is whether intervention-conditioned
+molecular-state modeling transfers to unseen intervention genes and contexts.
+Synthetic-lethality prediction is a downstream stress test, not the world
+model's training target or identity.
 
-## Scientific rules
+SLp-1 is frozen proof-of-concept evidence. Do not treat its architecture,
+9,845-gene universe, feature concatenation, decoder family, data mixtures,
+thresholds, or benchmark results as defaults for SLp-1.1.
 
-- Prevent leakage before optimizing performance. For intervention-isolated experiments, remove every quantitative trajectory involving any validation or test gene, not only exact test pairs.
-- Never use benchmark test labels for architecture choice, feature choice, target choice, sign selection, calibration, early stopping, or hyperparameter tuning.
-- Select the world model and label-free readouts on fixed molecular validation objectives. Open a locked external benchmark only after the candidate and decision rule are frozen.
-- Keep label-free transition scores, quantitative-decoder scores, and fold-local supervised readouts separate in code and reporting.
-- Compare against simple degree, feature, and published baselines on the identical split. Report all folds and seeds, not only their mean.
-- Treat retrospective evidence as retrospective. A state-of-the-art claim requires a locked protocol and untouched or prospective confirmation.
-- Pin or checksum raw inputs, split files, feature packs, and checkpoints. Record exclusions and accessible feature modalities for every result.
+## Begin every substantial run
 
-## Training workflow
+1. Read root `MODEL_CARD.md` and the latest section of `docs/results.md`.
+2. Inspect bounded OMF state with `omf doctor`, `omf agent context`, and
+   `omf agent capabilities` on a supported Linux host.
+3. State one falsifiable hypothesis, one fixed advancement rule, the accessible
+   modalities, and the exact data snapshots before allocating compute.
+4. Prefer the smallest run that can reject the hypothesis.
 
-1. Read `docs/model-card.md` and the latest section of `docs/results.md` before proposing an experiment.
-2. State one falsifiable hypothesis and a fixed advancement criterion. Prefer the smallest experiment that can reject it.
-3. Prepare data with scripts in `src/training/`; write generated arrays and audit JSON to `results/`, never into source or documentation directories.
-4. Train through `src/training/run_modal.py` or a focused local entry point. The retained compact configuration is `d=384`, `latent=128`, `layers=6`, with 12 pretraining, 10 perturbation, and 3 reinforcement epochs where applicable.
-5. Evaluate molecular validation first. Advance to MuSL, SLAMR, Sanger, HAP1, or Feng only when the prespecified criterion passes.
-6. Append the hypothesis, protocol, hashes, compute, fold-level metrics, interpretation, and decision to `docs/results.md`. Update the model card only when the supported model or claim changes.
+Git holds code and versioned configuration. OMF artifact stores hold datasets,
+checkpoints, model payloads, and releases. `.omf/` is untracked runtime state;
+never edit or commit it.
 
-For the retained intervention-isolated training path:
+## Scientific boundaries
 
-```bash
-python src/training/sl_predict.py prepare_spectral_safe
-python src/training/sl_predict.py benchmarks
-modal run src/training/run_modal.py --spectral-safe-intervention \
-  --pretrain-epochs 12 --perturb-epochs 10 --rl-epochs 3
-```
+- Prevent leakage before optimizing performance. For intervention-isolated
+  claims, exclude every quantitative trajectory involving a validation or test
+  intervention gene, not only exact pairs.
+- Keep pretraining, molecular validation, molecular reward, molecular final
+  holdout, and benchmark data in separate OMF `DatasetSnapshot` resources with
+  separate rights and access boundaries.
+- Never use benchmark test labels for architecture, feature, target, sign,
+  calibration, checkpoint, early-stopping, or hyperparameter choices.
+- Select the world model and label-free readouts only on fixed molecular
+  objectives. Open an external benchmark after the candidate and decision rule
+  are frozen.
+- Keep world-state predictions, quantitative molecular decoders, label-free
+  application scores, and fold-local supervised readouts in separate modules
+  and reports.
+- Compare against mean, additive, linear, degree, feature, and published
+  baselines on identical splits. Report every fold, seed, source and species,
+  not only averages.
+- Treat retrospective evidence as retrospective. A state-of-the-art claim
+  requires a locked protocol and untouched or prospective confirmation.
+- Pin or checksum raw inputs, splits, feature packs, modules, runtimes, and
+  checkpoints. Record exclusions, populations, endpoints, normalization, and
+  accessible feature modalities.
+- Remove systematic average perturbation effects in evaluation and measure the
+  perturbation-specific landscape; ordinary control-referenced correlation is
+  insufficient evidence.
 
-Run `modal run src/training/run_modal.py --help` before changing flags. Do not silently substitute data versions, split seeds, or benchmark semantics.
+## Species-aware data policy
+
+- Preserve stable source identifiers and NCBI taxonomy IDs. Never merge genes
+  across species by display symbol.
+- Keep yeast measurements species-native. Orthology and sequence similarity
+  are auxiliary relations, not permission to relabel a yeast phenotype as a
+  human outcome.
+- A cross-species claim needs within-species held-gene results and a separately
+  defined transfer test. Aggregate gains cannot conceal regression in one
+  species.
+- Static sequence, protein, annotation, and phylogeny features may cover held
+  genes. Quantitative intervention outcomes for held genes may not enter
+  fitting or reward.
+- Every imported dataset needs verified training rights. Redistribution rights
+  are separate. A rights file with `trainingAllowed: false` is a deliberate
+  quarantine, not an invitation to bypass admission.
+
+## OMF work loop
+
+1. Add or verify rights-bearing data snapshots with `omf data add` and
+   `omf data verify`.
+2. Put executable behavior in a self-contained `modules/<name>/` directory,
+   semantic stage graphs in `workloads/`, metrics in `evaluations/`, physical
+   placement in `bindings/`, and authorization in `policies/`.
+3. Validate the module, workload, evaluation, executor preflight, and clean Git
+   state before a run. Never fall back silently to another executor.
+4. Run the corpus audit before training. A failed audit ends the run.
+5. Inspect terminal run state, outputs, lineage, immutable evaluation results,
+   and the pinned baseline before making another change.
+6. Append the hypothesis, protocol, resource revisions, hashes, compute,
+   source/species metrics, interpretation, and decision to `docs/results.md`.
+   Update `MODEL_CARD.md` only when supported intent or claims change.
+7. Correct OMF knowledge with a superseding immutable assertion; do not rewrite
+   prior evidence.
 
 ## Engineering rules
 
-- Treat `model/vN/` as immutable model code. It must remain data-free: no
-  dataset paths, split logic, benchmark imports, fitting loops, or application
-  scores. A numerical behavior change creates `model/v(N+1)` with a new model
-  card and checkpoint manifest.
-- Keep assay-specific fitness, SL, and drug-response heads in `modules/decoders/`.
-  Training and evaluation code may consume a model checkpoint but must not
-  alter the model package.
-- Training commands must not open a benchmark by default. Benchmark evaluation
-  is a distinct, explicit operation after model and decoder selection lock.
-- Keep the repository extremely lean. Prefer editing an existing function over adding a framework, abstraction layer, configuration system, or duplicate runner.
-- Put reusable training workflows in `modules/training/`; keep command adapters
-  and data preparation in `src/training/`; put only evaluation logic in
-  `src/benchmarks/`.
+- OMF module source must be self-contained because admission packages only the
+  module code root. Do not depend on repository-relative imports outside it.
+- New numerical behavior creates a new versioned module or immutable module
+  revision. `model/v1/` remains frozen historical code.
+- The world module must remain application-neutral: no benchmark names, split
+  loading, SL scoring, benchmark fitting, or application thresholds.
+- A training workload must not reference benchmark snapshots. Benchmark
+  evaluation is a separate explicit workload after lock.
+- Gene identity is data provenance, not a learnable shortcut. New world models
+  may not require a learned ID embedding or fixed gene vocabulary.
+- Keep the repository lean. Prefer bounded, shard-streaming formats and focused
+  modules over monolithic runners, accumulating flags, or copied frameworks.
+- Preserve deterministic seeds and add focused checks whenever split,
+  exclusion, normalization, rights, or benchmark logic changes.
+- Do not commit real data, results, checkpoints, weights, caches, credentials,
+  `.omf/`, or `ontology/`. Tiny synthetic contract fixtures are allowed only
+  under `data/fixtures/`.
 - Keep `docs/` limited to `litreview.md`, `model-card.md`, and `results.md`.
-- Never commit `data/`, `results/` artifacts, model weights, caches, vendored repositories, credentials, or `ontology/`. The ontology is local research infrastructure, not part of the public codebase.
-- Preserve deterministic seeds and leakage assertions. Add a focused check when changing split, exclusion, or benchmark logic.
-- Write like a scientist: name the dataset, population, endpoint, uncertainty, and limitation. Avoid internal process jargon.
-- Do not refactor unrelated code during an experiment.
+- Write like a scientist: name dataset, organism, population, endpoint,
+  uncertainty, and limitation. Avoid claims implied only by scale.
 
-## Artifact publishing
+## Release rules
 
-- The canonical public artifact repository is
-  `https://huggingface.co/potteryrage/SLp` (`potteryrage/SLp`, model repo).
-  Keep Git source-only; publish cleaned data products and released model or
-  decoder weights to the Hub without copying them into tracked directories.
-- Use immutable paths: `checkpoints/vN/RELEASE/`, `decoders/vN/RELEASE/`, and
-  `data/CORPUS/VERSION/`. Never overwrite an existing release; publish a new
-  version when bytes, preprocessing, splits, exclusions, or model behavior
-  change.
-- Before uploading data, verify that each upstream license permits
-  redistribution. Exclude restricted raw records, private data, credentials,
-  and third-party weights without redistribution rights. Derived or cleaned
-  does not automatically mean redistributable.
-- A data release must include an audit describing sources, licenses,
-  transformations, schema, population, endpoints, split construction,
-  leakage exclusions, and SHA-256 checksums. A checkpoint release must include
-  its generated manifest, model version, training-data release IDs, decoder
-  separation, and the supporting model-card/result commit.
-- Use the authenticated `hf` CLI. Never place a Hugging Face token in a
-  command, script, log, manifest, or tracked file. Review the exact local and
-  destination paths before each upload.
+- Promotion requires passing molecular evaluation, compatibility evidence,
+  complete lineage, current rights, vulnerability evidence, signatures,
+  policy approval, and an independent approver. Never fabricate or self-approve
+  evidence.
+- Use immutable artifact paths and never overwrite a release.
+- Review exact local and destination paths before upload. Never put a token in
+  a command, manifest, log, or tracked file.
+- OMF 1.0 does not materialize a large model artifact into its inference
+  adapter. Until a tested upstream contract closes that gap, training evidence
+  may be retained but no SLp-1.1 model may be promoted as portable or
+  deployable. Do not use absolute run paths or metadata-embedded weights.
 
 ## Compute
 
-Local compute is one RTX 4070. Run a local job without asking only when it should finish within one hour. For longer work, use available remote compute within the assigned allowance or ask the user before starting. Stop failed or scientifically invalid runs promptly; do not spend compute to complete an experiment whose advancement criterion can no longer pass.
+Local compute is one RTX 4070. Run locally without asking only when the job
+should finish within one hour. For longer work, use an admitted remote executor
+within the assigned allowance or ask first. Stop scientifically invalid runs
+as soon as the fixed advancement rule cannot pass.
 
-## Completion standard
+## Completion
 
-A change is complete when the relevant preparation or evaluation command runs, leakage constraints are checked, outputs are reproducible from recorded inputs, and `docs/results.md` states what changed and what the evidence does and does not support. Code-only changes should include the narrowest practical syntax or smoke check.
+A change is complete only when its OMF resources and module contracts validate,
+focused tests pass, leakage constraints are checked, outputs are reproducible
+from pinned inputs, and `docs/results.md` states what the evidence does and does
+not support. Code-only changes need the narrowest practical syntax and smoke
+checks.
