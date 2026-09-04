@@ -1853,3 +1853,138 @@ composite joins before biological training. The external synthetic-lethality
 benchmark remained closed. No model was trained, no checkpoint or molecular
 metric was produced, and this evidence supports no transfer, performance,
 novelty, frontier, release, or SOTA claim.
+
+## 2026-09-04 — deterministic sequence-statistics feature baseline
+
+**Hypothesis, fixed rule, modalities, and snapshots.** The falsifiable static-
+feature hypothesis was that the exact admitted SGD R64.5.1 protein sequences
+and relation-closed yeast entity universe could produce a deterministic,
+complete numerical baseline without consuming quantitative outcomes, held
+assignments, or benchmark data. Advancement required two clean executions to
+emit byte-identical payloads with exactly 7,037 composite-keyed rows, 21 present
+values per row, zero missing or ambiguous entities, explicit accounting for
+all 109 non-current sequence records, and exact peptide consensus for all five
+proteins with two current-ORF relations. Any source, relation, identifier,
+feature-definition, member, row-order, dtype, shape, mask, provenance, or
+excluded-record drift had to fail closed.
+
+The feature definition was fixed before execution as peptide length divided by
+4096 followed by amino-acid fractions in `ACDEFGHIKLMNPQRSTVWY` order. Values
+are IEEE-754 little-endian float32 in C row-major order. There is no fitting,
+clipping, learned or numerical identifier feature, post hoc normalization, or
+trainable parameter. The only biological modality is static *Saccharomyces
+cerevisiae* sequence for NCBI taxonomy 4932 and S288C strain taxonomy 559292.
+The exact DatasetSnapshot inputs were:
+
+- sequence source
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-sgd-protein-sequences-r64-5-1@sha256:3b76017f5ac74d8d96efb1db52d14af91c9fb15995062110558ce4651cf3ba0c`,
+  outer manifest
+  `sha256:8f88480196b5cd8f3c15d65dbdbc09f83305c371fb476c70a38825dad2be4283`,
+  tree
+  `sha256:823a18ed8039ee44ee44b860551fea749b9012c941e6b9cd5163938da19b168a`;
+- static entity universe
+  `omf://abiome/slp/datasetsnapshot/slp-1-1-static-entity-universe-v1@sha256:de3efddf5a9e4f66496a1edda14b04de774e972bc7b9efd30964644de2a56cac`,
+  outer manifest
+  `sha256:a65f94081c0b60a8b486ed968b58fc4d021ba3ea7f5f11425d3a1635cbb10684`,
+  tree
+  `sha256:7ec354f427cfd8a2fcc3de1004c7e4ac77402a78b5cc0a0b5ef89ba24656fd3f`.
+
+The two additional immutable inputs were the 6,613-row current-ORF artifact
+`artifact:sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192`
+(2,135,394-byte payload,
+`df7b717cad88dc3672f72f8148f6a9132d12abe6ba020b220b091a8da8f7004d`)
+and mapping-manifest artifact
+`artifact:sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c`
+(3,818-byte payload,
+`570557ab1201913a18de9790f8adc5ee2e3cb56c6bb0e8d588fe43660c0214e1`).
+The mapping identity remained
+`slp-sgd-map:2026-08-28-object-set-v1`, digest
+`6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a`.
+No quantitative outcome, held roster, partition assignment, reward, model,
+checkpoint, prediction, or benchmark input was available to the module.
+
+**Implemented contract and review.** Commit
+`6887f28b25ae47d6a46e8faf3e7c82cc4f584c65` added the self-contained
+`slp-1-1-sequence-statistics-feature-block-v1` module, strict nested artifact
+schemas, workload, entry-point tests, and adversarial contract tests. It parses
+the structural SGD header fields rather than using description prose as a
+feature or class signal. Every gene row uses its own current-ORF peptide. Every
+protein row uses its typed current-ORF relation; the five one-to-many relations
+are accepted only when all related peptides are identical, never by choosing a
+first target. The validator independently reconstructs the canonical USTAR
+archive, semantic provenance, excluded-record set, `.npy` headers and payloads,
+row ordering, exact `(4932, entityId)` key set, all-present mask, feature values,
+and declared counts. The resulting block contains 5,187 gene rows and 1,850
+protein rows, with 147,777 present values, zero missing entities, zero ambiguous
+entities, 1,426 current ORFs outside the relation-closed universe, and 109
+excluded non-current sequences. Its entity-key digest is
+`82b8e2885939577fe6946e3b974a10cb947834118f2070e1bcbe4c2f2e6a5fd9`.
+
+**OMF execution and reproducibility.** OMF module validation produced package
+digest
+`sha256:b2793ed5250222bc095365bc7e642a1a84d31f45abc590ebb122bedda6d59bc9`
+and source-artifact manifest
+`sha256:d04e02041286f9085eb7e2916910e9ab1497363fa8242982df0e7e3ee2e29a89`.
+The admitted workload and workload-resource manifest digests were respectively
+`sha256:a248766c727f6a380f9208eb4923bc6545f583ffb3495cd1f5ac66ffebdcb0e9`
+and
+`sha256:9cedcb7754a924b96083475d01ae4f6e8395c6e80d57bd75bd58d82d4225fa5e`.
+An initial submission as actor `local-user` was denied by the existing factory
+policy and created no run. The policy-compliant executions
+`01a06df0-2427-7737-9321-1615583dedd8` and
+`01a06df0-6255-7e42-bf6d-e87425e8a19c` then succeeded. Their immutable
+RunResults are respectively
+`omf://abiome/slp/runresult/result-01a06df0-2427-7737-9321-1615583dedd8@sha256:72a9b2509069c05ed8aae82734fc31402f02229a64d8b39cd2f7afd06496a53b`
+and
+`omf://abiome/slp/runresult/result-01a06df0-6255-7e42-bf6d-e87425e8a19c@sha256:bf66d15da02370b2bfb0b1989cfd473876b2c55f482a7c9ed272c96886084eb2`.
+
+Both runs emitted an identical 4,392,960-byte archive with SHA-256
+`1b0aaec738b10ad3baa082d907d0c962c35c9b159b89fffca893fa1ecf5a7bed`
+and identical 7,851-byte audit with SHA-256
+`5d3a9fba29e9c31979fbda5a07951f244b66b35cf6c45de53c27fd231586a5e7`.
+The archive members were exactly:
+
+- `entities.jsonl`: 727,401 bytes,
+  `e487f428c6eb1eb58de0d3e8ca74f016841713c3014cc55370048eb3e8304572`;
+- `excluded-non-current.jsonl`: 42,781 bytes,
+  `aeb6be983ff828c517aaed9def31d9401a111b312e344e8349678eae75e7972f`;
+- `manifest.json`: 7,139 bytes,
+  `5cfd73bb2c55ca0bfc381b6d9e883fcc7d4ab793ee9dfc94ef5f3f02cab5ff65`;
+- `present.npy`: 147,905 bytes,
+  `c6a282c63fc45d94a4dd932c4b064d345b02939e4e40c84dd4b70d871dc96716`;
+- `sequence-provenance.jsonl`: 2,869,698 bytes,
+  `5955ae6f8503b87370bf5116fdae8699ced9c4e3a0a378fd3843baaa7c2965fe`;
+- `values.npy`: 591,236 bytes,
+  `3f1bd1c02d56fb6b9ab100d95fb567a931fed39f6d8b6352a6389a8cae301f05`.
+
+The semantic feature-definition digest was
+`2e2152471d3cb487775159d91ff5073c8b19997b62a5a09f94be637efeb75620`.
+Run-specific OMF artifact manifests correctly differ because they bind
+different lineage: archive manifests
+`sha256:8d7eba8e435ad4ff5a020bec68d452969b923b0722cd13227ed058f05236d878`
+and
+`sha256:d6f76d8c09cd68c9e461a249e64f25db14a9d97d9f52588b2f20a4b9bca0e30c`,
+and audit manifests
+`sha256:559129602ac30a4903a0823665941e583e8dbd79bc61402d3318a565c607ac52`
+and
+`sha256:1001f228cffa5da235ca079af845722b5f450aef2fe32d898b518867ecd54809`.
+Both used CPython 3.12.3, environment digest
+`sha256:2857f0de3e6a95a520da1d0b3ba81b0974bac0a1f8c88a6d048320edff836169`,
+and the empty dependency-lock digest
+`sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+The repository suite passed 223 tests with 9 skipped, and six Linux schema
+tests passed.
+
+**Evidence boundary and next step.** Admission of this derived feature block as
+an OMF DatasetSnapshot is pending. No knowledge assertion has been added for
+it. The immutable run evidence establishes deterministic construction and
+static identity/sequence provenance only. The 21 hand-designed statistics are
+an intentionally weak baseline, not a learned protein representation, and
+static coverage of held genes does not authorize any held quantitative outcome
+for fitting or reward. The block has only yeast sequence, no human feature
+coverage, domain structure, protein-language-model representation, annotation,
+phylogeny, context, or experimental measurement. It has not yet been composed
+into corpus v1.2 or consumed by a world-model workload. No model was trained,
+no checkpoint or molecular metric was produced, the external synthetic-
+lethality benchmark remained closed, and this milestone supports no transfer,
+performance, novelty, frontier, release, or SOTA claim.
