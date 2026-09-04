@@ -118,6 +118,7 @@ def _write_audit(
         }
     audit = {
         "schema": AUDIT_SCHEMA,
+        "rewardEnabled": False,
         "auditPassed": True,
         "strictInterventionIsolation": True,
         "leakageViolations": 0,
@@ -126,7 +127,6 @@ def _write_audit(
         "omfPriorAdmissionRequired": True,
         "datasets": {
             "pretrain": pretrain_identity,
-            "molecularReward": held_identity("reward", "molecular-reward", "5", []),
             "molecularValidation": held_identity(
                 "validation", "molecular-validation", "6", validation
             ),
@@ -303,7 +303,7 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
                     expected_corpus_audit_manifest_digest="sha256:" + "f" * 64,
                 )
 
-    def test_matches_actual_corpus_audit_v11_roles_and_schema(self) -> None:
+    def test_matches_actual_corpus_audit_v12_roles_and_schema(self) -> None:
         module_name = "slp11_corpus_audit_contract_integration"
         spec = importlib.util.spec_from_file_location(module_name, AUDIT_MODULE / "audit.py")
         assert spec is not None and spec.loader is not None
@@ -312,6 +312,7 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             spec.loader.exec_module(producer)
         schema = json.loads((AUDIT_MODULE / "corpus-audit.schema.json").read_text())
         self.assertEqual(producer.AUDIT_SCHEMA, AUDIT_SCHEMA)
+        self.assertEqual(schema["properties"]["rewardEnabled"], {"const": False})
         self.assertEqual(producer.EXPECTED_ROLES, AUDIT_DATASET_ROLES)
         self.assertEqual(
             set(schema["properties"]["datasets"]["required"]),
@@ -334,6 +335,40 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
         held_properties = schema["$defs"]["heldRosterIdentity"]["properties"]
         self.assertEqual(held_properties["validationGeneCount"]["minimum"], 1)
         self.assertEqual(held_properties["finalGeneCount"]["minimum"], 1)
+
+    def test_reward_disabled_audit_contract_is_fail_closed(self) -> None:
+        mutations = (
+            (lambda document: document.__setitem__("schema", "slp.corpus-audit/v1.1"),
+             "zero-leakage"),
+            (lambda document: document.pop("rewardEnabled"), "exact admitted"),
+            (lambda document: document.__setitem__("rewardEnabled", True), "zero-leakage"),
+            (lambda document: document.__setitem__("leakageViolations", False), "zero-leakage"),
+            (lambda document: document.__setitem__("benchmarkLabelRecords", False), "zero-leakage"),
+            (
+                lambda document: document["datasets"].__setitem__(
+                    "molecularReward", dict(document["datasets"]["pretrain"])
+                ),
+                "exactly three",
+            ),
+        )
+        for mutate, message in mutations:
+            with self.subTest(message=message), tempfile.TemporaryDirectory() as temporary:
+                case = _case(Path(temporary))
+                pretrain, query, pretrain_input, query_input, audit_input, roster_input, _ = case
+                audit_path = Path(audit_input["path"])
+                document = json.loads(audit_path.read_text())
+                mutate(document)
+                audit_path.write_bytes(canonical_json_bytes(document, newline=True))
+                with self.assertRaisesRegex(ValueError, message):
+                    validate_admitted_training_evidence(
+                        pretrain,
+                        query,
+                        pretrain_input,
+                        query_input,
+                        audit_input,
+                        roster_input,
+                        expected_corpus_audit_manifest_digest=AUDIT_MANIFEST_DIGEST,
+                    )
 
     def test_checkpoint_is_invariant_to_protected_truth_content_fingerprints(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -27,15 +27,17 @@ Both DatasetSnapshot inputs must have OMF's exact copied input shape, immutable
 resource revisions, and outer manifest digests. Materialized paths must be
 non-symlink directories shaped as
 `.../inputs/<input-name>/<resource-name>`. The module also requires an exact OMF
-artifact for a previously admitted `slp.corpus-audit/v1.1` and a copied,
+artifact for a previously admitted, reward-disabled
+`slp.corpus-audit/v1.2` and a copied,
 revision-pinned DatasetSnapshot for the global held-intervention roster. Bare
 JSON or an unbound filesystem path is not accepted. The frozen run config must
 also name the exact admitted corpus-audit artifact-manifest digest; a different
 materialization fails before training.
 
-The admitted audit binds pretrain, molecular reward, molecular validation, and
-molecular final corpus identities plus the roster provenance and population
-hashes. The trainer independently verifies its pretrain identity, recomputes
+The admitted audit explicitly records `rewardEnabled: false` and binds
+pretraining, molecular validation, and molecular final corpus identities plus
+the roster provenance and population hashes. A reward snapshot, placeholder,
+or identity is forbidden. The trainer independently verifies its pretrain identity, recomputes
 the frozen roster assignment role from each identifier digest, checks the
 validation/final corpus populations against roster hashes, requires the query
 intervention domain to equal the complete nonempty validation roster, and

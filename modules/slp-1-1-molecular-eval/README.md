@@ -7,7 +7,7 @@ synthetic-lethality labels and its output is diagnostic evidence, not the
 
 The evaluator consumes five distinct, copied, revision-pinned OMF
 `DatasetSnapshot` inputs: fitting-only centering, evaluator-only held truth,
-the target-free query, a passing `slp.corpus-audit/v1.1`, and the outcome-blind
+the target-free query, a passing reward-disabled `slp.corpus-audit/v1.2`, and the outcome-blind
 held roster. Predictions and the exact model checkpoint are separate immutable
 artifacts. File-valued artifacts use OMF's `.../payload/payload` materialization
 semantics; the checkpoint bytes are hashed and must equal the prediction

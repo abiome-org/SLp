@@ -1,4 +1,4 @@
-# Contract-only smoke graph. Replace these dataset aliases only after the four
+# Contract-only smoke graph. Replace these dataset aliases only after the three
 # corpora, held roster, and protected source inventories are separately admitted
 # and verified. OMF pins their exact revisions during run admission.
 apiVersion: omf.dev/v1alpha1
@@ -13,13 +13,13 @@ spec:
         operation: run
         inputs:
           pretrain: dataset/audit-fixture-pretrain
-          molecularReward: dataset/audit-fixture-reward
           molecularValidation: dataset/audit-fixture-validation
           molecularFinal: dataset/audit-fixture-final
           heldRoster: dataset/audit-fixture-held-roster
           protectedInventoryAtlas: dataset/audit-fixture-protected-inventory-atlas
           protectedInventoryProteome: dataset/audit-fixture-protected-inventory-proteome
         config:
+          rewardEnabled: false
           maxManifestBytes: 4194304
           maxCoverageBytes: 67108864
           maxFilesPerCorpus: 256
@@ -40,6 +40,7 @@ spec:
         outputs:
           - auditSummary
           - auditSha256
+          - rewardEnabled
           - auditPassed
           - leakageViolations
           - benchmarkLabelRecords

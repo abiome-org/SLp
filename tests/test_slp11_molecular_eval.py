@@ -230,7 +230,9 @@ class Fixture:
         held_sets = {role: set(values) for role, values in self.roles.items()}
         all_ids = set().union(*held_sets.values())
         datasets = {}
-        for index, role in enumerate(("pretrain", "molecularReward", "molecularValidation", "molecularFinal"), 6):
+        for index, role in enumerate(
+            ("pretrain", "molecularValidation", "molecularFinal"), 6
+        ):
             trajectory_genes = (
                 held_sets["molecular-validation"] if role == "molecularValidation" else {f"GENE:{role}"}
             )
@@ -253,6 +255,7 @@ class Fixture:
         held_union = held_sets["molecular-validation"] | held_sets["molecular-final"]
         audit = {
             "schema": audit_emitter.AUDIT_SCHEMA, "auditPassed": True,
+            "rewardEnabled": False,
             "strictInterventionIsolation": True, "leakageViolations": 0,
             "leakedTrajectoryGenes": [], "benchmarkLabelRecords": 0,
             "omfPriorAdmissionRequired": True, "datasets": datasets,
@@ -351,7 +354,11 @@ class MolecularEvaluatorV2Tests(unittest.TestCase):
             )
             destination.parent.mkdir(parents=True)
             report, digest = audit_emitter.write_audit_artifact(
-                corpora, held_roster, protected_inventories, destination
+                corpora,
+                held_roster,
+                protected_inventories,
+                destination,
+                reward_enabled=False,
             )
             revision = "sha256:" + "e" * 64
             pinned = evaluator.resolve_pinned_dataset_input(
@@ -373,6 +380,31 @@ class MolecularEvaluatorV2Tests(unittest.TestCase):
                 set(loaded["heldRoster"]["sourceInventories"][0]),
                 evaluator.AUDIT_SOURCE_INVENTORY_FIELDS,
             )
+
+    def test_reward_disabled_audit_contract_is_fail_closed(self) -> None:
+        mutations = (
+            (lambda document: document.__setitem__("schema", "slp.corpus-audit/v1.1"),
+             "passing admitted"),
+            (lambda document: document.pop("rewardEnabled"), "fields do not match"),
+            (lambda document: document.__setitem__("rewardEnabled", True), "passing admitted"),
+            (
+                lambda document: document["datasets"].__setitem__(
+                    "molecularReward", dict(document["datasets"]["pretrain"])
+                ),
+                "exactly all three",
+            ),
+        )
+        for mutate, message in mutations:
+            with self.subTest(message=message), tempfile.TemporaryDirectory() as temporary:
+                fixture = self.fixture(temporary)
+                audit_path = Path(fixture.audit["path"]) / "corpus-audit.json"
+                document = json.loads(audit_path.read_text())
+                mutate(document)
+                audit_path.write_bytes(_canonical(document))
+                with self.assertRaisesRegex(
+                    evaluator.MolecularEvaluationError, message
+                ):
+                    fixture.evaluate()
 
     def test_protected_inventory_snapshot_provenance_drift_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

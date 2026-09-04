@@ -1,4 +1,4 @@
-"""Adversarial tests for the fail-closed corpus audit v1.1."""
+"""Adversarial tests for the fail-closed corpus audit v1.2."""
 
 from __future__ import annotations
 
@@ -347,7 +347,6 @@ class CorpusAuditTest(unittest.TestCase):
     ) -> tuple[dict[str, object], dict[str, object], dict[str, object]]:
         genes = {
             "pretrain": [self.by_role["pretrain"]],
-            "molecularReward": [self.by_role["pretrain"]],
             "molecularValidation": [self.by_role["molecular-validation"]],
             "molecularFinal": [self.by_role["molecular-final"]],
         }
@@ -386,7 +385,11 @@ class CorpusAuditTest(unittest.TestCase):
                 root = Path(temporary)
                 inputs, held, inventories = self._fixture(root)
                 report, digest = audit.write_audit_artifact(
-                    inputs, held, inventories, root / "output" / "corpus-audit"
+                    inputs,
+                    held,
+                    inventories,
+                    root / "output" / "corpus-audit",
+                    reward_enabled=False,
                 )
                 payload = root / "output" / "corpus-audit" / "corpus-audit.json"
                 self.assertEqual(hashlib.sha256(payload.read_bytes()).hexdigest(), digest)
@@ -395,12 +398,13 @@ class CorpusAuditTest(unittest.TestCase):
                 self.assertEqual(set(schema["required"]), set(report))
                 self.assertEqual(
                     schema["properties"]["schema"]["const"],
-                    "slp.corpus-audit/v1.1",
+                    "slp.corpus-audit/v1.2",
                 )
                 outputs.append(payload.read_bytes())
         self.assertEqual(outputs[0], outputs[1])
         document = json.loads(outputs[0])
-        self.assertEqual(document["schema"], "slp.corpus-audit/v1.1")
+        self.assertEqual(document["schema"], "slp.corpus-audit/v1.2")
+        self.assertIs(document["rewardEnabled"], False)
         self.assertEqual(set(document["datasets"]), set(audit.EXPECTED_ROLES))
         self.assertTrue(document["omfPriorAdmissionRequired"])
         self.assertEqual(document["leakedTrajectoryGenes"], [])
@@ -428,7 +432,10 @@ class CorpusAuditTest(unittest.TestCase):
                     audit.CorpusAuditError, message
                 ):
                     audit.audit_corpora(
-                        {**inputs, "pretrain": value}, held, inventories
+                        {**inputs, "pretrain": value},
+                        held,
+                        inventories,
+                        reward_enabled=False,
                     )
 
     def test_internal_digest_and_exact_file_set_drift_fail(self) -> None:
@@ -446,7 +453,9 @@ class CorpusAuditTest(unittest.TestCase):
                 else:
                     (directory / "extra.txt").write_text("not declared")
                 with self.assertRaisesRegex(audit.CorpusAuditError, message):
-                    audit.audit_corpora(inputs, held, inventories)
+                    audit.audit_corpora(
+                        inputs, held, inventories, reward_enabled=False
+                    )
 
     def test_hidden_or_missing_shard_members_are_fatal(self) -> None:
         for mutation in ("hidden", "missing-target"):
@@ -467,7 +476,9 @@ class CorpusAuditTest(unittest.TestCase):
                 manifest["shards"][0]["sha256"] = _sha256(shard)
                 manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
                 with self.assertRaisesRegex(audit.CorpusAuditError, "NPZ arrays mismatch"):
-                    audit.audit_corpora(inputs, held, inventories)
+                    audit.audit_corpora(
+                        inputs, held, inventories, reward_enabled=False
+                    )
 
     def test_sgd_taxon_zero_and_cross_species_active_actions_are_fatal(self) -> None:
         for entity_taxon, add_declared_species, message in (
@@ -497,7 +508,9 @@ class CorpusAuditTest(unittest.TestCase):
                 manifest["entityDictionary"]["sha256"] = _sha256(entity_path)
                 manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
                 with self.assertRaisesRegex(audit.CorpusAuditError, message):
-                    audit.audit_corpora(inputs, held, inventories)
+                    audit.audit_corpora(
+                        inputs, held, inventories, reward_enabled=False
+                    )
 
     def test_duplicate_record_ids_are_fatal(self) -> None:
         second_pretrain = next(
@@ -526,7 +539,9 @@ class CorpusAuditTest(unittest.TestCase):
             manifest["shards"][0]["sha256"] = _sha256(shard)
             manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "record_id values must be unique"):
-                audit.audit_corpora(inputs, held, inventories)
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
+                )
 
     def test_roster_intersection_is_recomputed_from_protected_inventories(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -554,21 +569,51 @@ class CorpusAuditTest(unittest.TestCase):
                 manifest["files"][0]["records"] += 1
                 manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "exact QC-passing"):
-                audit.audit_corpora(inputs, held, inventories)
-            with self.assertRaisesRegex(audit.CorpusAuditError, "at least two"):
-                audit.audit_corpora(inputs, held, dict(list(inventories.items())[:1]))
-
-    def test_final_only_and_reward_leakage_are_fatal(self) -> None:
-        for role in ("pretrain", "molecularReward"):
-            with self.subTest(role=role), tempfile.TemporaryDirectory() as temporary:
-                root = Path(temporary)
-                inputs, held, inventories = self._fixture(
-                    root, {role: [self.by_role["molecular-final"]]}
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
                 )
+            with self.assertRaisesRegex(audit.CorpusAuditError, "at least two"):
+                audit.audit_corpora(
+                    inputs,
+                    held,
+                    dict(list(inventories.items())[:1]),
+                    reward_enabled=False,
+                )
+
+    def test_final_only_pretrain_leakage_is_fatal(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            inputs, held, inventories = self._fixture(
+                root, {"pretrain": [self.by_role["molecular-final"]]}
+            )
+            with self.assertRaisesRegex(
+                audit.CorpusAuditError, "quantitative fitting trajectories"
+            ):
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
+                )
+
+    def test_reward_flag_and_reward_input_are_fail_closed(self) -> None:
+        for value in (None, True, 0, "false"):
+            with self.subTest(value=value), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                inputs, held, inventories = self._fixture(root)
                 with self.assertRaisesRegex(
-                    audit.CorpusAuditError, "quantitative fitting trajectories"
+                    audit.CorpusAuditError, "requires rewardEnabled=false"
                 ):
-                    audit.audit_corpora(inputs, held, inventories)
+                    audit.audit_corpora(
+                        inputs, held, inventories, reward_enabled=value
+                    )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            inputs, held, inventories = self._fixture(root)
+            with self.assertRaisesRegex(audit.CorpusAuditError, "must be exactly"):
+                audit.audit_corpora(
+                    {**inputs, "molecularReward": inputs["pretrain"]},
+                    held,
+                    inventories,
+                    reward_enabled=False,
+                )
 
     def test_forged_roster_role_is_fatal_even_when_file_hash_is_updated(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -586,7 +631,9 @@ class CorpusAuditTest(unittest.TestCase):
             coverage["rosterSha256"] = _sha256(roster)
             coverage_path.write_bytes(audit.canonical_json_bytes(coverage, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "forged or drifted"):
-                audit.audit_corpora(inputs, held, inventories)
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
+                )
 
     def test_validation_final_overlap_and_wrong_role_are_fatal(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -594,14 +641,18 @@ class CorpusAuditTest(unittest.TestCase):
             shared = self.by_role["molecular-validation"]
             inputs, held, inventories = self._fixture(root, {"molecularFinal": [shared]})
             with self.assertRaisesRegex(audit.CorpusAuditError, "overlap"):
-                audit.audit_corpora(inputs, held, inventories)
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
+                )
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             inputs, held, inventories = self._fixture(
                 root, {"molecularValidation": [self.by_role["pretrain"]]}
             )
             with self.assertRaisesRegex(audit.CorpusAuditError, "roster role"):
-                audit.audit_corpora(inputs, held, inventories)
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
+                )
 
     def test_input_omissions_extras_and_record_level_trajectory_drift_fail(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -612,7 +663,9 @@ class CorpusAuditTest(unittest.TestCase):
                 {**inputs, "unexpected": inputs["pretrain"]},
             ):
                 with self.assertRaisesRegex(audit.CorpusAuditError, "must be exactly"):
-                    audit.audit_corpora(changed, held, inventories)
+                    audit.audit_corpora(
+                        changed, held, inventories, reward_enabled=False
+                    )
 
             directory = Path(inputs["pretrain"]["path"])
             genes = directory / "trajectory-genes.txt"
@@ -622,7 +675,9 @@ class CorpusAuditTest(unittest.TestCase):
             manifest["trajectoryGenes"].update(sha256=_sha256(genes), count=0)
             manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "record-level species actions"):
-                audit.audit_corpora(inputs, held, inventories)
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
+                )
 
     def test_benchmark_and_coverage_source_provenance_drift_are_fatal(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -633,7 +688,9 @@ class CorpusAuditTest(unittest.TestCase):
             manifest["benchmarkLabelsPresent"] = True
             manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "benchmark labels"):
-                audit.audit_corpora(inputs, held, inventories)
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
+                )
 
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -645,7 +702,9 @@ class CorpusAuditTest(unittest.TestCase):
             with self.assertRaisesRegex(
                 audit.CorpusAuditError, "exactly reproduce|deterministically sorted"
             ):
-                audit.audit_corpora(inputs, held, inventories)
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
+                )
 
     def test_symlink_is_fatal_when_host_permits_creation(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -661,12 +720,27 @@ class CorpusAuditTest(unittest.TestCase):
             except OSError:
                 self.skipTest("symlink creation is not permitted on this Windows host")
             with self.assertRaisesRegex(audit.CorpusAuditError, "symlink"):
-                audit.audit_corpora(inputs, held, inventories)
+                audit.audit_corpora(
+                    inputs, held, inventories, reward_enabled=False
+                )
 
     def test_module_workload_and_local_schema_freeze_exact_boundary(self) -> None:
         module = yaml.safe_load((MODULE / "module.yaml").read_text())
         required = set(module["spec"]["contracts"]["input"]["required"])
         self.assertEqual(required, {*audit.EXPECTED_ROLES, "heldRoster"})
+        input_properties = module["spec"]["contracts"]["input"]["properties"]
+        self.assertNotIn("molecularReward", input_properties)
+        config_contract = module["spec"]["contracts"]["config"]
+        self.assertEqual(config_contract["required"], ["rewardEnabled"])
+        self.assertEqual(config_contract["properties"]["rewardEnabled"], {"const": False})
+        self.assertEqual(
+            module["spec"]["contracts"]["output"]["properties"]["rewardEnabled"],
+            {"const": False},
+        )
+        self.assertEqual(
+            module["spec"]["contracts"]["output"]["properties"]["rewardRecords"],
+            {"const": 0},
+        )
         workload_text = (ROOT / "workloads" / "slp-1-1-audit-smoke.yaml").read_text()
         workload = yaml.safe_load(workload_text)
         inputs = workload["spec"]["graph"]["stages"][0]["inputs"]
@@ -674,6 +748,10 @@ class CorpusAuditTest(unittest.TestCase):
         self.assertGreaterEqual(len(protected), 2)
         self.assertEqual(
             set(inputs), {*audit.EXPECTED_ROLES, "heldRoster", *protected}
+        )
+        self.assertIs(
+            workload["spec"]["graph"]["stages"][0]["config"]["rewardEnabled"],
+            False,
         )
         self.assertTrue(all(value.startswith("dataset/") for value in inputs.values()))
         self.assertNotIn("omf://", workload_text)

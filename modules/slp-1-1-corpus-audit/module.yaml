@@ -11,12 +11,11 @@ spec:
   contracts:
     input:
       type: object
-      minProperties: 7
-      maxProperties: 69
-      required: [pretrain, molecularReward, molecularValidation, molecularFinal, heldRoster]
+      minProperties: 6
+      maxProperties: 68
+      required: [pretrain, molecularValidation, molecularFinal, heldRoster]
       properties:
         pretrain: {type: object}
-        molecularReward: {type: object}
         molecularValidation: {type: object}
         molecularFinal: {type: object}
         heldRoster: {type: object}
@@ -28,6 +27,7 @@ spec:
       required:
         - auditSummary
         - auditSha256
+        - rewardEnabled
         - auditPassed
         - leakageViolations
         - benchmarkLabelRecords
@@ -38,17 +38,20 @@ spec:
       properties:
         auditSummary: {type: object}
         auditSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        rewardEnabled: {const: false}
         auditPassed: {type: integer, minimum: 0, maximum: 1}
         leakageViolations: {type: integer, minimum: 0, maximum: 0}
         benchmarkLabelRecords: {type: integer, minimum: 0, maximum: 0}
         pretrainRecords: {type: integer, minimum: 0}
-        rewardRecords: {type: integer, minimum: 0}
+        rewardRecords: {const: 0}
         validationRecords: {type: integer, minimum: 0}
         finalRecords: {type: integer, minimum: 0}
       additionalProperties: false
     config:
       type: object
+      required: [rewardEnabled]
       properties:
+        rewardEnabled: {const: false}
         maxManifestBytes: {type: integer, minimum: 1024, maximum: 67108864}
         maxCoverageBytes: {type: integer, minimum: 1024, maximum: 536870912}
         maxFilesPerCorpus: {type: integer, minimum: 5, maximum: 4096}
@@ -72,19 +75,20 @@ spec:
         operation: validate
         inputs:
           pretrain: {}
-          molecularReward: {}
           molecularValidation: {}
           molecularFinal: {}
           heldRoster: {}
           protectedInventoryOne: {}
           protectedInventoryTwo: {}
-        config: {}
+        config:
+          rewardEnabled: false
         state: {}
       result:
         status: ok
         outputs:
-          auditSummary: {schema: slp.corpus-audit/v1.1, validationOnly: true}
+          auditSummary: {schema: slp.corpus-audit/v1.2, validationOnly: true}
           auditSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          rewardEnabled: false
           auditPassed: 0
           leakageViolations: 0
           benchmarkLabelRecords: 0

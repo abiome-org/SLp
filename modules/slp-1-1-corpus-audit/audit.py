@@ -1,4 +1,4 @@
-"""Fail-closed v1.1 corpus, roster, provenance, and leakage audit.
+"""Fail-closed v1.2 corpus, roster, provenance, and leakage audit.
 
 Identity-bearing NPZ arrays are inspected with the standard library so a
 trajectory manifest cannot conceal a record-level intervention.
@@ -22,7 +22,7 @@ import zipfile
 
 
 CORPUS_SCHEMA = "slp.corpus/v1.1"
-AUDIT_SCHEMA = "slp.corpus-audit/v1.1"
+AUDIT_SCHEMA = "slp.corpus-audit/v1.2"
 ROSTER_SCHEMA = "slp.held-intervention-roster-report/v1"
 INVENTORY_SCHEMA = "slp.intervention-identity-inventory/v1"
 INVENTORY_RECORD_SCHEMA = "slp.intervention-identity-record/v1"
@@ -31,7 +31,6 @@ ASSIGNMENT_DOMAIN_HEX = ASSIGNMENT_DOMAIN.hex()
 BUCKET_RULE = "int(first-16-lowercase-hex,16) mod 100"
 EXPECTED_ROLES = {
     "pretrain": "pretrain",
-    "molecularReward": "molecular-reward",
     "molecularValidation": "molecular-validation",
     "molecularFinal": "molecular-final",
 }
@@ -802,7 +801,7 @@ def _validate_manifest_semantics(
     if manifest["role"] != expected_role:
         raise CorpusAuditError(f"corpus role must be exactly {expected_role}")
     if manifest["labelClass"] != "molecular":
-        raise CorpusAuditError("all four governed corpora must contain molecular labels")
+        raise CorpusAuditError("all governed corpora must contain molecular labels")
     if manifest["benchmarkLabelsPresent"] is not False:
         raise CorpusAuditError("benchmark labels are forbidden")
 
@@ -1626,7 +1625,14 @@ def audit_corpora(
     held_roster_input: object,
     protected_inventory_inputs: Mapping[str, object],
     bounds: AuditBounds | None = None,
+    *,
+    reward_enabled: object,
 ) -> dict[str, Any]:
+    if reward_enabled is not False:
+        raise CorpusAuditError(
+            "corpus-audit v1.2 requires rewardEnabled=false; molecular reward "
+            "needs a new versioned contract"
+        )
     bounds = bounds or AuditBounds()
     if set(corpus_inputs) != set(EXPECTED_ROLES):
         raise CorpusAuditError(
@@ -1691,8 +1697,6 @@ def audit_corpora(
         (
             corpora["pretrain"].trajectory_genes
             | corpora["pretrain"].active_actions
-            | corpora["molecularReward"].trajectory_genes
-            | corpora["molecularReward"].active_actions
         )
         & held_union
     )
@@ -1701,20 +1705,14 @@ def audit_corpora(
             (corpora["pretrain"].trajectory_genes | corpora["pretrain"].active_actions)
             & held_union
         )
-        reward_leaks = sorted(
-            (
-                corpora["molecularReward"].trajectory_genes
-                | corpora["molecularReward"].active_actions
-            )
-            & held_union
-        )
         raise CorpusAuditError(
             "held validation/final interventions occur in quantitative fitting trajectories; "
-            f"pretrain={pretrain_leaks}, molecularReward={reward_leaks}"
+            f"pretrain={pretrain_leaks}"
         )
 
     return {
         "schema": AUDIT_SCHEMA,
+        "rewardEnabled": False,
         "auditPassed": True,
         "strictInterventionIsolation": True,
         "leakageViolations": 0,
@@ -1732,9 +1730,15 @@ def write_audit_artifact(
     protected_inventory_inputs: Mapping[str, object],
     destination: str | Path,
     bounds: AuditBounds | None = None,
+    *,
+    reward_enabled: object,
 ) -> tuple[dict[str, Any], str]:
     audit = audit_corpora(
-        corpus_inputs, held_roster_input, protected_inventory_inputs, bounds
+        corpus_inputs,
+        held_roster_input,
+        protected_inventory_inputs,
+        bounds,
+        reward_enabled=reward_enabled,
     )
     destination = Path(destination).absolute()
     if destination.exists():

@@ -26,7 +26,7 @@ PREDICTION_ROLE = "molecular-validation-predictions"
 QUERY_SCHEMA = "slp.molecular-query-manifest/v1"
 REPORT_SCHEMA = "slp.molecular-evaluation-report/v3"
 DIAGNOSTIC_SCHEMA = "slp.molecular-profile-diagnostic/v3"
-CORPUS_AUDIT_SCHEMA = "slp.corpus-audit/v1.1"
+CORPUS_AUDIT_SCHEMA = "slp.corpus-audit/v1.2"
 ROSTER_SCHEMA = "slp.held-intervention-roster-report/v1"
 ROSTER_ASSIGNMENT_DOMAIN = b"slp-1.1-yeast-global-held-v1\x00"
 YEAST_TAXON = 4932
@@ -75,9 +75,9 @@ QUERY_MANIFEST_FIELDS = {
     "observedMaskPresent", "valueSpace", "speciesTaxa", "sourceIds", "shards",
 }
 CORPUS_AUDIT_FIELDS = {
-    "schema", "auditPassed", "strictInterventionIsolation", "leakageViolations",
-    "leakedTrajectoryGenes", "benchmarkLabelRecords", "omfPriorAdmissionRequired",
-    "datasets", "heldRoster",
+    "schema", "rewardEnabled", "auditPassed", "strictInterventionIsolation",
+    "leakageViolations", "leakedTrajectoryGenes", "benchmarkLabelRecords",
+    "omfPriorAdmissionRequired", "datasets", "heldRoster",
 }
 CORPUS_DATASET_FIELDS = {
     "resource", "revision", "manifestDigest", "datasetId", "version", "role",
@@ -87,7 +87,6 @@ CORPUS_DATASET_FIELDS = {
 }
 AUDIT_DATASET_ROLES = {
     "pretrain": "pretrain",
-    "molecularReward": "molecular-reward",
     "molecularValidation": "molecular-validation",
     "molecularFinal": "molecular-final",
 }
@@ -1081,6 +1080,7 @@ def _load_corpus_audit(pinned: PinnedDatasetInput) -> tuple[dict[str, object], s
     _strict_fields(audit, CORPUS_AUDIT_FIELDS, "corpus audit")
     if (
         audit["schema"] != CORPUS_AUDIT_SCHEMA
+        or audit["rewardEnabled"] is not False
         or audit["strictInterventionIsolation"] is not True
         or audit["auditPassed"] is not True
         or audit["omfPriorAdmissionRequired"] is not True
@@ -1093,7 +1093,7 @@ def _load_corpus_audit(pinned: PinnedDatasetInput) -> tuple[dict[str, object], s
         raise MolecularEvaluationError("a passing admitted strict zero-leakage corpus audit is required")
     datasets = audit["datasets"]
     if not isinstance(datasets, dict) or set(datasets) != set(AUDIT_DATASET_ROLES):
-        raise MolecularEvaluationError("corpus audit must attest exactly all four governed corpora")
+        raise MolecularEvaluationError("corpus audit must attest exactly all three governed corpora")
     for name, identity in datasets.items():
         identity = _strict_fields(identity, CORPUS_DATASET_FIELDS, f"corpus audit dataset {name}")
         resource = _dataset_resource(identity["resource"], f"audit datasets.{name}.resource")
@@ -1123,7 +1123,7 @@ def _load_corpus_audit(pinned: PinnedDatasetInput) -> tuple[dict[str, object], s
             ):
                 raise MolecularEvaluationError(f"audit dataset {name} {field_name} is invalid")
         if identity["speciesTaxa"] != [YEAST_TAXON]:
-            raise MolecularEvaluationError("audit v1.1 molecular boundary is yeast-only")
+            raise MolecularEvaluationError("audit v1.2 molecular boundary is yeast-only")
     roster = _strict_fields(audit["heldRoster"], AUDIT_ROSTER_FIELDS, "audit heldRoster")
     resource = _dataset_resource(roster["resource"], "audit heldRoster.resource")
     if roster["revision"] != resource.rpartition("@")[2]:

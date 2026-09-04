@@ -21,7 +21,7 @@ from slp_sparse_corpus import CorpusIndex, PredictionQueryIndex, pinned_dataset_
 from slp_sparse_training import TrainingConfig, iter_sparse_predictions, model_parameter_sha256
 
 
-AUDIT_SCHEMA = "slp.corpus-audit/v1.1"
+AUDIT_SCHEMA = "slp.corpus-audit/v1.2"
 CHECKPOINT_FORMAT = "slp.world-sparse-checkpoint/v1"
 CHECKPOINT_MAGIC = b"SLP-WORLD-SPARSE-CHECKPOINT-V1\n"
 PREDICTION_SCHEMA = "slp.molecular-evaluation/v2"
@@ -39,7 +39,6 @@ RELEASE_BLOCKERS = [
 ROSTER_ASSIGNMENT_DOMAIN = b"slp-1.1-yeast-global-held-v1\x00"
 AUDIT_DATASET_ROLES = {
     "pretrain": "pretrain",
-    "molecularReward": "molecular-reward",
     "molecularValidation": "molecular-validation",
     "molecularFinal": "molecular-final",
 }
@@ -202,25 +201,28 @@ def validate_admitted_training_evidence(
     )
     audit = _read_json_bounded(audit_path, "corpus audit")
     required = {
-        "schema", "auditPassed", "strictInterventionIsolation", "leakageViolations",
-        "leakedTrajectoryGenes", "benchmarkLabelRecords", "omfPriorAdmissionRequired",
-        "datasets", "heldRoster",
+        "schema", "rewardEnabled", "auditPassed", "strictInterventionIsolation",
+        "leakageViolations", "leakedTrajectoryGenes", "benchmarkLabelRecords",
+        "omfPriorAdmissionRequired", "datasets", "heldRoster",
     }
     if not isinstance(audit, dict) or set(audit) != required:
         raise ValueError("corpus audit must be an exact admitted sparse-training attestation")
     if (
         audit["schema"] != AUDIT_SCHEMA
+        or audit["rewardEnabled"] is not False
         or audit["auditPassed"] is not True
         or audit["strictInterventionIsolation"] is not True
+        or type(audit["leakageViolations"]) is not int
         or audit["leakageViolations"] != 0
         or audit["leakedTrajectoryGenes"] != []
+        or type(audit["benchmarkLabelRecords"]) is not int
         or audit["benchmarkLabelRecords"] != 0
         or audit["omfPriorAdmissionRequired"] is not True
     ):
         raise ValueError("prior-admitted zero-leakage, zero-benchmark audit is required")
     datasets = audit["datasets"]
     if not isinstance(datasets, dict) or set(datasets) != set(AUDIT_DATASET_ROLES):
-        raise ValueError("corpus audit must bind exactly four quantitative corpora")
+        raise ValueError("corpus audit must bind exactly three quantitative corpora")
     for name, role in AUDIT_DATASET_ROLES.items():
         _validate_audit_dataset_identity(datasets[name], role, name)
     if datasets["pretrain"] != _audit_dataset_identity(pretrain, pretrain_input):
@@ -237,7 +239,7 @@ def validate_admitted_training_evidence(
         "finalGeneSetSha256", "finalGeneCount", "unionGeneSetSha256", "unionGeneCount",
     }
     if not isinstance(held, dict) or set(held) != held_fields:
-        raise ValueError("corpus audit heldRoster fields do not match v1.1")
+        raise ValueError("corpus audit heldRoster fields do not match v1.2")
     expected_held = {
         "rosterSha256": _sha256_file(roster_path),
         "coverageSha256": _sha256_file(coverage_path),

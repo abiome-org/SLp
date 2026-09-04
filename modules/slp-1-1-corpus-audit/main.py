@@ -1,4 +1,4 @@
-"""OMF entry point for the fail-closed corpus audit v1.1."""
+"""OMF entry point for the fail-closed corpus audit v1.2."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ def _validation_outputs() -> dict[str, object]:
     return {
         "auditSummary": {"schema": AUDIT_SCHEMA, "validationOnly": True},
         "auditSha256": "0" * 64,
+        "rewardEnabled": False,
         "auditPassed": 0,
         "leakageViolations": 0,
         "benchmarkLabelRecords": 0,
@@ -29,6 +30,11 @@ def validate(_request: ProtocolRequest) -> ProtocolResult:
 
 
 def run(request: ProtocolRequest) -> ProtocolResult:
+    if request.config.get("rewardEnabled") is not False:
+        raise ValueError(
+            "corpus-audit v1.2 requires rewardEnabled=false; molecular reward "
+            "needs a new versioned contract"
+        )
     fixed_inputs = {*EXPECTED_ROLES, "heldRoster"}
     protected_inputs = {
         name: value
@@ -37,7 +43,8 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     }
     if set(request.inputs) != fixed_inputs | set(protected_inputs) or len(protected_inputs) < 2:
         raise ValueError(
-            "inputs require exactly the four corpora, heldRoster, and at least two "
+            "inputs require exactly pretrain, molecularValidation, molecularFinal, "
+            "heldRoster, and at least two "
             "protectedInventory* DatasetSnapshots"
         )
     config = request.config
@@ -73,6 +80,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         protected_inputs,
         output_root / "corpus-audit",
         bounds,
+        reward_enabled=request.config["rewardEnabled"],
     )
     records = {
         name: audit["datasets"][name]["records"] for name in EXPECTED_ROLES
@@ -80,11 +88,12 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     outputs = {
         "auditSummary": audit,
         "auditSha256": audit_sha256,
+        "rewardEnabled": False,
         "auditPassed": int(audit["auditPassed"]),
         "leakageViolations": audit["leakageViolations"],
         "benchmarkLabelRecords": audit["benchmarkLabelRecords"],
         "pretrainRecords": records["pretrain"],
-        "rewardRecords": records["molecularReward"],
+        "rewardRecords": 0,
         "validationRecords": records["molecularValidation"],
         "finalRecords": records["molecularFinal"],
     }

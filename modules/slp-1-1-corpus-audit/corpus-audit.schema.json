@@ -1,15 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://abiome.org/schemas/slp-corpus-audit-v1-1.schema.json",
-  "title": "SLp corpus audit v1.1",
+  "$id": "https://abiome.org/schemas/slp-corpus-audit-v1-2.schema.json",
+  "title": "SLp corpus audit v1.2",
   "type": "object",
   "required": [
-    "schema", "auditPassed", "strictInterventionIsolation",
+    "schema", "rewardEnabled", "auditPassed", "strictInterventionIsolation",
     "leakageViolations", "leakedTrajectoryGenes", "benchmarkLabelRecords",
     "omfPriorAdmissionRequired", "datasets", "heldRoster"
   ],
   "properties": {
-    "schema": {"const": "slp.corpus-audit/v1.1"},
+    "schema": {"const": "slp.corpus-audit/v1.2"},
+    "rewardEnabled": {"const": false},
     "auditPassed": {"const": true},
     "strictInterventionIsolation": {"const": true},
     "leakageViolations": {"const": 0},
@@ -18,10 +19,9 @@
     "omfPriorAdmissionRequired": {"const": true},
     "datasets": {
       "type": "object",
-      "required": ["pretrain", "molecularReward", "molecularValidation", "molecularFinal"],
+      "required": ["pretrain", "molecularValidation", "molecularFinal"],
       "properties": {
         "pretrain": {"$ref": "#/$defs/corpusIdentity"},
-        "molecularReward": {"$ref": "#/$defs/corpusIdentity"},
         "molecularValidation": {"$ref": "#/$defs/corpusIdentity"},
         "molecularFinal": {"$ref": "#/$defs/corpusIdentity"}
       },
@@ -51,7 +51,7 @@
         "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
         "datasetId": {"$ref": "#/$defs/curie"},
         "version": {"type": "string", "minLength": 1},
-        "role": {"enum": ["pretrain", "molecular-reward", "molecular-validation", "molecular-final"]},
+        "role": {"enum": ["pretrain", "molecular-validation", "molecular-final"]},
         "corpusManifestSha256": {"$ref": "#/$defs/sha256"},
         "contentDigest": {"$ref": "#/$defs/sha256"},
         "trajectoryGenesSha256": {"$ref": "#/$defs/sha256"},
