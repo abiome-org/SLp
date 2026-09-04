@@ -27,6 +27,7 @@ class Corpus:
     manifest: dict[str, Any]
     trajectory_genes: frozenset[str]
     records: int
+    identity: dict[str, Any]
 
 
 def _relative_file(root: Path, value: object) -> Path:
@@ -47,6 +48,16 @@ def _sha256(path: Path) -> str:
         while block := stream.read(1024 * 1024):
             digest.update(block)
     return digest.hexdigest()
+
+
+def _document_digest(value: object) -> str:
+    payload = json.dumps(
+        value,
+        ensure_ascii=True,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def load_corpus(root: str | Path, expected_role: str) -> Corpus:
@@ -110,6 +121,7 @@ def load_corpus(root: str | Path, expected_role: str) -> Corpus:
         raise CorpusAuditError("corpus must contain at least one shard")
     records = 0
     seen_paths: set[str] = set()
+    verified_shards: list[dict[str, object]] = []
     for shard in shards:
         if not isinstance(shard, dict) or set(shard) != {"path", "sha256", "records"}:
             raise CorpusAuditError("each shard requires only path, sha256, and records")
@@ -121,13 +133,32 @@ def load_corpus(root: str | Path, expected_role: str) -> Corpus:
         seen_paths.add(path_value)
         path = _relative_file(root, path_value)
         expected = shard["sha256"]
-        if not isinstance(expected, str) or len(expected) != 64 or _sha256(path) != expected:
+        actual = _sha256(path)
+        if not isinstance(expected, str) or len(expected) != 64 or actual != expected:
             raise CorpusAuditError(f"shard digest mismatch: {path_value}")
         count = shard["records"]
         if not isinstance(count, int) or isinstance(count, bool) or count <= 0:
             raise CorpusAuditError("shard records must be positive integers")
         records += count
-    return Corpus(root=root, manifest=manifest, trajectory_genes=genes, records=records)
+        verified_shards.append(
+            {"path": path_value, "sha256": actual, "records": count}
+        )
+    identity = {
+        "datasetId": manifest["datasetId"],
+        "version": manifest["version"],
+        "role": manifest["role"],
+        "manifestSha256": _sha256(manifest_path),
+        "trajectoryGenesSha256": _sha256(gene_path),
+        "shards": verified_shards,
+    }
+    identity["contentDigest"] = _document_digest(identity)
+    return Corpus(
+        root=root,
+        manifest=manifest,
+        trajectory_genes=genes,
+        records=records,
+        identity=identity,
+    )
 
 
 def audit_corpora(paths: dict[str, str | Path], strict: bool = True) -> dict[str, Any]:
@@ -162,9 +193,7 @@ def audit_corpora(paths: dict[str, str | Path], strict: bool = True) -> dict[str
         "speciesTaxa": species,
         "datasets": {
             name: {
-                "datasetId": corpus.manifest["datasetId"],
-                "version": corpus.manifest["version"],
-                "role": corpus.manifest["role"],
+                **corpus.identity,
                 "modalities": corpus.manifest["modalities"],
             }
             for name, corpus in corpora.items()

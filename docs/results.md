@@ -627,3 +627,72 @@ newline-aligned binary blocks because buffered CSV chunking over a text stream
 split lines and silently corrupted coordinates; the builder asserts coordinate
 ranges and a clean end-of-stream. Constituent packs remain untracked generated
 artifacts; the data-preparation scripts are tracked source.
+
+## 2026-09-03 — SLp-1.1 pre-compute contract hardening
+
+**Hypothesis and fixed rule.** Before any biological training, an identical
+molecular query must produce an identical marginal distribution regardless of
+the other queries in its panel, and a passing corpus audit must become invalid
+if any admitted manifest, trajectory-gene inventory or shard byte changes. The
+first biological candidate remains closed until it achieves both at least 0.02
+nats per observed-target and 2% Gaussian-NLL improvement over the strongest
+fixed mean/ridge baseline, at least 0.10 training-centroid-adjusted molecular
+Pearson, and non-negative source- and species-level NLL deltas. The absolute
+delta was added before data exposure because a relative density-NLL percentage
+alone depends on the additive likelihood constant and registered value space.
+
+**Architecture correction.** The initial Transformer decoder allowed query
+self-attention. In a direct adversarial probe, the same query changed by
+0.24558 in predicted mean and 0.49919 in log scale when unrelated queries were
+added. It was replaced with stacked pre-norm cross-attention and feed-forward
+blocks with no query-to-query communication. The corrected CPU probe is
+bitwise identical under panel subset, reordering and chunking (maximum mean and
+log-scale deltas 0.0). Masked query features and `readout_type=-1` sentinels are
+now inert.
+
+**Admission correction.** The corpus audit now attests SHA-256 identities for
+each exact manifest, trajectory-gene file and shard, plus an aggregate content
+digest. The trainer recomputes those identities before constructing a model.
+Numerical shards require fixed-width stable record, source, perturbation and
+action identities; exact action-CURIE inventory agreement; declared taxon to
+species-vector agreement; compatible shapes and dtypes; finite tensors; and at
+least one observed molecular target per represented species. Reusing a valid
+audit after substituting another corpus is rejected before training. Gaussian
+NLL now includes its normalization constant and emits an absolute NLL delta.
+Molecular reinforcement is schema-disabled until a matched deterministic
+continuation and rollback-safe source/species preservation gate exist.
+
+**Species-native yeast boundary.** A new self-contained preparation module
+accepts only an immutable checksum-pinned raw snapshot with verified
+`trainingAllowed: true` rights, taxon 4932, and SGD CURIE actions. It rejects
+missing, false or drifted rights; mutable release aliases; raw digest or count
+drift; symbol identities; taxon relabeling; duplicate/unsorted records;
+non-finite values; and unbounded token shapes. Output is deterministic,
+bounded, trainer-validated NPZ shards plus a corpus manifest, exact intervention
+inventory, provenance report and tar artifact. Costanzo remains quarantined and
+was not prepared or admitted.
+
+**Molecular evaluator and OMF boundary.** A separate self-contained evaluator
+checks checksum-bound molecular references and predictions, nested held-gene
+overlap, source/species identity and benchmark-like fields. It reports ordinary
+errors plus training-perturbed-centroid Pearson/cosine and common-panel centroid
+accuracy by species and source. This is explicitly Systema-inspired for sparse
+multi-modal profiles, not an exact reproduction of the dense single-cell
+benchmark. Source inspection of OMF commit
+`ef26eea2cb694596f7680a4bce400371738cbb4b` and a direct resolver probe show
+that a same-workload generated artifact is captured but cannot be pinned for a
+dependent stage: resolution fails with `reference input was not pinned at
+admission`. The supported design is two runs, with the second workload pinning
+the first run's literal prediction-artifact digest. No sibling-stage path or
+metadata-embedded payload workaround was added.
+
+**Validation and decision.** The merged repository passes 40 unit tests,
+including adversarial query, audit-substitution, non-finite tensor,
+action-inventory, species-vector, rights, species-native preparation,
+perturbed-mean and nested-intervention checks. All changed Python modules
+compile, three fixture manifests validate against the corpus schema, and the
+world, audit, yeast-preparation, molecular-evaluation, workload and evaluation
+manifests validate against pinned OMF 1.0 on Ubuntu/Python 3.12. The
+seven-study public perturbation-atlas history from the concurrent main branch
+was retained, but it is not silently admitted as an SLp-1.1 snapshot. No
+biological model, checkpoint, molecular result or SL benchmark was produced.

@@ -1,0 +1,77 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-molecular-eval
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+  contracts:
+    input:
+      type: object
+      required:
+        - molecularReference
+        - molecularPredictions
+      properties:
+        molecularReference: {type: object}
+        molecularPredictions: {type: object}
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - evaluationSummary
+        - evaluationReportSha256
+        - molecularTargets
+        - profileCount
+        - ordinaryPearson
+        - perturbedCentroidPearson
+        - perturbedCentroidCosine
+        - centroidAccuracyCommonPanel
+        - minimumSpeciesPerturbedCentroidPearson
+        - benchmarkLabelRecords
+        - heldInterventionOverlap
+      properties:
+        evaluationSummary: {type: object}
+        evaluationReportSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        molecularTargets: {type: integer, minimum: 0}
+        profileCount: {type: integer, minimum: 0}
+        ordinaryPearson: {type: number, minimum: -1, maximum: 1}
+        perturbedCentroidPearson: {type: number, minimum: -1, maximum: 1}
+        perturbedCentroidCosine: {type: number, minimum: -1, maximum: 1}
+        centroidAccuracyCommonPanel: {type: number, minimum: 0, maximum: 1}
+        minimumSpeciesPerturbedCentroidPearson: {type: number, minimum: -1, maximum: 1}
+        benchmarkLabelRecords: {type: integer, minimum: 0}
+        heldInterventionOverlap: {type: integer, minimum: 0}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        minimumReferencePerturbations: {type: integer, minimum: 2}
+        minimumProfileReadouts: {type: integer, minimum: 2}
+        maxLineBytes: {type: integer, minimum: 1024}
+        maximumAbsoluteLogScale: {type: number, exclusiveMinimum: 0}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs: {}
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          evaluationSummary:
+            schema: slp.molecular-evaluation-summary/v1
+            validationOnly: true
+          evaluationReportSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          molecularTargets: 0
+          profileCount: 0
+          ordinaryPearson: 0.0
+          perturbedCentroidPearson: 0.0
+          perturbedCentroidCosine: 0.0
+          centroidAccuracyCommonPanel: 0.0
+          minimumSpeciesPerturbedCentroidPearson: 0.0
+          benchmarkLabelRecords: 0
+          heldInterventionOverlap: 0

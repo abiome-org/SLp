@@ -71,13 +71,78 @@ class WorldPrediction:
         return self.log_scale.exp()
 
 
+class CrossAttentionQueryBlock(nn.Module):
+    """Update each query independently from the shared encoded memory."""
+
+    def __init__(self, config: WorldConfig):
+        super().__init__()
+        d = config.d_model
+        hidden = config.ffn_multiplier * d
+        self.cross_attention_norm = nn.LayerNorm(d)
+        self.cross_attention = nn.MultiheadAttention(
+            embed_dim=d,
+            num_heads=config.nhead,
+            dropout=config.dropout,
+            batch_first=True,
+        )
+        self.cross_attention_dropout = nn.Dropout(config.dropout)
+        self.feedforward_norm = nn.LayerNorm(d)
+        self.feedforward = nn.Sequential(
+            nn.Linear(d, hidden),
+            nn.GELU(),
+            nn.Dropout(config.dropout),
+            nn.Linear(hidden, d),
+        )
+        self.feedforward_dropout = nn.Dropout(config.dropout)
+
+    def forward(
+        self,
+        queries: torch.Tensor,
+        memory: torch.Tensor,
+        memory_key_padding_mask: torch.Tensor,
+    ) -> torch.Tensor:
+        attended, _ = self.cross_attention(
+            query=self.cross_attention_norm(queries),
+            key=memory,
+            value=memory,
+            key_padding_mask=memory_key_padding_mask,
+            need_weights=False,
+        )
+        queries = queries + self.cross_attention_dropout(attended)
+        transformed = self.feedforward(self.feedforward_norm(queries))
+        return queries + self.feedforward_dropout(transformed)
+
+
+class CrossAttentionQueryDecoder(nn.Module):
+    """Decode marginal queries without query-to-query communication."""
+
+    def __init__(self, config: WorldConfig):
+        super().__init__()
+        self.layers = nn.ModuleList(
+            CrossAttentionQueryBlock(config) for _ in range(config.decoder_layers)
+        )
+        self.norm = nn.LayerNorm(config.d_model)
+
+    def forward(
+        self,
+        queries: torch.Tensor,
+        memory: torch.Tensor,
+        memory_key_padding_mask: torch.Tensor,
+    ) -> torch.Tensor:
+        for layer in self.layers:
+            queries = layer(queries, memory, memory_key_padding_mask)
+        return self.norm(queries)
+
+
 class SpeciesAwareWorldModel(nn.Module):
     """Predict sparse molecular readouts from context and intervention sets.
 
     Gene identifiers never enter this module. Every entity is represented by
     versioned molecular features supplied by the corpus. With no positional
     encoding, context and intervention memory is permutation equivariant and
-    the query outputs are invariant to memory order.
+    the query outputs are invariant to memory order. Queries cross-attend to
+    that memory independently, so a marginal prediction is unchanged by query
+    order, panel membership, or chunking.
     """
 
     def __init__(self, config: WorldConfig):
@@ -101,25 +166,12 @@ class SpeciesAwareWorldModel(nn.Module):
             batch_first=True,
             norm_first=True,
         )
-        decoder_layer = nn.TransformerDecoderLayer(
-            d_model=d,
-            nhead=config.nhead,
-            dim_feedforward=config.ffn_multiplier * d,
-            dropout=config.dropout,
-            activation="gelu",
-            batch_first=True,
-            norm_first=True,
-        )
         self.memory_encoder = nn.TransformerEncoder(
             encoder_layer,
             num_layers=config.encoder_layers,
             norm=nn.LayerNorm(d),
         )
-        self.query_decoder = nn.TransformerDecoder(
-            decoder_layer,
-            num_layers=config.decoder_layers,
-            norm=nn.LayerNorm(d),
-        )
+        self.query_decoder = CrossAttentionQueryDecoder(config)
         self.output_norm = nn.LayerNorm(d)
         self.mean_head = nn.Linear(d, 1)
         self.scale_head = nn.Linear(d, 1)
@@ -142,15 +194,17 @@ class SpeciesAwareWorldModel(nn.Module):
         memory_mask = torch.cat((batch.context_mask, batch.action_mask), dim=1)
         encoded = self.memory_encoder(memory, src_key_padding_mask=~memory_mask)
 
+        query_mask = batch.query_mask.unsqueeze(-1)
+        query_features = batch.query_features.masked_fill(~query_mask, 0)
+        safe_readout_type = batch.readout_type.masked_fill(~batch.query_mask, 0)
         queries = (
-            self.query_projection(batch.query_features)
-            + self.readout_kind(batch.readout_type)
+            self.query_projection(query_features)
+            + self.readout_kind(safe_readout_type)
             + species
         )
         decoded = self.query_decoder(
-            tgt=queries,
+            queries=queries,
             memory=encoded,
-            tgt_key_padding_mask=~batch.query_mask,
             memory_key_padding_mask=~memory_mask,
         )
         decoded = self.output_norm(decoded)

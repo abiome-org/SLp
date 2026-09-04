@@ -10,6 +10,8 @@
   "trajectoryGenes": "trajectory-genes.txt",
   "entityFeatureDim": 8,
   "speciesFeatureDim": 2,
+  "speciesFeatureVectors": {"4932": [1.0, 0.0], "9606": [0.0, 1.0]},
+  "actionCovariateDim": 4,
   "readoutTypes": ["synthetic-effect"],
   "shards": [
     {

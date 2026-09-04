@@ -24,8 +24,10 @@ spec:
         - checkpointSha256
         - validationNll
         - validationBaselineNll
+        - validationNllDelta
         - validationNllImprovement
         - validationEffectPearson
+        - minimumSpeciesNllDelta
         - minimumSpeciesNllImprovement
         - rlRetained
         - parameterCount
@@ -34,8 +36,10 @@ spec:
         checkpointSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
         validationNll: {type: number}
         validationBaselineNll: {type: number}
+        validationNllDelta: {type: number}
         validationNllImprovement: {type: number}
         validationEffectPearson: {type: number, minimum: -1, maximum: 1}
+        minimumSpeciesNllDelta: {type: number}
         minimumSpeciesNllImprovement: {type: number}
         rlRetained: {type: integer, minimum: 0, maximum: 1}
         parameterCount: {type: integer, minimum: 0}
@@ -45,7 +49,7 @@ spec:
       properties:
         seed: {type: integer}
         epochs: {type: integer, minimum: 1}
-        reinforcementEpochs: {type: integer, minimum: 0}
+        reinforcementEpochs: {type: integer, minimum: 0, maximum: 0}
         batchSize: {type: integer, minimum: 1}
         learningRate: {type: number, exclusiveMinimum: 0}
         reinforcementLearningRate: {type: number, exclusiveMinimum: 0}
@@ -72,8 +76,10 @@ spec:
           checkpointSha256: "0000000000000000000000000000000000000000000000000000000000000000"
           validationNll: 0.0
           validationBaselineNll: 0.0
+          validationNllDelta: 0.0
           validationNllImprovement: 0.0
           validationEffectPearson: 0.0
+          minimumSpeciesNllDelta: 0.0
           minimumSpeciesNllImprovement: 0.0
           rlRetained: 0
           parameterCount: 0

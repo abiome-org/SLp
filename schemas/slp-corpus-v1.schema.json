@@ -13,6 +13,11 @@
     "speciesTaxa",
     "modalities",
     "trajectoryGenes",
+    "entityFeatureDim",
+    "speciesFeatureDim",
+    "speciesFeatureVectors",
+    "actionCovariateDim",
+    "readoutTypes",
     "shards"
   ],
   "properties": {
@@ -39,6 +44,16 @@
     "trajectoryGenes": {"$ref": "#/$defs/relativePath"},
     "entityFeatureDim": {"type": "integer", "minimum": 1},
     "speciesFeatureDim": {"type": "integer", "minimum": 1},
+    "speciesFeatureVectors": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "items": {"type": "number"}
+      }
+    },
+    "actionCovariateDim": {"type": "integer", "minimum": 1},
     "readoutTypes": {
       "type": "array",
       "uniqueItems": true,

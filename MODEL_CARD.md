@@ -4,9 +4,10 @@
 
 SLp-1.1 is a species-aware genomics world-model program. It learns conditional
 distributions of molecular measurements after interventions. Synthetic
-lethality is not a pretraining label, a model output type, or a release gate.
-It remains one downstream test of whether the learned transition rules transfer
-to two genes absent from quantitative trajectory fitting.
+lethality is not a pretraining label or a world-model output type. It becomes a
+separate downstream release test only after the molecular candidate and
+decision rule are frozen, asking whether learned transition rules transfer to
+two genes absent from quantitative trajectory fitting.
 
 SLp-1 is frozen proof-of-concept evidence. Its fixed human gene universe,
 hand-concatenated feature vector, shallow outcome-specific heads, experiment
@@ -24,10 +25,12 @@ The first candidate advances only when one frozen run satisfies all of these
 conditions on molecular validation data:
 
 - zero held-intervention-gene overlap and zero benchmark-label records;
-- at least 2% Gaussian-NLL improvement over both the training-set mean and one
-  fixed ridge baseline;
-- effect Pearson correlation of at least 0.10;
-- non-negative NLL improvement for every represented species;
+- at least 0.02 nats per observed target and 2% Gaussian-NLL improvement over
+  both the training-set mean and one fixed ridge baseline in a preregistered
+  value space;
+- perturbation-specific, training-centroid-adjusted Pearson correlation of at
+  least 0.10;
+- non-negative NLL delta for every represented species and protected source;
 - no post hoc sign selection, source removal, threshold change, or checkpoint
   selection using an SL benchmark.
 
@@ -46,8 +49,10 @@ Each example contains three variable-size sets:
 Tokens use released sequence-, protein-, annotation-, and measurement-derived
 features. The model has no learned gene-ID embedding and no fixed gene list.
 Context and action sets have no positional encoding, making their order
-irrelevant. A query decoder emits a mean and calibrated scale for every sparse
-readout query instead of reconstructing one hard-coded expression panel.
+irrelevant. A cross-attention-only query decoder emits a mean and scale for
+every sparse readout query instead of reconstructing one hard-coded expression
+panel. Queries do not attend to each other, so a marginal prediction is exactly
+invariant to panel membership, ordering, padding, and chunking.
 
 Species is an explicit continuous feature block, not inferred from gene names.
 Yeast observations retain yeast identifiers and experimental context. Orthology
@@ -73,17 +78,19 @@ module and release line.
 
 ## Training and evaluation
 
-Maximum-likelihood pretraining mixes sources with explicit per-source sampling
-weights and reports source- and species-level metrics. A later stochastic
-continuation may use only molecular reward snapshots. Each reinforcement epoch
-is compared with its frozen pre-update checkpoint on the same molecular
-validation objective and is discarded unless it improves without a protected
-source regression.
+Maximum-likelihood pretraining will mix sources with explicit per-source
+sampling weights and report source- and species-level metrics. Molecular
+reinforcement is currently disabled in the module contract. It may be opened
+only after a deterministic continuation control exists; both continuations
+must use identical reward records, token budgets and seeds, and every rejected
+epoch must roll back before another update.
 
 Selection metrics must remove the shared average perturbation shift and include
-simple mean, additive, and linear baselines. Scaling claims require fixed data
-mixtures evaluated at multiple token budgets; parameter growth alone is not a
-scientific result.
+simple mean, additive, and linear baselines. The separate molecular evaluator
+reports training-centroid-adjusted Pearson/cosine and common-panel centroid
+accuracy by source and species. Scaling claims require fixed data mixtures
+evaluated at multiple token budgets; parameter growth alone is not a scientific
+result.
 
 ## Release status
 
@@ -95,6 +102,10 @@ this Windows checkout. It also passes JSON protocol state—but not a materializ
 large model artifact—to the inference adapter. A portable SLp release therefore
 requires an upstream artifact-to-adapter contract before promotion; absolute
 run paths or model weights serialized into metadata are forbidden workarounds.
+The same OMF revision also cannot pin a newly produced artifact for a dependent
+stage in the same workload. Training and molecular evaluation therefore use two
+separately admitted runs with the exact prediction-artifact digest pinned in
+the second run until that upstream contract is fixed.
 Only the built-in Linux-local binding is currently declared. Scaling beyond one
 host also requires a tested `omf.executor/v1` provider; launching Modal from a
 network-denied training module is not an executor integration.

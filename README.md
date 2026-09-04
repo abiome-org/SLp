@@ -21,7 +21,9 @@ rights/                          dataset rights declarations
 sources/                         versioned source-admission plans
 schemas/                         versioned corpus contracts
 modules/slp-1-1-corpus-audit/   shard integrity and leakage firewall
+modules/slp-1-1-yeast-prepare/  rights-gated species-native yeast preparation
 modules/slp-1-1-world/          fresh species-aware query-decoder model
+modules/slp-1-1-molecular-eval/ perturbation-specific molecular evaluator
 workloads/                       auditable stage graphs
 evaluations/                     molecular-only advancement gates
 MODEL_CARD.md                    supported intent and limits
@@ -96,7 +98,12 @@ For real training, import three separately governed snapshots using the exact
 names `slp-1-1-pretrain`, `slp-1-1-molecular-validation`, and
 `slp-1-1-molecular-reward`, apply
 `evaluations/slp-1-1-molecular.yaml`, and run
-`workloads/slp-1-1-pretrain.yaml` only after preflight succeeds.
+`workloads/slp-1-1-pretrain.yaml` only after preflight succeeds. Biological
+training remains closed until the world module exports identity-keyed molecular
+predictions. OMF 1.0 cannot pin a generated artifact for a later stage in the
+same workload, so molecular evaluation must be a second admitted run whose
+input is the literal content digest produced by training; sibling-stage paths
+or weights/predictions embedded in JSON metadata are forbidden workarounds.
 
 The world module's empty dependency lock currently means its executor image
 must already provide compatible PyTorch and NumPy. This is acceptable for
@@ -110,12 +117,17 @@ an OMF executor and is not called from inside a training module.
 Each snapshot contains `corpus.json`, a stable-CURIE intervention-gene list,
 and digest-addressed shards. Production shards are bounded `.npz` files so the
 trainer can stream them one at a time. Required arrays are documented by
-`modules/slp-1-1-world/trainer.py`; every example carries context, action,
-query, species, target, and validity tensors.
+`modules/slp-1-1-world/trainer.py`; every example carries stable record,
+source, perturbation and action identities plus context, action, query,
+species, target, and validity tensors. Declared taxonomy IDs map to exact
+versioned continuous species-feature vectors.
 
 The audit stage runs before compute allocation to the model. It verifies shard
 bytes and rejects any benchmark labels or any validation intervention gene
-present in pretraining or molecular reward. Static public features for held
+present in pretraining or molecular reward. Its attestation binds the exact
+manifest, trajectory-gene inventory, and every shard digest; the trainer
+recomputes those identities and checks that tensor-level action CURIEs match
+the inventory before constructing a model. Static public features for held
 genes are allowed and recorded separately from quantitative trajectories.
 
 ## Validation
@@ -126,11 +138,14 @@ python -m unittest tests.test_slp11_architecture
 python -m unittest discover -s tests
 ```
 
-The first advancement gate is molecular-only: at least 2% validation NLL
-improvement over both a training-set mean and fixed ridge baseline, at least 0.10 perturbation-effect
-Pearson correlation, non-negative improvement in every represented species,
-and zero leakage or benchmark-label records. External SL benchmarks stay
-closed until the candidate and downstream decision rule are frozen.
+The first advancement gate is molecular-only: at least 0.02 nats per observed
+target and 2% validation NLL improvement over both a training-set mean and
+fixed ridge baseline, at least 0.10 training-centroid-adjusted perturbation
+Pearson correlation, non-negative improvement in every represented species and
+protected source, and zero leakage or benchmark-label records. Reinforcement is
+disabled until it has a matched deterministic-continuation control. External
+SL benchmarks stay closed until the candidate and downstream decision rule are
+frozen.
 
 ## Release boundary
 

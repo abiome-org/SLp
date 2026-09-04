@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
 import json
 import math
 from pathlib import Path, PurePosixPath
-from typing import Iterator
+from typing import Any, Iterator
 
 import numpy as np
 import torch
@@ -16,10 +17,14 @@ from architecture import SpeciesAwareWorldModel, WorldBatch, WorldConfig
 
 
 REQUIRED_ARRAYS = {
+    "record_id",
+    "source_id",
+    "perturbation_id",
     "context_features",
     "context_mask",
     "action_features",
     "action_covariates",
+    "action_curies",
     "action_mask",
     "query_features",
     "query_mask",
@@ -31,46 +36,167 @@ REQUIRED_ARRAYS = {
 }
 
 
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        while block := stream.read(1024 * 1024):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _document_digest(value: object) -> str:
+    payload = json.dumps(
+        value,
+        ensure_ascii=True,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _relative_file(root: Path, value: object) -> Path:
+    if not isinstance(value, str) or not value:
+        raise ValueError("corpus paths must be non-empty strings")
+    relative = PurePosixPath(value)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ValueError(f"unsafe corpus path: {value!r}")
+    path = root.joinpath(*relative.parts)
+    if not path.is_file():
+        raise ValueError(f"missing corpus file: {value}")
+    return path
+
+
 @dataclass(frozen=True)
 class CorpusIndex:
     root: Path
     role: str
+    dataset_id: str
+    version: str
     entity_feature_dim: int
     species_feature_dim: int
+    action_covariate_dim: int
     readout_types: tuple[str, ...]
+    species_taxa: tuple[int, ...]
+    species_feature_vectors: dict[int, tuple[float, ...]]
+    trajectory_genes: frozenset[str]
     shards: tuple[dict[str, object], ...]
+    identity: dict[str, Any]
 
     @classmethod
     def load(cls, root: str | Path, role: str) -> "CorpusIndex":
         root = Path(root).resolve()
-        manifest = json.loads((root / "corpus.json").read_text(encoding="utf-8"))
+        manifest_path = root / "corpus.json"
+        if not manifest_path.is_file():
+            raise ValueError("snapshot must contain corpus.json")
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if manifest.get("schema") != "slp.corpus/v1" or manifest.get("role") != role:
             raise ValueError(f"expected an slp.corpus/v1 {role!r} snapshot")
         if manifest.get("benchmarkLabelsPresent") is not False:
             raise ValueError("benchmark labels are forbidden in a world-model corpus")
+        dataset_id = manifest.get("datasetId")
+        version = manifest.get("version")
+        if not isinstance(dataset_id, str) or not dataset_id:
+            raise ValueError("datasetId must be non-empty")
+        if not isinstance(version, str) or not version:
+            raise ValueError("version must be non-empty")
         feature_dim = manifest.get("entityFeatureDim")
         species_dim = manifest.get("speciesFeatureDim")
+        covariate_dim = manifest.get("actionCovariateDim")
         readouts = manifest.get("readoutTypes")
         if not isinstance(feature_dim, int) or feature_dim <= 0:
             raise ValueError("entityFeatureDim must be positive")
         if not isinstance(species_dim, int) or species_dim <= 0:
             raise ValueError("speciesFeatureDim must be positive")
+        if not isinstance(covariate_dim, int) or covariate_dim <= 0:
+            raise ValueError("actionCovariateDim must be positive")
         if not isinstance(readouts, list) or not readouts or any(not item for item in readouts):
             raise ValueError("readoutTypes must be a non-empty string list")
+        if len(readouts) != len(set(readouts)):
+            raise ValueError("readoutTypes must be unique")
+        taxa = manifest.get("speciesTaxa")
+        if (
+            not isinstance(taxa, list)
+            or not taxa
+            or any(not isinstance(item, int) or isinstance(item, bool) or item <= 0 for item in taxa)
+            or len(taxa) != len(set(taxa))
+        ):
+            raise ValueError("speciesTaxa must contain unique positive taxonomy IDs")
+        raw_vectors = manifest.get("speciesFeatureVectors")
+        if not isinstance(raw_vectors, dict) or set(raw_vectors) != {str(item) for item in taxa}:
+            raise ValueError("speciesFeatureVectors must define every declared taxon exactly once")
+        species_vectors: dict[int, tuple[float, ...]] = {}
+        for taxon in taxa:
+            vector = raw_vectors[str(taxon)]
+            if (
+                not isinstance(vector, list)
+                or len(vector) != species_dim
+                or any(not isinstance(item, (int, float)) or isinstance(item, bool) for item in vector)
+                or not np.isfinite(np.asarray(vector, dtype=np.float64)).all()
+            ):
+                raise ValueError("species feature vectors must be finite and match speciesFeatureDim")
+            species_vectors[taxon] = tuple(float(item) for item in vector)
+        gene_path = _relative_file(root, manifest.get("trajectoryGenes"))
+        genes = frozenset(
+            line.strip()
+            for line in gene_path.read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        )
+        if not genes or any(":" not in gene for gene in genes):
+            raise ValueError("trajectory genes must be stable CURIE identifiers")
+        shards = manifest.get("shards")
+        if not isinstance(shards, list) or not shards:
+            raise ValueError("corpus must contain at least one shard")
+        verified_shards: list[dict[str, object]] = []
+        seen_paths: set[str] = set()
+        for shard in shards:
+            if not isinstance(shard, dict) or set(shard) != {"path", "sha256", "records"}:
+                raise ValueError("each shard requires only path, sha256, and records")
+            path_value = shard["path"]
+            if not isinstance(path_value, str) or path_value in seen_paths:
+                raise ValueError("shard paths must be unique strings")
+            seen_paths.add(path_value)
+            path = _relative_file(root, path_value)
+            expected_digest = shard["sha256"]
+            actual_digest = _sha256(path)
+            if (
+                not isinstance(expected_digest, str)
+                or len(expected_digest) != 64
+                or actual_digest != expected_digest
+            ):
+                raise ValueError(f"shard digest mismatch: {path_value}")
+            records = shard["records"]
+            if not isinstance(records, int) or isinstance(records, bool) or records <= 0:
+                raise ValueError("shard records must be positive integers")
+            verified_shards.append(
+                {"path": path_value, "sha256": actual_digest, "records": records}
+            )
+        identity: dict[str, Any] = {
+            "datasetId": dataset_id,
+            "version": version,
+            "role": role,
+            "manifestSha256": _sha256(manifest_path),
+            "trajectoryGenesSha256": _sha256(gene_path),
+            "shards": verified_shards,
+        }
+        identity["contentDigest"] = _document_digest(identity)
         return cls(
             root=root,
             role=role,
+            dataset_id=dataset_id,
+            version=version,
             entity_feature_dim=feature_dim,
             species_feature_dim=species_dim,
+            action_covariate_dim=covariate_dim,
             readout_types=tuple(readouts),
-            shards=tuple(manifest["shards"]),
+            species_taxa=tuple(taxa),
+            species_feature_vectors=species_vectors,
+            trajectory_genes=genes,
+            shards=tuple(verified_shards),
+            identity=identity,
         )
 
     def shard_path(self, shard: dict[str, object]) -> Path:
-        relative = PurePosixPath(str(shard["path"]))
-        if relative.is_absolute() or ".." in relative.parts:
-            raise ValueError("unsafe shard path")
-        return self.root.joinpath(*relative.parts)
+        return _relative_file(self.root, shard["path"])
 
 
 def _validate_compatible(*corpora: CorpusIndex) -> None:
@@ -79,13 +205,17 @@ def _validate_compatible(*corpora: CorpusIndex) -> None:
         if (
             corpus.entity_feature_dim != first.entity_feature_dim
             or corpus.species_feature_dim != first.species_feature_dim
+            or corpus.action_covariate_dim != first.action_covariate_dim
             or corpus.readout_types != first.readout_types
         ):
             raise ValueError("corpus feature and readout contracts do not match")
 
 
 def _load_shard(corpus: CorpusIndex, shard: dict[str, object]) -> dict[str, np.ndarray]:
-    with np.load(corpus.shard_path(shard), allow_pickle=False) as source:
+    path = corpus.shard_path(shard)
+    if _sha256(path) != shard["sha256"]:
+        raise ValueError(f"shard digest drifted after admission: {shard['path']}")
+    with np.load(path, allow_pickle=False) as source:
         missing = sorted(REQUIRED_ARRAYS - set(source.files))
         if missing:
             raise ValueError(f"shard is missing arrays: {', '.join(missing)}")
@@ -93,7 +223,152 @@ def _load_shard(corpus: CorpusIndex, shard: dict[str, object]) -> dict[str, np.n
     records = int(shard["records"])
     if any(array.shape[0] != records for array in arrays.values()):
         raise ValueError("shard record count does not match corpus.json")
+    _validate_shard_arrays(corpus, arrays, records)
     return arrays
+
+
+def _validate_shard_arrays(
+    corpus: CorpusIndex,
+    arrays: dict[str, np.ndarray],
+    records: int,
+) -> None:
+    context = arrays["context_features"]
+    action = arrays["action_features"]
+    query = arrays["query_features"]
+    if context.ndim != 3 or context.shape[2] != corpus.entity_feature_dim:
+        raise ValueError("context_features must have shape [records, context, entityFeatureDim]")
+    if action.ndim != 3 or action.shape[2] != corpus.entity_feature_dim:
+        raise ValueError("action_features must have shape [records, actions, entityFeatureDim]")
+    if query.ndim != 3 or query.shape[2] != corpus.entity_feature_dim:
+        raise ValueError("query_features must have shape [records, queries, entityFeatureDim]")
+    expected_shapes = {
+        "record_id": (records,),
+        "source_id": (records,),
+        "perturbation_id": (records,),
+        "context_mask": context.shape[:2],
+        "action_covariates": (*action.shape[:2], corpus.action_covariate_dim),
+        "action_curies": action.shape[:2],
+        "action_mask": action.shape[:2],
+        "query_mask": query.shape[:2],
+        "readout_type": query.shape[:2],
+        "species_features": (records, corpus.species_feature_dim),
+        "species_taxon": (records,),
+        "target": query.shape[:2],
+        "target_mask": query.shape[:2],
+    }
+    for name, expected in expected_shapes.items():
+        if arrays[name].shape != expected:
+            raise ValueError(f"{name} has shape {arrays[name].shape}, expected {expected}")
+    for name in ("context_mask", "action_mask", "query_mask", "target_mask"):
+        if arrays[name].dtype.kind != "b":
+            raise ValueError(f"{name} must have boolean dtype")
+    for name in (
+        "context_features",
+        "action_features",
+        "action_covariates",
+        "query_features",
+        "species_features",
+        "target",
+    ):
+        value = arrays[name]
+        if value.dtype.kind != "f" or not np.isfinite(value).all():
+            raise ValueError(f"{name} must contain only finite floating-point values")
+    for name in ("species_taxon", "readout_type"):
+        if arrays[name].dtype.kind not in "iu":
+            raise ValueError(f"{name} must have integer dtype")
+    for name in ("record_id", "source_id", "perturbation_id", "action_curies"):
+        if arrays[name].dtype.kind not in "US":
+            raise ValueError(f"{name} must use a fixed-width string dtype")
+    query_mask = arrays["query_mask"]
+    target_mask = arrays["target_mask"]
+    if (
+        not np.all(arrays["context_mask"].any(axis=1))
+        or not np.all(arrays["action_mask"].any(axis=1))
+        or not np.all(query_mask.any(axis=1))
+    ):
+        raise ValueError("every record requires at least one context, action, and query token")
+    if np.any(target_mask & ~query_mask):
+        raise ValueError("target_mask cannot observe a padded query")
+    active_readouts = arrays["readout_type"][query_mask]
+    if np.any(active_readouts < 0) or np.any(active_readouts >= len(corpus.readout_types)):
+        raise ValueError("active readout_type values are outside the declared vocabulary")
+    taxa = arrays["species_taxon"].astype(np.int64, copy=False)
+    if not set(taxa.tolist()).issubset(set(corpus.species_taxa)):
+        raise ValueError("species_taxon contains a taxon absent from corpus.json")
+    for row, taxon in enumerate(taxa.tolist()):
+        expected = np.asarray(corpus.species_feature_vectors[int(taxon)], dtype=np.float64)
+        if not np.allclose(arrays["species_features"][row], expected, rtol=0.0, atol=1e-6):
+            raise ValueError("species_features do not match species_taxon and corpus.json")
+    for name in ("record_id", "source_id", "perturbation_id"):
+        values = np.char.strip(arrays[name].astype(str))
+        if np.any(values == ""):
+            raise ValueError(f"{name} values must be non-empty")
+    action_ids = np.char.strip(arrays["action_curies"].astype(str))
+    action_mask = arrays["action_mask"]
+    if np.any(action_ids[~action_mask] != ""):
+        raise ValueError("padded action_curies must be empty")
+    active_actions = action_ids[action_mask]
+    if np.any(active_actions == "") or any(":" not in item for item in active_actions.tolist()):
+        raise ValueError("active action_curies must be stable CURIE identifiers")
+
+
+def _validate_corpus(corpus: CorpusIndex) -> None:
+    record_ids: set[str] = set()
+    action_ids: set[str] = set()
+    observed_targets = 0
+    row_taxa: set[int] = set()
+    targets_by_taxon = {taxon: 0 for taxon in corpus.species_taxa}
+    for shard in corpus.shards:
+        arrays = _load_shard(corpus, shard)
+        shard_records = arrays["record_id"].astype(str).tolist()
+        duplicate = record_ids.intersection(shard_records)
+        if duplicate or len(shard_records) != len(set(shard_records)):
+            raise ValueError("record_id values must be unique across a corpus")
+        record_ids.update(shard_records)
+        action_ids.update(
+            np.char.strip(arrays["action_curies"].astype(str))[arrays["action_mask"]].tolist()
+        )
+        observed_mask = arrays["target_mask"] & arrays["query_mask"]
+        observed_targets += int(np.count_nonzero(observed_mask))
+        for row, taxon in enumerate(arrays["species_taxon"].astype(np.int64).tolist()):
+            row_taxa.add(int(taxon))
+            targets_by_taxon[int(taxon)] += int(np.count_nonzero(observed_mask[row]))
+    if action_ids != set(corpus.trajectory_genes):
+        missing = sorted(set(corpus.trajectory_genes) - action_ids)
+        undeclared = sorted(action_ids - set(corpus.trajectory_genes))
+        raise ValueError(
+            "trajectoryGenes does not exactly match shard action_curies "
+            f"(missing={missing[:5]}, undeclared={undeclared[:5]})"
+        )
+    if observed_targets == 0:
+        raise ValueError("corpus has no observed molecular targets")
+    if row_taxa != set(corpus.species_taxa):
+        raise ValueError("every declared species taxon must occur in the corpus")
+    if any(count == 0 for count in targets_by_taxon.values()):
+        raise ValueError("every represented species requires an observed molecular target")
+
+
+def validate_audit_binding(
+    corpora: dict[str, CorpusIndex],
+    audit: object,
+) -> None:
+    if (
+        not isinstance(audit, dict)
+        or audit.get("schema") != "slp.corpus-audit/v1"
+        or audit.get("auditPassed") is not True
+        or audit.get("strictInterventionIsolation") is not True
+    ):
+        raise ValueError("a passing strict corpus audit is required before training")
+    datasets = audit.get("datasets")
+    if not isinstance(datasets, dict) or set(datasets) != set(corpora):
+        raise ValueError("corpus audit does not attest the exact training inputs")
+    for name, corpus in corpora.items():
+        attested = datasets.get(name)
+        if not isinstance(attested, dict):
+            raise ValueError(f"corpus audit is missing {name}")
+        for field, expected in corpus.identity.items():
+            if attested.get(field) != expected:
+                raise ValueError(f"corpus audit identity mismatch for {name}.{field}")
 
 
 def iter_batches(
@@ -143,7 +418,11 @@ def _gaussian_nll(
     log_scale: torch.Tensor,
     target: torch.Tensor,
 ) -> torch.Tensor:
-    return 0.5 * ((target - mean) * torch.exp(-log_scale)).square() + log_scale
+    return (
+        0.5 * ((target - mean) * torch.exp(-log_scale)).square()
+        + log_scale
+        + 0.5 * math.log(2.0 * math.pi)
+    )
 
 
 def _linear_features(batch: WorldBatch, readout_types: int) -> torch.Tensor:
@@ -273,6 +552,12 @@ class Moments:
         return (baseline - model) / max(abs(baseline), 1e-8)
 
     @property
+    def nll_delta(self) -> float:
+        if not self.count:
+            return 0.0
+        return self.strongest_baseline_nll - self.model_nll / self.count
+
+    @property
     def strongest_baseline_nll(self) -> float:
         return min(self.mean_baseline_nll, self.linear_baseline_nll) / self.count
 
@@ -326,8 +611,10 @@ def evaluate(
         "baselineNll": overall.strongest_baseline_nll,
         "meanBaselineNll": overall.mean_baseline_nll / overall.count,
         "linearBaselineNll": overall.linear_baseline_nll / overall.count,
+        "nllDelta": overall.nll_delta,
         "nllImprovement": overall.improvement,
         "effectPearson": overall.pearson,
+        "minimumSpeciesNllDelta": min(item.nll_delta for item in by_species.values()),
         "minimumSpeciesNllImprovement": min(item.improvement for item in by_species.values()),
         "species": {
             str(taxon): {
@@ -336,6 +623,7 @@ def evaluate(
                 "baselineNll": item.strongest_baseline_nll,
                 "meanBaselineNll": item.mean_baseline_nll / item.count,
                 "linearBaselineNll": item.linear_baseline_nll / item.count,
+                "nllDelta": item.nll_delta,
                 "nllImprovement": item.improvement,
                 "effectPearson": item.pearson,
             }
@@ -347,18 +635,34 @@ def evaluate(
 def train_world(
     roots: dict[str, str | Path],
     config: dict[str, object],
+    audit: object,
 ) -> tuple[SpeciesAwareWorldModel, dict[str, object], Baselines]:
-    seed = int(config.get("seed", 111))
-    torch.manual_seed(seed)
-    np.random.seed(seed)
     pretrain = CorpusIndex.load(roots["pretrain"], "pretrain")
     validation = CorpusIndex.load(roots["molecularValidation"], "molecular-validation")
     reward = CorpusIndex.load(roots["molecularReward"], "molecular-reward")
     _validate_compatible(pretrain, validation, reward)
+    corpora = {
+        "pretrain": pretrain,
+        "molecularValidation": validation,
+        "molecularReward": reward,
+    }
+    validate_audit_binding(corpora, audit)
+    for corpus in corpora.values():
+        _validate_corpus(corpus)
+    reinforcement_epochs = int(config.get("reinforcementEpochs", 0))
+    if reinforcement_epochs:
+        raise ValueError(
+            "molecular reinforcement is disabled until a matched deterministic "
+            "continuation and per-source preservation gate are implemented"
+        )
+    seed = int(config.get("seed", 111))
+    torch.manual_seed(seed)
+    np.random.seed(seed)
     model_config = WorldConfig(
         entity_feature_dim=pretrain.entity_feature_dim,
         species_feature_dim=pretrain.species_feature_dim,
         readout_types=len(pretrain.readout_types),
+        action_covariate_dim=pretrain.action_covariate_dim,
         d_model=int(config.get("dModel", 256)),
         nhead=int(config.get("nhead", 8)),
         encoder_layers=int(config.get("encoderLayers", 4)),
@@ -388,6 +692,8 @@ def train_world(
             batch = _to_device(batch, device)
             target = target.to(device)
             mask = target_mask.to(device) & batch.query_mask
+            if not mask.any():
+                continue
             prediction = model(batch)
             loss = _gaussian_nll(prediction.mean, prediction.log_scale, target)[mask].mean()
             optimizer.zero_grad()
@@ -413,7 +719,7 @@ def train_world(
         weight_decay=1e-2,
     )
     anchor_weight = float(config.get("reinforcementAnchorWeight", 0.1))
-    for epoch in range(int(config.get("reinforcementEpochs", 0))):
+    for epoch in range(reinforcement_epochs):
         model.train()
         for batch, target, target_mask, _species in iter_batches(
             reward, batch_size, seed=seed + 1000 + epoch, shuffle=True
@@ -421,6 +727,8 @@ def train_world(
             batch = _to_device(batch, device)
             target = target.to(device)
             mask = target_mask.to(device) & batch.query_mask
+            if not mask.any():
+                continue
             prediction = model(batch)
             distribution = torch.distributions.Normal(prediction.mean, prediction.scale)
             sample = distribution.sample()
@@ -456,6 +764,7 @@ def train_world(
         "seed": seed,
         "modelConfig": model.config.as_dict(),
         "readoutTypes": list(pretrain.readout_types),
+        "corpora": {name: corpus.identity for name, corpus in corpora.items()},
         "parameterCount": model.count_parameters(),
         "reinforcementRetained": rl_retained,
         "selected": best_metrics,

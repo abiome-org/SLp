@@ -16,11 +16,17 @@ spec:
     - name: validation-nll-improvement
       output: train.validationNllImprovement
       minimum: 0.02
+    - name: validation-nll-delta-nats
+      output: train.validationNllDelta
+      minimum: 0.02
     - name: validation-effect-pearson
       output: train.validationEffectPearson
       minimum: 0.10
     - name: worst-species-nll-improvement
       output: train.minimumSpeciesNllImprovement
+      minimum: 0.0
+    - name: worst-species-nll-delta-nats
+      output: train.minimumSpeciesNllDelta
       minimum: 0.0
   extensions:
     benchmarkAccess: forbidden
