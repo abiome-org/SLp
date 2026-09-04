@@ -7,15 +7,21 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import yaml
+
 MODULE = Path(__file__).resolve().parents[1] / "modules" / "slp-1-1-molecular-eval"
 sys.path.insert(0, str(MODULE))
 
 from evaluator import (
+    MINIMUM_PERTURBED_CENTROID_PEARSON,
+    MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON,
     PREDICTION_ROLE,
     REFERENCE_ROLE,
     MolecularEvaluationError,
     evaluate_molecular_predictions,
+    resolve_literal_omf_artifact,
 )
+from render_workload import WorkloadRenderError, render_workload_text
 
 
 class MolecularEvaluationTest(unittest.TestCase):
@@ -131,6 +137,9 @@ class MolecularEvaluationTest(unittest.TestCase):
         self.assertEqual(set(report["sources"]), {"costanzo:2016", "replogle:2022"})
         self.assertEqual(report["audit"]["heldInterventionOverlap"], 0)
         self.assertEqual(report["method"]["class"], "Systema-inspired")
+        self.assertTrue(report["decision"]["passed"])
+        self.assertTrue(report["decision"]["compatibilityPassed"])
+        self.assertEqual(report["decision"]["scope"], "molecular-profile-evaluation-only")
 
     def test_perturbed_mean_prediction_scores_zero_specific_signal(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -151,6 +160,8 @@ class MolecularEvaluationTest(unittest.TestCase):
         self.assertEqual(specific["perturbedCentroidCosine"], 0.0)
         self.assertEqual(specific["perturbedCentroidPearsonUndefinedProfiles"], 4)
         self.assertEqual(specific["centroidAccuracyCommonPanel"], 0.0)
+        self.assertFalse(report["decision"]["passed"])
+        self.assertTrue(report["decision"]["compatibilityPassed"])
 
     def test_component_intervention_overlap_is_fatal_for_a_combination(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -192,6 +203,59 @@ class MolecularEvaluationTest(unittest.TestCase):
             )
             with self.assertRaisesRegex(MolecularEvaluationError, "unexpected record fields"):
                 evaluate_molecular_predictions(reference, predictions)
+
+    def test_second_run_template_renders_only_literal_frozen_artifacts(self) -> None:
+        reference = "sha256:" + "c" * 64
+        predictions = "sha256:" + "d" * 64
+        rendered = render_workload_text(reference, predictions)
+        workload = yaml.safe_load(rendered)
+        stage = workload["spec"]["graph"]["stages"][0]
+        self.assertEqual(stage.get("needs", []), [])
+        self.assertEqual(stage["inputs"]["molecularReference"], reference)
+        self.assertEqual(stage["inputs"]["molecularPredictions"], predictions)
+        self.assertIn("passed", stage["outputs"])
+        self.assertIn("compatibilityPassed", stage["outputs"])
+        self.assertNotIn("@@", rendered)
+
+    def test_second_run_renderer_rejects_mutable_or_ambiguous_references(self) -> None:
+        digest = "sha256:" + "e" * 64
+        with self.assertRaisesRegex(WorkloadRenderError, "exact sha256"):
+            render_workload_text("train.predictions", digest)
+        with self.assertRaisesRegex(WorkloadRenderError, "must be distinct"):
+            render_workload_text(digest, digest)
+
+    def test_evaluation_spec_cannot_drift_from_the_profile_gate(self) -> None:
+        path = Path(__file__).resolve().parents[1] / "evaluations" / (
+            "slp-1-1-molecular-artifact.yaml"
+        )
+        resource = yaml.safe_load(path.read_text(encoding="utf-8"))
+        metrics = {item["name"]: item for item in resource["spec"]["metrics"]}
+        self.assertEqual(metrics["molecular-profile-gate"]["output"], "molecular.passed")
+        self.assertEqual(
+            metrics["perturbation-specific-pearson"]["minimum"],
+            MINIMUM_PERTURBED_CENTROID_PEARSON,
+        )
+        self.assertEqual(
+            metrics["worst-species-perturbation-specific-pearson"]["minimum"],
+            MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON,
+        )
+
+    def test_evaluator_accepts_only_admission_pinned_literal_artifact_objects(self) -> None:
+        digest = "sha256:" + "f" * 64
+        path = "C:/omf/run/stages/molecular/inputs/reference/payload"
+        materialized = {
+            "resource": f"artifact:{digest}",
+            "kind": "artifact",
+            "artifacts": {"payload": digest},
+            "paths": {"payload": path},
+            "path": path,
+        }
+        self.assertEqual(
+            resolve_literal_omf_artifact(materialized, "molecularReference"),
+            (path, digest),
+        )
+        with self.assertRaisesRegex(MolecularEvaluationError, "literal OMF artifact"):
+            resolve_literal_omf_artifact({"path": path}, "molecularReference")
 
 
 if __name__ == "__main__":

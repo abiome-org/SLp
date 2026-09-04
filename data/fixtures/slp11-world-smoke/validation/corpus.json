@@ -1,0 +1,39 @@
+{
+  "actionCovariateDim": 2,
+  "benchmarkLabelsPresent": false,
+  "datasetId": "slp11-world-smoke-validation",
+  "entityFeatureDim": 4,
+  "labelClass": "molecular",
+  "modalities": [
+    "synthetic-fixture"
+  ],
+  "readoutTypes": [
+    "synthetic-effect"
+  ],
+  "role": "molecular-validation",
+  "schema": "slp.corpus/v1",
+  "shards": [
+    {
+      "path": "shard-000.npz",
+      "records": 8,
+      "sha256": "fa1affa29a2f480769429ff8f4e55ae5d5c7e45618c2e96deb8dd8e818d4b443"
+    }
+  ],
+  "speciesFeatureDim": 2,
+  "speciesFeatureVectors": {
+    "4932": [
+      1.0,
+      0.0
+    ],
+    "9606": [
+      0.0,
+      1.0
+    ]
+  },
+  "speciesTaxa": [
+    4932,
+    9606
+  ],
+  "trajectoryGenes": "trajectory-genes.txt",
+  "version": "fixture-v1"
+}

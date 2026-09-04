@@ -1,0 +1,34 @@
+apiVersion: omf.dev/v1alpha1
+kind: EvaluationSpec
+metadata:
+  name: slp-1-1-molecular-artifact
+spec:
+  metrics:
+    - name: molecular-profile-gate
+      output: molecular.passed
+      minimum: 1
+    - name: molecular-artifact-compatibility
+      output: molecular.compatibilityPassed
+      minimum: 1
+    - name: held-intervention-overlap
+      output: molecular.heldInterventionOverlap
+      maximum: 0
+    - name: benchmark-label-records
+      output: molecular.benchmarkLabelRecords
+      maximum: 0
+    - name: perturbation-specific-pearson
+      output: molecular.perturbedCentroidPearson
+      minimum: 0.10
+    - name: worst-species-perturbation-specific-pearson
+      output: molecular.minimumSpeciesPerturbedCentroidPearson
+      minimum: 0.0
+    - name: ordinary-pearson-descriptive
+      output: molecular.ordinaryPearson
+    - name: centroid-accuracy-descriptive
+      output: molecular.centroidAccuracyCommonPanel
+  extensions:
+    benchmarkAccess: forbidden
+    selectionClass: molecular-only
+    scope: separately admitted evaluation of frozen molecular artifacts
+    compatibilityScope: immutable molecular reference/prediction artifact contract only
+    doesNotAuthorize: model release or portable-inference claims

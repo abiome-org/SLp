@@ -1,0 +1,61 @@
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-world-smoke
+spec:
+  graph:
+    stages:
+      - name: audit
+        module: modules/slp-1-1-corpus-audit/module.yaml
+        operation: run
+        inputs:
+          pretrain: dataset/slp-1-1-world-smoke-pretrain
+          molecularValidation: dataset/slp-1-1-world-smoke-validation
+          molecularReward: dataset/slp-1-1-world-smoke-reward
+        config:
+          strictInterventionIsolation: true
+        outputs:
+          - audit
+          - auditPassed
+          - leakageViolations
+          - benchmarkLabelRecords
+          - pretrainRecords
+          - validationRecords
+          - rewardRecords
+          - speciesCount
+          - auditReport
+      - name: train
+        needs: [audit]
+        module: modules/slp-1-1-world/module.yaml
+        operation: run
+        inputs:
+          pretrain: dataset/slp-1-1-world-smoke-pretrain
+          molecularValidation: dataset/slp-1-1-world-smoke-validation
+          molecularReward: dataset/slp-1-1-world-smoke-reward
+          corpusAudit: audit.audit
+        config:
+          seed: 17
+          epochs: 1
+          reinforcementEpochs: 0
+          batchSize: 4
+          learningRate: 0.001
+          dModel: 8
+          nhead: 2
+          encoderLayers: 1
+          decoderLayers: 1
+          ffnMultiplier: 2
+          dropout: 0.0
+        outputs:
+          - modelState
+          - checkpointSha256
+          - validationNll
+          - validationBaselineNll
+          - validationNllDelta
+          - validationNllImprovement
+          - validationEffectPearson
+          - minimumSpeciesNllDelta
+          - minimumSpeciesNllImprovement
+          - rlRetained
+          - parameterCount
+          - checkpoint
+          - trainingReport

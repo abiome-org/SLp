@@ -1,0 +1,37 @@
+# Template only: render after both producer artifacts are frozen. OMF does not
+# materialize a sibling stage's newly generated artifact in the same run.
+apiVersion: omf.dev/v1alpha1
+kind: WorkloadSpec
+metadata:
+  name: slp-1-1-molecular-eval-frozen
+spec:
+  evaluationRefs:
+    - evaluationspec/slp-1-1-molecular-artifact
+  graph:
+    stages:
+      - name: molecular
+        module: modules/slp-1-1-molecular-eval/module.yaml
+        operation: run
+        inputs:
+          molecularReference: "@@MOLECULAR_REFERENCE_ARTIFACT@@"
+          molecularPredictions: "@@MOLECULAR_PREDICTIONS_ARTIFACT@@"
+        config:
+          minimumReferencePerturbations: 2
+          minimumProfileReadouts: 2
+          maxLineBytes: 16777216
+          maximumAbsoluteLogScale: 20.0
+        outputs:
+          - evaluationSummary
+          - evaluationReportSha256
+          - molecularTargets
+          - profileCount
+          - ordinaryPearson
+          - perturbedCentroidPearson
+          - perturbedCentroidCosine
+          - centroidAccuracyCommonPanel
+          - minimumSpeciesPerturbedCentroidPearson
+          - benchmarkLabelRecords
+          - heldInterventionOverlap
+          - passed
+          - compatibilityPassed
+          - molecularEvaluationReport

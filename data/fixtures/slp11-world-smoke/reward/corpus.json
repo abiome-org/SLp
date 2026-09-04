@@ -1,0 +1,39 @@
+{
+  "actionCovariateDim": 2,
+  "benchmarkLabelsPresent": false,
+  "datasetId": "slp11-world-smoke-reward",
+  "entityFeatureDim": 4,
+  "labelClass": "molecular",
+  "modalities": [
+    "synthetic-fixture"
+  ],
+  "readoutTypes": [
+    "synthetic-effect"
+  ],
+  "role": "molecular-reward",
+  "schema": "slp.corpus/v1",
+  "shards": [
+    {
+      "path": "shard-000.npz",
+      "records": 8,
+      "sha256": "570c013bde00baa19cb0a154c4fd676006fecb9e3bf3eebb4c90dc69ebb2d828"
+    }
+  ],
+  "speciesFeatureDim": 2,
+  "speciesFeatureVectors": {
+    "4932": [
+      1.0,
+      0.0
+    ],
+    "9606": [
+      0.0,
+      1.0
+    ]
+  },
+  "speciesTaxa": [
+    4932,
+    9606
+  ],
+  "trajectoryGenes": "trajectory-genes.txt",
+  "version": "fixture-v1"
+}

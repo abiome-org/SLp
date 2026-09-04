@@ -78,8 +78,21 @@ spec:
   fixtures:
     - request:
         operation: validate
-        inputs: {}
-        config: {}
+        inputs:
+          source: {}
+        config:
+          datasetId: slp11-yeast-validation-fixture
+          version: fixture-v1
+          role: pretrain
+          entityFeatureDim: 8
+          speciesFeatureDim: 2
+          speciesFeatureVector: [1.0, 0.0]
+          actionCovariateDim: 4
+          readoutTypes: [synthetic-effect]
+          maxContextTokens: 2
+          maxActionTokens: 2
+          maxQueryTokens: 2
+          shardRecords: 1
         state: {}
       result:
         status: ok

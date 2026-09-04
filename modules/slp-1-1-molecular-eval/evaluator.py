@@ -14,6 +14,9 @@ REFERENCE_ROLE = "molecular-reference"
 PREDICTION_ROLE = "molecular-validation-predictions"
 REPORT_SCHEMA = "slp.molecular-evaluation-report/v1"
 SYSTEMA_DOI = "10.1038/s41587-025-02777-8"
+PROFILE_GATE_SCHEMA = "slp.molecular-profile-gate/v1"
+MINIMUM_PERTURBED_CENTROID_PEARSON = 0.10
+MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON = 0.0
 HEX_DIGITS = frozenset("0123456789abcdef")
 MANIFEST_FIELDS = frozenset(
     {
@@ -107,6 +110,34 @@ def _resolve_shard(root: Path, relative_path: object) -> Path:
     if resolved.suffix not in {".jsonl", ".gz"}:
         raise MolecularEvaluationError("evaluation shards must end in .jsonl or .jsonl.gz")
     return resolved
+
+
+def resolve_literal_omf_artifact(value: object, name: str) -> tuple[str, str]:
+    """Require the object OMF creates from a literal, admission-pinned artifact digest."""
+    if not isinstance(value, dict):
+        raise MolecularEvaluationError(f"{name} must be a materialized OMF artifact object")
+    if value.get("kind") != "artifact":
+        raise MolecularEvaluationError(f"{name} must be a literal OMF artifact input")
+    artifacts = value.get("artifacts")
+    paths = value.get("paths")
+    path = value.get("path")
+    if not isinstance(artifacts, dict) or set(artifacts) != {"payload"}:
+        raise MolecularEvaluationError(f"{name}.artifacts must contain only payload")
+    digest = artifacts["payload"]
+    if not isinstance(digest, str) or not digest.startswith("sha256:") or not _is_digest(
+        digest.removeprefix("sha256:")
+    ):
+        raise MolecularEvaluationError(f"{name} payload must be a SHA-256 artifact manifest")
+    if value.get("resource") != f"artifact:{digest}":
+        raise MolecularEvaluationError(f"{name} resource does not match its artifact manifest")
+    if (
+        not isinstance(path, str)
+        or not path
+        or not isinstance(paths, dict)
+        or paths.get("payload") != path
+    ):
+        raise MolecularEvaluationError(f"{name} materialized payload path is inconsistent")
+    return path, digest
 
 
 @dataclass(frozen=True)
@@ -206,6 +237,10 @@ class SnapshotManifest:
                 raise MolecularEvaluationError("modelCheckpointSha256 must be a lowercase SHA-256")
             if not _is_digest(reference_digest):
                 raise MolecularEvaluationError("referenceManifestSha256 must be a lowercase SHA-256")
+        elif "modelCheckpointSha256" in raw or "referenceManifestSha256" in raw:
+            raise MolecularEvaluationError(
+                "molecular-reference manifests may not declare prediction provenance"
+            )
         return cls(
             root=snapshot_root,
             role=expected_role,
@@ -668,6 +703,72 @@ def _combined_report(moments: ScalarMoments, metrics: list[ProfileMetric]) -> di
     return {"ordinary": moments.report(), "perturbationSpecific": _profile_report(metrics)}
 
 
+def molecular_profile_decision(report: dict[str, object]) -> dict[str, object]:
+    """Apply the frozen profile-only gate without claiming full model advancement."""
+    overall = report["overall"]
+    audit = report["audit"]
+    species = report["species"]
+    sources = report["sources"]
+    assert isinstance(overall, dict)
+    assert isinstance(audit, dict)
+    assert isinstance(species, dict)
+    assert isinstance(sources, dict)
+    specific = overall["perturbationSpecific"]
+    assert isinstance(specific, dict)
+    species_pearson = {
+        str(taxon): float(value["perturbationSpecific"]["perturbedCentroidPearson"])
+        for taxon, value in species.items()
+    }
+    source_profiles = {
+        str(source): int(value["perturbationSpecific"]["profiles"])
+        for source, value in sources.items()
+    }
+    species_profiles = {
+        str(taxon): int(value["perturbationSpecific"]["profiles"])
+        for taxon, value in species.items()
+    }
+    minimum_species = min(species_pearson.values())
+    checks = {
+        "zeroBenchmarkLabelRecords": int(audit["benchmarkLabelRecords"]) == 0,
+        "zeroHeldInterventionOverlap": int(audit["heldInterventionOverlap"]) == 0,
+        "overallPerturbedCentroidPearson": (
+            float(specific["perturbedCentroidPearson"])
+            >= MINIMUM_PERTURBED_CENTROID_PEARSON
+        ),
+        "minimumSpeciesPerturbedCentroidPearson": (
+            minimum_species >= MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON
+        ),
+        "everySpeciesHasEligibleProfiles": all(value > 0 for value in species_profiles.values()),
+        "everySourceHasEligibleProfiles": all(value > 0 for value in source_profiles.values()),
+    }
+    return {
+        "schema": PROFILE_GATE_SCHEMA,
+        "scope": "molecular-profile-evaluation-only",
+        "passed": all(checks.values()),
+        "compatibilityPassed": True,
+        "compatibilityScope": "immutable molecular reference/prediction artifact contract",
+        "thresholds": {
+            "minimumPerturbedCentroidPearson": MINIMUM_PERTURBED_CENTROID_PEARSON,
+            "minimumSpeciesPerturbedCentroidPearson": (
+                MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON
+            ),
+        },
+        "observed": {
+            "perturbedCentroidPearson": specific["perturbedCentroidPearson"],
+            "minimumSpeciesPerturbedCentroidPearson": minimum_species,
+            "speciesProfiles": species_profiles,
+            "sourceProfiles": source_profiles,
+        },
+        "checks": checks,
+        "doesNotEstablish": [
+            "the separate Gaussian-NLL improvement gate",
+            "checkpoint selection eligibility",
+            "synthetic-lethality benchmark performance",
+            "portable inference or release compatibility",
+        ],
+    }
+
+
 def evaluate_molecular_predictions(
     reference_root: str | Path,
     prediction_root: str | Path,
@@ -779,7 +880,7 @@ def evaluate_molecular_predictions(
         )
         for (taxon, source), moments in sorted(species_source_moments.items())
     }
-    return {
+    report: dict[str, object] = {
         "schema": REPORT_SCHEMA,
         "method": {
             "name": "training-perturbed-centroid sparse-profile evaluation",
@@ -835,3 +936,5 @@ def evaluate_molecular_predictions(
         "sources": sources,
         "speciesSources": species_sources,
     }
+    report["decision"] = molecular_profile_decision(report)
+    return report

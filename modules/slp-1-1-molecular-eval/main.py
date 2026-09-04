@@ -24,6 +24,8 @@ def _validation_outputs() -> dict[str, object]:
         "minimumSpeciesPerturbedCentroidPearson": 0.0,
         "benchmarkLabelRecords": 0,
         "heldInterventionOverlap": 0,
+        "passed": False,
+        "compatibilityPassed": False,
     }
 
 
@@ -32,11 +34,20 @@ def validate(_request: ProtocolRequest) -> ProtocolResult:
 
 
 def run(request: ProtocolRequest) -> ProtocolResult:
-    from evaluator import evaluate_molecular_predictions
+    from evaluator import evaluate_molecular_predictions, resolve_literal_omf_artifact
+
+    reference_path, reference_artifact = resolve_literal_omf_artifact(
+        request.inputs["molecularReference"], "molecularReference"
+    )
+    prediction_path, prediction_artifact = resolve_literal_omf_artifact(
+        request.inputs["molecularPredictions"], "molecularPredictions"
+    )
+    if reference_artifact == prediction_artifact:
+        raise ValueError("molecular reference and prediction artifacts must be distinct")
 
     report = evaluate_molecular_predictions(
-        request.inputs["molecularReference"]["path"],
-        request.inputs["molecularPredictions"]["path"],
+        reference_path,
+        prediction_path,
         minimum_reference_perturbations=int(
             request.config.get("minimumReferencePerturbations", 2)
         ),
@@ -46,6 +57,8 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             request.config.get("maximumAbsoluteLogScale", 20.0)
         ),
     )
+    report["inputs"]["reference"]["omfArtifactManifestDigest"] = reference_artifact
+    report["inputs"]["predictions"]["omfArtifactManifestDigest"] = prediction_artifact
     output_dir = Path(os.environ["OMF_RESULT_FILE"]).parent
     report_path = output_dir / "molecular-evaluation-report.json"
     report_path.write_text(
@@ -68,7 +81,12 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         ],
         "referenceManifestSha256": report["inputs"]["reference"]["manifestSha256"],
         "predictionManifestSha256": report["inputs"]["predictions"]["manifestSha256"],
+        "referenceArtifactManifestDigest": reference_artifact,
+        "predictionArtifactManifestDigest": prediction_artifact,
         "methodClass": report["method"]["class"],
+        "decisionScope": report["decision"]["scope"],
+        "decisionThresholds": report["decision"]["thresholds"],
+        "compatibilityScope": report["decision"]["compatibilityScope"],
     }
     outputs = {
         "evaluationSummary": summary,
@@ -82,6 +100,8 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         "minimumSpeciesPerturbedCentroidPearson": min(species_pearson),
         "benchmarkLabelRecords": report["audit"]["benchmarkLabelRecords"],
         "heldInterventionOverlap": report["audit"]["heldInterventionOverlap"],
+        "passed": report["decision"]["passed"],
+        "compatibilityPassed": report["decision"]["compatibilityPassed"],
     }
     return ProtocolResult(
         status="ok",

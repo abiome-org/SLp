@@ -32,6 +32,8 @@ spec:
         - minimumSpeciesPerturbedCentroidPearson
         - benchmarkLabelRecords
         - heldInterventionOverlap
+        - passed
+        - compatibilityPassed
       properties:
         evaluationSummary: {type: object}
         evaluationReportSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
@@ -44,6 +46,8 @@ spec:
         minimumSpeciesPerturbedCentroidPearson: {type: number, minimum: -1, maximum: 1}
         benchmarkLabelRecords: {type: integer, minimum: 0}
         heldInterventionOverlap: {type: integer, minimum: 0}
+        passed: {type: boolean}
+        compatibilityPassed: {type: boolean}
       additionalProperties: false
     config:
       type: object
@@ -56,7 +60,9 @@ spec:
   fixtures:
     - request:
         operation: validate
-        inputs: {}
+        inputs:
+          molecularReference: {}
+          molecularPredictions: {}
         config: {}
         state: {}
       result:
@@ -75,3 +81,5 @@ spec:
           minimumSpeciesPerturbedCentroidPearson: 0.0
           benchmarkLabelRecords: 0
           heldInterventionOverlap: 0
+          passed: false
+          compatibilityPassed: false
