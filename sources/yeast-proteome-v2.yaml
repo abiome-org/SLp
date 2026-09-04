@@ -267,6 +267,16 @@ admission:
   requireMissingnessSemantics: true
   requireSampleBatchStrainProvenance: true
   onAmbiguity: quarantine
+  rawSnapshot:
+    admitted: true
+    verified: true
+    mode: copy
+    sampleSchema: slp.raw-mendeley-proteome/v2
+    resource: omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-raw-v2@sha256:5392d4df7e962c9f59798b83fbdf8e71cd568b30c78a498702d50fabc059397e
+    manifestDigest: sha256:7f25f6e11d3deb73624d1c59f7aead59aef77641be6a54b8d0ee838e305f2213
+    rightsVerifiedAtAdmission: true
+    identityInventoryProduced: false
+    quantitativeCorpusProduced: false
 modeling:
   preserveMissingAsUnobserved: true
   useDifferentialExpressionStatisticsAsTargets: false
