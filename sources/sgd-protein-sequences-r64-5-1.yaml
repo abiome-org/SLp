@@ -1,0 +1,133 @@
+schema: slp.source-acquisition/v1
+id: sgd-protein-sequences-r64-5-1
+status: exact-source-pinned-admission-pending
+blocker: >-
+  This source is not an admitted DatasetSnapshot yet. It may not be used by a
+  feature generator until the three exact objects below are re-downloaded,
+  rehashed, staged without extra files, admitted with the matching narrow
+  rights declaration, and verified by OMF.
+organism:
+  name: Saccharomyces cerevisiae S288C
+  speciesTaxon: 4932
+  strainTaxon: 559292
+  taxonomyRelation: NCBITaxon:559292 strain-of NCBITaxon:4932
+  note: >-
+    The source is the S288C reference strain. Downstream records must retain the
+    strain provenance even when the current molecular protocol groups records
+    at species taxon 4932.
+source:
+  publisher: Saccharomyces Genome Database
+  archiveRoot: https://downloads.yeastgenome.org/sequence/S288C_reference/
+  documentation: https://wiki.yeastgenome.org/index.php/FTP_Sequence
+rights: rights/sgd-protein-sequences-r64-5-1-cc-by-4.0.yaml
+release:
+  upstreamGenomeAnnotationRelease: R64.5.1
+  upstreamHeaderRelease: 64-5-1
+  releaseDate: 2024-05-29
+  releaseEvidence: https://wiki.yeastgenome.org/index.php/SGD_Newsletter%2C_Summer_2024
+  pinnedAt: 2026-09-04
+  note: >-
+    Object LastModified dates are upload metadata, not the annotation release
+    date. The release-labelled archive object is primary; a byte-identical
+    current-path object version is recorded only as a mirror.
+allowlist:
+  - name: orf_trans_all_R64-5-1_20240529.fasta.gz
+    path: sequence/S288C_reference/orf_protein/archive/orf_trans_all_R64-5-1_20240529.fasta.gz
+    versionedUrl: "https://downloads.yeastgenome.org/sequence/S288C_reference/orf_protein/archive/orf_trans_all_R64-5-1_20240529.fasta.gz?versionId=GRiDuJlE44rFsMHE63VZUFxVcA4GBun6"
+    s3VersionId: GRiDuJlE44rFsMHE63VZUFxVcA4GBun6
+    lastModified: 2024-06-13T22:29:50Z
+    bytes: 2689634
+    upstreamEtag: c1fe0077834ebc918b16bc8dfbd59d72
+    etagIsCryptographicChecksum: false
+    sha256: 17e8b47e1ae23178c6000fbc4ab548f102d1b250ef9dff5d811feb3f03dd2c5b
+    decompressedBytes: 5511467
+    decompressedSha256: e01f9e1ef7e5a01ff7cd0ee7a843e6d1c1da8c3777fdfac3a5293711d4c56518
+    role: exact-release-translated-orf-protein-sequences
+    payloadClass: static-protein-sequence
+  - name: orf_protein.README
+    path: sequence/S288C_reference/orf_protein/orf_protein.README
+    versionedUrl: "https://downloads.yeastgenome.org/sequence/S288C_reference/orf_protein/orf_protein.README?versionId=qrmr4JzXcqmddqAYm5cA4i4ywgAp2xkp"
+    s3VersionId: qrmr4JzXcqmddqAYm5cA4i4ywgAp2xkp
+    lastModified: 2019-10-25T18:56:09Z
+    bytes: 930
+    upstreamEtag: d0ed15f3fd52cad0ac29c2565bf97064
+    etagIsCryptographicChecksum: false
+    sha256: b53064bef6424f0e9b5c5a6af88602bb15949e68bedb397b6731b094ebca5be9
+    role: pinned-fasta-file-semantics
+    payloadClass: documentation
+  - name: dates_of_genome_releases.tab
+    path: sequence/S288C_reference/dates_of_genome_releases.tab
+    versionedUrl: "https://downloads.yeastgenome.org/sequence/S288C_reference/dates_of_genome_releases.tab?versionId=7Ze3kUv.yxtt8cDceDVCDbYH8pdhu43S"
+    s3VersionId: 7Ze3kUv.yxtt8cDceDVCDbYH8pdhu43S
+    lastModified: 2024-11-19T19:03:51Z
+    bytes: 2050
+    upstreamEtag: 5665a030caba6ab2133dc7f3ecee4d9c
+    etagIsCryptographicChecksum: false
+    sha256: cc5d40722442a605d1d6dcf9a36442d87076829a04f776f87b3de0020f92f9e7
+    role: pinned-release-label-to-date-evidence
+    payloadClass: documentation
+mirror:
+  path: sequence/S288C_reference/orf_protein/orf_trans_all.fasta.gz
+  versionedUrl: "https://downloads.yeastgenome.org/sequence/S288C_reference/orf_protein/orf_trans_all.fasta.gz?versionId=9nr84pfuY9VyM9_MU.MRTw4evwY7Z_Vz"
+  s3VersionId: 9nr84pfuY9VyM9_MU.MRTw4evwY7Z_Vz
+  lastModified: 2024-06-13T22:28:53Z
+  bytes: 2689634
+  upstreamEtag: c1fe0077834ebc918b16bc8dfbd59d72
+  sha256: 17e8b47e1ae23178c6000fbc4ab548f102d1b250ef9dff5d811feb3f03dd2c5b
+  admittedPayload: false
+expectedContent:
+  fastaCompression: gzip
+  fastaRecords: 6722
+  uniqueSgdIds: 6722
+  releaseMarker: Genome Release 64-5-1
+  releaseMarkerRecords: 6722
+  currentOrfCoverage:
+    mappingArtifact: artifact:sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192
+    mappingManifest: artifact:sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c
+    currentOrfs: 6613
+    coveredCurrentOrfs: 6613
+    missingCurrentOrfs: 0
+  sourceClasses:
+    verifiedOrf: 5271
+    uncharacterizedOrf: 659
+    dubiousOrf: 683
+    transposableElementGene: 91
+    pseudogene: 12
+    blockedReadingFrame: 6
+  nonCurrentOrfRecords: 109
+identity:
+  fastaHeaderPrefix: ">systematic-name display-name SGDID:S#########,"
+  canonicalJoin: exact SGDID token converted to SGD:S#########
+  systematicNameCrossCheck: exact-case-sensitive against current-orfs.jsonl
+  displayNameResolvesIdentity: false
+  simpleSystematicOrfRegexAllowed: false
+  duplicateCanonicalIdsAllowed: false
+featurePolicy:
+  staticFeatureSourceAllowed: true
+  quantitativeTrainingCorpusAllowed: false
+  includeHeldEntitySequences: true
+  freeTextHeaderDescriptionAsFeature: false
+  displayNameAsFeature: false
+  identifierDerivedNumericFeatures: false
+  outcomeFieldsPresent: false
+  benchmarkFieldsPresent: false
+validation:
+  requireExactFileSet: true
+  requireS3VersionIdEcho: true
+  requireLocalSha256: true
+  requireGzipIntegrity: true
+  requireExactRecordCounts: true
+  requireFullCurrentOrfCoverage: true
+  failOnReadmeContentDrift: true
+limitations:
+  - >-
+    The pinned README's companion-file prose says orf_trans.fasta.gz excludes
+    pseudogenes, but the exact companion content includes at least YAR061W.
+    The all-sequence payload is governed by its exact bytes and asserted record
+    composition, not by that inconsistent subset prose.
+  - >-
+    Static sequence access means held genes are unseen only with respect to
+    quantitative intervention outcomes, not unseen biological entities.
+  - >-
+    This snapshot provides protein sequences only. It provides no domain,
+    annotation, orthology, phylogeny, quantitative outcome, or benchmark data.

@@ -1,0 +1,41 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://downloads.yeastgenome.org/sequence/S288C_reference/
+evidence: https://doi.org/10.1093/genetics/iyae185
+releaseEvidence: https://wiki.yeastgenome.org/index.php/SGD_Newsletter%2C_Summer_2024
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  SGD-authored translated ORF protein sequences and documentation in the exact
+  three object-version- and SHA-256-pinned files declared by
+  sources/sgd-protein-sequences-r64-5-1.yaml only.
+rightsBasis: >-
+  The SGD project's 2025 GENETICS update states that all information and
+  materials provided by SGD are available under CC BY 4.0 and permits reuse,
+  distribution, remixing, adaptation, and commercial use with attribution.
+  Deterministic numeric descriptors and frozen sequence embeddings are treated
+  as adaptations. Technical access is recorded separately from permission.
+technicalAccessIsRightsEvidence: false
+technicalAccessEvidence:
+  host: https://downloads.yeastgenome.org/
+  mechanism: Amazon S3 object-version URLs
+  verifiedAt: "2026-09-04"
+  note: >-
+    Each exact URL returned HTTP 200 and echoed its requested x-amz-version-id;
+    this verifies reproducible access but does not itself establish rights.
+attribution: >-
+  Saccharomyces Genome Database (SGD), Stanford University; Engel SR et al.
+  (2025), Saccharomyces Genome Database: Advances in Genome Annotation,
+  Expanded Biochemical Pathways, and Other Key Enhancements, GENETICS 229(3),
+  iyae185. https://doi.org/10.1093/genetics/iyae185
+purposeRestrictions:
+  staticFeatureGeneration: true
+  molecularOutcomeTrainingCorpus: false
+  syntheticLethalityLabels: false
+exclusions:
+  - linked third-party resources not authored or distributed by SGD
+  - mutable unversioned responses and the current-path mirror
+  - free-text descriptions as model features
+  - protein domains, GO annotations, phenotype annotations, interactions, and quantitative outcomes
+  - any future SGD object version until its rights and provenance are reviewed
