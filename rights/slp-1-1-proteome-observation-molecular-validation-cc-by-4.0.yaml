@@ -1,0 +1,78 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: derived protected molecular-validation proteome observations from Mendeley Data w8jtmnszd9 version 2 under the frozen SGD and cross-source held-roster boundary
+evidence:
+  - https://api.datacite.org/dois/10.17632/w8jtmnszd9.2
+  - https://zenodo.org/api/records/14062629
+  - https://doi.org/10.1093/genetics/iyae185
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Exactly one file named observation-corpus.tar emitted as
+  proteomeMolecularValidationObservation by OMF run
+  01a06d60-6e5c-7552-b9ce-01cf6d046c31 from the exact resources listed below.
+  The archive contains 537 protected molecular-validation Saccharomyces
+  cerevisiae knockout observations over 529 stable SGD intervention identities
+  and 1,850 typed UniProtKB readouts, with 967,019 observed positive-intensity
+  values transformed by log2 without a pseudocount and 26,431 missing values
+  represented only by absent sparse entries. It contains no pretraining,
+  molecular-final, quarantine, analytical-QC, control, reward, or
+  synthetic-lethality record.
+operationalUse:
+  currentFactoryRole: custodian
+  currentFactoryAdmissionAllowed: true
+  currentFactoryEvaluationAllowed: false
+  intendedUse: protected-molecular-validation-evaluation-truth
+  fittingAllowed: false
+  rewardAllowed: false
+  finalHoldoutAllowed: false
+  confidentialityEnforcedByCurrentOMF: false
+  operationalRestrictionsEnforcedByCurrentOMF: false
+  requiredEvaluationBoundary: distinct OS or service identity and artifact store
+  note: >-
+    trainingAllowed records the source license permission required for OMF
+    DatasetSnapshot admission. It does not authorize model fitting, reward,
+    calibration, checkpoint selection, or co-location with a clean training
+    factory.
+derivedFrom:
+  datasets:
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-raw-v2@sha256:5392d4df7e962c9f59798b83fbdf8e71cd568b30c78a498702d50fabc059397e
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-intervention-inventory-v1@sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-protein-relations-v1@sha256:acad3427907644f8ab8af38ed36066a6e1148ef92557b727351b0a4fba2b446c
+    - omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450
+  inputArtifacts:
+    sgdCurrentOrfs: sha256:e67f0e8773feae108ecdb687139885e01ca972ff4aec95cd1358b33db1ea1192
+    sgdMappingManifest: sha256:c74ea81ce604357b998e5f09130dff85bf8a7a26504b9b2426f8038608c52d9c
+  runResult: omf://abiome/slp/runresult/result-01a06d60-6e5c-7552-b9ce-01cf6d046c31@sha256:3efaf6bf8db78894f478badc4b46b54432b54008556aefb9cbe3844760424dde
+  artifacts:
+    molecularValidationObservation: sha256:c2ae4c787504f39f01e78e88e46c3009e32542002adb00b802b6c98e2611d87c
+  contentSha256: f8263d4813282799625182e8286a0af42311d5e76d58c84071ae9071e8a4bc69
+reproducedBy:
+  runResult: omf://abiome/slp/runresult/result-01a06d60-e6d5-7326-a0ed-2c2dda05a18b@sha256:2eff9f50be60e4dd80be3dcd2915c08cc1d33ec272777d544563f25ad0c1be96
+  artifact: sha256:36f6edcdf585319553093e172b05412bfe5b80377bdd6964fd411f5a4ce08d52
+  contentSha256: f8263d4813282799625182e8286a0af42311d5e76d58c84071ae9071e8a4bc69
+rightsBasis: >-
+  The quantitative source and every identity or split input contributing to
+  this adaptation are covered by the exact CC BY 4.0 source scopes cited
+  above, with adaptation and redistribution allowed with attribution. Legal
+  permission does not weaken the frozen operational separation: this artifact
+  is validation truth and may not be used for fitting or reward.
+attribution: >-
+  Messner, Christoph; Kustatscher, Georg; Ralser, Markus (2023), The
+  Proteomic Landscape of Genome-Wide Genetic Perturbations, Mendeley Data V2,
+  https://doi.org/10.17632/w8jtmnszd9.2; Nadal-Ribelles, Mariona et al., A
+  single-cell resolved genotype-phenotype map using genome-wide genetic and
+  environmental perturbations, Zenodo,
+  https://doi.org/10.5281/zenodo.14062629; and Saccharomyces Genome Database
+  (SGD), Stanford University, with Engel SR et al. (2025), GENETICS 229(3),
+  iyae185, https://doi.org/10.1093/genetics/iyae185.
+exclusions:
+  - preparation-audit.json and every OMF output not named in scope
+  - every pretraining, molecular-final, quarantine, analytical-QC, and control outcome
+  - model fitting, molecular reward, calibration, checkpoint selection, and hyperparameter selection
+  - synthetic-lethality labels and every benchmark record
+  - admission to or co-location with the clean training factory
+  - imputed proteome tables, differential-expression tables, and growth phenotypes
+  - linked third-party resources outside the exact parent source allowlists
+  - any future source, identity, roster, module, workload, output, or final-holdout revision
