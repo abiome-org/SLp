@@ -107,11 +107,31 @@ spec:
     - request:
         operation: validate
         inputs:
-          pretrain: {}
-          heldRoster: {}
-          custodianBoundaryAttestation: {}
-          protectedInventoryOne: {}
-          protectedInventoryTwo: {}
+          pretrain:
+            resource: omf://abiome/slp/datasetsnapshot/fixture-pretrain@sha256:0000000000000000000000000000000000000000000000000000000000000000
+            mode: copy
+            path: /fixture/inputs/pretrain/fixture-pretrain
+            manifestDigest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+          heldRoster:
+            resource: omf://abiome/slp/datasetsnapshot/fixture-held-roster@sha256:0000000000000000000000000000000000000000000000000000000000000000
+            mode: copy
+            path: /fixture/inputs/heldRoster/fixture-held-roster
+            manifestDigest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+          custodianBoundaryAttestation:
+            resource: omf://abiome/slp/datasetsnapshot/fixture-authorization@sha256:0000000000000000000000000000000000000000000000000000000000000000
+            mode: copy
+            path: /fixture/inputs/custodianBoundaryAttestation/fixture-authorization
+            manifestDigest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+          protectedInventoryOne:
+            resource: omf://abiome/slp/datasetsnapshot/fixture-inventory-one@sha256:0000000000000000000000000000000000000000000000000000000000000000
+            mode: copy
+            path: /fixture/inputs/protectedInventoryOne/fixture-inventory-one
+            manifestDigest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+          protectedInventoryTwo:
+            resource: omf://abiome/slp/datasetsnapshot/fixture-inventory-two@sha256:0000000000000000000000000000000000000000000000000000000000000000
+            mode: copy
+            path: /fixture/inputs/protectedInventoryTwo/fixture-inventory-two
+            manifestDigest: sha256:0000000000000000000000000000000000000000000000000000000000000000
         config:
           rewardEnabled: false
           recipientFactoryIdentity: sha256:0000000000000000000000000000000000000000000000000000000000000000

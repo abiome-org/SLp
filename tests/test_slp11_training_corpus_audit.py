@@ -549,6 +549,14 @@ class TrainingCorpusAuditTest(unittest.TestCase):
         self.assertEqual(contract["input"]["minProperties"], 5)
         self.assertEqual(contract["config"]["properties"]["rewardEnabled"], {"const": False})
         self.assertNotIn("trust", json.dumps(contract).casefold())
+        fixture_inputs = module["spec"]["fixtures"][0]["request"]["inputs"]
+        self.assertEqual(set(fixture_inputs), {
+            "pretrain", "heldRoster", "custodianBoundaryAttestation",
+            "protectedInventoryOne", "protectedInventoryTwo",
+        })
+        for value in fixture_inputs.values():
+            self.assertEqual(set(value), {"resource", "mode", "path", "manifestDigest"})
+            self.assertEqual(value["mode"], "copy")
 
     def test_authorization_directory_and_trust_anchor_are_exact(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
