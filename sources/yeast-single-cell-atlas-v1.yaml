@@ -71,6 +71,18 @@ excludedFiles:
   - seu.RData
   - summary.genotypes_Rev.R
   - summary240_237.xlsx
+metadataProbe:
+  date: 2026-09-03
+  files:
+    - name: README.txt
+      localSha256: 268533b10c59d3f4ca941ff31ac8b9c108b61f55f00d85792d44b3a90b3b9da8
+      upstreamChecksumVerified: true
+  observations:
+    - seus_split.RData contains two separately processed Seurat objects, one control and one NaCl-treated
+    - seu.RData is a merged duplicate representation and remains excluded
+    - figure scripts consume third-party human and yeast datasets that remain excluded from this source
+  unresolved:
+    - object slot, layer, cell metadata, genotype identity, raw-count, and missingness semantics require a no-training RData structural probe
 admission:
   firstOperation: metadata-and-schema-probe-only
   requireStableDeletionIdentity: true
@@ -83,4 +95,3 @@ modeling:
   preserveCellLevelMissingness: true
   useSignificanceCallsAsTargets: false
   encodeConditionOnlyInMetadata: false
-

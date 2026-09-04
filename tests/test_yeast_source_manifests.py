@@ -65,6 +65,12 @@ class YeastSourceManifestTest(unittest.TestCase):
         self.assertIn("seu.RData", manifest["excludedFiles"])
         self.assertIn("DEG.Rdata", manifest["excludedFiles"])
         self.assertIs(manifest["modeling"]["useSignificanceCallsAsTargets"], False)
+        probe = manifest["metadataProbe"]
+        self.assertEqual(
+            probe["files"][0]["localSha256"],
+            "268533b10c59d3f4ca941ff31ac8b9c108b61f55f00d85792d44b3a90b3b9da8",
+        )
+        self.assertTrue(probe["unresolved"])
         self._assert_rights(
             manifest["rights"], "10.5281/zenodo.14062629"
         )
@@ -76,6 +82,15 @@ class YeastSourceManifestTest(unittest.TestCase):
         self.assertEqual(manifest["organism"]["ncbiTaxon"], 4932)
         self.assertEqual(manifest["source"]["versionDoi"],
                          "10.17632/w8jtmnszd9.2")
+        value_space = manifest["upstreamValueSpace"]
+        self.assertEqual(
+            value_space["quantity"],
+            "positive batch-corrected MaxLFQ relative protein intensity",
+        )
+        self.assertIs(value_space["tableLogTransformed"], False)
+        self.assertIn("literal NA", value_space["missing"])
+        self.assertEqual(value_space["processing"]["software"],
+                         "DIA-NN 1.7.12 and DIA-NN R maxLFQ")
         files = {item["name"]: item for item in manifest["allowlist"]}
         self.assertEqual(set(files), {
             "yeast5k_noimpute_wide.csv",
@@ -94,6 +109,30 @@ class YeastSourceManifestTest(unittest.TestCase):
         self.assertIs(manifest["admission"]["requireNonImputedValues"], True)
         self.assertIs(manifest["modeling"]["useGrowthPhenotypesAsMolecularTargets"],
                       False)
+        probe = manifest["metadataProbe"]
+        self.assertEqual(probe["observations"]["sampleTypes"], {
+            "ko": 4699,
+            "qc": 389,
+            "HIS3": 388,
+        })
+        self.assertEqual(probe["observations"]["uniqueKnockoutOrfStrings"], 4549)
+        self.assertEqual(probe["observations"]["replicatedKnockoutRows"], 150)
+        matrix = probe["observations"]["wideMatrix"]
+        self.assertEqual((matrix["rows"], matrix["columns"]), (1850, 5477))
+        self.assertIs(matrix["sampleHeaderOrderExactlyMatchesMetadata"], True)
+        self.assertEqual(matrix["missingToken"], "NA")
+        self.assertEqual(matrix["missingCells"], 255715)
+        self.assertEqual(matrix["quotedSampleHeadersContainingComma"], 1)
+        self.assertEqual(
+            {item["localSha256"] for item in probe["files"]},
+            {
+                "48864282c82d516ae929dc87aff7fae9e05e9b922e316c001f3d29dce0ff878b",
+                "ca7c8f2ac33272df3763807add7b8982b8a8b52d4276bd929a61ecf19e0ae405",
+                "69a9df05b6db011f595a4e0b3ce25c1cc247f22cbdd066c79e6da9a706aa1df9",
+                "4078289dc86dd6b526d9b0c963e6df61d53acdfdf6260abdeae307588623f828",
+            },
+        )
+        self.assertTrue(probe["unresolved"])
         self._assert_rights(
             manifest["rights"], "10.17632/w8jtmnszd9.2"
         )

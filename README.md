@@ -22,7 +22,9 @@ sources/                         versioned source-admission plans
 schemas/                         versioned corpus contracts
 modules/slp-1-1-corpus-audit/   shard integrity and leakage firewall
 modules/slp-1-1-yeast-prepare/  rights-gated species-native yeast preparation
-modules/slp-1-1-world/          fresh species-aware query-decoder model
+modules/slp-1-1-held-roster/    outcome-blind global yeast held-gene split
+modules/slp-1-1-world/          admitted dense-fixture engineering prototype
+modules/slp-1-1-world-sparse/   typed sparse world-candidate contract
 modules/slp-1-1-molecular-eval/ perturbation-specific molecular evaluator
 workloads/                       auditable stage graphs
 evaluations/                     molecular-only advancement gates
@@ -49,12 +51,22 @@ point for SLp-1.1 architecture selection.
 
 ## SLp-1.1 model shape
 
-The new model consumes variable-size sets of basal/context tokens and
+The active candidate consumes variable-size sets of basal/context tokens and
 intervention tokens, then decodes sparse molecular readout queries. It has no
 learned gene-ID table, fixed human gene universe, fixed expression landmark
 panel, or synthetic-lethality output. Context and interventions are
 permutation-invariant. Species, assay, protocol, action, dose, time, and
-readout identity are explicit inputs.
+readout identity are explicit inputs. Stable entity and query identifiers stay
+in corpus provenance; the model sees only released feature vectors, explicit
+missingness masks, and small ontology-type indices. Its independent
+cross-attention query decoder supports Gaussian and negative-binomial scalar
+heads without materializing a record-by-global-query target matrix.
+
+`slp-1-1-world-sparse` is currently a validated architecture and corpus
+contract, not a trained biological model: its OMF module reports
+`trainingImplemented: false` and emits no checkpoint. The earlier
+`slp-1-1-world` run remains useful execution evidence, but its dense fixture
+format and toy metrics are not architecture-selection evidence.
 
 Yeast data remains yeast data. Costanzo SGA and future yeast expression,
 fitness, chemical-genomics, and regulatory measurements are trained with yeast
@@ -114,13 +126,16 @@ an OMF executor and is not called from inside a training module.
 
 ## Data contract
 
-Each snapshot contains `corpus.json`, a stable-CURIE intervention-gene list,
-and digest-addressed shards. Production shards are bounded `.npz` files so the
-trainer can stream them one at a time. Required arrays are documented by
-`modules/slp-1-1-world/trainer.py`; every example carries stable record,
-source, perturbation and action identities plus context, action, query,
-species, target, and validity tensors. Declared taxonomy IDs map to exact
-versioned continuous species-feature vectors.
+The active `slp.corpus/v1.1` snapshot contains `corpus.json`, checksum-addressed
+entity, query and panel dictionaries, a stable-CURIE trajectory-gene list, and
+bounded sparse `.npz` shards. Context and action tokens reference a typed entity
+dictionary. Per-record targets use CSR query/value storage, preserve observed
+missingness, and declare Gaussian or negative-binomial likelihood semantics and
+units per readout type. Source, intervention, replicate and record order define
+a deterministic hierarchical sampling schedule. Declared taxonomy IDs map to
+exact versioned continuous species-feature vectors. A chemical-only corpus may
+have an empty trajectory-gene inventory; otherwise that inventory must equal
+the exact set of active species-specific action entities.
 
 The audit stage runs before compute allocation to the model. It verifies shard
 bytes and rejects any benchmark labels or any validation intervention gene
@@ -135,6 +150,8 @@ genes are allowed and recorded separately from quantitative trajectories.
 ```bash
 python -m unittest tests.test_slp11_corpus_audit
 python -m unittest tests.test_slp11_architecture
+python -m unittest tests.test_slp11_sparse_candidate
+python -m unittest tests.test_slp11_held_roster
 python -m unittest discover -s tests
 ```
 

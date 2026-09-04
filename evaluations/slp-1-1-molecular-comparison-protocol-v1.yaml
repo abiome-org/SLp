@@ -1,0 +1,62 @@
+schema: slp.molecular-architecture-comparison-protocol/v1
+protocolId: slp-1-1-molecular-architecture-comparison
+protocolVersion: 1.0.0
+status: frozen-before-first-biological-architecture-comparison
+scope: molecular-only; no synthetic-lethality labels or benchmark selection
+hardAdvancementGate:
+  resource: evaluations/slp-1-1-molecular.yaml
+  rule: unchanged; this protocol adds diagnostics and comparison requirements only
+tasks:
+  - name: intervention-gene-cold
+    exclusion: every quantitative trajectory containing any evaluation intervention gene, including combinations, is absent from fitting, reward, and selection
+    contextAccess: evaluation contexts may occur in fitting data
+    staticGeneFeaturesAllowed: true
+  - name: perturbation-context-cold-with-basal-access
+    exclusion: every perturbational outcome from the complete evaluation biological context is absent from fitting, reward, and selection
+    contextIdentity: immutable tuple of NCBI taxon, biological system or strain, genotype, donor, and condition; unreported fields remain explicit rather than inferred
+    interventionAccess: evaluation interventions must have quantitative outcomes in other fitting contexts
+    basalAccess: a matched unperturbed basal or control profile from the evaluation context is allowed and must be declared
+  - name: double-cold
+    exclusion: both intervention-gene-cold and perturbation-context-cold-with-basal-access exclusions apply simultaneously
+    reporting: separate task; never pooled with either single-axis task
+requiredBaselines:
+  - name: context-only
+    status: protocol-required
+    definition: predict the matched evaluation-context basal or control state; the predicted perturbation effect is zero
+  - name: txpert-mean-additive
+    status: protocol-required
+    definition:
+      seenIntervention: add the intervention-specific mean effect over fitting contexts to the matched evaluation-context basal or control state
+      unseenIntervention: add the global fitting perturbation mean effect to the matched evaluation-context basal or control state
+      combination: use an exact fitting combination when available; otherwise add constituent effects and use the global fitting perturbation mean for each unavailable constituent
+  - name: feature-bilinear-ridge
+    status: protocol-required
+    definition: "prediction = intercept + context_linear_term + query_features^T W action_features"
+    fitting: fit W and every regularization choice only within molecular fitting folds; held quantitative outcomes and benchmark labels are forbidden
+protocolRequiredContractBlocked:
+  bds:
+    name: bound-discrimination-score
+    status: protocol-required-contract-blocked
+    inadmissibleAtOrBelow: 0.5
+    unit: metric-by-source
+    requiredEvidence: disjoint replicate halves plus frozen positive and negative anchors per perturbation
+    blockedReason: the current sparse prediction artifact does not carry replicate-half identities or empirical anchors
+  differentialExpression:
+    status: protocol-required-contract-blocked
+    metrics:
+      - reference-significant-lfc-spearman
+      - reference-significant-direction-agreement
+    requiredFreeze: differential-expression method, FDR, minimum effect, feature universe, and intervention-target exclusion
+    blockedReason: the current sparse prediction artifact does not carry replicate-level transcriptomic observations or frozen differential-expression calls
+populationMetrics:
+  prohibitedUntilPopulationGenerativeOutput:
+    - energy-distance
+    - wasserstein-distance
+  reason: sparse marginal Gaussian query outputs do not define a generated cell population
+reporting:
+  strata:
+    - overall
+    - species
+    - source
+    - species-source
+  aggregation: macro-average within perturbation before context, source, or species aggregation; no pooled result may rescue a failing protected stratum

@@ -54,6 +54,16 @@ every sparse readout query instead of reconstructing one hard-coded expression
 panel. Queries do not attend to each other, so a marginal prediction is exactly
 invariant to panel membership, ordering, padding, and chunking.
 
+The current typed sparse candidate separates identifiers from numerical model
+inputs. Checksum-pinned entity, query and panel dictionaries provide
+provenance, while the network receives feature vectors, presence masks and
+ontology-type indices. Targets are record-local CSR query/value lists rather
+than a dense record-by-global-readout tensor. Gaussian and negative-binomial
+heads share the world representation but retain distinct likelihoods. A
+count-specific library-size offset and biological training loop are not yet
+implemented; this candidate cannot be selected until both the relevant
+likelihood contract and molecular comparisons pass.
+
 Species is an explicit continuous feature block, not inferred from gene names.
 Yeast observations retain yeast identifiers and experimental context. Orthology
 and sequence similarity are auxiliary relations; yeast interaction scores are
@@ -95,7 +105,10 @@ result.
 ## Release status
 
 No SLp-1.1 model is released. The repository contains the OMF project boundary,
-corpus leakage auditor, workload and architecture contract only.
+corpus leakage auditor, outcome-blind held-intervention roster, typed sparse
+world-candidate contract, workload contracts, and molecular evaluator. The
+sparse module currently validates architecture and corpus semantics only; it
+does not train or emit a checkpoint.
 
 OpenModelFactory 1.0 is supported for its local lifecycle on Linux x86-64, not
 this Windows checkout. It also passes JSON protocol state—but not a materialized

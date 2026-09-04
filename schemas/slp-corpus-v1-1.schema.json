@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abiome.org/schemas/slp-corpus-v1-1.schema.json",
+  "title": "SLp typed sparse molecular corpus snapshot",
+  "type": "object",
+  "required": [
+    "schema",
+    "datasetId",
+    "version",
+    "role",
+    "labelClass",
+    "benchmarkLabelsPresent",
+    "rights",
+    "modalities",
+    "sources",
+    "sampling",
+    "species",
+    "featurePack",
+    "entityTypes",
+    "contextTypes",
+    "actionTypes",
+    "covariates",
+    "readoutTypes",
+    "entityDictionary",
+    "queryDictionary",
+    "queryPanels",
+    "trajectoryGenes",
+    "normalization",
+    "bounds",
+    "shards"
+  ],
+  "properties": {
+    "schema": {"const": "slp.corpus/v1.1"},
+    "datasetId": {"$ref": "#/$defs/curie"},
+    "version": {"type": "string", "minLength": 1},
+    "role": {
+      "enum": ["pretrain", "molecular-validation", "molecular-reward", "molecular-final"]
+    },
+    "labelClass": {"const": "molecular"},
+    "benchmarkLabelsPresent": {"const": false},
+    "rights": {
+      "type": "object",
+      "required": ["revision", "trainingAllowed", "redistributionAllowed"],
+      "properties": {
+        "revision": {"$ref": "#/$defs/curie"},
+        "trainingAllowed": {"const": true},
+        "redistributionAllowed": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "modalities": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/curie"}
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {"id": {"$ref": "#/$defs/curie"}},
+        "additionalProperties": false
+      }
+    },
+    "sampling": {
+      "type": "object",
+      "required": ["scheme", "sourceWeights"],
+      "properties": {
+        "scheme": {"const": "slp.source-intervention-replicate-record/v1"},
+        "sourceWeights": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "number", "exclusiveMinimum": 0}
+        }
+      },
+      "additionalProperties": false
+    },
+    "species": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["taxon", "featureValue", "featurePresent"],
+        "properties": {
+          "taxon": {"type": "integer", "minimum": 1},
+          "featureValue": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "number"}
+          },
+          "featurePresent": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "boolean"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "featurePack": {
+      "type": "object",
+      "required": ["revision", "sha256", "entityFeatureDim", "speciesFeatureDim"],
+      "properties": {
+        "revision": {"$ref": "#/$defs/curie"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "entityFeatureDim": {"type": "integer", "minimum": 1},
+        "speciesFeatureDim": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "entityTypes": {"$ref": "#/$defs/curieList"},
+    "contextTypes": {"$ref": "#/$defs/curieList"},
+    "actionTypes": {"$ref": "#/$defs/curieList"},
+    "covariates": {
+      "type": "object",
+      "required": ["record", "context", "action", "observation"],
+      "properties": {
+        "record": {"$ref": "#/$defs/covariateList"},
+        "context": {"$ref": "#/$defs/covariateList"},
+        "action": {"$ref": "#/$defs/covariateList"},
+        "observation": {"$ref": "#/$defs/covariateList"}
+      },
+      "additionalProperties": false
+    },
+    "readoutTypes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "likelihood", "unit", "implicitZero"],
+        "properties": {
+          "id": {"$ref": "#/$defs/curie"},
+          "likelihood": {"enum": ["gaussian", "negative-binomial"]},
+          "unit": {"$ref": "#/$defs/curie"},
+          "implicitZero": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "entityDictionary": {"$ref": "#/$defs/fileReference"},
+    "queryDictionary": {"$ref": "#/$defs/fileReference"},
+    "queryPanels": {"$ref": "#/$defs/fileReference"},
+    "trajectoryGenes": {"$ref": "#/$defs/possiblyEmptyFileReference"},
+    "normalization": {
+      "type": "object",
+      "required": ["id", "valueSpace"],
+      "properties": {
+        "id": {"$ref": "#/$defs/curie"},
+        "valueSpace": {"$ref": "#/$defs/curie"}
+      },
+      "additionalProperties": false
+    },
+    "bounds": {
+      "type": "object",
+      "required": [
+        "maxRecordsPerShard",
+        "maxContextTokens",
+        "maxActionTokens",
+        "maxPanelQueries",
+        "maxTargetsPerRecord"
+      ],
+      "properties": {
+        "maxRecordsPerShard": {"type": "integer", "minimum": 1},
+        "maxContextTokens": {"type": "integer", "minimum": 1},
+        "maxActionTokens": {"type": "integer", "minimum": 1},
+        "maxPanelQueries": {"type": "integer", "minimum": 1},
+        "maxTargetsPerRecord": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "shards": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "records", "targetValues"],
+        "properties": {
+          "path": {"$ref": "#/$defs/relativePath"},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "records": {"type": "integer", "minimum": 1},
+          "targetValues": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "curie": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._-]*:[^\\s]+$"
+    },
+    "curieList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/curie"}
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "fileReference": {
+      "type": "object",
+      "required": ["path", "sha256", "count"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "count": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "possiblyEmptyFileReference": {
+      "type": "object",
+      "required": ["path", "sha256", "count"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "covariateList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "unit", "access"],
+        "properties": {
+          "id": {"$ref": "#/$defs/curie"},
+          "unit": {"$ref": "#/$defs/curie"},
+          "access": {"enum": ["world", "likelihood", "audit"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,78 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-world-sparse
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  checkpoint: false
+  contracts:
+    input:
+      type: object
+      required: [corpus]
+      properties:
+        corpus:
+          type: object
+          required: [manifestDigest, mode, path, resource]
+          properties:
+            manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+            mode: {const: copy}
+            path: {type: string, minLength: 1}
+            resource:
+              type: string
+              pattern: "^omf://[^/\\s]+/[^/\\s]+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+          additionalProperties: false
+      additionalProperties: false
+    output:
+      type: object
+      required:
+        - contractState
+        - parameterCount
+        - recordCount
+        - targetValueCount
+        - sourceScheduleCounts
+      properties:
+        contractState: {type: object}
+        parameterCount: {type: integer, minimum: 0}
+        recordCount: {type: integer, minimum: 0}
+        targetValueCount: {type: integer, minimum: 0}
+        sourceScheduleCounts: {type: object}
+      additionalProperties: false
+    config:
+      type: object
+      properties:
+        seed: {type: integer}
+        scheduleRecords: {type: integer, minimum: 1}
+        dModel: {type: integer, minimum: 8}
+        nhead: {type: integer, minimum: 1}
+        encoderLayers: {type: integer, minimum: 1}
+        decoderLayers: {type: integer, minimum: 1}
+        ffnMultiplier: {type: integer, minimum: 1}
+        dropout: {type: number, minimum: 0, maximum: 0.5}
+      additionalProperties: false
+    state:
+      type: object
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          corpus:
+            manifestDigest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+            mode: copy
+            path: validation-only
+            resource: omf://abiome/slp/datasetsnapshot/validation-only@sha256:0000000000000000000000000000000000000000000000000000000000000000
+        config: {}
+        state: {}
+      result:
+        status: ok
+        outputs:
+          contractState:
+            schema: slp.world-sparse-contract/v1.1
+            validationOnly: true
+          parameterCount: 0
+          recordCount: 0
+          targetValueCount: 0
+          sourceScheduleCounts: {}

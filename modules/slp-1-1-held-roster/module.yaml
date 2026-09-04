@@ -1,0 +1,71 @@
+apiVersion: omf.dev/v1alpha1
+kind: Module
+metadata:
+  name: slp-1-1-held-roster
+spec:
+  entryPoint:
+    command: [python3, main.py]
+  environment:
+    dependencyLock: requirements.lock
+    dependencyDigest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  contracts:
+    input:
+      type: object
+      minProperties: 2
+      maxProperties: 64
+      propertyNames:
+        pattern: "^[A-Za-z][A-Za-z0-9_-]{0,63}$"
+      additionalProperties: {type: object}
+    output:
+      type: object
+      required:
+        - rosterSummary
+        - rosterSha256
+        - coverageSha256
+        - sourceCount
+        - intersectionSize
+        - pretrainCount
+        - validationCount
+        - finalCount
+      properties:
+        rosterSummary: {type: object}
+        rosterSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        coverageSha256: {type: string, pattern: "^[0-9a-f]{64}$"}
+        sourceCount: {type: integer, minimum: 0, maximum: 64}
+        intersectionSize: {type: integer, minimum: 0, maximum: 100000}
+        pretrainCount: {type: integer, minimum: 0, maximum: 100000}
+        validationCount: {type: integer, minimum: 0, maximum: 100000}
+        finalCount: {type: integer, minimum: 0, maximum: 100000}
+      additionalProperties: false
+    config:
+      type: object
+      required: [minimumIntersectionSize]
+      properties:
+        minimumIntersectionSize: {type: integer, minimum: 1, maximum: 100000}
+        maxSources: {type: integer, minimum: 2, maximum: 64}
+        maxFilesPerSource: {type: integer, minimum: 1, maximum: 256}
+        maxRecordsPerSource: {type: integer, minimum: 1, maximum: 2000000}
+        maxLineBytes: {type: integer, minimum: 128, maximum: 65536}
+      additionalProperties: false
+  fixtures:
+    - request:
+        operation: validate
+        inputs:
+          inventoryOne: {}
+          inventoryTwo: {}
+        config:
+          minimumIntersectionSize: 1
+        state: {}
+      result:
+        status: ok
+        outputs:
+          rosterSummary:
+            schema: slp.held-intervention-roster-report/v1
+            validationOnly: true
+          rosterSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          coverageSha256: "0000000000000000000000000000000000000000000000000000000000000000"
+          sourceCount: 0
+          intersectionSize: 0
+          pretrainCount: 0
+          validationCount: 0
+          finalCount: 0

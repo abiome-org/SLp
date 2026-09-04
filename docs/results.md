@@ -773,3 +773,105 @@ and units. Encoding them as fake SGD identifiers, source strings or anonymous
 numeric covariates is rejected. A typed context/action/readout v1.1 contract is
 the next prerequisite; only then will one global held-intervention roster be
 frozen across transcriptome and proteome snapshots.
+
+## 2026-09-03 — typed sparse world and global held-intervention contracts
+
+**Hypothesis, fixed rule, modalities and snapshots.** Before allocating
+biological training compute, a dictionary-size-independent model should accept
+typed, sparse molecular observations without learning stable IDs; the same
+outcome-blind yeast roster should assign every intervention covered by both
+protected sources to exactly one immutable role; and uncertainty diagnostics
+must not silently modify the molecular gate. This contract milestone passes
+only if dictionary permutation and extension leave parameters and identical
+queries unchanged, sparse missingness and typed likelihoods fail closed on
+ambiguous inputs, the roster is deterministic from the exact common SGD-CURIE
+set and mapping revision, and both modules validate with pinned OMF 1.0. It
+cannot advance a biological candidate. The accessible modalities were the
+published yeast knockout proteome payload and metadata, plus the yeast
+single-cell-atlas README; no biological OMF `DatasetSnapshot`, RData payload,
+checkpoint, molecular reward set, final holdout, or benchmark snapshot was
+opened or created.
+
+**Typed sparse candidate.** `slp.corpus/v1.1` separates checksum-pinned entity,
+query and panel dictionaries from record-local CSR targets. Context, action,
+record and observation covariates declare `world`, `likelihood`, or `audit`
+access; missing numerical values require an explicit false mask and zero
+storage. Readouts declare units, implicit-zero semantics, and Gaussian or
+negative-binomial likelihoods. Model batches contain features, missingness
+masks and ontology-type indices but no stable entity/query IDs or dictionary
+indices. The independent cross-attention decoder is bitwise query-invariant,
+and the parameter count does not depend on dictionary cardinality. Exact
+active nonzero-taxon action entities must equal `trajectoryGenes`; neutral
+chemical actions are excluded from that gene inventory. Source weights produce
+deterministic quotas followed by source→perturbation→replicate→record cycling.
+The OMF module accepts only a copied SHA-256-pinned `DatasetSnapshot` at the
+materialization path implied by its resource. It deliberately returns
+`trainingImplemented: false`, emits no checkpoint, and is not a model result.
+Negative-binomial library-size offsets and the biological optimizer remain
+blocked contracts.
+
+**Outcome-blind global yeast roster.** A separate module accepts two or more
+immutable identity-only inventories and rejects quantitative fields. Every
+inventory must use taxon 4932, canonical `SGD:S#########` CURIEs, and the exact
+same immutable SGD mapping ID and digest. The candidate set is the intersection
+of QC-passing identities across every protected source. Assignment is the
+first 64 bits of SHA-256 over the domain-separated string
+`slp-1.1-yeast-global-held-v1\x00<SGD-CURIE>` modulo 100: buckets 0–9 are
+molecular final, 10–29 molecular validation, and 30–99 pretraining. There is no
+outcome access, optimization or reroll. Stable-identity mapping remains a hard
+source-admission prerequisite; no biological roster was generated in this
+milestone.
+
+**Source probe.** Four allowlisted files from Mendeley Data
+`10.17632/w8jtmnszd9.2` were downloaded to an untracked temporary directory and
+matched their upstream checksums: `yeast5k_noimpute_wide.csv` SHA-256
+`69a9df05b6db011f595a4e0b3ce25c1cc247f22cbdd066c79e6da9a706aa1df9`,
+metadata `48864282c82d516ae929dc87aff7fae9e05e9b922e316c001f3d29dce0ff878b`,
+knockout-detection metadata
+`ca7c8f2ac33272df3763807add7b8982b8a8b52d4276bd929a61ecf19e0ae405`,
+and documentation
+`4078289dc86dd6b526d9b0c963e6df61d53acdfdf6260abdeae307588623f828`.
+The matrix has 1,850 protein rows and 5,476 sample columns whose order and set
+match the metadata exactly, 255,715 literal `NA` cells, no empty cells, and one
+quoted comma-bearing sample header. The metadata has 4,699 knockout, 389 QC and
+388 HIS3 rows over 57 plates; the 4,699 knockout rows contain 4,549 distinct raw
+ORF strings, including 247 extended systematic identifiers requiring an
+explicit pinned map. The values are positive batch-corrected MaxLFQ relative
+intensities, not the later log2 differential-analysis table. Any target
+transform must be frozen from fitting records and WT controls only; published
+all-knockout centering cannot include held interventions. The Zenodo atlas
+README SHA-256 is
+`268533b10c59d3f4ca941ff31ac8b9c108b61f55f00d85792d44b3a90b3b9da8`;
+it confirms separate control and NaCl objects in `seus_split.RData`. The 5.9 GB
+RData structure, cell identities, raw-count layer and missingness semantics
+remain unprobed, so the atlas stays contract-blocked.
+
+**Molecular comparison protocol.** The frozen comparison contract now names
+intervention-gene-cold, context-cold-with-declared-basal-access, and double-cold
+tasks separately. It requires context-only, TxPert mean/additive and
+feature-bilinear ridge baselines on molecular fitting folds. BDS remains
+inadmissible at or below 0.5 but is contract-blocked until replicate halves and
+anchors exist; differential-expression metrics are blocked until their method,
+FDR, effect threshold and feature universe are frozen. Energy and Wasserstein
+metrics are prohibited for the current marginal-output model. The evaluator
+reports inclusive central-Normal 50% and 90% empirical coverage and mean full
+interval width overall and by species, source and species×source. These are
+diagnostics only; the molecular decision function and thresholds are unchanged.
+
+**Validation and decision.** On Windows, all 73 repository tests pass with one
+expected symlink-creation skip. The 36 focused sparse, roster, evaluator and
+source-manifest tests also pass on Ubuntu/Python 3.12, including the symlink
+checks. Changed Python files compile and the JSON schema validates. OMF module
+validation produced sparse package
+`sha256:c2476b34284651c3f723f806836e8e09ae75961609393a6b4ca2b42ee4478620`
+with artifact manifest
+`sha256:bde1c96757e7fb16b8f08e6777ad403c01681d986e7d443dd596a347ce8ba41f`,
+and roster package
+`sha256:aa046b9041bbf51ffe29e8801e833467b4125c05c7279dcbb46a61759532c102`
+with artifact manifest
+`sha256:e52f95a625cbd228e4302a1e985d9a362b58b3e21d66c174ad2faa5a08ec8672`.
+OMF's fixture runner still lacks `omf.sdk` in the empty dependency-lock
+environment and reuses a fixed module-test identity; no interpreter-path or
+metadata-payload workaround was added. This milestone admits the contracts,
+not a model. No biological metric, selected checkpoint, SL benchmark result,
+novelty result, or SOTA claim exists.

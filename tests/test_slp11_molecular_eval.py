@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import math
 import sys
 import tempfile
 import unittest
@@ -13,11 +14,14 @@ MODULE = Path(__file__).resolve().parents[1] / "modules" / "slp-1-1-molecular-ev
 sys.path.insert(0, str(MODULE))
 
 from evaluator import (
+    CENTRAL_50_NORMAL_Z,
+    CENTRAL_90_NORMAL_Z,
     MINIMUM_PERTURBED_CENTROID_PEARSON,
     MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON,
     PREDICTION_ROLE,
     REFERENCE_ROLE,
     MolecularEvaluationError,
+    ScalarMoments,
     evaluate_molecular_predictions,
     resolve_literal_omf_artifact,
 )
@@ -33,6 +37,7 @@ class MolecularEvaluationTest(unittest.TestCase):
         target: list[float],
         prediction: list[float] | None = None,
         interventions: list[str] | None = None,
+        prediction_log_scale: list[float] | None = None,
     ) -> dict[str, object]:
         record: dict[str, object] = {
             "speciesTaxon": taxon,
@@ -45,7 +50,9 @@ class MolecularEvaluationTest(unittest.TestCase):
         }
         if prediction is not None:
             record["predictionMean"] = prediction
-            record["predictionLogScale"] = [0.0, 0.0, 0.0]
+            record["predictionLogScale"] = (
+                prediction_log_scale if prediction_log_scale is not None else [0.0, 0.0, 0.0]
+            )
         return record
 
     def _snapshot(
@@ -125,6 +132,7 @@ class MolecularEvaluationTest(unittest.TestCase):
             )
             report = evaluate_molecular_predictions(reference, predictions)
         overall = report["overall"]
+        self.assertEqual(report["schema"], "slp.molecular-evaluation-report/v2")
         self.assertAlmostEqual(overall["ordinary"]["rmse"], 0.0)
         self.assertAlmostEqual(overall["ordinary"]["pearson"], 1.0)
         self.assertAlmostEqual(
@@ -137,9 +145,117 @@ class MolecularEvaluationTest(unittest.TestCase):
         self.assertEqual(set(report["sources"]), {"costanzo:2016", "replogle:2022"})
         self.assertEqual(report["audit"]["heldInterventionOverlap"], 0)
         self.assertEqual(report["method"]["class"], "Systema-inspired")
+        self.assertIn("exp(predictionLogScale)^2", report["method"]["gaussianScaleDefinition"])
+        expected_widths = {
+            "central50": 2.0 * CENTRAL_50_NORMAL_Z,
+            "central90": 2.0 * CENTRAL_90_NORMAL_Z,
+        }
+        for group in (
+            report["overall"],
+            *report["species"].values(),
+            *report["sources"].values(),
+            *report["speciesSources"].values(),
+        ):
+            calibration = group["gaussianCalibration"]
+            for interval, expected_width in expected_widths.items():
+                self.assertAlmostEqual(calibration[interval]["empiricalCoverage"], 1.0)
+                self.assertAlmostEqual(
+                    calibration[interval]["meanIntervalWidth"], expected_width
+                )
         self.assertTrue(report["decision"]["passed"])
         self.assertTrue(report["decision"]["compatibilityPassed"])
         self.assertEqual(report["decision"]["scope"], "molecular-profile-evaluation-only")
+        self.assertEqual(
+            set(report["decision"]["checks"]),
+            {
+                "zeroBenchmarkLabelRecords",
+                "zeroHeldInterventionOverlap",
+                "overallPerturbedCentroidPearson",
+                "minimumSpeciesPerturbedCentroidPearson",
+                "everySpeciesHasEligibleProfiles",
+                "everySourceHasEligibleProfiles",
+            },
+        )
+
+    def test_gaussian_interval_endpoints_are_inclusive_and_exact(self) -> None:
+        moments = ScalarMoments()
+        moments.add(0.0, CENTRAL_50_NORMAL_Z, 0.0)
+        moments.add(0.0, math.nextafter(CENTRAL_50_NORMAL_Z, math.inf), 0.0)
+        moments.add(0.0, CENTRAL_90_NORMAL_Z, 0.0)
+        moments.add(0.0, math.nextafter(CENTRAL_90_NORMAL_Z, math.inf), 0.0)
+
+        calibration = moments.gaussian_calibration_report()
+        self.assertEqual(calibration["central50"]["z"], 0.6744897501960817)
+        self.assertEqual(calibration["central90"]["z"], 1.6448536269514722)
+        self.assertEqual(calibration["central50"]["empiricalCoverage"], 0.25)
+        self.assertEqual(calibration["central90"]["empiricalCoverage"], 0.75)
+        self.assertEqual(
+            calibration["central50"]["meanIntervalWidth"],
+            2.0 * CENTRAL_50_NORMAL_Z,
+        )
+        self.assertEqual(
+            calibration["central90"]["meanIntervalWidth"],
+            2.0 * CENTRAL_90_NORMAL_Z,
+        )
+
+    def test_gaussian_calibration_is_stratified_without_affecting_decision(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            reference, reference_sha256 = self._snapshot(
+                root, "reference", REFERENCE_ROLE, self._reference_records()
+            )
+            prediction_records = self._prediction_records(exact=True)
+            for record in prediction_records[2:]:
+                record["predictionMean"] = [
+                    value + 4.0 for value in record["predictionMean"]
+                ]
+                record["predictionLogScale"] = [math.log(2.0)] * 3
+            predictions, _ = self._snapshot(
+                root,
+                "predictions",
+                PREDICTION_ROLE,
+                prediction_records,
+                reference_sha256,
+            )
+            report = evaluate_molecular_predictions(reference, predictions)
+
+        for interval, z in (
+            ("central50", CENTRAL_50_NORMAL_Z),
+            ("central90", CENTRAL_90_NORMAL_Z),
+        ):
+            self.assertEqual(
+                report["species"]["4932"]["gaussianCalibration"][interval][
+                    "empiricalCoverage"
+                ],
+                1.0,
+            )
+            self.assertEqual(
+                report["species"]["9606"]["gaussianCalibration"][interval][
+                    "empiricalCoverage"
+                ],
+                0.0,
+            )
+            self.assertAlmostEqual(
+                report["sources"]["costanzo:2016"]["gaussianCalibration"][interval][
+                    "meanIntervalWidth"
+                ],
+                2.0 * z,
+            )
+            self.assertAlmostEqual(
+                report["speciesSources"]["9606|replogle:2022"][
+                    "gaussianCalibration"
+                ][interval]["meanIntervalWidth"],
+                4.0 * z,
+            )
+            self.assertEqual(
+                report["overall"]["gaussianCalibration"][interval]["empiricalCoverage"],
+                0.5,
+            )
+            self.assertAlmostEqual(
+                report["overall"]["gaussianCalibration"][interval]["meanIntervalWidth"],
+                3.0 * z,
+            )
+        self.assertTrue(report["decision"]["passed"])
 
     def test_perturbed_mean_prediction_scores_zero_specific_signal(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -238,6 +354,49 @@ class MolecularEvaluationTest(unittest.TestCase):
         self.assertEqual(
             metrics["worst-species-perturbation-specific-pearson"]["minimum"],
             MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON,
+        )
+
+    def test_architecture_comparison_protocol_cannot_drift(self) -> None:
+        path = Path(__file__).resolve().parents[1] / "evaluations" / (
+            "slp-1-1-molecular-comparison-protocol-v1.yaml"
+        )
+        protocol = yaml.safe_load(path.read_text(encoding="utf-8"))
+        canonical = json.dumps(protocol, sort_keys=True, separators=(",", ":")).encode()
+        self.assertEqual(
+            hashlib.sha256(canonical).hexdigest(),
+            "a0c5814907427d466a905e27d2f9a78999f4fca6b6e09fe177796c8871eb6b18",
+        )
+        self.assertEqual(protocol["schema"], "slp.molecular-architecture-comparison-protocol/v1")
+        self.assertEqual(protocol["protocolVersion"], "1.0.0")
+        self.assertEqual(
+            [task["name"] for task in protocol["tasks"]],
+            [
+                "intervention-gene-cold",
+                "perturbation-context-cold-with-basal-access",
+                "double-cold",
+            ],
+        )
+        self.assertEqual(
+            [baseline["name"] for baseline in protocol["requiredBaselines"]],
+            ["context-only", "txpert-mean-additive", "feature-bilinear-ridge"],
+        )
+        blocked = protocol["protocolRequiredContractBlocked"]
+        self.assertEqual(blocked["bds"]["inadmissibleAtOrBelow"], 0.5)
+        self.assertEqual(blocked["bds"]["status"], "protocol-required-contract-blocked")
+        self.assertEqual(
+            blocked["differentialExpression"]["metrics"],
+            [
+                "reference-significant-lfc-spearman",
+                "reference-significant-direction-agreement",
+            ],
+        )
+        self.assertEqual(
+            blocked["differentialExpression"]["status"],
+            "protocol-required-contract-blocked",
+        )
+        self.assertEqual(
+            protocol["populationMetrics"]["prohibitedUntilPopulationGenerativeOutput"],
+            ["energy-distance", "wasserstein-distance"],
         )
 
     def test_evaluator_accepts_only_admission_pinned_literal_artifact_objects(self) -> None:

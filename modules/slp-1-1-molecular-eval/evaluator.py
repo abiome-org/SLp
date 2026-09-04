@@ -12,11 +12,13 @@ from pathlib import Path
 SCHEMA = "slp.molecular-evaluation/v1"
 REFERENCE_ROLE = "molecular-reference"
 PREDICTION_ROLE = "molecular-validation-predictions"
-REPORT_SCHEMA = "slp.molecular-evaluation-report/v1"
+REPORT_SCHEMA = "slp.molecular-evaluation-report/v2"
 SYSTEMA_DOI = "10.1038/s41587-025-02777-8"
 PROFILE_GATE_SCHEMA = "slp.molecular-profile-gate/v1"
 MINIMUM_PERTURBED_CENTROID_PEARSON = 0.10
 MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON = 0.0
+CENTRAL_50_NORMAL_Z = 0.6744897501960817
+CENTRAL_90_NORMAL_Z = 1.6448536269514722
 HEX_DIGITS = frozenset("0123456789abcdef")
 MANIFEST_FIELDS = frozenset(
     {
@@ -337,9 +339,14 @@ class ScalarMoments:
     sum_absolute_error: float = 0.0
     sum_square_error: float = 0.0
     sum_gaussian_nll: float = 0.0
+    central_50_covered: int = 0
+    central_90_covered: int = 0
+    sum_central_50_interval_width: float = 0.0
+    sum_central_90_interval_width: float = 0.0
 
     def add(self, prediction: float, target: float, log_scale: float) -> None:
         error = prediction - target
+        scale = math.exp(log_scale)
         self.count += 1
         self.sum_prediction += prediction
         self.sum_target += target
@@ -353,6 +360,13 @@ class ScalarMoments:
             + log_scale
             + 0.5 * math.log(2.0 * math.pi)
         )
+        absolute_error = abs(error)
+        central_50_radius = CENTRAL_50_NORMAL_Z * scale
+        central_90_radius = CENTRAL_90_NORMAL_Z * scale
+        self.central_50_covered += int(absolute_error <= central_50_radius)
+        self.central_90_covered += int(absolute_error <= central_90_radius)
+        self.sum_central_50_interval_width += 2.0 * central_50_radius
+        self.sum_central_90_interval_width += 2.0 * central_90_radius
 
     def merge(self, other: ScalarMoments) -> None:
         for name in self.__dataclass_fields__:
@@ -378,6 +392,25 @@ class ScalarMoments:
             "pearson": pearson if pearson is not None else 0.0,
             "pearsonDefined": pearson is not None,
             "gaussianNll": self.sum_gaussian_nll / self.count,
+        }
+
+    def gaussian_calibration_report(self) -> dict[str, object]:
+        if not self.count:
+            raise MolecularEvaluationError("a metric group has no observed molecular targets")
+        return {
+            "targets": self.count,
+            "central50": {
+                "nominalCoverage": 0.50,
+                "z": CENTRAL_50_NORMAL_Z,
+                "empiricalCoverage": self.central_50_covered / self.count,
+                "meanIntervalWidth": self.sum_central_50_interval_width / self.count,
+            },
+            "central90": {
+                "nominalCoverage": 0.90,
+                "z": CENTRAL_90_NORMAL_Z,
+                "empiricalCoverage": self.central_90_covered / self.count,
+                "meanIntervalWidth": self.sum_central_90_interval_width / self.count,
+            },
         }
 
 
@@ -700,7 +733,11 @@ def _profile_report(metrics: list[ProfileMetric]) -> dict[str, object]:
 
 
 def _combined_report(moments: ScalarMoments, metrics: list[ProfileMetric]) -> dict[str, object]:
-    return {"ordinary": moments.report(), "perturbationSpecific": _profile_report(metrics)}
+    return {
+        "ordinary": moments.report(),
+        "gaussianCalibration": moments.gaussian_calibration_report(),
+        "perturbationSpecific": _profile_report(metrics),
+    }
 
 
 def molecular_profile_decision(report: dict[str, object]) -> dict[str, object]:
@@ -893,6 +930,16 @@ def evaluate_molecular_predictions(
             "centroidAccuracyDefinition": (
                 "Strict Euclidean-distance rank accuracy against other validation perturbation "
                 "centroids on the common observed readout panel."
+            ),
+            "gaussianScaleDefinition": (
+                "Each observed target is scored under Normal(predictionMean, "
+                "exp(predictionLogScale)^2); predictionLogScale is the natural logarithm "
+                "of the standard deviation in the declared valueSpace."
+            ),
+            "gaussianIntervalDefinition": (
+                "Central 50% and 90% intervals use exact standard-Normal z values and "
+                "closed, inclusive endpoints. Empirical coverage and mean full interval "
+                "width are diagnostic only and do not enter any decision check."
             ),
             "citationDoi": SYSTEMA_DOI,
             "deviations": [

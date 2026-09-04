@@ -33,6 +33,14 @@ same perturbation are averaged into a centroid. Individual intervention IDs are
 audited across the reference and validation inputs, so a held gene nested in a
 combination is still leakage.
 
+`predictionLogScale` is the natural logarithm of the Normal standard deviation
+in the manifest's declared `valueSpace`: each target is scored under
+`Normal(predictionMean, exp(predictionLogScale)^2)`. The report includes
+empirical coverage and mean full interval width for closed central 50% and 90%
+intervals, using standard-Normal z values `0.6744897501960817` and
+`1.6448536269514722`. These calibration fields are descriptive only and do not
+participate in the frozen profile decision or the separate advancement gate.
+
 For each species, source, centering group, and readout, the module averages the
 training perturbation centroids with equal perturbation weight. It reports
 ordinary error/correlation plus Pearson and cosine metrics after subtracting
@@ -41,7 +49,9 @@ centroid accuracy over the common observed readout panel. This is a sparse,
 multi-modal adaptation of Systema (DOI
 `10.1038/s41587-025-02777-8`), not a claim of exact reproduction of its
 single-cell benchmark. Undefined per-profile reference metrics contribute zero
-to macro means and are counted explicitly.
+to macro means and are counted explicitly. Ordinary, Gaussian-calibration and
+perturbation-specific reports are emitted overall, per species, per source and
+per species-source stratum.
 
 ## Frozen second-run workflow
 
