@@ -1,0 +1,22 @@
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: false
+source: https://doi.org/10.7910/DVN/Q2ZV3E
+evidence:
+  - https://dataverse.harvard.edu/api/datasets/6153416/versions
+  - https://creativecommons.org/publicdomain/zero/1.0/
+licenseTerms: https://creativecommons.org/publicdomain/zero/1.0/
+scope: >-
+  Only norman.zip (Dataverse file 6154020, MD5
+  cdc41d6050e619c37fd9dd44d440e2b4) in released PertNet dataset versions 2
+  and 3, DOI 10.7910/DVN/Q2ZV3E.
+rightsBasis: >-
+  The official historical-version API identifies dataset versions 2 and 3,
+  the exact file ID and checksum, and CC0 1.0. The file is public and unrestricted.
+attribution: >-
+  PertNet Team (2022). PertNet. Harvard Dataverse. DOI 10.7910/DVN/Q2ZV3E;
+  Norman TM et al. Science 2019, DOI 10.1126/science.aax4438.
+exclusions:
+  - later replacement archives and model checkpoints
+  - files outside the exact historical-version scope

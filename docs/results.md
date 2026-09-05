@@ -6062,3 +6062,227 @@ The chosen implementation scope is now in `MODEL_CARD.md`. Broader independent
 combination and context coverage is needed for an emergence claim. This migration
 makes the current model manufacturable and usable; it neither implements that
 next shared neural model nor changes the evidence that SLp-1.1 is not yet SOTA.
+
+### 2026-09-05 — STRING64 response backbone and canonical retrospective comparison
+
+The public SLIM source was pinned at commit
+`5a7e9ade5d0a6b6331e6dbc81181450605047bcc`. Its tracked
+`gene_string_embeddings.v0.3.h5` contains 21,688 symbol-keyed, 64-dimensional
+vectors. The exact file SHA-256 is
+`789416877b8701ef6f800106d26bf7bb97ea8e72744e6ab93e24933a717f247d`.
+The SLIM repository distributes this file under its root MIT license and asks
+users to cite Hu et al., DOI 10.1038/s41540-026-00746-8; this does not assert a
+separate upstream license for the Hu vectors. Stable Ensembl IDs are mapped
+through the pinned Replogle source GTF, with zero vectors and an explicit
+presence bit for missing symbols. Whole-roster coverage is 92.42% K562, 94.67%
+RPE1 and 95.49% Norman; native fitting-action coverage is 99.65% and 98.32% in
+K562/RPE1.
+
+On the existing native development panels, three-fold fitting-only CV selected
+rank 16 and alpha 1000 for the concatenated static577+STRING64+presence reduced-
+rank response model in both contexts. Normalization is fitted inside each fold.
+No held outcome selects rank, penalty, sign or feature policy.
+
+| Native retained backbone | K562 MSE | K562 centered r | RPE1 MSE | RPE1 centered r |
+|---|---:|---:|---:|---:|
+| Earlier static577 rank 32 | .00343271 | .24875 | .00815924 | .28589 |
+| static577+STRING64+presence rank 16 | **.00334073** | **.27656** | **.00795145** | **.32614** |
+
+The comparator grid took 333.85 CPU seconds. The STRING-only arms also carry
+signal, while the concatenated arm has the best MSE in both native contexts.
+This rank-16 642-feature map is therefore the retained main response backbone.
+
+For an executable published-method comparison, exact official GEARS archives
+were downloaded from Harvard Dataverse and verified against both Dataverse MD5
+and local SHA-256. Replogle K562/RPE1 are files 7458695/7458694 in GEARS V6,
+DOI 10.7910/DVN/BD93JY, CC0 1.0. Norman is file 6154020 in PertNet historical
+versions 2/3, DOI 10.7910/DVN/Q2ZV3E, CC0 1.0. Exact-scope rights records are
+`rights/gears-replogle-filtered-canonical-cc0-1.0.yaml` and
+`rights/gears-norman-canonical-cc0-1.0.yaml`. The split code is pinned to
+cell-gears 0.1.2 commit `df09d7ae34e90f5ef25afa389daf7c5c589e710d`:
+`simulation`, seed 1, 75% initial training-gene set, then a 90/10 simulation
+split of that training set. Train/development aggregation read no test expression
+bytes. All eight candidate artifacts and the scoring protocol were hashed before
+the single test access.
+
+The score below is the mean across conditions of Pearson correlation across all
+measured genes between real and predicted control-referenced processed-expression
+means. Predictions add the frozen training-control mean and clip to [0,14.99].
+MSE is the mean all-gene profile MSE. This deterministic direct-mean protocol
+does not construct SLIM's resampled synthetic cell population, so the values are
+not a reproduction of the manuscript's stochastic scaffold or its reported
+scores.
+
+| Frozen canonical test model | K562 Pearson-delta | K562 MSE | RPE1 Pearson-delta | RPE1 MSE |
+|---|---:|---:|---:|---:|
+| Published-default SLIM, K10/lambda .1 | .47600 | .00586003 | .63630 | .01013786 |
+| Fitting-CV SLIM | .50160 | .00569066 | .64582 | .00999647 |
+| STRING64 reduced rank | .49288 | .00568595 | .65130 | .01006854 |
+| static577+STRING64+presence reduced rank | **.51716** | **.00538725** | **.65333** | **.00942391** |
+
+The canonical reduced-rank ranks are 32 for K562 and 16 for RPE1. On 273 K562
+conditions, paired 10,000-replicate bootstrap intervals for the concatenated
+model's Pearson gain are [.00464,.02658] versus fitting-CV SLIM and
+[.02783,.05514] versus published-default SLIM; MSE-reduction intervals are
+[.00013195,.00048412] and [.00029863,.00065552]. On 386 RPE1 conditions,
+Pearson-gain intervals are [.00230,.01329] and [.01051,.02452], with MSE-
+reduction intervals [.00031889,.00083190] and [.00045391,.00097548]. The
+canonical model fit took 51.76 CPU seconds. Per-condition results, rosters,
+model receipts and scoring protocol are under
+`results/slp11-transition/gears-frozen-test-v1/`.
+
+This test is retrospective because its underlying Replogle biology already
+participated in SLp development. It supports a matched direct-mean advantage
+over these frozen SLIM comparators. It is not prospective evidence, a general
+leaderboard claim, or proof of state of the art.
+
+The first shared joint model generation used static577 and 6,000 updates. Its
+K562/RPE1 MSE and centered correlation were .0034458/.2451 and .0086551/.2676.
+On Norman fold 0, autonomous-average MSE was .0156281: 16.12% below observed
+additive and 5.53% below the prior-only forecast. Generation 2 adds STRING64
+and its presence bit, uses a rank-16 response prior, and trained 20,000 updates
+in 788.75 seconds on the RTX 4070 (810,882 parameters; 1,158.5 MB peak GPU).
+Its K562/RPE1 metrics are .0033355/.2800 and .0081827/.3216, improvements of
+3.20% and 5.46% in MSE over generation 1. Against the new retained linear
+backbone, K562 MSE improves 0.16%, while RPE1 MSE regresses 2.91%.
+
+Generation-2 Norman fold-0 autonomous-average MSE is .0151073, 8.38% below
+its own predicted-additive forecast (.0164889). The observed-parent-average
+readout is .0146551, 8.23% below its observed-parent-prior (.0159697).
+Direct-two-action MSE is .0150115, slightly better than autonomous average, and
+only one of three combination folds is represented. These are useful shared-
+model development results, not stable composition evidence. Expanded joint
+training is currently pending; no result or completion is claimed for it.
+
+### 2026-09-05 — Correction: canonical STRING lookup and frozen retrospective scores
+
+This entry supersedes only the canonical GEARS table and intervals in the
+preceding STRING64 entry. The native-panel results and all earlier evidence
+remain unchanged. Audit found that the first canonical runner treated presence
+in a source-panel symbol roster as STRING availability. That omitted valid
+vectors from the official symbol-keyed HDF5 for 3 of 737 K562 fitting genes,
+17 of 1,041 RPE1 fitting genes, and 4 of 386 RPE1 test genes. Development
+coverage was unaffected. There were no false-positive covered genes with zero
+STRING vectors. The static577 and generated STRING-pack `entity_id` axes were
+exactly equal (8,752 K562 rows and 9,032 RPE1 rows), but the implementation had
+relied on the shared row index without asserting identity.
+
+The corrected runner reads STRING64 directly from the official HDF5 by exact
+canonical symbol, independently of the static roster. It maps static577 by the
+explicit chain symbol to stable Ensembl ID to static row, rejects duplicate or
+ambiguous identities, and defines the concatenated presence bit as actual
+STRING coverage. Static coverage is 734/737, 82/82 and 273/273 in K562
+train/development/test and 1,024/1,041, 116/116 and 382/386 in RPE1. STRING
+coverage is 737/737, 82/82 and 273/273 in K562 and 1,041/1,041, 116/116 and
+386/386 in RPE1. Thus HDF5-only genes receive their real STRING64 vector, zero
+static577, and a one-valued STRING-presence bit.
+
+Because canonical test outcomes had already been opened, this correction made
+no new model choice. It reused exactly the previously frozen ranks and
+regularizers: K562 concatenated reduced rank 32/alpha 1,000, STRING reduced
+rank 16/alpha 100, fitting-CV SLIM K64/lambda 10 and published SLIM K10/lambda
+.1; RPE1 used rank 16/alpha 1,000, rank 32/alpha 1,000, K32/lambda 10 and
+K10/lambda .1 respectively. There was no feature-policy, sign, clipping or
+test-conditioned adjustment. Predictions still add the training-control mean
+and clip to [0,14.99]. The correction protocol truthfully records that test
+outcomes were opened before this protocol.
+
+| Corrected frozen canonical test model | K562 Pearson-delta | K562 MSE | RPE1 Pearson-delta | RPE1 MSE |
+|---|---:|---:|---:|---:|
+| Published-default SLIM, K10/lambda .1 | .476276 | .00585545 | .636390 | .01014863 |
+| Fitting-CV SLIM | .501496 | .00569064 | .645608 | .01001188 |
+| STRING64 reduced rank | .492983 | .00568554 | .651180 | .01010347 |
+| static577+STRING64+presence reduced rank | **.516913** | **.00538925** | **.653012** | **.00943376** |
+
+For the concatenated model versus fitting-CV SLIM, paired 10,000-replicate
+condition-bootstrap 95% intervals for Pearson gain are [.004531,.026404] in
+K562 and [.002322,.012966] in RPE1; MSE-reduction intervals are
+[.00012974,.00048148] and [.00032024,.00084411]. Versus published-default
+SLIM, Pearson-gain intervals are [.027393,.054611] and [.010343,.023795], and
+MSE-reduction intervals are [.00029178,.00064801] and
+[.00045089,.00098288]. Seed 731, 10,000 replicates, condition pairing, the 273
+K562 and 386 RPE1 rosters, and all scoring equations are unchanged.
+
+The source remains SLIM commit
+`5a7e9ade5d0a6b6331e6dbc81181450605047bcc`; the official HDF5 SHA-256 is
+`789416877b8701ef6f800106d26bf7bb97ea8e72744e6ab93e24933a717f247d`.
+The Replogle source GTF SHA-256 is
+`796bb1f1d36c75462fea32e87cc54c66e2ee7b60a2e6eed3b6e0c02e8df7908b`.
+Static K562/RPE1 files are
+`6706f8867adedef8822897bc275ea90680584f84afd24771e4beb3c8ecf07659`
+and `621e1e9f0dffc740ef42382b1b2898f629edd5037e8a02d411e8d30e815ed816`.
+The feature-input receipt SHA-256 is
+`bf732052ce02b3da1e468fe532dc4769665ba286016b8c16395f6f64add073b2`.
+It binds the source commit, official HDF5, mapping GTF, generated symbol/ID
+packs and static577 inputs. The corrected model receipt SHA-256 is
+`3840e3677a6fbf25d41201a5ec8b1fef049d09c5e699bc1af801d502bb2f586d`;
+the development report is
+`6945721a30783d1a79b7f559e04f8491cec09424e804b074b7fb02cf1390892b`,
+and the corrected test report is
+`0ad9656842fabad7425a41c7d1f2ba747b38152e6616ab3299d2b8a0d5fa2996`.
+Artifacts are retained under
+`results/slp11-transition/gears-response-models-v4-corrected-receipts/`
+and `results/slp11-transition/gears-frozen-test-v3-corrected-receipts/`;
+the erroneous artifacts remain intact for audit.
+
+This remains a retrospective matched direct-mean comparison on source biology
+that participated in earlier development. The correction supports no
+prospective, general-leaderboard or state-of-the-art claim.
+
+### 2026-09-05 — Five-context joint world model, Norman fold 1
+
+The first completed expanded run trains a single 877,444-parameter population
+state model across K562 essential CRISPRi, RPE1 essential CRISPRi, author K562
+genome-wide CRISPRi, HepG2 CRISPRi and Norman K562 CRISPRa. The model uses 642
+static action descriptors, four assay IDs, two mechanism IDs, a separately
+masked control-expression context, and a value-bound observation encoder. The
+control-expression context is distinct from the zero basal anchor of the
+control-z endpoints. The empty-action transition remains exact identity.
+
+This was a native Windows RTX 4070 run, seed 731 and Norman fold 1. It completed
+20,000 updates in 790.84 seconds with about 2.4 GiB peak GPU memory. The five
+contexts contributed 1,443 K562 essential, 1,666 RPE1, 7,438 genome-wide,
+1,758 HepG2 and 111 Norman fitting populations. Development results at the
+completed checkpoint are:
+
+| Source and weighting | MSE | Profile Pearson | Independently query-centered Pearson |
+|---|---:|---:|---:|
+| K562 essential, intervention rows | .00332139 | — | .281796 |
+| RPE1 essential, intervention rows | .00815964 | — | .320993 |
+| K562 genome-wide, 1,613 population views | .01210323 | .096225 | .084511 |
+| K562 genome-wide, 1,491 unique genes | .01176667 | .101895 | .090593 |
+| HepG2, 396 population views | .05860674 | .273711 | .232930 |
+| HepG2, 361 unique genes | .05642275 | .292248 | .248465 |
+
+Population-view weighting represents every source/GEM population separately;
+unique-gene weighting first averages views for each intervention gene. The
+centered column removes the mean response across development interventions and
+then each query profile mean, so it measures perturbation-specific structure
+rather than shared endpoint level. Genome-wide MSE improves slightly over its
+frozen prior under both weightings (.01212999 population-view and .01179906
+unique-gene), while centered correlation is approximately unchanged. HepG2
+MSE also improves slightly over its prior (.05869050 and .05657508), and its
+centered correlation increases, while ordinary profile Pearson decreases.
+These are adaptive development contexts, not new-context confirmation.
+
+On the 19 held Norman fold-1 combinations, autonomous-average MSE is .01788604,
+8.15% below its own predicted-additive forecast (.01947211) and 5.51% below
+the direct-two-action forecast (.01893001). The observed-parent-average readout
+is .01747486, 9.35% below its observed-parent prior (.01927705). Autonomous
+centered nonadditive Pearson is .449887; observed-parent-average centered
+nonadditive Pearson is .452169. These improvements are useful fold-1
+composition evidence, but one fold cannot establish stable composition or
+emergence across contexts.
+
+The checkpoint SHA-256 is
+`fd96ce7db8fae3a1550223374a306026acfaeb4acc002d3e22a60cb8af9b212c`;
+the evaluation report SHA-256 is
+`f6b4cbc7388a32258ab217149207392dd8f162104de1208ca21a475f729efa1d`.
+The research export at
+`results/slp11-transition/joint-world-expanded-fold1-research-export-v1/`
+contains 20 payload files plus its manifest, including the model code, pinned
+Linux requirements, adapters, priors and safetensor checkpoint. Its Linux
+standalone portability check is pending. Runtime hash-lock and captured-source
+ordering have been corrected for future training runs; this native run is not
+an OMF-trained neural result. Norman fold 2 and the OMF fold-0 run are underway,
+so no aggregate fold claim or completed OMF neural claim is made here.

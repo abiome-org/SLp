@@ -1,0 +1,23 @@
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: false
+source: https://doi.org/10.7910/DVN/BD93JY
+evidence:
+  - https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId=doi:10.7910/DVN/BD93JY
+  - https://creativecommons.org/publicdomain/zero/1.0/
+licenseTerms: https://creativecommons.org/publicdomain/zero/1.0/
+scope: >-
+  Only replogle_k562_essential.zip (Dataverse file 7458695, MD5
+  84eed779531de88f83d3eb16a773a261) and replogle_rpe1_essential.zip
+  (file 7458694, MD5 169370a8da6093470f122172ab30f7c5) in released dataset
+  version 6, DOI 10.7910/DVN/BD93JY.
+rightsBasis: >-
+  The official Harvard Dataverse API identifies released version 6 and its
+  files under CC0 1.0. Both files are public and unrestricted.
+attribution: >-
+  Roohani, Yusuf (2023). GEARS: Predicting transcriptional outcomes of novel
+  multi-gene perturbations. Harvard Dataverse V6. DOI 10.7910/DVN/BD93JY.
+exclusions:
+  - every other file or dataset version
+  - model checkpoints and predictions

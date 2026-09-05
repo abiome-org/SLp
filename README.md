@@ -31,8 +31,8 @@ hash-locked dependencies without modifying existing OMF records manually.
 Project configuration archives uncommitted source; a separate commit is not a
 prerequisite for development.
 
-The active [experiment.yaml](experiment.yaml) manufactures the strongest retained
-molecular-response baseline through ordinary scripts. Training and evaluation
+The baseline [experiment.yaml](experiment.yaml) reproduces the retained 577-feature
+rank-32 molecular-response model through ordinary scripts. Training and evaluation
 receive separate captured datasets. The model artifact is a directory containing
 both native-panel models, inference code, dependency lock and manifest.
 This workflow is the runnable OMF 2 integration; it is not a claim that the
@@ -66,32 +66,63 @@ space). Output contains `predictions` and stable `query_ids`. The Python API is
 weight hashes and require explicit context controls. No corpus or OMF service is
 needed by the exported inference code.
 
-## Model build direction
+## Shared molecular world model
 
-SLp-1.1 is being consolidated around a shared observation encoder, a
-mechanism-aware action/state transition, and queried molecular decoders. The
-observation encoder must participate in inference and accept observed perturbed
-states. CRISPRi and CRISPRa are explicit mechanisms. Unpaired single-cell assays
-supply population states, not invented cell-to-cell trajectories.
+The implemented [joint module](modules/slp-1-1-joint-world-v1/CONTRACT.md) combines
+a masked observation encoder, a mechanism-aware action/state transition, and
+queried molecular decoders. Inference can start from a measured perturbed state
+or roll forward from the model's own predicted state. CRISPRi and CRISPRa are
+explicit mechanisms. Unpaired single-cell assays supply population endpoints.
 
-The available training base includes 350,755 K562/RPE1 fitting/control cells,
-static protein/annotation descriptors, and measured Norman single/double
-endpoints. RNA count likelihoods and standardized endpoint likelihoods retain
-their native measurement semantics while training the same state transition.
-Composition is learned within that model instead of attached as a separate
-small correction after training. The detailed build direction and its current
-implementation status are in the model card.
+The five-context training corpus includes K562/RPE1 essential-gene screens,
+Norman single/double endpoints, the K562 genome-wide screen, and HepG2.
+Static protein/annotation features and public STRING embeddings describe genes
+without learned gene-ID lookup tables. Separate assay heads preserve native
+count-derived and standardized endpoint units. The encoder additionally accepts
+the control population's expression profile; a zero-centered endpoint does not
+replace that biological context. The objective models population mean response,
+not a single-cell count likelihood.
 
-Current count, response and composition branches remain reproducible research
-artifacts. None has established SOTA or broad emergent SL capability. The
-strongest recent autonomous combination result is pooled and unstable across
-folds. Development feedback is used to improve the model; fresh cases are needed
-for independent claims.
+The stronger 642-feature reduced-rank response backbone beats matched SLIM
+comparators on both canonical retrospective test sets. The shared neural model
+improves held-out Norman combinations over its own predicted-additive output
+on the measured pilot fold. These support continued use of the architecture;
+they do not establish broad SL performance or emergent causal understanding.
+The model card reports exact comparisons and the remaining RPE1 tradeoff.
+
+Native CUDA training from the prepared five-context corpus:
+
+```powershell
+python modules/slp-1-1-joint-world-v1/train.py --data data/derived/slp11-joint-world-expanded-string-v1 --output results/my-joint-world --steps 20000 --save-every 5000 --batch-size 32 --observation-queries 512 --learning-rate 0.0002 --norman-fold 0
+```
+
+The output destination must be new. The trainer captures source, normalizers,
+query adapters, frozen linear priors, and safetensor checkpoints. Joint-model
+inference uses a different request contract from the historical baseline:
+
+```powershell
+python results/my-joint-world/inference.py --model results/my-joint-world --checkpoint step-020000.safetensors --context k562 --input request.npz --output prediction.npz
+```
+
+Requests contain `actions` (B by A by 642 raw descriptors), Boolean
+`action_mask`, and `basal` (B by native query count). Optional `observed`
+supplies the starting perturbed state. Optional `control_context_values` and
+`control_context_mask` supply an aligned log2(1+CP10K) control profile. Output
+contains `predictions` and stable `query_ids`; empty-action rows preserve the
+starting observation exactly.
+
+[experiment-joint-world.yaml](experiment-joint-world.yaml) declares the equivalent
+OMF 2 captured-script workflow with physically separated training and development
+inputs. Its hash-pinned Linux CUDA dependencies can be installed and checked with
+`bash scripts/bootstrap_slp_joint_linux.sh`. Native CUDA execution and OMF
+execution are recorded separately in the results ledger.
 
 ## Project layout and compatibility
 
 - `experiment.yaml` and `modules/slp-1-1-response-omf2/`: active captured-script
   training, evaluation and portable baseline inference.
+- `experiment-joint-world.yaml` and `modules/slp-1-1-joint-world-v1/`: shared
+  population-state training, composition, and standalone inference.
 - `modules/`, `workloads/`, `evaluations/`, `bindings/`, `rights/`, `sources/`:
   compatible `omf.dev/v1alpha1` resources and retained numerical components.
 - `model/v1/`, historical `src/` and `docs/model-card.md`: frozen SLp-1 evidence.

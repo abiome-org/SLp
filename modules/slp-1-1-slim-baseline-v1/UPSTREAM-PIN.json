@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/RasmussenLab/SLIM.git",
+  "revision": "5a7e9ade5d0a6b6331e6dbc81181450605047bcc",
+  "license": "MIT",
+  "retrieved": "2026-09-05",
+  "adaptation": "Official single-perturbation PCA/train-mean/closed-form-ridge algebra with SLp static577 intervention features and control-anchored residual endpoints."
+}
