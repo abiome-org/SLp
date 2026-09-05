@@ -16,7 +16,7 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
-def export(model, checkpoint, output, requirements=LOCK):
+def export(model, checkpoint, output, requirements=LOCK, inference_override=None):
     model, output, requirements = Path(model), Path(output), Path(requirements)
     config = json.loads((model / 'config.json').read_text(encoding='utf-8'))
     if config.get('training', {}).get('steps_completed', 0) <= 0:
@@ -40,6 +40,19 @@ def export(model, checkpoint, output, requirements=LOCK):
     for name in required + ['train.py', 'data-manifest.json']:
         if (model / name).is_file():
             shutil.copyfile(model / name, output / name)
+    override_record = None
+    if inference_override is not None:
+        inference_override = Path(inference_override)
+        if not inference_override.is_file():
+            raise FileNotFoundError(inference_override)
+        original_hash = digest(model / 'inference.py')
+        replacement_hash = digest(inference_override)
+        shutil.copyfile(inference_override, output / 'inference.py')
+        exported_config = json.loads((output / 'config.json').read_text(encoding='utf-8'))
+        exported_config.setdefault('code', {})['inference.py'] = replacement_hash
+        (output / 'config.json').write_text(json.dumps(exported_config, indent=2, sort_keys=True) + '\n')
+        override_record = {'originalInferenceSha256': original_hash,
+                           'replacementInferenceSha256': replacement_hash}
     for directory in ('adapters', 'priors'):
         (output / directory).mkdir()
         for context in config['contexts']:
@@ -59,6 +72,8 @@ def export(model, checkpoint, output, requirements=LOCK):
                 'trainingExecutor': config['runtime'],
                 'dependencyPlatform': 'Linux x86_64 CPython 3.12, CUDA 12.8 wheels',
                 'noDatasetRequiredForInference': True}
+    if override_record is not None:
+        manifest['inferenceOverride'] = override_record
     (output / 'manifest.json').write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
     return manifest
 
@@ -69,8 +84,10 @@ def main():
     parser.add_argument('--checkpoint', required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--requirements', type=Path, default=LOCK)
+    parser.add_argument('--inference-override', type=Path)
     args = parser.parse_args()
-    manifest = export(args.model, args.checkpoint, args.output, args.requirements)
+    manifest = export(args.model, args.checkpoint, args.output, args.requirements,
+                      args.inference_override)
     print(json.dumps({'output': str(args.output), 'files': len(manifest['files']),
                       'checkpoint': manifest['selectedCheckpoint']}))
 

@@ -1,4 +1,4 @@
-# Joint population world model v1
+# Joint population world model v2
 
 `SharedWorldModel` encodes a masked molecular population observation, applies an
 exchangeable set of statically described actions, and decodes arbitrary queried
@@ -8,6 +8,9 @@ control-z observations. IDs are fixed as CRISPRi `0`, CRISPRa `1`, ln1p mean
 CP10K `0`, Norman control-z `1`, author GWPS control-z `2`, and separately
 normalized HepG2 control-z `3`. The last two share a mechanism but retain
 different assay heads and original endpoint units.
+Version 2 also admits MCF10A CRISPR-Cas9 knockout as mode `2` and its mean
+per-cell ln1p(CP10K) endpoint as assay `4`. Mode and assay vocabulary sizes are
+derived from the selected source shards rather than fixed to a named corpus.
 
 The transition is an exact identity for an empty action set and its final update
 projection starts at zero. Its parameters receive gradients on the first update;
@@ -15,7 +18,18 @@ the encoder and decoder remain ordinarily initialized and trainable. `forward`
 returns only the neural residual change. The trainer is responsible for adding
 the frozen reduced-rank action prior and observed-response anchor. Rank and
 regularization are serialized per context; current count priors use rank 16
-and the Norman prior uses rank 32.
+and every composition-bearing context prior uses its measured singles at rank
+32. Combination training is activated by `single_rows`, `combination_rows`,
+`combination_single_rows`, and `combination_fold` arrays, independently of the
+source name.
+
+Training sources and positive sampling weights come from the captured data
+manifest's `trainingSources` and `sourceWeights` fields, or from explicit
+`--sources` and `--source-weights` arguments. In the context-transfer snapshot,
+three MCF10A environments share one stable-gene pair-fold hash. Fold-zero
+double outcomes are withheld in every fitting environment while all measured
+parent singles remain available. Minimal-medium day-6 outcomes are physically
+absent from the training snapshot and reserved for context-transfer evaluation.
 
 By default the observation token includes a multiplicative binding between its
 static query representation and its scaled response relative to basal. This

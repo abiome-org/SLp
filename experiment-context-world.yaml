@@ -1,0 +1,136 @@
+name: slp-1-1-context-world-omf2
+objective: Train the eight-context molecular state model and evaluate known-gene composition
+  and held-medium transfer.
+modelCard: MODEL_CARD.md
+data:
+  training:
+    source: data/derived/slp11-joint-world-context-transfer-v2-training-r4
+    rights:
+      license: source-specific research mixture; see source rights and captured manifests
+      trainingAllowed: true
+  development:
+    source: data/derived/slp11-joint-world-expanded-development-string-v1
+    rights:
+      license: source-specific research mixture; see source rights and captured manifests
+      trainingAllowed: true
+  reference:
+    source: results/slp11-transition/human-essential-count-response-rank32-seed731-v1
+    rights:
+      license: project-derived-research-artifact
+      trainingAllowed: false
+  cropseq:
+    source: data/derived/slp11-gse164996-cropseq-populations-v4
+    rights:
+      license: public processed GEO measurements; see rights/gse164996-combinatorial-cropseq-public-molecular.yaml
+      trainingAllowed: false
+train:
+  source: modules/slp-1-1-joint-world-v2
+  inputs:
+  - training
+  dependencies: requirements-linux.lock
+  command:
+  - python3
+  - train.py
+  - --data
+  - '{inputs[training]}'
+  - --output
+  - '{output}/model'
+  - --steps
+  - '{parameters[steps]}'
+  - --save-every
+  - '{parameters[save_every]}'
+  - --seed
+  - '{parameters[seed]}'
+  - --fold
+  - '{parameters[fold]}'
+  - --width
+  - '{parameters[width]}'
+  - --batch-size
+  - '{parameters[batch_size]}'
+  - --observation-queries
+  - '{parameters[observation_queries]}'
+  - --decode-queries
+  - '{parameters[decode_queries]}'
+  - --learning-rate
+  - '{parameters[learning_rate]}'
+  - --reconstruction-weight
+  - '{parameters[reconstruction_weight]}'
+  - --response-rank
+  - '{parameters[response_rank]}'
+  - --residual-penalty
+  - '{parameters[residual_penalty]}'
+  - --max-seconds
+  - '{parameters[max_seconds]}'
+  artifacts:
+    model: model
+evaluate:
+  source: modules/slp-1-1-joint-world-v2
+  inputs:
+  - development
+  - reference
+  - model
+  - cropseq
+  dependencies: requirements-linux.lock
+  command:
+  - python3
+  - evaluate.py
+  - --development
+  - '{inputs[development]}'
+  - --reference
+  - '{inputs[reference]}'
+  - --model
+  - '{inputs[model]}'
+  - --checkpoint
+  - '{parameters[checkpoint]}'
+  - --output
+  - '{output}'
+  - --device
+  - cuda
+  - --mcf-data
+  - '{inputs[cropseq]}'
+  metrics: metrics.json
+  artifacts:
+    report: report.json
+    predictions: predictions.npz
+metrics:
+  k562_mse:
+    direction: minimize
+  rpe1_mse:
+    direction: minimize
+  k562_centered_pearson:
+    direction: maximize
+  rpe1_centered_pearson:
+    direction: maximize
+  norman_autonomous_mse:
+    direction: minimize
+  norman_observed_parent_mse:
+    direction: minimize
+  mcf10a_minimal_d6_single_mse:
+    direction: minimize
+  mcf10a_minimal_d6_pair_mse:
+    direction: minimize
+primaryMetric: k562_mse
+baseline: context-transfer
+candidates:
+  context-transfer:
+    rationale: Shared CRISPRi, CRISPRa and knockout state transitions; minimal-medium
+      outcomes are absent from training.
+    parameters:
+      steps: 20000
+      save_every: 5000
+      checkpoint: step-020000.safetensors
+      seed: 731
+      width: 128
+      batch_size: 32
+      observation_queries: 512
+      decode_queries: 512
+      learning_rate: 0.0002
+      reconstruction_weight: 0.05
+      response_rank: 16
+      residual_penalty: 1.0
+      max_seconds: 2700
+      fold: 0
+limits:
+  timeoutSeconds: 3600
+  cpuSeconds: 3600
+executor: local

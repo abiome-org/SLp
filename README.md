@@ -68,14 +68,15 @@ needed by the exported inference code.
 
 ## Shared molecular world model
 
-The implemented [joint module](modules/slp-1-1-joint-world-v1/CONTRACT.md) combines
+The implemented [joint module](modules/slp-1-1-joint-world-v2/CONTRACT.md) combines
 a masked observation encoder, a mechanism-aware action/state transition, and
 queried molecular decoders. Inference can start from a measured perturbed state
-or roll forward from the model's own predicted state. CRISPRi and CRISPRa are
-explicit mechanisms. Unpaired single-cell assays supply population endpoints.
+or roll forward from the model's own predicted state. CRISPRi, CRISPRa and Cas9
+knockout are explicit mechanisms. Unpaired single-cell assays supply population endpoints.
 
-The five-context training corpus includes K562/RPE1 essential-gene screens,
-Norman single/double endpoints, the K562 genome-wide screen, and HepG2.
+The eight-context training corpus includes K562/RPE1 essential-gene screens,
+Norman single/double endpoints, the K562 genome-wide screen, HepG2, and three
+MCF10A knockout environments from GSE164996.
 Static protein/annotation features and public STRING embeddings describe genes
 without learned gene-ID lookup tables. Separate assay heads preserve native
 count-derived and standardized endpoint units. The encoder additionally accepts
@@ -85,15 +86,18 @@ not a single-cell count likelihood.
 
 The stronger 642-feature reduced-rank response backbone beats matched SLIM
 comparators on both canonical retrospective test sets. The shared neural model
-improves held-out Norman combinations over its own predicted-additive output
-on the measured pilot fold. These support continued use of the architecture;
+improves autonomous Norman combination MSE by 6.39% over its predicted-additive
+output across all three folds (59 held pairs). The eight-context extension also
+improves combination MSE over additive prediction in each trained MCF10A
+environment, although retaining the control state has lower absolute MSE.
+MCF10A intervention prediction and held-medium transfer need further improvement. These support continued use of the architecture;
 they do not establish broad SL performance or emergent causal understanding.
 The model card reports exact comparisons and the remaining RPE1 tradeoff.
 
-Native CUDA training from the prepared five-context corpus:
+Native CUDA training from the prepared eight-context corpus:
 
 ```powershell
-python modules/slp-1-1-joint-world-v1/train.py --data data/derived/slp11-joint-world-expanded-string-v1 --output results/my-joint-world --steps 20000 --save-every 5000 --batch-size 32 --observation-queries 512 --learning-rate 0.0002 --norman-fold 0
+python modules/slp-1-1-joint-world-v2/train.py --data data/derived/slp11-joint-world-context-transfer-v2-training-r4 --output results/my-joint-world --steps 20000 --save-every 5000 --seed 731 --fold 0 --batch-size 32 --observation-queries 512 --decode-queries 512 --learning-rate 0.0002 --response-rank 16 --residual-penalty 1 --max-seconds 2700
 ```
 
 The output destination must be new. The trainer captures source, normalizers,
@@ -108,21 +112,33 @@ Requests contain `actions` (B by A by 642 raw descriptors), Boolean
 `action_mask`, and `basal` (B by native query count). Optional `observed`
 supplies the starting perturbed state. Optional `control_context_values` and
 `control_context_mask` supply an aligned log2(1+CP10K) control profile. Output
-contains `predictions` and stable `query_ids`; empty-action rows preserve the
+contains `predictions`, stable `query_ids`, and `prediction_supported`; empty-action rows preserve the
 starting observation exactly.
 
 [experiment-joint-world.yaml](experiment-joint-world.yaml) declares the equivalent
-OMF 2 captured-script workflow with physically separated training and development
-inputs. Its hash-pinned Linux CUDA dependencies can be installed and checked with
+completed five-context OMF 2 captured-script workflow with physically separated
+training and development inputs. [experiment-context-world.yaml](experiment-context-world.yaml)
+is the validated eight-context replay configuration, with MCF10A evaluation
+inputs separate from training. Its hash-pinned Linux CUDA dependencies can be installed and checked with
 `bash scripts/bootstrap_slp_joint_linux.sh`. Native CUDA execution and OMF
 execution are recorded separately in the results ledger.
+
+The completed eight-context research bundle is
+`results/slp11-transition/joint-world-eight-context-research-export-v1/`. Its
+26 payload files passed hash verification and standalone Windows/Linux replay
+across all eight contexts, with maximum prediction drift 2.16e-7 and no OMF
+import available. The bundle's Python API is `JointWorldBundle(model_directory)`;
+its manifest selects the completed checkpoint automatically. This is a local
+research model, not an externally published release.
 
 ## Project layout and compatibility
 
 - `experiment.yaml` and `modules/slp-1-1-response-omf2/`: active captured-script
   training, evaluation and portable baseline inference.
-- `experiment-joint-world.yaml` and `modules/slp-1-1-joint-world-v1/`: shared
-  population-state training, composition, and standalone inference.
+- `experiment-joint-world.yaml` and `modules/slp-1-1-joint-world-v1/`: verified
+  five-context OMF training, composition, and standalone inference.
+- `experiment-context-world.yaml` and `modules/slp-1-1-joint-world-v2/`: generalized
+  eight-context training, held-medium evaluation, and portable inference.
 - `modules/`, `workloads/`, `evaluations/`, `bindings/`, `rights/`, `sources/`:
   compatible `omf.dev/v1alpha1` resources and retained numerical components.
 - `model/v1/`, historical `src/` and `docs/model-card.md`: frozen SLp-1 evidence.

@@ -1,0 +1,42 @@
+schema: slp.source-acquisition/v1
+id: gse164996-combinatorial-cropseq-v1
+status: acquired-decoded-local-research
+admissionClaim: true
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  accession: GEO:GSE164996
+  bioProject: PRJNA692740
+  landingUrl: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE164996
+  articleDoi: 10.1158/0008-5472.CAN-21-2555
+rights: rights/gse164996-combinatorial-cropseq-public-molecular.yaml
+context:
+  cellLine: MCF10A
+  perturbation: combinatorial-CRISPR-Cas9-knockout
+  conditions:
+    - full-medium-day-0
+    - full-medium-day-6
+    - TGF-beta1-supplemented-medium-day-6
+    - minimal-medium-day-6
+localSourceDirectory: data/sources/gse164996-combinatorial-cropseq-v1
+sourceManifest: data/sources/gse164996-combinatorial-cropseq-v1/manifest.json
+derivedSnapshot: data/derived/slp11-gse164996-cropseq-populations-v1
+derivedManifest: data/derived/slp11-gse164996-cropseq-populations-v1/manifest.json
+selection: >-
+  Submitted filtered matrices and axes plus submitted per-cell protospacer calls
+  only. A usable cell must have exactly the two distinct guides expected from
+  the dual-vector experiment. Singles require one target plus CTRL0001/2;
+  basal controls require CTRL0001+CTRL0002; doubles require two distinct target
+  genes. Each population view requires at least ten aligned cells.
+normalization: per-cell total-count CP10K, log1p, then population mean
+leakageRouting: >-
+  Any call containing a gene in the 1,492-gene validation roster from the
+  pinned four-context snapshot is removed before outcome aggregation. This
+  excludes CBFB, NF2, and SMAD4 and all combinations containing them.
+protectedTestOpened: false
+limitations:
+  - Guide-level populations are retained separately when several guides target one stable gene.
+  - The 7,000-gene query axis is the exact overlap with the existing 7,036-gene world-model panel.
+  - Population means do not retain cell-level heterogeneity.
+  - Public research training rights do not imply unconditional redistribution rights.

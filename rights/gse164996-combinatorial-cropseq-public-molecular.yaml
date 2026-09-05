@@ -1,0 +1,32 @@
+license: NCBI-GEO-public-data-policy
+trainingAllowed: true
+redistributionAllowed: conditional
+attributionRequired: true
+source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE164996
+evidence:
+  - https://www.ncbi.nlm.nih.gov/geo/info/disclaimer.html
+  - https://www.ncbi.nlm.nih.gov/home/about/policies/
+  - https://pmc.ncbi.nlm.nih.gov/articles/PMC9762330/
+scope: >-
+  The four submitted filtered Cell Ranger expression matrices, their feature
+  and barcode axes, submitted protospacer calls, and GEO family metadata pinned
+  by sources/gse164996-combinatorial-cropseq-v1.yaml. Raw matrices and raw
+  sequencing reads are excluded.
+rightsBasis: >-
+  NCBI states that it places no restrictions on use or distribution of GEO
+  molecular data, while warning that submitters may retain patent, copyright,
+  or other rights and that NCBI does not transfer those rights. The authors
+  explicitly released raw and processed combinatorial CROP-seq data through
+  GEO GSE164996 in the article's data-availability statement. Public research
+  model training is allowed with citation. Redistribution remains conditional
+  because neither the GEO record nor article assigns a dataset-specific open
+  content license.
+attribution: >-
+  Zhao X et al. Combinatorial CRISPR/Cas9 Screening Reveals Epistatic Networks
+  of Interacting Tumor Suppressor Genes and Therapeutic Targets in Human Breast
+  Cancer. Cancer Research. 2021;81:6090-6105. DOI: 10.1158/0008-5472.CAN-21-2555.
+  GEO accession GSE164996.
+exclusions:
+  - raw Cell Ranger matrices and raw sequencing reads
+  - growth or synthetic-lethality screening labels
+  - derived local arrays, model weights, forecasts, and evaluations

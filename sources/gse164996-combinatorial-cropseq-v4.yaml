@@ -1,0 +1,34 @@
+schema: slp.source-acquisition/v1
+id: gse164996-combinatorial-cropseq-v4
+supersedes: gse164996-combinatorial-cropseq-v2
+status: acquired-decoded-local-research
+admissionClaim: true
+organism: {name: Homo sapiens, ncbiTaxon: 9606}
+source:
+  accession: GEO:GSE164996
+  bioProject: PRJNA692740
+  landingUrl: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE164996
+  articleDoi: 10.1158/0008-5472.CAN-21-2555
+  authorCodeCommit: 11e98073eab520f39458ccb93bf08b9814207e2a
+  authorCode: https://github.com/Xiaoyu-Zhao/Oncogenic_GI_screening
+rights: rights/gse164996-combinatorial-cropseq-public-molecular.yaml
+localSourceDirectory: data/sources/gse164996-combinatorial-cropseq-v1
+sourceManifest: data/sources/gse164996-combinatorial-cropseq-v1/manifest.json
+derivedSnapshot: data/derived/slp11-gse164996-cropseq-populations-v4
+derivedManifest: data/derived/slp11-gse164996-cropseq-populations-v4/manifest.json
+selection: >-
+  Submitted filtered matrices and exact two-guide assignments only. Basal pools
+  the two complete author controls CTRL0002+CTRL0001 and
+  hRosa26_2+CTRL0001; singleton CTRL0001 controls imputed by the author code
+  are excluded. Following the author rules, an exact target plus either
+  numbered control is an SKO and two distinct non-control target guides are a
+  DKO. Same-gene pairs and hRosa26+target pairs are excluded. The deposited
+  feature_call field does not expose Puro/Blasti vector slots, so no unsupported
+  slot assignment is invented. Every population view requires at least ten cells.
+normalization: per-cell total-count CP10K, log1p, then population mean
+leakageRouting: >-
+  CBFB, NF2, SMAD4 and every combination containing one of them are removed
+  before aggregation because they occur in the pinned 1,492-gene validation roster.
+protectedTestOpened: false
+trainingAllowed: true
+redistributionAllowed: conditional

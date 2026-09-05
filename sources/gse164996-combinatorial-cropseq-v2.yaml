@@ -1,0 +1,30 @@
+schema: slp.source-acquisition/v1
+id: gse164996-combinatorial-cropseq-v2
+supersedes: gse164996-combinatorial-cropseq-v1
+status: acquired-decoded-local-research
+admissionClaim: true
+organism: {name: Homo sapiens, ncbiTaxon: 9606}
+source:
+  accession: GEO:GSE164996
+  bioProject: PRJNA692740
+  landingUrl: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE164996
+  articleDoi: 10.1158/0008-5472.CAN-21-2555
+  authorCode: https://github.com/Xiaoyu-Zhao/Oncogenic_GI_screening
+rights: rights/gse164996-combinatorial-cropseq-public-molecular.yaml
+localSourceDirectory: data/sources/gse164996-combinatorial-cropseq-v1
+sourceManifest: data/sources/gse164996-combinatorial-cropseq-v1/manifest.json
+derivedSnapshot: data/derived/slp11-gse164996-cropseq-populations-v2
+derivedManifest: data/derived/slp11-gse164996-cropseq-populations-v2/manifest.json
+selection: >-
+  Submitted filtered matrices and exact two-guide assignments only. Basal pools
+  the two author-declared complete controls CTRL0002+CTRL0001 and
+  hRosa26_2+CTRL0001. A single Puro target must pair with Blasti CTRL0001;
+  same-vector target+CTRL0002 calls are rejected. Doubles require two distinct
+  target genes. Every retained population requires at least ten cells.
+normalization: per-cell total-count CP10K, log1p, then population mean
+leakageRouting: >-
+  CBFB, NF2, SMAD4 and every combination containing one of them are removed
+  before aggregation because they occur in the pinned 1,492-gene validation roster.
+protectedTestOpened: false
+trainingAllowed: true
+redistributionAllowed: conditional

@@ -6286,3 +6286,269 @@ standalone portability check is pending. Runtime hash-lock and captured-source
 ordering have been corrected for future training runs; this native run is not
 an OMF-trained neural result. Norman fold 2 and the OMF fold-0 run are underway,
 so no aggregate fold claim or completed OMF neural claim is made here.
+
+### 2026-09-05 — Author-population-scored canonical comparison
+
+The corrected frozen GEARS models were passed through SLIM's unchanged pinned
+population builder and metric implementation. For each test perturbation,
+`build_result_h5ad` samples fitting/control cells with seed 1, rescales each
+gene to the frozen predicted mean, and clips synthetic cells to [0,14.99]. The
+authors' evaluator then uses real controls and averages Pearson of expression
+delta equally over the 273 K562 or 386 RPE1 test conditions. Cell-level H5AD
+files were temporary; post-scaffold means, cell counts, query identities and
+per-condition results are retained.
+
+| Population-scored frozen model | K562 Pearson-delta | K562 MSE | RPE1 Pearson-delta | RPE1 MSE |
+|---|---:|---:|---:|---:|
+| Published-default SLIM, K10/lambda .1 | .476035 | .00585907 | .636037 | .01016149 |
+| Fitting-CV SLIM | .501233 | .00569426 | .645247 | .01002488 |
+| static577+STRING64+presence reduced rank | **.516688** | **.00539291** | **.652638** | **.00944712** |
+
+Paired 10,000-replicate condition bootstraps use seed 731. Against fitting-CV
+SLIM, the concatenated model's Pearson-gain 95% intervals are
+[.004568,.026433] K562 and [.002304,.012975] RPE1; MSE-reduction intervals are
+[.00012969,.00048137] and [.00031991,.00084358]. Against published-default
+SLIM, Pearson intervals are [.027412,.054603] and [.010320,.023782], with MSE
+intervals [.00029177,.00064804] and [.00045047,.00098224].
+
+This supersedes the earlier hypothesis that SLIM's cell scaffold explains the
+gap to its README values: population scoring changes the direct-mean results by
+less than .0004 and does not recover .499 K562/.613 RPE1. Deterministic full-SVD
+reconstruction matches the frozen SLIM means within 8e-15. The pinned authors'
+default randomized PCA changes mean values only 3e-6 to 1.4e-5 across recorded
+seeds 1/2/3. The repository does not contain the README-referenced
+`manuscript-results/results/test_mean_scores.csv`, so the headline discrepancy
+remains an upstream artifact or data-environment provenance gap; it does not
+block the matched comparison reported here. The source biology and test
+outcomes were accessed previously, and a training-only algebraic reconstruction
+was performed after that access solely to validate frozen means; it did not
+select or supply any scored prediction.
+
+The parity report SHA-256 is
+`f50481401a733d81c98c72e161143c7d3fbe7d177cb5490e049e73d998d8684e`.
+
+### 2026-09-05 — Eight-context joint world model with held MCF10A environment
+
+The context-transfer revision trained one 910,725-parameter population-state
+model for 20,000 updates across K562 and RPE1 essential CRISPRi, K562
+genome-wide CRISPRi, HepG2 CRISPRi, Norman K562 CRISPRa, and three MCF10A
+CRISPR knockout environments (full-medium day 0, full-medium day 6 and TGF-beta
+day 6). The model used 642 static descriptors, three mechanism IDs, five assay
+IDs, observed molecular state and a separately masked control-expression
+context. The immutable training snapshot was
+`slp11-joint-world-context-transfer-v2-training-r4` (manifest SHA-256
+`8d9beb1e77bbb4ef9ada2c48f8fd5396d1a1ab3425ca28e39073f67e11a27cab`).
+The corrected GSE164996 population snapshot manifest SHA-256 was
+`ac34a2bf8c26547cdcf559100c9f3f9edbab3ca2c7830f32b0d8aa44d1cc3c0b`.
+It pools both deposited exact two-guide controls, retains author-defined
+single-knockout calls without inventing unavailable vector slots, and excludes
+every intervention in the global 1,492-gene validation roster.
+
+The fixed protocol used seed 731, canonical combination fold 0, rank-16 frozen
+linear priors, batch size 32, and a .05 reconstruction auxiliary loss. All
+minimal-medium day-6 outcomes were physically absent from fitting. The native
+RTX 4070 run completed in 994.17 seconds with 2,476.68 MiB peak GPU memory; its
+step-20,000 checkpoint SHA-256 is
+`18634c2765bc0636e1528dcaeaba4dd4543eee10bf6ec3e8a3b7e81e32ca0aee`.
+
+The adaptive single-intervention development results were:
+
+| Source and weighting | Joint MSE | Prior MSE | Joint centered Pearson | Prior centered Pearson |
+|---|---:|---:|---:|---:|
+| K562 essential, 305 rows | .00331249 | .00334074 | .282763 | .276556 |
+| RPE1 essential, 360 rows | .00808808 | .00795168 | .320072 | .326121 |
+| K562 genome-wide, 1,613 views | .01210236 | .01212999 | .086605 | .084861 |
+| K562 genome-wide, 1,491 unique genes | .01176522 | .01179906 | .092601 | .090662 |
+| HepG2, 396 views | .05844371 | .05869050 | .231821 | .226600 |
+| HepG2, 361 unique genes | .05632339 | .05657508 | .247783 | .242137 |
+
+The same canonical pair fold was withheld within each fitted combinatorial
+context. Metrics below report MSE and independently query-centered
+nonadditive Pearson; the latter removes shared endpoint level before measuring
+perturbation-specific composition.
+
+| Context (held pairs) | Direct two actions | Autonomous average | Observed-parent average | Predicted additive | Prior only | Zero response MSE |
+|---|---:|---:|---:|---:|---:|---:|
+| Norman CRISPRa (23) | .015661/.448680 | .014980/.474750 | .014722/.471795 | .016307/.424821 | .016324/.433422 | — |
+| MCF10A full D0 (10) | .006106/.365264 | .005498/.496392 | .005919/.481572 | .006642/.498201 | .006634/.501102 | .004130 |
+| MCF10A full D6 (10) | .007064/.355218 | .006292/.479066 | .006770/.436354 | .007650/.475873 | .007651/.478691 | .004659 |
+| MCF10A TGF-beta D6 (7) | .010676/.402841 | .009029/.558255 | .010098/.554792 | .012435/.557165 | .012443/.560029 | .007119 |
+
+Minimal-medium day 6 is a held environment: no outcome from this environment
+entered fitting, calibration, checkpoint selection or sign selection. Forecasts
+use the frozen full-medium day-6 model and prior with the minimal-medium control
+profile. Its ten single interventions have joint MSE .00552547 and centered
+Pearson .050358, versus prior-only .00551440/.048968 and zero-response MSE
+.00303003. Pair results separate combinations observed in another MCF10A
+environment from the canonical fold excluded in every environment:
+
+| Minimal-medium pair subset | Pairs | Direct two actions | Autonomous average | Observed-parent average | Predicted additive | Prior only | Zero response MSE |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Seen in another environment | 17 | .009335/.543220 | .009589/.542715 | .005930/.529640 | .012210/.525960 | .012173/.528925 | .004402 |
+| Globally held hash fold | 10 | .010879/.548690 | .009657/.560700 | .005721/.553671 | .012144/.557317 | .012099/.558283 | .004077 |
+| All minimal-medium pairs | 27 | .009907/.543780 | .009614/.551867 | .005852/.540726 | .012186/.540128 | .012146/.542388 | .004282 |
+
+Each pair cell reports MSE/independently query-centered nonadditive Pearson.
+Observed-parent forecasts use measured single-parent states and therefore are
+not autonomous forecasts. On the globally held combinations, autonomous
+averaging improves direct-action MSE and centered correlation, but remains
+worse than the observed-additive MSE (.008339) and zero-response MSE (.004077).
+Single-intervention transfer is also worse in MSE than the zero-response
+baseline. A 10,000-resample bootstrap with seed 731 clustered duplicate views
+by canonical gene pair. Autonomous-minus-predicted-additive MSE differences
+were -.001144 (95% interval [-.001399,-.000839]) for full D0, -.001358
+[-.001665,-.001048] for full D6, -.003406 [-.003984,-.002830] for TGF-beta D6,
+and -.002487 [-.002948,-.002050] for the globally held minimal-medium fold.
+Thus the learned state update improves on its own additive forecast while both
+remain behind the zero-response scale baseline in this endpoint. This is weak
+new-context compositional evidence, not a state-of-the-art or general
+cross-context claim. The corrected evaluation ran in 51.51 seconds, did not
+access a protected benchmark test, and produced report SHA-256
+`0f7b172b64f8aa8f56f6514ffe14c90ce74baf0193da6824aa43ec8a2db01fb3` and
+prediction SHA-256
+`dfe439a334fce5ff4af717ad98231b5e3ec97783015fcb78da19918fd0cc767c`.
+
+### 2026-09-05 — Five-context fold-0 completion under OMF 2
+
+OMF experiment run `01a07387-19fa-76f1-8e7a-bb9568b9d870` completed both
+captured stages successfully on Linux with the local RTX 4070. The run used
+seed 731, Norman fold 0, the five-context expanded training snapshot and the
+captured `slp-1-1-joint-world-v1` module. Training completed 20,000 updates in
+1,069.96 seconds with 2,404.47 MiB peak allocated GPU memory. The definition,
+workload and evaluation revisions are respectively
+`sha256:d97b4af9e15bf08fc09421fb34a711b21b5fe097f719637776268cc4772ce4e6`,
+`sha256:0863c1b1f4165de4b9290eefe858b3d795d92faa590b00ad6b1641ef5ee243a1`
+and
+`sha256:b4c4f8923daeaa89ab88eccdcb9bd3935574f0ad361cbac650e72e4929bc7d26`.
+
+The fold-0 development results are K562 MSE .00332378 and independently
+query-centered Pearson .282516; RPE1 MSE .00819490 and centered Pearson
+.319857; genome-wide K562 population-view/unique-gene MSE
+.01209511/.01176228; and HepG2 population-view/unique-gene MSE
+.05851243/.05640213. On 23 held Norman combinations, autonomous-average MSE is
+.01496229 versus predicted-additive .01641067, a reduction of 8.83%.
+Observed-parent-average MSE is .01443095 versus its observed-parent prior
+.01596971, a reduction of 9.64%. This is adaptive development evidence, with
+RPE1 still worse than its frozen prior MSE .00795168.
+
+The captured checkpoint SHA-256 is
+`1498753a778e2e439e0a09617dcb36d7dc1c531873179c9d9cddf6eb4a774b11`.
+The stage report and predictions have OMF artifact digests
+`sha256:e7b6145fa712314f6304f06f47cb6c4a7387118ffbf29fa879a64e10409b81b6`
+and
+`sha256:a633a8f522585a740df73b59dc0c5df09f5940d5150b40662601c5bbcb79a0fb`;
+their materialized file SHA-256 values are
+`97f83107eb9fe984bd91c5434adb0a510c1e2d6dc3a5d664f00466dab2e7b5f2`
+and
+`a223babb50c61ee1e7c5c45b8fe6a431aab4e80e7dc7b0eb44c89dcf857040d5`.
+The supported `omf experiment export` command materialized model, captured
+train/evaluate sources and evidence at
+`results/slp11-transition/joint-world-expanded-fold0-omf2-export-v1/`;
+its `evidence.json` SHA-256 is
+`df289db824c5124015179431212a1eaa5fc134674d43b210f0e8585c18fb169d`.
+OMF records `passed: false` because this exploratory EvaluationSpec has no
+evaluator pass declaration or compatibility evidence. Both workload stages
+nevertheless have terminal `succeeded` status; no release or deployment claim
+follows from this research export.
+
+### 2026-09-05 — Clean Linux inference portability
+
+The fold-1 checkpoint was copied unchanged into the new research export
+`results/slp11-transition/joint-world-expanded-fold1-research-export-v2/`.
+Its checkpoint SHA-256 remains
+`fd96ce7db8fae3a1550223374a306026acfaeb4acc002d3e22a60cb8af9b212c`.
+The export replaces only the captured inference loader with the reviewed core
+`safetensors.safe_open` loader and records original/replacement loader hashes
+`f6506bdbdabce78148e3b9aab3829e13a5db3442247609a08720b800e5761c92`
+and
+`fb92d7025976962146e6b37b18c3f6a4f7b516c49be64256080b762ac706faee`.
+
+The strict replay at
+`results/slp11-transition/joint-world-expanded-fold1-portability-v5/` ran the
+managed Linux Python with `-S`, admitted only its explicit site-packages and
+bundle/script paths, limited Torch to four CPU threads, and confirmed that OMF
+was not importable. All 20 payload hashes matched the export manifest, query
+identities and support masks matched exactly, and empty actions preserved the
+supplied observation exactly within each runtime. Across Windows and isolated
+Linux, maximum prediction drift over all five contexts was
+`1.4156103134155273e-7`; generated observation drift was at most
+`4.336808689942018e-19`. The portability report manifest SHA-256 is
+`7f0d05227e61a551fe83c3ea3a972f90f817981748193cdadb0660728ab57b7f`.
+
+### 2026-09-05 — Five-context Norman three-fold aggregate
+
+The three independently trained five-context models now cover every one of the
+59 Norman held-combination development endpoints exactly once: fold 0 has 23,
+fold 1 has 19 and fold 2 has 17. Stable source-row pair identifiers are unique
+and nonoverlapping, all query axes match, and every fold uses the same 7,182
+common measured queries. Fold 0 comes from succeeded OMF run
+`01a07387-19fa-76f1-8e7a-bb9568b9d870`; folds 1 and 2 are the bounded native
+seed-731 runs. The earlier three-context fold-0 model is excluded.
+
+| Fold | Direct MSE / centered nonadditive r | Autonomous-average MSE / r | Observed-parent-average MSE / r |
+|---|---:|---:|---:|
+| 0 (23 pairs) | .0153351 / .461515 | .0149623 / .475228 | .0144310 / .497754 |
+| 1 (19 pairs) | .0189300 / .393200 | .0178860 / .449887 | .0174749 / .452169 |
+| 2 (17 pairs) | .0131854 / .448380 | .0136231 / .443319 | .0132181 / .422378 |
+| pooled (59 pairs) | .0158734 / .434552 | .0155180 / .450436 | .0150617 / .442280 |
+
+On the pooled conditions, direct two-action prediction reduces MSE by .000730
+against its prior-only forecast; its centered nonadditive correlation gain is
+.01462. Autonomous averaging reduces MSE by .001059 against its own
+predicted-additive forecast and raises centered nonadditive correlation by
+.04297. Observed-parent averaging reduces MSE by .001182 against its matched
+observed-parent prior and raises centered nonadditive correlation by .02235.
+
+Paired condition bootstraps use 10,000 replicates and seed 731. The 95%
+intervals for autonomous MSE reduction and centered-correlation gain are
+[.000252,.001897] and [.01457,.07224]. Direct MSE reduction is
+[.000109,.001457], while its correlation interval [-.00849,.03905] crosses
+zero. Observed-parent MSE reduction is [.000350,.002081], while its correlation
+interval [-.01878,.06385] also crosses zero. Thus all three routes improve
+pooled MSE, and autonomous composition has the clearest perturbation-specific
+correlation evidence; route and fold variability remain material. These are
+adaptive known-gene combination results, not independent confirmation of
+emergence.
+
+The aggregate uses only saved reports and predictions. Its report SHA-256 is
+`37506a44448ec5b534d5ceb96b4bb8622628539a00c955d1d35f14f0d9277420`.
+
+**Zero-response addendum.** Version 2 adds the exact all-zero forecast
+appropriate to Norman's control-z target units; it does not change any
+version-1 model metric or bootstrap. Its MSE is
+.04045064/.05259486/.04066122 in folds 0/1/2 and .04442217 pooled,
+substantially above every matched model and additive/prior forecast in version
+1. The v2 report SHA-256 is
+`e1e6c210542d1b7377a81b8666218fffbd5100549189a9773e550bb3b2dfebb9`.
+
+### 2026-09-05 — Eight-context standalone inference bundle
+
+The completed seed-731/fold-0 eight-context model was exported to the new local
+research directory `results/slp11-transition/joint-world-eight-context-research-export-v1`. All 26 payload files were verified
+against manifest SHA-256 `567540682b58795a88fce95ddb9466ed377aa5271fd949c0f95f8c59d67cc33b`.
+The selected checkpoint is `step-020000.safetensors`, SHA-256
+`18634c2765bc0636e1528dcaeaba4dd4543eee10bf6ec3e8a3b7e81e32ca0aee`.
+The exporter retained the captured numerical core and weights and records an
+explicit inference-loader replacement. The replacement uses the core
+`safetensors.safe_open` API, avoiding an undeclared `packaging` import, and
+selects the manifest checkpoint automatically when no checkpoint is specified.
+An actual default-constructor load selected step 20,000 and loaded all eight
+adapters. Earlier artifacts were not overwritten.
+
+The isolated Linux worker ran with Python `-S`, only the explicit admitted
+Linux dependency directory and standard library, and asserted OMF was not
+importable. Native Windows and Linux each evaluated five target-free requests
+per context: two empty-action backgrounds, single actions, and a two-action
+set. All query IDs and support masks matched. Empty actions preserved observed
+state exactly within each runtime. Across all eight native query panels,
+maximum forecast drift was 2.15135514806e-07, below the fixed 1e-5 tolerance.
+The independent synthetic input drift across NumPy versions was below 5e-19.
+Replay report SHA-256 is `6f6cf29d697a5afabe6b34fcb4d6258265d76fbc8470071bcc3ba601c074a2b1`.
+
+These checks exercise standalone inference without a training corpus or OMF
+package. The eight-context weights were trained on native Windows CUDA; this
+Linux replay is inference compatibility, not a second training reproduction.
+The validated `experiment-context-world.yaml` provides an OMF 2 replay contract
+with explicit evaluation-only CROP-seq inputs, but it has not been executed.
+The completed five-context OMF execution/export is recorded separately above.
+No external release was uploaded, promoted, or deployed.
