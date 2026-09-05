@@ -243,6 +243,33 @@ Norman archives are CC0 1.0 with scoped rights records. SLIM is pinned at commit
 `5a7e9ade5d0a6b6331e6dbc81181450605047bcc`; the STRING HDF5 SHA-256 is
 `789416877b8701ef6f800106d26bf7bb97ea8e72744e6ab93e24933a717f247d`.
 
+## Downstream SL evidence
+
+The first corrected downstream readout is complete on MuSL CV3: two seeds,
+five gene-disjoint folds each, 22,175 test-fold pair occurrences, with tree counts
+and blending selected only inside training folds. Its ten-fold macro results are:
+
+| Frozen feature basis | AUROC | Average precision | Trapezoidal PR-AUC |
+|---|---:|---:|---:|
+| Corrected SLp-1 baseline | .780607 | .780161 | .779912 |
+| Baseline plus v3 world features | .783783 | .785635 | .785378 |
+| Training-selected blend | .784587 | .785751 | .785502 |
+
+The blend improves AUROC by .003980 and AP by .005590. AUROC improves in six
+folds, decreases in three and is unchanged in one. All 20 serialized readout
+models replay the saved predictions exactly. This is supervised SL prediction
+from frozen molecular features, not label-free emergence. World pretraining is
+not isolated from all quantitative measurements of SL-test genes. One uncovered
+gene excludes three test-fold pair occurrences. Earlier use of this benchmark
+also makes these retrospective results, not independent confirmation.
+
+The published MuSL CV3 aggregate is .7895 AUROC and .8018 trapezoidal PR-AUC;
+our current readout does not exceed it. Its test-selected checkpoint protocol
+differs from our training-only selection. SynLeaF uses different data and split
+definitions, so no matched head-to-head claim is made. A direct static-descriptor
+control is being completed to distinguish learned world information from the
+raw descriptors available to that model.
+
 ## Artifacts and API status
 
 The earlier static577 rank-32 model has a verified OMF 2.0.0 captured-script
@@ -286,8 +313,8 @@ and external publication have not been completed.
 - GWPS and HepG2 are adaptive development contexts.
 - The canonical SLIM comparison uses the authors' population scorer and remains
   retrospective. It is not a SynLeaf synthetic-lethality benchmark.
-- No result establishes general SOTA, prospective transfer, synthetic-lethality
-  performance, clinical utility, or deployment readiness.
+- No result establishes general SOTA, prospective transfer or SL performance,
+  clinical utility, or deployment readiness.
 
 Exact protocols, hashes, outputs, corrections, and historical
 decisions remain in [docs/results.md](docs/results.md).

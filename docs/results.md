@@ -6691,3 +6691,61 @@ named trapezoidal PR-AUC, and F1 at .5. F1 at test prevalence is descriptive,
 not a deployment threshold. The official MuSL paper aggregate and its different
 test-selected checkpoint protocol are documented in `docs/litreview.md`.
 SynLeaF uses a different population/split and cannot supply a matched CV3 score.
+
+### 2026-09-05 — Completed frozen MuSL readout
+
+Full v3 feature extraction completed 213,700 pairs and 1,054 coordinates; the
+pair-processing loop took 413.609 seconds after shared single-gene caching.
+Feature artifact SHA-256 is
+`a9a7b1b919d66116c1642dee5ce296ba64339100314c825550bbddc5d2e4435f`.
+Independent target-free audit verifies every pair ID, source range, roster and
+checkpoint receipt, finite values, and nonzero variance in every coordinate.
+The two identical columns are intentional mean/mean-absolute-value summaries of
+an already nonnegative order-difference quantity. Audit report SHA-256 is
+`eac5110a84ace96573e89d65cec21b6b6e254730bae3f8e52eddb6a8abeb9b2d`.
+
+Readout v1 fitting completed in approximately 603 seconds on native CPU with
+LightGBM 4.6.0, NumPy 2.4.4, SciPy 1.17.1 and scikit-learn 1.9.0. Commit
+`990022f` fixes source and protocol before scoring. All ten-fold predictions
+were locked under fit-manifest SHA-256
+`a29774522100547066c3ec69c09b27fce4775eba8ef8223865132b33d64f8ba4`.
+Only then did scoring read official test labels. Report SHA-256 is
+`aac66bcc2465a34e7dbdc48bec7797191f1b6b27c4916060c5c7701a37b677ca`.
+
+| Seed/fold | Baseline AUROC / AP | World-augmented AUROC / AP | Training blend AUROC / AP |
+|---|---:|---:|---:|
+| 42/0 | .796975 / .782668 | .813634 / .804939 | .813634 / .804939 |
+| 42/1 | .740735 / .732528 | .725723 / .717927 | .727943 / .721333 |
+| 42/2 | .801380 / .787117 | .807310 / .797223 | .806155 / .791590 |
+| 42/3 | .770151 / .789726 | .786064 / .804875 | .784615 / .803343 |
+| 42/4 | .739067 / .755029 | .735556 / .761556 | .735556 / .761556 |
+| 432/0 | .750631 / .752392 | .765990 / .769030 | .765479 / .768078 |
+| 432/1 | .818934 / .815323 | .820812 / .814048 | .824735 / .818767 |
+| 432/2 | .824048 / .818579 | .821567 / .816662 | .824048 / .818579 |
+| 432/3 | .813291 / .815450 | .815759 / .824884 | .817641 / .823131 |
+| 432/4 | .750857 / .752798 | .745416 / .745201 | .746059 / .746190 |
+| Ten-fold macro | .780607 / .780161 | .783783 / .785635 | .784587 / .785751 |
+
+Macro trapezoidal PR-AUC is .779912/.785378/.785502 for baseline/augmented/blend.
+Macro F1 at .5 is .652873/.652341/.652592; prevalence-matched diagnostic F1 is
+.713243/.717682/.719048. Published MuSL .7895 AUROC/.8018 trapezoidal PR-AUC
+remains higher, with a different checkpoint-selection protocol. No SOTA claim
+follows. The training-selected blend adds .003980 AUROC and .005590 AP over the
+corrected baseline: six AUROC gains, three regressions and one unchanged fold.
+This is evidence for a modest supervised application contribution, not emergent
+label-free SL prediction. Direct static-feature attribution remains unfinished.
+
+An independent replay verifies all saved model hashes and official test indices,
+source rows and pair IDs, then loads all 20 serialized LightGBM boosters. All
+22,175 test-fold occurrences reproduce baseline, augmented and blend predictions
+bit-for-bit without reading labels. Replay report SHA-256 is
+`755f1e52d374849f61ed631547bf20c97de97325f167e12cd9c5416307ba4f10`.
+The readout output is `joint-world-compositional-musl-readout-v1`.
+
+The next control passes the exact 642 raw gene descriptors directly to the
+readout as symmetric sum, absolute difference and product (1,926 coordinates).
+It compares baseline-plus-static against baseline-plus-static-plus-world under
+the same training-only selection rule. This completes the missing direct feature
+baseline; it introduces no new biological input. Since the same test roster has
+now been inspected, subsequent scores remain retrospective, and no choice may
+be selected from those test outcomes. The world checkpoint remains unchanged.

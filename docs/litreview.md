@@ -857,3 +857,38 @@ The inspected primary manuscript does not establish identity with MuSL's
 released `CV3_bins_32` pairs, seeds or entirely unseen-both-gene split.
 SynLeaF is therefore architectural context for multimodal fusion, not a matched
 numerical comparator for this MuSL CV3 readout.
+
+### 2026 world-model evidence behind the v3 design
+
+GeneGeoFlow, *Control-Anchored Residual Flow Matching Conditioned on Gene Geometry*
+(submitted 7 August 2026, [arXiv:2608.06824](https://arxiv.org/abs/2608.06824)),
+conditions a control-anchored residual flow on intervention-routed GO and
+control-derived coexpression spectra. On Norman its 0.8979 Pearson-delta remains
+slightly below additive's 0.9024, although conditioned geometry improves every
+matched fold; explicit low-rank graph propagation is inconsistent. This supports
+v3's action-dependent direction conditioning and control anchor, but does not
+establish unseen-pair emergence.
+
+Molina and Zhang, *Perturbation response decomposition enables biologically aligned
+generalization* (posted 27 July 2026, [bioRxiv](https://doi.org/10.64898/2026.07.24.740459)),
+separate global, cell-context, conserved-perturbation and interaction terms.
+Across four balanced CRISPRi cell lines, conserved and interaction terms remain
+substantial after shared-template removal, while control expression mainly predicts
+the global template. This directly motivates v3's shared-response removal and
+direction loss, while limiting claims that basal state identifies context interaction.
+
+Latent Causal Diffusion (submitted 20 January 2026, [arXiv:2601.15341](https://arxiv.org/abs/2601.15341))
+predicts unseen Norman and Wessels combinations with a stationary latent diffusion,
+but sums learned single-perturbation embeddings and requires both singles in fitting.
+Its gains concentrate on nonadditive pairs; additive or mean predictors remain
+competitive elsewhere. It motivates a nonadditive residual objective, not an
+interaction claim from embedding addition.
+
+CellTempo (posted 10 February 2026, [bioRxiv](https://doi.org/10.64898/2026.02.08.704720))
+autoregresses cell codes over RNA-velocity/CellRank/pseudotime-inferred trajectories.
+U-Pert (posted 4 July 2026, [bioRxiv](https://doi.org/10.64898/2026.06.30.735555))
+learns separate state-velocity and population-growth fields from unpaired endpoints.
+Neither validates simultaneous genetic doubles as temporal trajectories. V3's
+detached predicted-parent schedule addresses inference exposure bias and tests order
+consistency; it is not a measured biological rollout. Evidence for unseen-combination
+emergence must rest on held-pair nonadditive response, not endpoint reconstruction.
