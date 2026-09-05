@@ -1,0 +1,84 @@
+schema: slp.static-feature-source/v1
+id: human-k562-gwps-static-features-v1
+status: derived-not-admitted
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+identity:
+  namespace: Ensembl-gene
+  baseRows: 7605
+  gwpsActionRows: 9852
+  unionRows: 10231
+  mergeRule: exact unversioned ENSG identity only
+inputs:
+  basePack:
+    path: data/derived/slp11-norman-static/ensembl116-goa2022-fixed-basis-v1/norman-extended-static-esm-go-features.npz
+    sha256: 7b3d78af66f013e2d1df3a3f98924707ed111bc795757753e82a5e8f495408b5
+  gwpsActionRoster:
+    path: data/derived/slp11-human-gwps/gwps-action-ids.txt
+    count: 9852
+    sha256: cb89e8110aaf63e1fcb9f21b04b10bef2626e5d02e435bf379b24858bea8b9b8
+  sequence: sources/ensembl-human-protein-sequences-release-116.yaml
+  go: sources/goa-human-ensembl-2022-09-19.yaml
+  sequenceRights: rights/ensembl-human-protein-sequences-release-116.yaml
+  goRights: rights/goa-human-ensembl-2022-static-mapping.yaml
+featureContract:
+  sequence:
+    model: facebook/esm2_t6_8M_UR50D
+    revision: c731040fcd8d73dceaa04b0a8e6329b345b0f5df
+    dimensions: 321
+    pooling: inverse-overlap-weighted full-residue mean without truncation
+    proteinPresentColumn: 320
+  go:
+    dimensions: 256
+    basisFitRows: 7542
+    basisRefit: false
+    componentFloat32Sha256: 44dc50187681703238b66a905750cfd25decbba8e9adb457a8f77bb69a2f5f2d
+  fusionDimensions: 577
+outputs:
+  directory: data/derived/slp11-human-gwps-static/ensembl116-goa2022-fixed-basis-v1
+  entityRoster:
+    path: entity-ids.txt
+    rows: 10231
+    bytes: 163696
+    sha256: 102749fd616de67bdb34799048a32b8e3629e3488996458e335568f4fc2b0442
+  sequence:
+    path: gwps-extended-esm2-features.npz
+    bytes: 12051030
+    sha256: 0b05b14ac496352e98569b2a0d033199925255f6fffefada47028bbc5e576de9
+  go:
+    path: gwps-extended-go-mf-cc-features.npz
+    bytes: 9444593
+    sha256: 733ee609d61cb83c3619518e05eafd258915a973fff53a6676b93d245b91f06f
+  fusion:
+    path: gwps-extended-static-esm-go-features.npz
+    bytes: 21567455
+    sha256: a2f3153478c00c191e5a9e218badb3327a180a56948a4c9c6a6926cc506ff02b
+  manifest:
+    path: manifest.json
+    bytes: 10952
+    sha256: 3c6b23e9e42a927b528eb7f946743487bc13f68de93378bf9bed77776bdc0927
+coverage:
+  addedRows: 2626
+  addedWithProteinEmbedding: 2615
+  addedWithFrozenBasisGoProjection: 2567
+  gwpsActions: 9852
+  gwpsActionsWithProteinEmbedding: 9825
+  gwpsActionsWithFrozenBasisGoProjection: 9696
+  addedSequenceMissing: 11
+  addedGoProjectionMissing: 59
+verification:
+  baseRowsCopiedWithoutRecomputation: true
+  baseSequenceRowsByteEqual: true
+  baseGoRowsByteEqual: true
+  baseFusionRowsByteEqual: true
+  goBasisReproducedExactly: true
+  newOnlyGoTermsOmitted: 560
+accessBoundary:
+  quantitativeMolecularOutcomesConsumed: false
+  testOutcomesConsumed: false
+  benchmarkDataConsumed: false
+limitations:
+  - Stable GWPS action IDs absent from Ensembl release 116 retain a zero sequence vector and zero protein-present flag.
+  - GO terms absent from the frozen 4,414-term basis are ignored rather than rotating or refitting the basis.
+  - This static feature pack is exploratory and not an OMF admission.

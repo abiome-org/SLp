@@ -1,0 +1,40 @@
+schema: slp.source-acquisition/v1
+id: goa-human-ensembl-2022-09-19-bp
+status: downloaded-verified-exploratory-static-feature-source
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+annotationSource:
+  publisher: Gene Ontology Consortium
+  release: "2022-09-19"
+  exactUrl: https://release.geneontology.org/2022-09-19/annotations/goa_human.gaf.gz
+  localIgnoredPath: data/derived/slp11-human-go/source/goa_human_2022-09-19.gaf.gz
+  bytes: 12187638
+  sha256: 8b97980a895cb74255615f7cdbdd818f72a3999867b7d2a14f867874480693e1
+mappingSource:
+  publisher: Ensembl, EMBL-EBI
+  release: 108
+  assembly: GRCh38
+  exactUrl: https://ftp.ensembl.org/pub/release-108/tsv/homo_sapiens/Homo_sapiens.GRCh38.108.uniprot.tsv.gz
+  localIgnoredPath: data/derived/slp11-human-go/source/Homo_sapiens.GRCh38.108.uniprot.tsv.gz
+  bytes: 1835509
+  sha256: 0d6fe982ce7023b2901171fd0e1419a2e9fbd7fbb9b3473a82ac6dee454f6e56
+identity:
+  annotationObject: exact UniProtKB accession from GAF column 2
+  mappingJoin: exact accession to Ensembl release-108 xref column
+  entity: exact stable unversioned ENSG ID from mapping column 1
+  displaySymbolsUsed: false
+featurePolicy:
+  aspects: [P]
+  annotationDateMaximumInclusive: "2022-12-31"
+  excludeQualifier: NOT
+  excludeEvidence: [HEP, HGI, HMP, IEP, IGI, IMP]
+  directTermsOnly: true
+  expressionTargetsAllowed: false
+  perturbationDerivedEvidenceAllowed: false
+rights: rights/goa-human-ensembl-2022-static-bp-mapping.yaml
+limitations:
+  - Direct terms omit ontology ancestor propagation.
+  - This BP declaration is separate from and does not alter the frozen MF/CC declaration.
+  - This source pair is not admitted as an OMF DatasetSnapshot.

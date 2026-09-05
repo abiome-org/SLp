@@ -1,0 +1,59 @@
+schema: slp.source-acquisition/v1
+id: replogle-2022-k562-essential-raw-singlecell-v1
+status: acquired-metadata-audited-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  accession: figshare-plus:20029387
+  version: 1
+  versionDoi: 10.25452/figshare.plus.20029387.v1
+  metadataUrl: https://api.figshare.com/v2/articles/20029387
+  articleDoi: 10.1016/j.cell.2022.05.013
+rights: rights/figshare-replogle-2022-k562-essential-singlecell-cc-by-4.0.yaml
+allowlist:
+  name: K562_essential_raw_singlecell_01.h5ad
+  figshareFileId: 35773219
+  url: https://ndownloader.figshare.com/files/35773219
+  localPath: data/sources/replogle-2022-k562-essential-singlecell-v1/K562_essential_raw_singlecell_01.h5ad
+  bytes: 10661879995
+  upstreamMd5: 4f1122ce1c7f13299a68df6459a266d3
+  sha256: 3e5a63a9e892b21029bb55fca4e12517a49aad7af6c14133ca63d12cf68c6cee
+context:
+  id: replogle-2022-k562-essential-day-6
+  interventionMode: CRISPRi
+  assay: single-cell RNA UMI counts
+  sourceValueSpace: raw counts stored as float32
+plannedAccess:
+  metadataFirst: true
+  expressionPolicy: >-
+    Before any X access, route cells by the existing global stable-action hash;
+    fitting actions and verified non-targeting controls may enter development
+    shards, validation cells remain separate, and test-action cells are excluded.
+  guidePolicy: retain exact author guide, gene_transcript, gemgroup and barcode provenance
+  noEfficacyForecastInput: true
+acquisition:
+  downloader: scripts/acquire_replogle_k562_essential_singlecell.py
+  maximumConnections: 4
+  rangeBytes: 67108864
+  maximumSecondsIncludingHash: 3500
+  completedAt: 2026-09-05
+  totalSeconds: 530.594
+  receipt: data/sources/replogle-2022-k562-essential-singlecell-v1/complete.json
+  receiptSha256: 8f6d01ef1b47a848a7a97b57b91c1061336deeb528aedc182ef7e6a0f725b807
+metadataAudit:
+  cells: 310385
+  sourceQueries: 8563
+  actionGenes: 2057
+  stableGuidePairs: 2273
+  gemGroups: 48
+  controls: 10691
+  expressionValuesRead: false
+  routingSidecar: data/derived/slp11-human-k562-essential-singlecell-metadata-v1/cell-routing-metadata.npz
+  routingSidecarSha256: 47c89c5082c0a9d4008c6b567407c530933a36fb7603621c37cbe913143f15ad
+  report: results/slp11-transition/k562-essential-singlecell-metadata-audit-v1/report.json
+  reportSha256: 8b4eba21fe17f0082960bac9c66daf11ce9e3e9d1e3f1706ef30dba6c7d61270
+limitations:
+  - This source snapshot is not an OMF admission or a trained model.
+  - Cell-state distributions require sparse streaming; dense whole-matrix loading is forbidden.

@@ -2271,3 +2271,3794 @@ and physical clean-factory isolation also remain separate gates. No model was
 trained, no checkpoint or molecular metric was produced, and the external
 synthetic-lethality benchmark remained closed. This correction supports no
 transfer, performance, novelty, frontier, release, or SOTA claim.
+
+## 2026-09-04 — principal-scientist audit and selective scientific reset
+
+**Question, rule and access.** At clean Git commit `399ae15`, the audit tested
+whether the current admitted data, numerical consumer and evaluation contracts
+could support the stated unseen-intervention and unseen-context program.
+This was a code-and-contract audit, not a preregistered biological experiment.
+The audit criterion was conjunctive: the data must identify the claimed task;
+the consumer must preserve the admitted identity and access boundary through
+inference; and the evaluator must compare the candidate against the complete
+frozen molecular baseline rule. A missing component rejects readiness, without
+opening protected truth or changing thresholds. This rule failed: the project
+is ready for further engineering, not biological candidate selection or scale.
+
+Accessible evidence was tracked code, source/rights declarations, prior ledger
+entries, bounded OMF metadata, and synthetic numerical probes. No biological
+outcome arrays were opened by this audit. In particular, no molecular-validation,
+final, reward, or SL benchmark truth was loaded. The proposed feasibility study
+would use molecular proteomics and static sequence statistics only, with its
+exact existing resource revisions recorded in
+`evaluations/slp-1-1-scientific-reset-v1.yaml`. Those pins do not grant new
+training or evaluation access.
+
+**Factory state.** The existing Linux interpreter metadata referenced
+`/tmp/slp11-omf-venv`, which no longer existed. The CLI was absent from PATH.
+The exact README OMF source revision
+`ef26eea2cb694596f7680a4bce400371738cbb4b` was checked out and installed in a
+disposable CPython 3.12 environment. Temporary installation files did not
+survive a subsequent invocation; restoration and diagnostics were therefore
+performed within one Linux session. No retained offline runtime closure follows
+from this repair, and its newly resolved installation dependencies are not
+scientific execution provenance.
+
+All three required diagnostics then completed: `omf doctor` returned
+`ready: true`, eight passing checks and zero failures at
+2026-09-04T22:21:15Z; `omf agent context` returned a bounded activity view
+(20 of 21 operations, with the truncation explicit); and
+`omf agent capabilities` returned catalog digest
+`sha256:c5ac5c4ab25071858a53b32fa562bf95e7aa2e0cf10a3ec3f60712e3fd23ea97`.
+The latest two listed runs were the successful composite-corpus runs already
+recorded above. The context reported zero deployments. Factory health is not
+evidence of baseline performance, clean training isolation or release eligibility.
+No OMF training, admission, promotion, token creation or independent signing
+ceremony was performed; no runtime-state files were manually edited.
+
+**Model shape and consumer findings.**
+
+1. The sparse model is a conditional scalar-readout predictor with deterministic
+   shared context/action memory and separate Gaussian/NB heads. It has no learned
+   entity-ID embedding, which should be retained. Independent scalar marginals
+   do not learn residual cross-readout dependence or establish a calibrated joint
+   cell population. There is no implemented temporal transition objective. A set
+   encoder can express non-additivity, but single-intervention training alone
+   cannot identify general double-intervention effects. Keep these distinctions
+   explicit rather than changing the name of the output into evidence.
+2. `workloads/slp-1-1-world-sparse.yaml.tmpl` fixes `dModel: 16`, one encoder and
+   one decoder layer, 12 epochs and 32 record draws per epoch, with learning rate
+   0.01. `train_sparse_world` explicitly puts the model on CPU and uses one CPU
+   thread. Its 384 scheduled draws are not 12 complete passes through 3,811
+   biological records. The 256-wide `WorldConfig` default is not the effective
+   training template. With the composite corpus ontology dimensions, the smoke
+   shape has 5,476 parameters. This is engineering scaffolding, not an RTX 4070
+   training implementation or a justified architecture/budget selection.
+3. The admitted corpus is composite-keyed v1.2 and uses the packaged v1.5 audit,
+   while the frozen sparse consumer remains on the earlier corpus/audit boundary.
+   `TargetFreeQueryIndex.materialize` joins entities by bare ID, masks every
+   context token, and marks continuous covariates missing. The composer supplies
+   an active context token during fitting. Even one-context prediction therefore
+   needs matching semantics, before broader context transfer can be considered.
+   The materializer also requires an unambiguous readout for **both** supported
+   likelihood families even when a query is Gaussian-only. A new consumer must
+   resolve requested families only; adding a dummy NB type is not a remedy.
+4. Technical sample locators are correctly marked `access: audit` in the
+   composer. The old consumer's `_select_covariates(..., "world")` excludes
+   them from representation inputs. The suspected locator shortcut was not
+   substantiated. Preserve that safeguard and re-test it in the new consumer.
+5. Every output query currently runs separately through attention and output
+   projection to preserve exact bitwise chunk equality. The mathematical panel
+   independence is useful; mandatory bitwise equality across changed kernel
+   shapes is an expensive implementation constraint. A new numerical version
+   should use bounded batched queries, explicit tolerances and reproducibility
+   within its pinned runtime. Frozen implementations were not changed.
+
+**Data findings and limits.** The composition contract and previously admitted
+evidence describe 3,811 fitting records, 3,679 intervention genes, one yeast
+biological context, one assayed panel of 1,850 proteins, 6,865,493 observed
+values and 184,857 missing values. These counts were not independently rederived
+from biological arrays during this audit. The number of scalar readouts must
+not be presented as the number of independent interventions. The broader
+species-aware program currently has neither an admitted human fitting corpus
+on this path nor a within-corpus context-transfer test.
+
+The source is the Messner yeast deletion proteome release, with positive
+MaxLFQ intensity transformed to log2 and `NA` omitted, not zero-imputed. It
+samples measurable proteomes in the viable deletion collection, not all genes,
+all molecular abundances or lethal double mutants. Thus observed-target NLL
+estimates performance conditional on detection and this population. Report
+readout coverage, intervention-level uncertainty and source limitations.
+The HIS3 control artifact has 1,843 supported readouts of 1,850; missing basal
+support must have a frozen evaluation policy rather than post hoc panel pruning.
+
+`sources/yeast-proteome-v2.yaml` records upstream plate-median normalization
+and scaling by the median of all plate medians, preceding our held-gene split.
+This is an unresolved preprocessing dependency: our row-level exclusion proves
+neither that source normalization was fitted exclusively on allowed controls
+and fitting rows nor that held outcomes could not influence retained values.
+Its effect has not been quantified here. End-to-end isolation requires a
+source-method audit and, where necessary, a rights-admitted reprocessing from
+raw fitting/control inputs with frozen transforms. Until then, label any future
+result processed-release retrospective prediction. Do not silently describe
+the current cleaned rows as a wholly inductive preprocessing pipeline.
+
+Static features are 20 amino-acid fractions plus scaled length. Reversing a
+synthetic canonical peptide produces exactly identical features, by construction.
+This proves loss of residue-order information, not that all real genes collide
+or that the feature arm must fail. Keep it as a weak matched control. A proposed
+order-sensitive sequence representation needs separate model/sequence rights,
+immutable model and extraction revisions, coverage and contamination review.
+No particular pretrained model or novel architecture has been selected by
+benchmark scores in this audit.
+
+The yeast single-cell atlas has an outcome-blind genotype inventory, but that
+does not imply an admitted quantitative transcriptomic corpus. Its potential
+environmental contrast is a future source of context evidence, subject to
+counts/exposure, basal-state and replicate contracts. A count likelihood without
+a source-appropriate library-size contract is insufficient. Likewise, row-based
+replicate IDs are not proof of independent biological replicate halves.
+
+**Evaluation and benchmark decisions.** The molecular evaluator v2 is explicitly
+diagnostic-only: it computes typed likelihood and perturbation-centroid metrics
+but does not compute the complete frozen baseline-NLL gate. The context/TxPert
+module emits point predictions without frozen probabilistic scales; ridge is
+not implemented there. The older `slp-1-1-molecular.yaml` refers to trainer-side
+outputs and does not encode the complete protected-source baseline comparison.
+It must not be repurposed to certify the new target-separated path. Fit baseline
+scales and all hyperparameters only inside gene-grouped fitting folds, then
+compare exact matched predictions within the independently controlled evaluator.
+Report every seed and protected source/species, primary per-intervention macro
+metrics, observed-target NLL and intervention-clustered uncertainty. Readout
+count does not justify narrow gene-transfer confidence intervals.
+
+Continuous-density NLL is unit-dependent and can be non-positive. The historical
+dense code uses `(baseline - model) / max(abs(baseline), 1e-8)`. Preserve that
+historical fact; the next independent evaluator must explicitly freeze its
+value space, baseline-specific denominator and aggregation rather than silently
+inventing a new meaning of the 2% rule. The 0.02-nat and 0.10 adjusted-Pearson
+floors remain unchanged. The existing bound-discrimination and DE requirements
+remain contract-blocked; neither should be fabricated from unreplicated means.
+
+Primary-literature checks reinforce this interpretation. Systema documents how
+shared perturbation shifts inflate ordinary metrics and motivates centering on
+perturbation-specific references
+([Nature Biotechnology](https://doi.org/10.1038/s41587-025-02777-8)). The 2026
+Signal, Bounds, and Baselines preprint argues for signal-sensitive metrics,
+empirical bounds and meaningful linear comparators
+([bioRxiv v2](https://www.biorxiv.org/content/10.64898/2026.04.20.719650v2)); it is
+methodological context, not a reproduced SLp result. Feng et al.'s benchmark
+shows sensitivity to split, negative sampling and label provenance
+([Nature Communications](https://www.nature.com/articles/s41467-024-52900-7)).
+These sources support evaluation design, not a universal current model ranking.
+
+Retain the SLp-1 benchmark history as retrospective evidence. Future primary SL
+confirmation should name a context-specific measured interaction/viability
+endpoint, the screened population and negatives, and both-gene quantitative
+exclusion. Unknown pairs are unlabeled, not automatically tested negatives.
+Freeze the label-free application score before opening benchmark truth; a
+fold-local supervised readout is a separate result. Compare degree, feature,
+linear and reproducible published methods on identical access and splits, with
+prevalence-aware AUPRC and ranking at fixed experimental budgets. An untouched
+or prospective independent confirmation is required for a SOTA claim. No such
+comparison or confirmation occurred here.
+
+**Implemented decision and validation.** Added the design document
+`evaluations/slp-1-1-scientific-reset-v1.yaml` and reproducible, biological-data-free
+probe `scripts/audit_slp11_model_shape.py`. Updated root `MODEL_CARD.md` and
+`README.md` to distinguish actual data/model status from the program objective.
+The design is explicitly not an OMF resource or executable workload, and has no
+production admission claim. Historical numerical modules, source snapshots,
+thresholds and ledger entries were retained.
+
+The retained probe on CPython 3.11.9, Torch 2.11.0+cu128, CPU, one thread and
+seed 731 reproduced the feature-order collision and 5,476-parameter smoke
+shape. For one forward call with 1,850 synthetic queries and two memory tokens,
+the serial decoder took 0.5143 seconds and its algebraically batched layers
+0.0018 seconds; maximum absolute difference was 7.153e-7, passing rtol=atol=1e-5.
+An earlier ad hoc probe gave 0.5247 versus 0.0027 seconds. These noisy CPU
+microbenchmarks establish an implementation opportunity, not GPU throughput,
+training speedup, full-model equivalence or biological accuracy.
+
+The focused suite passed **77 tests, one optional schema skip**, in 24.60 seconds,
+covering sparse architecture/training/OMF entrypoint, molecular baselines and
+evaluation, composition, packaged audit v1.5, factory isolation and active
+workload boundaries. Ten existing nested-tensor warnings occurred. The probe
+passed; Ruff, Python compilation and design-YAML parsing passed. No biological
+training or paid remote compute was allocated. The probe source SHA-256 is
+`285d777f5a12a4d928d1452e985f15297b46b993865bd750ed9bf82a88139d84`;
+the design SHA-256 is
+`f32cbbb1037e413faf6956e7cc4ca5eae444e187f9ff00b1f173dff412ddc3e2`.
+
+**Decision.** Reject readiness to scale or claim a biological world model.
+Retain the useful provenance infrastructure and query interface; replace the
+smoke consumer and complete the probabilistic baseline evaluator. The next
+falsifiable study is a small, same-context yeast held-gene comparison at matched
+features and budget. Even success would not establish human transfer, context
+transfer, combinations, temporal dynamics or SL. Biological execution remains
+blocked by independent custodian authorization, clean physical boundaries,
+consumer/evaluator compatibility and the source-normalization question.
+This audit does not self-provision an independent signer or waive those gates.
+No checkpoint, molecular performance metric, release or SOTA evidence was
+produced.
+
+## 2026-09-04 — Biological transition development replaces the audit-only stop
+
+**Authorization and scope.** The investigator explicitly authorized autonomous
+data acquisition, local biological training and bounded GPT-5.6 Sol scientific
+subtasks. This supersedes the preceding entry's independent-handoff prerequisite
+for exploratory work. We used native Windows CUDA explicitly, not an unreported
+OMF executor fallback. No release signature, independent confirmation, or OMF
+deployment claim was created. Historical model/v1 and earlier evidence remain
+unchanged. The original protected molecular snapshots and SL benchmark outcomes
+were not opened for these experiments.
+
+**Hypothesis and advancement.** A feature-conditioned intervention-to-molecular
+state model should improve development held-gene Gaussian NLL by at least 0.02
+nats per observed target over both fitted mean and feature-ridge, with
+centroid-adjusted profile Pearson at least 0.10. Checkpoints minimize validation
+gene-macro NLL, not the more favorable correlation at another epoch. Human
+contexts must each pass; averaging cannot hide regression. These development
+comparisons cannot establish a launch or SOTA claim. New feature/decoder arms
+are explicitly adaptive development, not an untouched final evaluation.
+
+**Implementation.** `modules/slp-1-1-world-transition-v1/` is a self-contained
+native experimental module. It includes composite-keyed loaders, complete mean
+and feature-ridge Gaussian controls, grouped fitting-only OOF scale calibration,
+static feature alignment, a feature-conditioned action encoder, measured basal
+context encoder, query decoder, and optional low-rank shared Gaussian factors.
+It has no learned gene-ID vocabulary. The default biological runs use diagonal
+uncertainty; joint likelihood and sampling were checked against dense Gaussian
+references, not established as biological population models. Tensor-file
+inference reloads without a corpus or OMF. Human runs retain source copies;
+initial yeast runs retained source hashes but predate automatic source copying.
+Neither local tensor reload nor a dependency lock certifies OMF deployment.
+
+**Data and splits.** Yeast uses fitting-only composite SHA-256
+`0a5322c46e15e8a15d17000e8993c0ad642fcc70bc8fff00cbba8fb2905708bf`.
+The new internal split hashes `slp11-development-v1|731|taxon|stable_id`, using
+the first eight digest bytes modulo 100: <70 training, 70–84 validation, and
+85–99 reserved test. All repeated intervention records share a group. Yeast
+has 2,656 training records/2,562 genes, 553 validation records/541 genes, and
+602 reserved records/576 genes. The original protected intervention roster
+was excluded upstream from the entire fitting corpus. Upstream processed
+proteome normalization remains a retrospective limitation.
+
+Human acquisition uses the authors' Replogle 2022 K562 essential day-6 and RPE1
+essential day-7 CRISPRi raw bulk summaries from Figshare+ v1, DOI
+[10.25452/figshare.plus.20029387.v1](https://doi.org/10.25452/figshare.plus.20029387.v1).
+The CC BY 4.0 release and author aggregation code identify these as per-cell
+mean abundance, not integer sums. The first adapter uses the metadata-only
+intersection of 7,226 ENSG readouts and `log2(1+10000*x/sum(shared_panel))`.
+Its development NPZ SHA-256 is
+`82904b7b52ab34d71e94abb2311c93a420321697d53eab12dabae5b247376f75`:
+3,281 training and 726 validation records over two contexts. Another 713
+records were routed to a separate reserved test file and not scored. Five RPE1
+rows with unresolved intervention identity were excluded. The same stable-gene
+split applies across both contexts. These raw-bulk targets are now a diagnostic
+arm, pending the data correction below.
+
+**Accessible modalities.** Sequence composition (21), ordered dipeptide
+statistics (421), ESM2 protein embeddings (320), and direct GO MF/CC SVD features
+(256) were tested for yeast. ESM2 is `facebook/esm2_t6_8M_UR50D` revision
+`c731040fcd8d73dceaa04b0a8e6329b345b0f5df`; long proteins use overlapping
+windows with residue-weighted pooling rather than truncation. Human ESM has
+320 protein features plus a presence flag, exact Ensembl gene identity, and
+7,401 translated/141 missing rows. Its NPZ SHA-256 is
+`9c0ade1b580f46f26938e5eab6e0222b9e543e44bc2c7d5113336c80459bfb52`.
+Archived 2022 GO features exclude NOT and perturbation-derived evidence codes;
+the human pack covers 7,315/7,542 entities, SHA-256
+`208be756b81229b3881af8229e18ba2f5e806f5be85180b6f5560c3f2d07c0ea`.
+Feature builders, source versions, mapping details and manifests accompany the
+ignored data artifacts. No quantitative interaction graph or SL label feature
+was included.
+
+**Yeast results, seed 731.** Each cell below is validation gene-macro NLL /
+centroid-adjusted profile Pearson. NLL is in nats per observed log2 value.
+
+| Feature/decoder arm | World | Matched feature ridge | Decision |
+|---|---|---|---|
+| Composition 21, learned scale | -0.06512 / 0.0053 | -0.06412 / 0.0185 | Fail; initial non-OOF calibration |
+| Dipeptide 421, learned scale | -0.06362 / 0.0127 | -0.06199 / 0.0192 | Fail |
+| ESM2, learned scale | -0.06421 / 0.0075 | -0.06442 / 0.0333 | Fail |
+| ESM2, fixed OOF scale | -0.06400 / 0.0110 | -0.06442 / 0.0333 | Fail |
+| GO MF/CC, fixed OOF scale | -0.06603 / 0.0301 | -0.06649 / 0.0462 | Fail |
+
+OOF mean NLL is -0.06358. Ordinary profile correlation near 0.99 conceals
+weak perturbation-specific predictions. Later checkpoints sometimes improved
+adjusted correlation while worsening NLL; they were not selected. A separately
+frozen 128-landmark Nyström RBF GO grid selected bandwidth factor 0.5/alpha1000:
+NLL -0.06304, adjusted r 0.03139, also failing against mean. These small runs
+reject sequence/GO scaling alone as the next investment on this yeast source.
+
+**Human raw-bulk results, seed 731.** The first measured-context model has 321
+action/query features, hidden width 128, state width 64, fixed OOF scales, and
+64 basal tokens selected by control-only context differences. The controlled
+decoder revision adds 32 query descriptors from SVD of standardized training
+responses only; action features are unchanged. These descriptors explain
+35.29% of standardized training variance and require an assay-measured query
+panel. They do not establish transfer to unmeasured readouts.
+
+| Context | Mean NLL | ESM ridge NLL / adjusted r | Protein-query world | Response-query world |
+|---|---|---|---|---|
+| K562 | -1.11419 | -1.12356 / 0.1289 | -1.12375 / 0.1048 | -1.13055 / 0.1503 |
+| RPE1 | -0.74568 | -0.75497 / 0.1621 | -0.75178 / 0.1787 | -0.75611 / 0.1819 |
+
+The response-query model improves both context point estimates but fails the
+0.02-nat rule against ridge. Selected epoch 20, 190,208 parameters, 66.83 seconds
+including baselines/evaluation; checkpoint SHA-256
+`df2889473e7c7a03caff22a65c1fd9eca0b3a7533e394bea9096d288d5d2a24d`.
+Artifacts: `results/slp11-transition/human-esm2-context-seed731-v2/` and
+`human-esm2-response32-seed731-v1/`. A separate training-response reduced-rank
+ridge grid (ranks 16/32/64, alpha100/1000/10000) selected rank32/alpha10000 but
+did not improve on unrestricted feature-ridge: NLL -1.11780 K562, -0.75458 RPE1.
+Every OOF fold refitted the response basis. Test artifacts remained unused.
+
+**Actionable data diagnosis.** An independent code/numerical audit found that
+the raw-bulk summaries have unequal precision: K562 has 5–1,996 filtered cells
+per targeting row and RPE1 2–3,580. Among core non-targeting controls, profile
+RMSE versus log(cell count) correlates -0.986 and -0.947 respectively. Equal
+training weights and query-only variance miss this measurement noise. The
+authors' phenotype analysis also uses per-cell UMI scaling and per-gemgroup
+control normalization, which cannot be reconstructed from already collapsed
+raw means. The adapter averages all controls despite core-control indicators.
+These findings motivate a new control-normalized dataset version and explicit
+measurement exposure; cell count must not become a post-intervention predictor
+feature. Duplicate ENSG records often represent P1/P2 library constructs with
+different efficacy, not biological or single-guide replicates. Their agreement
+is not a biological noise ceiling. Global uncertainty rescaling could improve
+validation NLL by only about 0.0014/0.0006 nats and cannot rescue the rule.
+
+The audit also identified tiny false mean-baseline adjusted correlations from
+subtracting a float32 reference from a float64 fitted mean. The scorer now
+retains the exact fitted centroid; the mean residual is undefined by
+construction. Earlier saved reports retain those numerical artifacts, which
+are not interpreted as signal. Source-target reconstruction error was <4.8e-7.
+Audit artifact SHA-256:
+`453ebfb6dcd6a209ef690eb02b998412a230215a11fca229a2acaacd2b1ab184`.
+
+**Scientific context and next action.** The need to remove average effects is
+consistent with [Systema](https://doi.org/10.1038/s41587-025-02777-8). Recent
+[TxPert](https://doi.org/10.1038/s41587-026-03113-4) provides a relevant public-code
+comparator, but its strongest proprietary graphs are not available to this
+program. Neither paper's headline results are substituted for comparisons on
+our splits. Continue with corrected human measurements and exposure-aware
+likelihood, then compare the static-feature and response-query arms. Keep
+combination and cross-context capabilities as untested until directly trained
+and evaluated. No candidate in this entry is launch-ready.
+
+**Compute and verification.** Native Python 3.11.9, Torch 2.11.0+cu128,
+NumPy 2.4.4, SciPy 1.17.1, scikit-learn 1.9.0 on RTX 4070; deterministic seed731,
+bounded per-run time caps, no purchased remote compute. Protein extraction took
+about 27 seconds for yeast and 52 seconds for human. Individual model pilots
+finished in seconds to about a minute. The full repository suite passed
+337 tests/21 skips before the response-query addition; the subsequent seven
+focused architecture/inference/response-query checks passed. Artifacts and
+real data remain ignored; code and versioned declarations are reviewable.
+
+## 2026-09-04 — Corrected human data, repeatable baseline gains, and combination data
+
+**Data correction.** The author-normalized Replogle development NPZ is
+`data/derived/slp11-human/replogle-k562-rpe1-author-normalized-development-v2.npz`,
+SHA-256 `88de5164fca4e2504ac5b459ab4226c161eb586dd04700d5784da4bb53048659`.
+It preserves the v1 identities and split arrays exactly: 3,281 training and
+726 validation records, 7,226 queries. Targets are author per-gemgroup,
+core-control-standardized pseudobulk means, not log2 abundance. All values on
+this shared panel are finite. Another 713 records were routed to a separate
+test-only artifact and not evaluated. The full sources have SHA-256
+`c1ca6456c9c9f1aa2b02c496eb64d1dc3e6a852edbd744d682b8d2c95fd36829`
+(K562) and `a3c5bfd0f15d63938bc80c9b8874b9cd761e3a23caf5ffe7966bae4e887ec89d`
+(RPE1); upstream MD5 checks also pass. Core-control pseudobulks number 97/113.
+Raw core-control expression supplies a separate measured basal context feature,
+avoiding the near-zero basal state implied by z-scored targets. Cell counts
+enter measurement uncertainty only. No intervention outcome or observed
+knockdown efficacy is used as an inference feature.
+
+**Fixed comparison.** The hypothesis remains improvement by 0.02 nats per
+observed target against both mean and ridge, with adjusted r >=0.10 in each
+context. The feature pack combines ESM2 and archived GO MF/CC (577 dimensions),
+SHA-256 `b3de49e18d3c75676985b8790d1ce85de0d87d526bbd7c0c5b555828a1fb11a0`.
+The neural model uses hidden128/state64, response-query rank32, dropout0.2,
+AdamW lr0.0005/weight-decay0.1, batch64, maximum180 epochs, patience30, and a
+30-minute wall-clock cap. It selects the minimum equal-context gene-macro NLL.
+The uncertainty model fits per-query/context biological + sampling/n variance
+from fitting-only OOF residuals and core controls. Sampling slopes were
+identifiable from controls for every query. References remain independent of n.
+
+The comparator grid freezes full ridge alpha100/1000/10000/100000 and
+response-basis ranks16/32/64 at those alphas. Every OOF response basis is
+refitted without the held intervention genes. Alpha10000 full ridge wins;
+equal-context NLL -0.378277 versus -0.343732 for mean and -0.376511 for the
+best reduced-rank arm (rank64/alpha10000). The grid took 39.27 seconds on CPU.
+
+**Results.** Entries are development gene-macro NLL / centroid-adjusted Pearson;
+NLL units are nats per observed author-control-standardized molecular value.
+They must not be compared numerically with the preceding log2-space NLLs.
+
+| Model | K562 | RPE1 | Best epoch |
+|---|---|---|---|
+| Mean | -0.48459 / undefined | -0.20287 / undefined | — |
+| Matched full fusion ridge | -0.52211 / 0.2170 | -0.23444 / 0.2454 | — |
+| Fusion world, seed731 | -0.54167 / 0.2307 | -0.24916 / 0.2653 | 20 |
+| Fusion world, seed732 | -0.54370 / 0.2363 | -0.24491 / 0.2461 | 93 |
+| Fusion world, seed733 | -0.54389 / 0.2305 | -0.24668 / 0.2619 | 45 |
+| GO-only world, seed731 | -0.54180 / 0.2438 | -0.24083 / 0.2470 | 40 |
+| Fusion ridge-reference correction, seed731 | -0.54735 / 0.2412 | -0.24887 / 0.2688 | 20 |
+
+The GO-only matched ridge is -0.51793/0.2342 K562 and -0.23036/0.2688 RPE1.
+The correction model uses grouped OOF ridge forecasts as its training reference
+and full-training ridge at inference; it never fits corrections to in-sample
+ridge residuals. Its uncertainty inherits the ridge OOF exposure components.
+The model's reference is still a quantitative molecular quantity, not an SL
+score or label-dependent readout. A saved linear-reference artifact reproduces
+the reference for arbitrary subsets of the fitted query panel.
+
+All three fusion seeds improve likelihood in both contexts. No listed model
+passes the 0.02-nat rule in both contexts. Seed731 bootstrap resamples
+intervention genes, retaining all their records, 1,000 times. NLL benefits over
+ridge are 0.01956 [0.00832,0.03210] K562 and 0.01472 [0.00393,0.02682] RPE1.
+Adjusted-r benefits are 0.01372 [-0.00689,0.03403] and
+0.01994 [-0.00770,0.04715], respectively. These intervals are conditional on
+the adaptive development process, not independent confirmation. Absolute world
+adjusted-r intervals are [0.2003,0.2584]/[0.2249,0.2998].
+
+**Uncertainty diagnosis.** With inherited mean uncertainty, world residual
+second moments for <30/30–99/100+ contributing cells are 1.493/1.012/0.744
+(K562) and 1.127/0.946/0.754 (RPE1). High-count summaries are overconservative,
+low-count summaries underconservative; heavy tails remain. A separately frozen
+calibration experiment therefore fits neural OOF residuals from three global
+gene folds, exactly 20 epochs each, using no outer-validation outcome. Every
+fold refits references, normalization and response geometry; 726 outer
+validation rows remain excluded. It preserves the core-control sampling
+component and estimates the neural residual biological component. Its effect
+on outer development validation is a separate evaluation, not scale fitting
+from these diagnostics.
+
+**Artifacts and practical inference.** Seed731 checkpoint SHA-256 is
+`40f69aefea1e895fcbfccd89677c3b8df05ef5bfc5ed4b8b1a2c7c8aedfe39f6`.
+Each run directory is under `results/slp11-transition/` and contains immutable
+weights/configuration/references, source copies, the pre-fit protocol and
+reports. Source changes create new run artifacts. Target-free CPU reload of
+the earlier response32 artifact matched its snapshotted runtime exactly for
+means, latent state and uncertainty. Tests verify that a measurement-scale
+override cannot change molecular means or latent state. Query-subset inference
+supports both fitted context means and saved linear references. The scientific
+figure is reproducible with `scripts/plot_slp11_development.py`; outputs are
+`results/slp11-transition/figures/human-development-v2.{png,pdf}`.
+The candidate-audit report SHA-256 is
+`8d00bec4cf75b0b9c97198a60601518f827d402b17a53f203c24d33101129cd7`.
+Full repository verification reached 361 tests passed/21 skipped before the
+subsequent inference and combination-data additions; focused checks for those
+additions are retained in their tests.
+
+**Combination data and decision.** Official GEO GSE133344 supplies Norman 2019
+K562 CRISPRa: 91,168 eligible cells covering control plus 105 single and 131 double
+perturbations. The first imported mean-UMI/CP10k aggregate is diagnostic; a new
+per-cell/control-normalized adapter is being prepared. Stable-gene hash routing
+assigns 130 intervention records to training, 40 to validation, 66 to test,
+with a test or validation constituent excluding the entire double record from
+training. Test-only outcomes are not used for modeling. All 105 intervention
+genes now have ESM features in a 7,605-entity static pack; existing 7,542 feature
+rows are byte-identical, and new GO rows are projected into the reconstructed
+original SVD basis without refitting. This enables a genuine molecular
+combination test instead of treating multi-token API support as evidence.
+
+Continue with fitting-only uncertainty calibration and the combination transfer
+pilot. The positive, repeatable human likelihood gain warrants further model
+development. It does not establish SOTA, unseen-context generalization, SL
+performance, or readiness for release. Local experiments remain bounded and
+no remote compute or original benchmark outcomes were used.
+
+## 2026-09-04 — Ensemble development passes; broader molecular tests remain necessary
+
+**Hypothesis and fixed rule.** Averaging the three already selected human
+molecular models reduces forecast error, and fitting observation uncertainty
+from their ensemble held-gene OOF residuals improves likelihood without using
+outer-validation outcomes for calibration. The rule remains a per-context gain
+of at least 0.02 nats/observed target against both mean and full-feature ridge,
+with centroid-adjusted profile Pearson at least 0.10. The ridge alpha remains
+10,000, selected in the earlier development grid. No SL outcomes enter this work.
+
+**Exact model and data.** Seeds 731/732/733 use selected epochs 20/93/45.
+Their three global calibration folds exclude every outer-validation gene and
+refit normalization, references and response-query descriptors inside each
+fold. Epochs are fixed within OOF calibration. The normalized human development
+snapshot is `88de5164fca4e2504ac5b459ab4226c161eb586dd04700d5784da4bb53048659`;
+static fusion is `b3de49e18d3c75676985b8790d1ce85de0d87d526bbd7c0c5b555828a1fb11a0`.
+The experiment takes 177.53 seconds on the local RTX 4070. Sources remain
+Replogle 2022 human K562 essential day 6 and RPE1 essential day 7, measured as
+author core-control-standardized pseudobulk means over 7,226 RNA queries.
+
+| Development context | Ensemble NLL | Gain over ridge (gene-bootstrap 95% interval) | Adjusted r | Fixed rule |
+| --- | ---: | ---: | ---: | --- |
+| K562 | -0.558232 | 0.036119 [0.022602, 0.049188] | 0.247285 | pass |
+| RPE1 | -0.257585 | 0.023143 [0.010486, 0.037244] | 0.269301 | pass |
+
+Intervals use 1,000 intervention-gene resamples and remain conditional on
+adaptive development. The rule uses point estimates; an interval lower bound
+of 0.02 was not stipulated and is not silently added. Independent latent
+coordinates are returned on separate member axes, never averaged. Ensemble
+variance is calibrated Gaussian measurement uncertainty, not a Bayesian
+posterior or a validated single-cell generator. Residual heavy tails and
+count-dependent coverage error remain.
+
+Artifact: `results/slp11-transition/human-normalized-fusion-response32-ensemble731-733-v1/`.
+Manifest SHA-256 `a972d994f80c124f948b9b4a313d9e76bdd5c1a3477ebc4082c143ae96c50a70`;
+exposure SHA-256 `3526b9c30b7f16e26fde17e8f2adece7271dd4d5c0ef3d38f45de40aee6de929`;
+report SHA-256 `dc8368481ec2af2b9c4a15fe0a3de2272bc50f5ea970c2af6a8334c1a5c8f610`.
+Recomputing seed731 OOF variance differs by at most 4.06e-7 from the earlier
+artifact, so numerical agreement, rather than byte-identical calibration, is
+claimed. Seven focused ensemble checks pass. A self-contained CPU package at
+`results/slp11-transition/packages/human-ensemble-crispri-dev-v1/` produces
+BRCA1 molecular forecasts using only its own runtime, weights, references and
+static features. Its packager verifies the exact frozen feature checksum
+before creating an output. This is a local experimental package, not a public
+or certified release.
+
+**Measured-context dependence.** With the selected seed731 model and correct
+references held fixed, matched/swapped/masked context tokens give K562 NLL
+-0.54167/-0.48658/-0.53185 and RPE1 -0.24916/-0.20888/-0.23299. Across 304 shared
+genes, context-response-difference profile r is 0.23619/-0.10800/0.13676.
+The model uses measured context beyond its reference; this does not establish
+transfer to a previously unobserved context. Audit:
+`results/slp11-transition/human-context-dependence-v1/report.json`.
+
+**Combination pilot rejects current transfer hypothesis.** Norman 2019 human
+K562 CRISPRa raw cells are normalized per cell (full-library CP10k, log2), then
+aggregated by exact construct and standardized by control-cell mean/population
+SD. This transformation is implemented by SLp, not supplied as an author
+normalized matrix. Development v2 SHA-256 is
+`ab81e7ed07d7f111b3dfc964cece28a2db7de0dcf5975f6ff1a3bc2db0be683e`.
+There are 160 training and 49 validation constructs, with 7,182 measured queries
+from the 7,226 panel. All validation constructs have exactly one held gene;
+none tests two held constituents. Additive summed-feature ridge alpha1000
+achieves validation RMSE 0.14555, adjusted r 0.3595 and double r 0.5239.
+Random/human-initialized neural models achieve RMSE 0.1486/0.1491 and double r
+0.4746/0.4710. Transfer fails the fixed rule. Report SHA-256
+`a67408fbea62e3e93ac7872e24a41cfc64f85c36a516107e163482223e2d4d1e`;
+12.02 seconds local GPU. No Norman test outcomes are scored. A single-CRISPRi
+success does not imply combination or activation-mode generalization.
+
+**Decision.** Freeze the successful ensemble, baselines, uncertainty and rule,
+then perform its first evaluation on the reserved new human molecular test
+snapshot `7bf755248513f41c552e4a4bde2d5958f0f5ea4243eeeb5ec77128642b0697d1`.
+Do not refit on development validation before confirmation. Separately expand
+training with the official K562 genome-scale day-8 screen. The three-context
+development snapshot is
+`baac863d7050fbd71ac332a680215af1e400f759ad441534019905bd521fda96`, containing
+10,719 training and 2,339 validation records. Selection by fitting observation
+availability yields 7,036 fully measured queries without imputation; shared-panel
+snapshot SHA-256 is
+`006b4bb127a09073a7f409d81a7bccce96bb961879cb5e57dce56b48eb8e664b`.
+Its query availability selection has two focused passing tests. New results
+must state the smaller panel explicitly and use identical-panel comparators.
+The original protected molecular snapshots and SL benchmark labels remain
+unopened. SOTA, new-context transfer and launch readiness are not established.
+
+## 2026-09-05 UTC — Frozen human molecular confirmation fails the advancement rule
+
+This entry follows the September 4 local-time development work. The frozen
+three-seed ensemble was evaluated exactly once on 713 reserved human molecular
+records, after the protocol and synthetic contract checks were written. No
+weights, epochs, uncertainty, baseline alpha or threshold changed afterward.
+Mean and full-feature ridge were fitted to the original 3,281 training rows
+only; the 726 development validation rows were not folded into fitting.
+
+| Confirmation context | Records / genes | Ensemble NLL | Gain over mean | Gain over ridge (gene-bootstrap 95% interval) | Adjusted r | Decision |
+| --- | --- | ---: | ---: | --- | ---: | --- |
+| K562 essential day 6 | 323 / 309 | -0.559072 | 0.045215 | 0.014646 [0.003575, 0.026303] | 0.228200 | fail |
+| RPE1 essential day 7 | 390 / 364 | -0.226893 | 0.031360 | 0.010336 [0.001877, 0.019008] | 0.251521 | fail |
+
+The fixed point-estimate threshold is 0.02 nats over both baselines in each
+context; both miss the ridge criterion. The small positive same-source
+held-gene gain survives, but the stipulated advancement claim does not.
+This is retrospective confirmation within the same sources and selected
+experimental populations, not unseen-context or prospective evidence.
+No SL benchmark was accessed. This molecular holdout is retired from model
+selection, and later candidates need a fresh confirmation source/protocol.
+
+Observation calibration remains imperfect: squared standardized residuals in
+<30 / 30–99 / 100+ cell bins are 1.473 / 1.022 / 0.778 in K562 and
+1.338 / 0.979 / 0.801 in RPE1. These are diagnostic findings only; no scale is
+recalibrated from these outcomes.
+
+Directory: `results/slp11-transition/human-normalized-fusion-response32-ensemble731-733-molecular-confirmation-v1/`.
+Protocol SHA-256 `bd6fc2fcb4943d9869a08e347a63b23e17133e28b91d7b87d8beb2b9e9e761a7`;
+report `60525de962553b7550b577da071c036de05c1d14b5564d4bd7b86bc4c7cd57f3`;
+predictions `f7716025d43d548c3b694970e956e9e2ce46436557e56414e38a5b877865271d`;
+baseline exposure `7b36fd62753643f69f6941e6e99de27127f6c6aa33f4a210110fb29e9566c51f`.
+Five focused confirmation checks pass. The repository suite reached 396 passed,
+21 skipped before those additions. An unrestricted pytest collection entered
+an old ignored benchmark-model directory and failed on an inaccessible Windows
+log symlink; explicit `python -m pytest tests -q` runs the intended source suite.
+No benchmark labels were read by that failed collection.
+
+**Continuing experiment, already initiated before confirmation.** Broader
+K562 genome-scale training uses the fixed 7,036-query shared panel. Source
+roster coverage is 7,079, but 43 additional queries have sporadic nonfinite
+author-normalized training entries, rather than zero source variance. They are
+masked in the original adapter and excluded from the complete-panel experiment;
+no missing outcome is treated as measured zero. The static extension now has
+10,231 entities and 577 features, SHA-256
+`a2f3153478c00c191e5a9e218badb3327a180a56948a4c9c6a6926cc506ff02b`.
+All prior 7,605 rows are byte-identical. ESM/GO covers 9,825/9,696 of 9,852 GWPS
+actions, respectively. ESM extraction adds 2,615 proteins in 17.1 seconds,
+retaining full-protein windows; 11 new proteins lack sequence. GO projects onto
+the unchanged archived basis and omits 560 new-only terms without refitting.
+
+Freeze a single seed731 pilot with the existing numerical architecture and
+hyperparameters, broadened training only, and the same per-context .02/.10 rule
+against context-local mean/ridge in all three contexts. Compare the old ensemble
+on the identical 7,036-query development panel descriptively; that comparison
+changes both corpus and ensemble size and cannot isolate a pure data effect.
+Original protected molecular and SL benchmark snapshots remain unopened.
+
+## 2026-09-05 UTC — Genome-scale training and physical-relation features
+
+**Broader-corpus hypothesis.** The predeclared seed731 model uses the same
+architecture, 32 response-query descriptors, hidden128/state64, dropout0.2,
+AdamW lr0.0005/weight-decay0.1, 180 epochs maximum/patience30. Complete-panel
+snapshot SHA-256 `006b4bb127a09073a7f409d81a7bccce96bb961879cb5e57dce56b48eb8e664b`
+and ESM/GO pack `a2f3153478c00c191e5a9e218badb3327a180a56948a4c9c6a6926cc506ff02b`
+are unchanged. There are 10,719 fitting/2,339 validation records and 7,036
+queried RNAs. All results below are adaptive development, with no test access.
+
+| Context | World NLL | Adjusted r | NLL gain vs mean / ridge | .02/.10 rule |
+| --- | ---: | ---: | --- | --- |
+| K562 essential day 6 | -0.543392 | 0.258046 | 0.062103 / 0.024067 | pass |
+| RPE1 essential day 7 | -0.249635 | 0.282514 | 0.049403 / 0.017571 | fail |
+| K562 genome-scale day 8 | -0.913336 | 0.102432 | 0.011459 / 0.005396 | fail |
+
+Epoch61 is selected; training takes 370.13 seconds and the full pilot/comparator
+386.08 seconds on one RTX 4070. The fixed all-context hypothesis fails. On the
+identical 7,036-query panel, the earlier three-seed ensemble has better NLL in
+K562/RPE1 (-0.555869/-0.255335), while the new single seed has higher adjusted r
+than its 0.248482/0.270051. This comparison does not isolate a data-scale effect:
+it also changes ensemble size, optimization and sample composition.
+
+Artifact root: `results/slp11-transition/human-gwps-complete-panel-fusion-response32-seed731-v1/`.
+Protocol SHA-256 `3f013a89b388615133a0f3de24dad4c5de3995badd9bcec89d07b950ea57bbe8`;
+summary `203f0f015505b67e30edee2ab4eeaeb7428ac4c1e9ebedd58c110b052f1cb37e`;
+checkpoint `66f0eb42faaf310f330c3da9734531d99ae2d1ea7f1daeec97acc69701d2b97c`;
+reference `244aa4b59f0ae0fad4d04079b286618851ef891633740f0c4cb40a86f1867d43`;
+exposure `aeba30010e3e8ae5680526cf00f187ae8ed3f91d622b58f53d5d8aa3f58da7cd`.
+Sixteen focused pilot checks pass.
+
+**Separate static physical-relation screen.** Official STRING12.0 physical
+relations and unique exact Ensembl_gene aliases supply direct human
+experimental-confidence edges >=700/1000. Text mining, transferred evidence,
+database channels and combined scores are excluded. Symmetric gene edges are
+collapsed by maximum confidence, self edges removed. Within the 10,231-gene
+cache this gives 34,155 edges and 3,145 genes with neighbors. The original577
+features remain exact; append their weighted known-neighbor mean577, log1p
+induced degree and a coverage flag. Feature SHA-256 is
+`2cbf12208461358b1c40b8ca5f51b3ebe6c363119f40a0d16ca87833f8e691f7`.
+This static2023 relation graph supports retrospective feature development;
+it is not molecular perturbation truth or evidence of causal direction.
+Sources/rights are recorded in `sources/string-human-physical-v12.0.yaml` and
+`rights/string-human-physical-v12.0.yaml` under the official CC-BY-4.0 terms.
+
+The fixed CPU screen compares ridge alpha10000 with original577 features,
+original+degree/coverage, and full1156 features. It reports point metrics only;
+no in-sample uncertainty is presented as calibrated likelihood. Advancement
+requires >=1% gene-MSE improvement over both controls and no adjusted-r
+regression in every context.
+
+| Context | Base / degree / physical MSE | Base / degree / physical adjusted r | Screen rule |
+| --- | --- | --- | --- |
+| K562 essential | .026671 / .026609 / .025431 | .218316 / .223448 / .257969 | pass |
+| RPE1 essential | .059120 / .058935 / .055860 | .246379 / .252739 / .302361 | pass |
+| K562 genome-scale | .012457 / .012424 / .012346 | .063444 / .068132 / .078508 | fail |
+
+The screen takes 30.56 seconds CPU and fails its all-context rule. Two focused
+aggregation tests verify duplicate handling and identity equivariance. Report
+SHA-256 `736968925a96806e1384cf71663e37ffd84fb70c2c4077ed0f240c4dc7a8c4a3` at
+`results/slp11-transition/physical-features-ridge-screen-v1/report.json`.
+This is not promoted by changing the threshold. A separate fixed neural trial
+will test nonlinear use of these relations against the stronger full-feature
+ridge and the prior neural world, while retaining all-context .02/.10 and
+neural nonregression requirements.
+
+**Architecture and future context evaluation.** A separate control-anchored
+module now makes empty intervention return the supplied control baseline
+exactly. Its four numerical contract checks pass. A matched biological pilot
+is running; the representational fix alone is not a performance claim. The
+single-intervention pilot freezes its unidentifiable pair projection. Average
+action pooling does not enforce additive molecular combination effects.
+
+Official Nadig HepG2 raw single-cell data have been acquired (5,614,460,941
+bytes; SHA-256 `e1ad7c3c5a201c861a207a858aa7e59f5e6ac1955674c415f7de0d1dadadb52e`).
+Only metadata and 4,976 non-targeting control rows have been examined, across
+56 GEM groups. Perturbed expression rows remain unread. The verified
+Replogle code uses linear full-UMI scaling and per-GEM control sample SD,
+without log or clipping, for target normalization. A control-only HepG2
+implementation is explicitly SLp-computed, not Nadig author DESeq2 logFC/SE.
+Artifact SHA-256 `3f72db203e989cb60d9ecd65874a11d2c83af0772a8011bafcb559a65c459951`.
+Four focused checks pass. Current saved basal descriptors have differing
+normalization denominators/aggregation, so a common control descriptor is
+being prepared before any unseen-context scoring. A transferable decoder also
+cannot require the new context's unobserved perturbation residual amplitude.
+
+## 2026-09-05 UTC — Physical neural improvement and control-anchoring failure
+
+The physical-neighbor neural trial changes static features to the frozen1156
+pack while retaining seed731, hidden128/state64, response-query rank32 and the
+same optimizer, splits, panel and stopping rule. Its primary rule is .02/.10
+in each context against mean and the stronger full1156-feature ridge, plus
+no NLL or adjusted-r regression against the preceding neural model.
+
+| Context | World NLL / adjusted r | NLL gain vs physical ridge | NLL gain / r change vs preceding world |
+| --- | --- | ---: | --- |
+| K562 essential | -.550340 / .280207 | .012017 | +.006948 / +.022161 |
+| RPE1 essential | -.250529 / .304302 | .002006 | +.000894 / +.021788 |
+| K562 genome-scale | -.914052 / .107656 | .004746 | +.000716 / +.005224 |
+
+Nonregression passes everywhere; the primary rule fails everywhere. The
+strongest matched ridge is -.538323/.257969, -.248522/.302361 and
+-.909306/.078508, respectively. Epoch43 is selected in 311.70 seconds GPU,
+318.25 seconds for the full pilot. Sixteen focused checks pass. Artifact root
+`results/slp11-transition/human-gwps-physical-fusion-response32-seed731-v1/`;
+summary SHA-256 `344bb7dab606d496b6f7533e1407eae1f0f894b0ca2cf47e1931d07a00248950`;
+checkpoint `159f23afd213ee0535c6f32e0cdd2807e56589c6da42a10ac89e43950b6e6fd6`;
+reference `ea12f1c8cb1371fe86fd5e6a1de050c60e6f5b88b9afffce271d02d8cff2f1a9`.
+The local self-contained experimental package
+`results/slp11-transition/packages/human-gwps-physical-crispri-dev-v1/` has
+passed CPU CLI inference from its own directory. No release was uploaded.
+
+**Control-anchored v1.** The separate model satisfies exact control mean/scale
+identity and zero latent/molecular intervention delta for an empty intervention
+in all3 contexts x7036 queries. Its singleton-unidentifiable pair projection is
+zeroed/frozen. However, selected epoch52 gives NLL/r -.53337/.23341 K562,
+-.23773/.26792 RPE1 and -.91134/.09700 GWPS, regressing against the original
+architecture. Both the primary and no-regression rules fail. The experiment
+changes architecture as well as anchoring and does not isolate their causal
+contributions. Report SHA-256 `f49ba0fbdb69af09e6e1ce49729febf11856670acae84d94715da96e47783e87`;
+checkpoint `2beb8ff4258fedf32fd62c2db9899d378472ed6a2a8eca192499b77f68f198dc`.
+Strict source/safetensor reload, query chunk identity and six focused checks
+pass. The post-run audit SHA-256
+`e42fa26291f5a8b1fa538fa90e4ebda9d47bf2eb5e22b059c2634a360cebefa1`
+records two limitations: average action pooling does not enforce additive
+molecular single effects, and the decoder amplitude still uses each represented
+context's training perturbation residual scale, unavailable in an unseen context.
+
+**Controlled next tests.** A minimal anchoring revision keeps the original
+encoder/transition parameterization, uses a single pooled training-only query
+amplitude and handles empty actions algebraically. A separate physical-feature
+run doubles only latent state64 to128. The geometry diagnostic motivating that
+capacity test projects existing ridge forecasts onto the frozen base-world
+64-dimensional decoder without fitting to target outcomes. Physical-ridge MSE
+rises .54% K562 and1.05% RPE1 but falls1.04% GWPS after projection. This identifies
+a possible representational loss in RPE1, not a theoretical oracle ceiling or
+proof a larger network will improve. Diagnostic report:
+`results/slp11-transition/gwps-decoder-span-audit-v1/report.json`.
+
+**Control descriptor correction.** Source review could not prove that Replogle
+raw pseudobulks preserve original full-cell UMI totals: only8248–8749 source
+genes remain, and the available unfiltered UMI statistic describes a different
+cell set. The first proposed full-library denominator equivalence is therefore
+superseded, without overwriting its artifact. Guaranteed common descriptors
+now normalize pooled raw control counts by the pooled count over exactly6789
+shared stable ENSGs, selected from source IDs and the frozen fitting-complete
+panel. This is fixed-panel relative abundance, not full-library CP10k.
+Roster SHA-256 `046891d3ceb0766e3fd09441677d6ae078fa7ac7d81ddb1f1c30866007d0d959`;
+new7036-target development snapshot
+`55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c`;
+standalone HepG2 descriptor
+`382626401ee38e8d5084ac9f86ffc44bd10408826fb85a94ede8eb908cdf5b27`.
+All prior targets, masks, controls and partitions remain exact NPY copies.
+Context masks exclude247 unsupported tokens consistently. Nine normalization
+and aggregate/single-cell equivalence checks pass. Zero HepG2 perturbed
+expression rows have been read. No SL benchmarks or retired confirmation
+outcomes enter these new model choices.
+
+## 2026-09-05 UTC — Capacity, transferable controls, and uncertainty experiments
+
+All experiments below use human Replogle CRISPRi development partitions only,
+seed731, local RTX4070 or two CPU threads. No SL benchmark or retired molecular
+confirmation outcomes inform their choices. Static modalities are sequence,
+archived MF/CC annotation and, where specified, direct physical neighbors.
+
+**Latent capacity ablation.** Doubling only the original physical-feature
+world's latent state64 to128 retains hidden128, response-query rank32 and the
+7036-query complete development panel (`006b4bb127a09073a7f409d81a7bccce96bb961879cb5e57dce56b48eb8e664b`).
+The fixed rule remains >=.02 nats versus mean and full physical ridge,
+adjusted r>=.10 and no regression versus state64 in every context.
+
+| Context | NLL / adjusted r | NLL gain vs physical ridge | NLL gain / r change vs state64 |
+| --- | --- | ---: | --- |
+| K562 essential | -.551662 / .290639 | .013340 | +.001323 / +.010432 |
+| RPE1 essential | -.257087 / .331079 | .008565 | +.006559 / +.026778 |
+| K562 genome-scale | -.914132 / .108128 | .004826 | +.000080 / +.000472 |
+
+The primary rule fails in every context; nonregression passes. Selected epoch43
+uses 584832 parameters and 303.22 seconds GPU (309.72 total). The response
+geometry hypothesis receives limited development support in RPE1, without
+establishing transfer or advancement. Artifact root
+`results/slp11-transition/human-gwps-physical-fusion-response32-state128-seed731-v1/`;
+summary `12c5dde62527b867fa9b1f80ea12ad8bc2c5f2c829277d4bd1ffb8bf99051b29`;
+checkpoint `d85e898e3486741c7aa87e6bc18ecf1c8607746117ec06bac266c567f6b31bbf`.
+Sixteen focused checks pass.
+
+**Minimal transferable control model.** The separate self-contained
+`modules/slp-1-1-control-transition-v2/` retains the original encoder topology,
+anchors empty interventions exactly to supplied controls, and replaces
+context-specific decoder amplitudes with one fitting-only pooled query vector.
+Observation scale cannot change molecular means or state. The fixed control
+snapshot is `55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c`;
+the common basal panel has 6789 queries, with 247 unsupported tokens masked.
+This permits inference from new-context controls without fitting its
+perturbation response statistics. It does not prove such inference is accurate.
+
+The base577/state64 pilot selects epoch61 and gives NLL/r
+-.533897/.246223 K562, -.244893/.264745 RPE1 and -.914183/.101173 GWPS.
+Ridge margins .01457/.01283/.00624 fail the fixed .02 rule. Report
+`665edc70ce283df3187ea0a16485e36f2b3c061fdb5d933065c5b1f85cddf3f9`;
+checkpoint `429791272736c59ae77cca72ccd5a6b51f60736c2213493fa6d924f215611d2d`.
+
+A separately fixed synthesis uses physical1156 features and state128, so it is
+not an isolated causal ablation. It compares with the stronger physical ridge
+and requires nonregression against the minimal base577/state64 pilot.
+
+| Context | NLL / adjusted r | NLL gain vs physical ridge | NLL gain / r change vs minimal base577 |
+| --- | --- | ---: | --- |
+| K562 essential | -.545383 / .284144 | .007061 | +.011486 / +.037922 |
+| RPE1 essential | -.251684 / .315596 | .003162 | +.006791 / +.050851 |
+| K562 genome-scale | -.910775 / .104834 | .001470 | -.003408 / +.003661 |
+
+The primary rule fails in all contexts, and GWPS NLL nonregression fails.
+Epoch61, 568448 parameters, 430.28 seconds total. Exact empty-control identity
+passes across all three contexts and7036 queries. Eleven focused checks pass.
+Artifact root
+`results/slp11-transition/human-gwps-fixed-context-minimal-control-physical-state128-response32-seed731-v1/`;
+protocol `ba5db27cd29a6f3c8fd796d5d20e013fc21b00529c3026e93aaa7d1d01aeaba2`;
+summary `8480b1f1b192edb878cb0e25eb9abc57ab9f6b67aa76f85408eab489dfa7a0ca`;
+checkpoint `b1e55f2bcc8a29b6b2467a92ebedfdc1cc80ff8c343a6ab36916d638b9c48cf3`.
+
+**Action-dependent uncertainty screen.** Physical-ridge means remain exactly
+fixed. A training-OOF-fitted action multiplier changes only biological variance,
+with alpha10000 and multiplier bounds [.25,4] fixed beforehand. The rule is
+>=.01 nats improvement in every context. NLL gains are +.021626 K562,
+-.007983 RPE1 and +.013699 GWPS: the rule fails. Low-count groups worsen in
+all contexts. This is not adopted or retuned from validation. CPU34.31seconds;
+four focused checks pass. Report at
+`results/slp11-transition/human-gwps-physical-ridge-action-uncertainty-v1/report.json`,
+SHA-256 `3f719e1d500a6229e73bca1ceb9d6364ff6e2f59b114d0721fb492bcbb54dae6`.
+
+**Next diagnostic frozen before target access.** New-context point prediction
+is a separate scientific question, not a replacement advancement gate for the
+failed candidates above. HepG2 metadata define2544 exact construct populations
+and2390 genes:1665 source-fitting genes and725 genes absent from source fitting.
+The physical/state128 minimal-control candidate and five source/control-only
+baselines will be frozen before first HepG2 perturbed-expression processing.
+The baseline-only protocol hash is
+`943baee44f25a9be7a9fe99e87bd89a364483902e429a7acbd2e2a92df6e74ed`.
+Controls select RPE1 as nearest source. Strong comparators include same-gene
+source response transfer and full physical-feature ridges. No HepG2 perturbed
+expression values have been accessed at this entry; no context-transfer
+performance or launch claim is made.
+
+**First HepG2 outcome processing.** Final scoring protocol
+`77f03b7a142077bbb19c414ef39b31217c8af0090bc95750f1a52e990ab1998d`
+pins the world forecast (`c6d6e6569d8d915886f28aaef024e49d82f55f7f6b219e7fcee5713640d6248d`),
+all five baselines, exact population/query axes and scoring implementation.
+Its primary estimand first averages construct profiles within gene, then gives
+each gene equal weight. Correlation independently removes prediction and truth
+query-wise gene centroids within each seen/unseen stratum. The diagnostic rule
+requires >=2% MSE improvement against every baseline, r>=.10 and correlation
+nonregression against every defined nonconstant baseline in both strata.
+1000 gene-block bootstrap draws seed731 re-estimate scoring centroids; intervals
+are descriptive and cannot change the decision. Six focused scoring checks pass.
+
+After that freeze, the adapter processed140138 targeted cells into2544 molecular
+records, preserving per-query contributing-cell counts and masking247 absent
+queries. All records support the6789 measured queries. The first outcome
+snapshot is `data/derived/slp11-human/nadig-hepg2-frozen-context-diagnostic-v1/molecular.npz`,
+SHA-256 `013c13534a5b33c8667a1f0c82d10416efec2b41d13d27f2ca94a29ab32b22e7`.
+Scoring is underway. This is jointly cross-study, cell-context and control-cohort
+normalization transfer: Replogle core controls and Nadig all-non-targeting
+controls are not equivalent populations. It is neither pure cell-context
+transfer nor replication of the author's DESeq2 endpoint. No new performance
+claim is supported until the frozen report completes.
+
+**Frozen HepG2 point results (bootstrap pending).** The unchanged point rule
+fails in both strata. For1665 source-fitting genes, world MSE is .0616399,
+at least2.3058% below every baseline, but independently centered profile r
+.262490 falls below same-gene source response transfer (.281151). For725 genes
+absent from fitting, world MSE .0614861 is1.0362% worse than equal-source
+physical ridge (.0608555), despite slightly higher centered r (.171143 versus
+.163890). Thus lower magnitude error and better response geometry are not
+interchangeable accomplishments. The model beats zero and average-response
+baselines in both strata, which is evidence of transferable molecular signal,
+not superiority over strong transferred predictors or launch readiness.
+Point report `results/slp11-transition/hepg2-context-transfer-frozen-scoring-v1/point-report.json`,
+SHA-256 `9646be33f5ff16c4762addf3948c16c163fcf96f48e547b9fbbfb5eb3577558a`.
+The descriptive1000-draw bootstrap remains running; no confidence claim is made
+from these point estimates alone. HepG2 outcomes are excluded from subsequent
+candidate selection.
+
+The separate target-free context-sensitivity audit reports that55.48% of
+across-context forecast-difference energy is gene-specific, with44.52% a common
+query profile. The model therefore does not respond to controls solely through
+an average shift. The two K562 control contexts yield nearly identical deltas
+(RMSdifference .001684; flattened r .999898), whereas RPE1 differs substantially.
+No explicit time or assay metadata enter this model, so this is not a test of
+learned time dynamics. Audit report
+`results/slp11-transition/minimal-control-physical-state128-context-sensitivity-v2/report.json`,
+SHA-256 `3f9643049c77016df91f12fe7f7e52ffaf804e50d1e33d5eb532bfcc53a62725`.
+
+## 2026-09-05 UTC — Follow-up representation and objective hypotheses
+
+These next experiments use the original three-source development outcomes;
+HepG2 remains excluded from candidate selection after its frozen diagnostic.
+
+**Static encoder capacity.** Existing local MIT ESM2-t33-650M weights match
+Hugging Face revision `08e4846e537177426273712802403f7ba8261b6c`. A representative
+full-protein profile estimates975seconds extraction for10079 available peptides
+among10231 exact Ensembl116 genes, with152 explicit missing rows. The workload
+has6067594 residues and11773 windows. Conservative runtime including25% margin
+is1218seconds; peak allocation2.82GB. Profile report
+`results/slp11-sequence/esm2-t33-650m-ensembl116-profile-v1/report.json`, SHA-256
+`f16c349fc82372358aaf841c6650a3cb668603c99fbb9128558290c362abff23`.
+
+Full extraction is authorized with float32 final-layer1280 vectors,
+1022-residue windows/128 overlap, inverse-overlap full-residue weighting,
+float64 accumulation, batch1, deterministic algorithms and TF32 disabled.
+The primary feature comparison uses PCA320 fitted on unique source-training
+action-gene static vectors only (present peptides, centered/no whitening,
+randomized solver, power7, seed731). GO and physical-graph recipes stay fixed.
+The fixed source-development ridge screen requires at least1% gene-macro MSE
+improvement and no adjusted-r regression in all three contexts. Full1280 is a
+separate secondary arm and cannot rescue a failed primary comparison. No
+protein-scale performance claim is made before this screen completes.
+
+**Training objective mismatch.** Current training averages rows while checkpoint
+selection averages context-specific gene-macro NLL. Fitting rows are1522 K562,
+1759 RPE1 and7438 GWPS; consequently GWPS contributes69.39% of rows, while
+evaluation gives it33.33% context weight. Within-context unique genes number
+1443/1666/6864. A separately controlled trial will weight each fitting row by
+`N / (3 * unique_genes_in_context * records_for_gene_in_context)`, with global
+mean weight1 and no per-batch renormalization. Architecture, features, random
+row order, optimizer and calibration remain fixed. This changes the statistical
+objective explicitly; it is not a claim that minority contexts must improve.
+
+**Latent decoder consistency.** A synthetic numerical counterexample shows
+that minimal-control-v2 can give identical latent states for an empty action
+and a nonempty action with learned zero intervention delta, while predicting
+different molecular means. Its decoder uses total latent state and a separate
+action-presence gate. The independent numerical revision
+`modules/slp-1-1-control-transition-v3/transition_model.py` decodes intervention
+delta instead, algebraically linear `D(state)-D(basal_state)`, and removes the
+molecular action gate. It adds no parameters. Zero latent effect now gives
+exactly the supplied control mean irrespective of action presence. Two focused
+checks reproduce the v2 counterexample and verify v3's linear-difference and
+empty-action contracts; Ruff passes. Module SHA-256
+`75a487046d30d399000bd50dbe7bf2c642fb1acf297a1c78e1d65b5adbb5a832`.
+This revision is untrained; existing v2 checkpoints and failed decisions remain
+v2 evidence. Objective weighting and decoder consistency must be tested
+separately before any synthesis.
+
+**Next source and controls.** Official GSE264667 Jurkat data are acquired:
+9366490264bytes, SHA-256
+`ffbe15f2c8f7ffcfd7b0ba9e6937d4ebc2d03b0179fa8234648a59bcb82c04a3`.
+Metadata define2390 stable actions,2544 populations and12013 controls across55
+GEM groups. Only control expression rows have been processed. Their full-UMI,
+per-GEM sample-SD normalizer SHA-256 is
+`81c46faac7728b737a610c4bf401b4fd49b3ae03dbd11e1093620b5af4b7d169`.
+A new common basal panel across the three Replogle contexts plus HepG2 and
+Jurkat contains6517 measured genes on the original7036 query axis, with519
+masked tokens. Its exact roster hash is
+`1a863ba69f514ba9c1f3752cebde707af4a54ecbf1b54000d7e1320207838a79`.
+Source targets/masks/splits/control arrays are unchanged NPY payloads in a new
+development snapshot `e925b4406bd1a1ad3ebe0dd31de5e6d356d65b54cdbe908b650ee47844c85c81`.
+This is preparation for a future candidate; it does not modify the6789-token
+HepG2 diagnostic or the planned objective-weighting comparison. Thirteen
+focused control aggregation/access checks pass. No Jurkat perturbed-expression
+values or outcomes have been accessed.
+
+**Protein encoder screen completed: reject wholesale replacement.** Extraction
+finished in1068.7seconds GPU,1090seconds including assembly. All10079 present
+gene rows map to verified peptides, with152 explicitly missing. The11773
+entity-expanded windows correspond to11752 unique-peptide windows because21
+entities share normalized peptides; no residues were omitted. Original GO,
+presence and physical graph construction are verified unchanged. Feature
+manifest SHA-256 `ecc855c7c273adc6903c46957684da6daa5925f1222277603be49872c3de08f1`;
+PCA320 physical pack `3ab70147fb7d1e1ff9a04d5029fd264f862cd048d2d57af0b130f1c3edc7512b`;
+full1280 physical pack `7db0b887cc4c9878f53b342f9915f6c849d8bff1c383a4e7c5f6fcfae70bcc4f`.
+PCA fits6846 unique source-fitting genes with present peptides and retains
+97.1391% of their static embedding variance; this is not response variance.
+
+The fixed alpha10000 ridge screen uses original complete-panel snapshot
+`006b4bb127a09073a7f409d81a7bccce96bb961879cb5e57dce56b48eb8e664b`.
+
+| Context | 8M MSE / adjusted r | 650M PCA320 MSE / adjusted r | 650M full1280 MSE / adjusted r |
+| --- | --- | --- | --- |
+| K562 essential | .0254312 / .257969 | .0252076 / .267823 | .0253234 / .253827 |
+| RPE1 essential | .0558602 / .302361 | .0551368 / .308836 | .0552971 / .294192 |
+| K562 genome-scale | .0123456 / .078508 | .0123771 / .076286 | .0124087 / .077933 |
+
+The dimension-matched primary improves K562 MSE by0.8794%, below1%, and RPE1
+by1.2952%, but regresses GWPS MSE by0.2556% and its correlation. Only RPE1
+passes. The full-width secondary also regresses correlations and cannot rescue
+the primary failure. Independently query-centered correlations, declared as a
+secondary scoring check before this run, show the same direction of changes.
+Thus increased protein encoder scale alone does not solve the cross-source
+prediction problem under this fixed representation and ridge protocol. It is
+not evidence that every possible use of the650M model is inferior. The packs
+are retained but not adopted as the next neural default. CPU64.41seconds;
+three identity/alignment checks and ten feature-extraction checks pass.
+Report `results/slp11-transition/protein-encoder-ridge-screen-v1/report.json`,
+SHA-256 `fe0c5c5f7cfa6fd38d33f5a991c2ae030613e7ee8debedddfc287cd228a69da3`;
+protocol `8a6c45b5f13d8581e61d3a7a2bdc0a2b8effa92203a179670285d770e061ab2a`.
+
+**Balanced objective completed: reject this candidate.** The matched v2
+physical1156/state128 experiment changes only fitting-row weights, on the
+original6789-token source snapshot `55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c`.
+Context weight totals are3573 each and global mean weight is1; minibatches are
+not renormalized. The default unweighted loss retains exact legacy behavior.
+
+| Context | Balanced NLL / adjusted r | NLL gain vs physical ridge | NLL gain / r change vs unweighted v2 |
+| --- | --- | ---: | --- |
+| K562 essential | -.549030 / .286987 | .010707 | +.003647 / +.002843 |
+| RPE1 essential | -.249603 / .318764 | .001081 | -.002081 / +.003167 |
+| K562 genome-scale | -.910613 / .097481 | .001307 | -.000163 / -.007352 |
+
+The ridge margin fails everywhere. RPE1 NLL nonregression fails; GWPS fails
+both nonregression checks and the .10-r minimum. This single-seed result
+rejects the candidate, not all possible balanced optimization procedures.
+Epoch47,445.05seconds local compute. No HepG2/Jurkat perturbed outcomes were
+accessed. Protocol `b7418348b9204efba681b16997d26c4ae57cfa4a021778dee93f6a83366ef49c`;
+summary `be93987d9234f460fbd9d4510b528ce93e70161acbf2ef2581c29db583b8f8bb`;
+checkpoint `13341283172db0d774e00f2b2890e156bd4362e747a89ea1de366a9a0a2e623d`.
+Artifact root
+`results/slp11-transition/human-gwps-fixed-context-minimal-control-physical-state128-balanced-objective-seed731-v1/`.
+The explicit weighting API and trainer model-source pinning are versioned and
+snapshotted; the broad suite passes477 tests with21 skips and17 legacy warnings.
+The v3 decoder experiment runs separately with the original row objective.
+
+### 2026-09-04 — Completed transfer uncertainty and representation redesign
+
+**State-difference decoder completed: reject this candidate.** The isolated
+v3 experiment changes the mean decoder from gated total state to latent
+intervention delta, retaining physical1156 features, state128, uniform row
+loss and the source `55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c`
+snapshot. Empty actions and nonempty zero latent effects now give exactly the
+control mean. This consistency property does not yield a performance gain.
+
+| Context | v3 NLL | Adjusted profile r | Fixed decision |
+| --- | ---: | ---: | --- |
+| K562 essential | -.54037 | .27646 | Fail: ridge margin and v2 nonregression |
+| RPE1 essential | -.24292 | .30663 | Fail: ridge margin and v2 nonregression |
+| K562 genome-scale | -.91336 | .10350 | Fail: mean/ridge margins and v2 r nonregression |
+
+Epoch24;306.83 seconds local CUDA. Reload maximum error2.98e-7,
+direct-delta formula error0, decoded-state-difference error1.19e-7.
+Report `results/slp11-transition/human-gwps-fixed-context-state-difference-physical-state128-seed731-v1/model/report.json`,
+SHA-256 `1e8b3b9ce951a3b4164a8f187577760ccf1721c8c6b4e721754cbd3cb9e4600e`;
+checkpoint `ee7769d8a2ca463758ac3f1b602629c49d95c1b62b30fdfbf0e33e766a32cb05`;
+outer protocol `10cb7481a561fdefad769fbde52041c8a2be5f713b0f5b0a71f8555020765a40`.
+
+**Frozen HepG2 diagnostic completed: fail both strata.** The unchanged
+preaccess protocol and all forecasts precede outcome materialization. The
+1,000-draw seed731 gene bootstrap recomputes centroids per draw and leaves the
+point-based decision unchanged. Seen-gene world adjusted r is .262490,
+95% descriptive interval [.250217,.274086], versus same-gene source-response
+.281151 [.270181,.291667]. Unseen-gene world r is .171143
+[.150365,.190675]. Intervals for individual correlations are not a paired
+test of their difference.
+
+A separately saved, descriptive paired-MSE supplement uses identical gene
+draws for world and every baseline. For unseen genes, equal-source ridge
+minus world MSE has 95% interval [-.0010694,-.0001755], or fractional world
+improvement [-1.7326%,-.3016%]. Only .001 of bootstrap draws favor the world
+model. For seen genes, fractional improvement over the closest MSE baseline,
+equal-source ridge, has interval [1.6479%,2.9890%]. These intervals do not
+change or retroactively tighten the frozen advancement rule. Constant
+forecasts have undefined centered correlation in every draw.
+
+CPU runtime2782.56 seconds. Final report
+`results/slp11-transition/hepg2-context-transfer-frozen-scoring-v1/report.json`
+SHA-256 `2bda36b03a3da2b65c7dc494d959d2d3cd2d602402f18eabb99520c32a454b03`;
+paired report `ac549362850e72aee8f1c0943e59bf2013c1cef0f3df474de40a464d4601ba16`;
+paired raw draws `c9802677feab8dadf395cd0f6f196bcc0a270eadc5182341726a43cde4c5a504`.
+The final PNG/PDF figure is
+`results/slp11-transition/figures/hepg2-frozen-transfer-final-v1`.
+Six scoring checks pass. HepG2 is now retrospective evidence and is excluded
+from subsequent candidate selection. Jurkat perturbed outcomes remain unread.
+
+**Typed intervention and assay metadata completed.** Immutable sidecars in
+`data/derived/slp11-action-observation-metadata-v2/` cover the current13,058-row,
+7,036-query Replogle development artifact, Norman CRISPRa and yeast deletion
+proteomics. The manifest hash is
+`7627bef96866f5cef8325311239ee6d9a4eac34da8e839090cb71d19b63e10d0`;
+the current Replogle sidecar is
+`a5aae27575cdbd6a026010bfff54d20728b56830f8209476233b4a671278a1bd`.
+Its three sources have1,853/2,154/9,051 records at days6/7/8. Quantitative
+efficacy and dose are missing, not assumed equal to1. Construct identifiers
+are provenance-only. Eight contract checks pass.
+
+Replogle responses are already author per-gemgroup control-standardized
+population means and receive no second log transform. Norman uses each
+cell's full33,694-gene library denominator, CP10K, log2(1+x), construct mean,
+then per-query control-cell mean/population-SD standardization. Yeast uses
+log2 MaxLFQ protein measurements. These value spaces require separate
+observation heads. Mode/time/source confounding remains explicit; sidecars
+alone do not establish cross-mode transfer or justify pooling target values.
+
+**Next falsifiable hypothesis, fixed before compute.** Learning to encode and
+reconstruct fitting molecular responses will provide a more predictable
+latent representation than direct intervention-to-response regression alone.
+One new self-contained observed-state module retains the v3 forecast topology
+and adds a training-only query-keyed response encoder. Its input is the masked
+response relative to control, scaled by the shared fitting amplitude. The
+encoder subtracts its zero-response output. The existing decoder reconstructs
+the posterior response. Inference never accepts the perturbed target.
+
+Total fitting loss is forecast Gaussian NLL +0.1 times reconstruction Gaussian
+NLL +0.1 times squared distance between L2-normalized predicted latent delta
+and stop-gradient normalized posterior delta, epsilon1e-6. Components are
+reported separately. Early stopping remains forecast gene-macro NLL only.
+Use the exact source55def snapshot, physical8M features hash2cbf1220...,64
+basal tokens, query-response rank32, hidden/state128, seed731, batch64,
+learning rate.0005, dropout.2, weight decay.1,180 epochs, patience30 and a
+1,800-second cap. Accessible inputs remain protein/GO/physical features and
+source control RNA; auxiliary targets are fitting-gene RNA only. The rule
+remains .02 NLL improvement over mean and physical ridge, adjusted r at least
+.10 in every source, and NLL/r nonregression against v2 physical128. This is
+an auxiliary representation-learning experiment, not evidence of dynamics or
+individual-cell generation. No result is available at protocol declaration.
+
+**Degree and coverage controls: world exceeds both simple controls.** A
+separate source-development diagnostic tests whether v2 physical128 performs
+better than a ridge model using only log1p physical interaction degree, and
+another using degree, graph coverage and protein-sequence availability.
+Both use fixed alpha1 with fitting-standardized inputs and an intercept;
+there is no alpha search. Three gene-grouped fitting folds estimate their
+own residual variance, with the same core-control sampling model.
+
+| Context | Degree adjusted r | Degree + coverage adjusted r | v2 world adjusted r |
+| --- | ---: | ---: | ---: |
+| K562 essential | .113547 | .127551 | .284144 |
+| RPE1 essential | .177405 | .172785 | .315596 |
+| K562 genome-scale | .064357 | .076946 | .104834 |
+
+World MSE is also lower than both controls in every context, passing the
+predeclared shortcut-control question. This does not change the failed
+stronger feature-ridge advancement rule. The low-dimensional controls
+themselves have nonzero adjusted correlation, so reporting only a constant
+baseline would overstate the learned model's contribution. Same source
+development outcomes as the neural runs; no new external outcomes.
+CPU29.22 seconds, two focused covariate-selection checks pass. Report
+`results/slp11-transition/degree-coverage-controls-v1/report.json`,
+SHA-256 `a7f27b51b63c4729d6c4d4740b179e37911ea1bc02268de3d7ce631b0383bcf3`;
+protocol `d8f4e0db8860b0a86b4ab3f85ab0cc12b00ee07389bb0e68ae08dc576ea54739`;
+predictions `1ce1b3cd6e19efae9472ec3ac117dd099214afdb8960140e2ac38a9a0da98f65`.
+
+**Queued model-specific uncertainty experiment.** The present three-source
+world means use uncertainty inherited from fitting-only mean-model residuals,
+whereas ridge uses its own residuals. A new calibration experiment will fit
+v2 physical128 in three global fitting-gene folds, excluding each fold's
+genes from every context. All response descriptors, action scaling, means
+and shared amplitudes are refitted within each fold. Neural fitting uses61
+fixed epochs, the selected full candidate's epoch count; no fold-held or
+outer-validation outcome selects an epoch. Frozen full-model means remain
+bit-identical. Only the measurement variance changes, using model-specific
+OOF residuals and unchanged control sampling components. The existing .02
+NLL margins and .10 adjusted-r minimum apply in each source. GPU cap1,800
+seconds after the observed-state pilot. This tests uncertainty calibration;
+it cannot fix the completed HepG2 mean-prediction failure.
+
+**Response compression diagnostic and matched comparison.** A fitting-only
+standardized response SVD retains28.37% of residual variance at rank32 and
+37.05% at rank128. Projecting each measured validation response into this
+basis gives oracle adjusted correlations .5575/.6895/.3522 in K562 essential,
+RPE1 essential and K562 GWPS. The predeclared question required at least.8 in
+every context, and fails. This oracle consumes the outcome being reconstructed
+and is not a forecast. Lost observed variation includes possible measurement
+noise; the result does not establish a biological representation deficit.
+
+Review found an important comparison mismatch: the original diagnostic's
+feature-to-latent ridge pooled contexts, while full feature ridge fitted each
+context separately. A separate supplement corrects that mismatch with the
+same frozen basis, features, alpha10000 and source rows. Projecting full-ridge
+forecasts through the response basis is algebraically equivalent to fitting
+context-local latent ridge; a synthetic explicit-fit check verifies this.
+
+| Context | Pooled rank128 forecast r | Context-local rank128 MSE / r | Full feature ridge MSE / r |
+| --- | ---: | --- | --- |
+| K562 essential | .2221 | .025340 / .2712 | .025431 / .2580 |
+| RPE1 essential | .2374 | .055837 / .3107 | .055860 / .3024 |
+| K562 genome-scale | .08470 | .012210 / .09247 | .012346 / .07851 |
+
+The matched low-rank forecast improves on full ridge, reversing the earlier
+unmatched comparison. It still does not satisfy the diagnostic's .8-oracle
+premise. Its gains motivate testing response representations, rather than
+concluding that static features or low rank alone are inadequate.
+
+Fixed cell-count bins [1,20),[20,100),[100,500),[500,infinity) show increasing
+oracle correlations in the essential-gene screens; the highest bins contain
+only3 K562 and5 RPE1 genes. GWPS remains .312/.360/.348/.381 across bins.
+Genes can span bins through different constructs, so bins are not independent
+replicates. The frozen control-sampling contribution averaged over validation
+queries is .00893/.01663/.00797 squared outcome units. These variance estimates
+are not a measured biological noise ceiling.
+
+Original report `results/slp11-transition/response-compression-diagnostic-v1/report.json`,
+SHA-256 `525cae361e2d7888a08ef70b4b5543bf13834b2a0467f55cff8d1c5fd638b51b`;
+protocol `7898252301d5488fabd45fea1be5739acc6417e99c5ead4165b301435dfd6b9a`.
+Matched/count-bin supplement
+`results/slp11-transition/response-compression-count-bin-supplement-v1/report.json`,
+SHA-256 `90c0fff0237d333da6d9fc4b84abeba75149a9624ddee6d6660fc74098d93aec`;
+protocol `2a1748acca36f75922e635ef6601233f7716d4a8250857837a99707e930a2df6`;
+matched predictions `1e97ecae8b485cd3eb7ed1b3a9f689e901c5c298e488a808b8b0f8052bbfda6b`.
+CPU20.9+15.2 seconds; five focused checks pass. No protected or external
+outcomes enter either diagnostic.
+
+Clarification to the queued uncertainty protocol:61 epochs are inherited from
+the full candidate's earlier development-selected checkpoint. Thus development
+validation influenced this fixed hyperparameter historically; the claim that
+it was excluded from all epoch choice was too broad. No fold-held outcomes
+or new validation feedback choose epochs during OOF fitting. The calibration
+arrays exclude all outer-validation intervention genes, and the result remains
+adaptive development evidence. The numerical plan and fixed rule are unchanged.
+
+Repository verification at this point:511 tests pass,21 skip,17 historical
+PyTorch warnings;41.81 seconds. Later adapter additions require their focused
+checks. No historical model code or protected benchmark was changed.
+
+**Observed-state auxiliary experiment completed: reject this candidate.**
+The unchanged declared objective fits770,432 parameters and selects epoch96
+after773.98 seconds of local CUDA work. The forecast topology and its initial
+parameters match v3 exactly; the additional response encoder is used only by
+the training objective. The following are forecast metrics, not reconstructions
+conditioned on the outcomes being evaluated.
+
+| Context | Forecast NLL | Adjusted r | NLL gain over physical ridge |
+| --- | ---: | ---: | ---: |
+| K562 essential | -.543546 | .284244 | .005223 |
+| RPE1 essential | -.252012 | .320829 | .003490 |
+| K562 genome-scale | -.911729 | .100239 | .002423 |
+
+Every ridge margin fails. K562 NLL regresses against v2 physical128; GWPS
+regresses in adjusted r and misses the mean-model margin. Relative to the
+isolated v3 decoder, essential-gene performance improves, while GWPS NLL and
+correlation regress. Auxiliary reconstruction has not delivered the required
+generalization improvement in this experiment.
+
+At the selected epoch, row-weighted fitting loss components are forecast
+NLL-.786314, reconstruction NLL-.817685, normalized latent MSE.005742 and
+total-.867509. These training aggregates have different source weights from
+the equal-source validation selection score and cannot directly quantify a
+train/validation generalization gap. Empty-action identity remains exact;
+source reload error is2.38e-7. A trap proves the response encoder is never
+called during forecast reload. Fourteen focused checks pass.
+
+Artifact root
+`results/slp11-transition/human-gwps-fixed-context-observed-state-auxiliary-physical-state128-seed731-v1/`;
+report SHA-256 `266152286bed210bc4bcf78d15de1fe3a10f00a47ce259e671e8888248d66d3f`;
+checkpoint `62cd59591fb13160f5f96d0638d7afa8fb2dbdaaaf1ab99dae90ef10cedc7d7d`;
+outer protocol `b4d5fecf3306f5788623f5a412826442ffdfad55a69b7a8a77e014ccb798d23a`.
+The GPU is released to the separately frozen three-fold v2 uncertainty run.
+No HepG2, Jurkat, protected molecular or SL outcomes enter this experiment.
+
+
+### 2026-09-05 — Calibration result, landscape correction and paired modality data
+
+**Frozen-v2 neural OOF calibration completed: reject advancement.** Three
+fitting-gene folds each train for the predeclared 61 epochs, with fold-local
+feature and response statistics. Total CUDA time is 302.86 seconds. No new
+held-fold or development feedback selects epochs; the historical development
+influence on the inherited epoch count is recorded in the preceding amendment.
+
+| Context | Calibrated NLL | Gain over full physical ridge | Mean forecast changed? |
+| --- | ---: | ---: | --- |
+| K562 essential | -.553117 | .014794 | No |
+| RPE1 essential | -.255993 | .007471 | No |
+| K562 genome-scale | -.914383 | .005078 | No |
+
+All .02-nat ridge margins fail; GWPS also misses the mean-model margin.
+Biological variance totals relative to mean-model calibration are
+.831/.851/.897; control sampling components have zero drift. Saved/reloaded
+mean forecasts are bit-identical. Calibration cannot repair the already
+observed HepG2 mean-prediction failure. Five focused checks and Ruff pass.
+Artifacts: `results/slp11-transition/human-gwps-physical-state128-neural-oof-calibration-v1/`;
+report SHA-256 `08999fb60dad104d9992185af9af43f938a162347da89b2cd375531958cd36f2`;
+protocol `feb8d7f5115471262f5238b767d164c3327c0eaa659f5a4ee960f8e6f39a3874`;
+pre-execution clarification `714421df69c5a568e7a290efe0a55f1545f676c6d840efea9434c4ea1eaa0afb`;
+calibrated predictions `1015d68d7d4c6fbf161074311094c665f9a576bc6ed73e312b125110ce033500`.
+
+**Independent source landscape audit.** Collapse constructs equally per gene,
+remove each prediction matrix's own per-query centroid across validation
+genes, remove the truth matrix's corresponding centroid separately, then
+compute Pearson across queries within each gene and average genes equally.
+No fitting or hyperparameter selection occurs. All source validation outcomes
+were already development data; this is an adaptive diagnostic.
+
+| Candidate | K562 essential r | RPE1 essential r | K562 genome-scale r |
+| --- | ---: | ---: | ---: |
+| Control v2 | .294913 | .306128 | .107899 |
+| Linear state-difference v3 | .288597 | .302147 | .108239 |
+| Observed-state auxiliary | .290936 | .314163 | .103227 |
+| Full physical ridge | .269269 | .315038 | .084352 |
+
+On the same collapsed profiles, common-fitting-centroid RPE1 correlations are
+.324444 for v2 and .310897 for ridge. The apparent advantage reverses after
+independent centroid removal. This change is not explained solely by
+construct aggregation. The previous candidates already failed; those decisions
+stand. Future candidates must also avoid regression against full ridge under
+the independently centered gene-profile metric in every source.
+Report `results/slp11-transition/source-landscape-centering-audit-v1/report.json`,
+SHA-256 `32b46978eb47827f74049170eaf083926d59b8bfc6f96693f416b09b70638777`.
+
+**Frangieh paired RNA/protein adapter completed.** Processed scPerturb v1.3
+Frangieh2021 counts are CC BY 4.0 and upstream-MD5 verified. RNA SHA-256 is
+`cc42ef38bcf703a00e0c77c7945dd53159b12d814c438ae8afeaed9bc71f48d1`;
+protein SHA-256 is
+`1f85827b5afad11a30d8ac99399772231110a1c3723bed6ecf7981a12cc3dbcc`.
+Raw DUOS-controlled material was not accessed. Exact paired barcode order is
+verified across 218,331 cells. Development retains 1,399 fitting and 403
+validation guide-resolved pseudobulks, 151/43 intervention genes, 84,121 target
+cells, 18,063 stable RNA genes and 20 molecular antibody channels. Control
+profiles use 39,347 verified all-nontargeting/no-guide cells. All 21,000 test
+cells are excluded before matrix-value reads. A further 73,863 cells are
+quarantined for mixed targets, guide disagreement, unresolved or truncated
+assignments; these are not relabeled as clean single interventions.
+
+RNA values are per-cell ln(1 + 10000 * count / sum of all 23,712 retained
+source columns), then averaged per guide group. Direct selected-row sums
+match source ncounts exactly; this is not claimed to be an unfiltered full
+library denominator. ADTs use the authors' max(0, ln((target UMI + 1) /
+(matched-isotype UMI + 1))) transform. Four isotypes remain QC channels.
+Stable ADT assay identifiers are not forced onto single gene identities.
+Paired means are observations of RNA and protein in the same endpoint cells,
+not before/after measurements of those cells. Co-culture reflects surviving
+cells, and source-wide filtering limits evidence to retrospective analysis.
+
+Development `data/derived/slp11-frangieh/paired-development-v1/development.npz`,
+SHA-256 `4bbb1eec9ede66211f1316b2841bb0037032ef975cd6c92d34aba0adb5fed744`;
+protocol `7a45073599c5104f7b7d39550d17a0a0455f4466b81741484d2a8c67e814940f`;
+manifest `9f4c47d86473ab704a4313e31529ed908a34c2fa8a6cd0376db92556b9c4bb4f`.
+Seven adapter checks and Ruff pass.
+
+**Next controlled neural hypothesis.** The bilinear observation decoder
+restricts intervention-response matrices to the latent width. Replace only
+this decoder with a 64-hidden-unit nonlinear shared observation function,
+using D(basal + intervention_delta, query) - D(basal, query). Action/context/
+transition encoders remain v3 topology, hidden/state 128, physical1156 plus
+response32 queries, uniform rows, seed731, batch64, lr .0005, decay .1,
+dropout .2, 180 epochs/patience30 and 1,800-second GPU cap. Exact data
+55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c and
+features 2cbf12208461358b1c40b8ca5f51b3ebe6c363119f40a0d16ca87833f8e691f7.
+Advancement retains .02 NLL margins, .10 adjusted r and v2 nonregression in
+every source, and adds the independently centered ridge nonregression gate
+above. Profile before execution; this tests a nonlinear measurement map,
+not identified temporal dynamics. HepG2, Jurkat and benchmark outcomes do
+not enter this experiment.
+
+
+**Nonlinear observation decoder completed: reject.** Revision v4 selects
+epoch96 after649.55 seconds of CUDA training. NLL/adjusted r are
+-.544380/.28319 (K562 essential), -.240803/.29142 (RPE1 essential), and
+-.913206/.10268 (K562 GWPS). All required ridge NLL margins fail; RPE1 is
+worse than ridge. Independently centered gene-profile r is
+.289794/.291271/.104618, versus ridge .269269/.315038/.084352. The added
+RPE1 gate fails. Relative to the isolated v3 decoder, K562 improves, RPE1
+regresses, and GWPS is nearly unchanged with slight regression. This run
+does not support observation nonlinearity alone as the missing ingredient.
+Exact empty-action identity and direct nonlinear decoder consistency pass;
+source reload error is5.36e-7. Output root
+`results/slp11-transition/human-gwps-nonlinear-decoder-physical-state128-seed731-v1/`;
+protocol SHA-256 `cf190316810cff60720ad34b67a5d6398911009b0cbf8b5f64067acd164d8fc0`;
+report `afd9a5a1c2f2da7e43549584f41ff57a59f95c63f79fb90231759da790919b99`;
+checkpoint `b3f24b2c87b15310ba2155e32f7fc5a604a4123390415733580710593949be29`.
+
+**Frangieh baseline scoring correction.** The first static-vs-target-basal
+ridge runner mislabeled ordinary within-profile Pearson as independently
+query-centroid-adjusted Pearson: it subtracted row means, but omitted the
+required per-query centroid across genes. Review caught the error before
+using the result to advance a model. Original predictions and report are
+preserved; a separate immutable scoring correction removes the prediction
+and truth query centroids before Pearson. No model is refitted.
+
+Corrected static -> static+target-basal r:
+Co-culture RNA .01458 -> .01468, ADT .03263 -> .03414;
+Control RNA .01583 -> .01594, ADT .07319 -> .07384;
+IFNg RNA .02465 -> .02464, ADT .08244 -> .08294.
+The mean model now correctly has undefined landscape correlation for all43
+genes per stratum. Every MSE gain remains below1%, so the original no-advance
+decision stands, with0/6 passing strata. The high earlier .99 correlations
+were shared abundance profiles, not intervention-specific prediction.
+Original report SHA-256
+`95ba68ff7e54af7496091eaba8da083acf4540933d2817423ca0adc139359cfd`;
+corrected scoring report
+`results/slp11-transition/frangieh-target-basal-ridge-corrected-scoring-v1/report.json`,
+SHA-256 `7b34b443b9969ca197e5cdc808bbf62a825388a31217e1baed66466beef5509a`;
+correction protocol `ae779fd694d776f07ec0a89fe12515e1348d276aae19ff4cf90f772f3dfb292d`.
+Focused checks cover arbitrary shared-query landscape invariance, undefined
+constant predictions and rejecting test genes from a development input.
+
+**Paired-state pilot specified before CUDA allocation.** New self-contained
+`modules/slp-1-1-paired-state-v1/` encodes molecular controls into a common
+state, applies an intervention-feature transition, and decodes RNA and ADT
+through separate nonlinear observation heads. Each head computes the
+observation difference between changed and basal states. RNA queries and
+actions use specieswide static1156 features;20 ADTs use fixed assay-component
+one-hot descriptors. This is a fixed measurement panel, not a learned gene
+vocabulary. No extrapolation to unseen antibody components is claimed.
+
+Hypothesis: this shared endpoint state predicts unseen intervention genes
+better than fitting means and context-local static ridge in each of the
+three Frangieh environments and both modalities. Fixed advancement requires
+at least1% raw-MSE improvement over every mean/base577/physical1156 comparator,
+query-centroid-adjusted gene-profile r >=.10, and no r regression against
+any defined static comparator, in every one of six strata. This is a first
+paired endpoint pilot, not a replacement for the molecular program's existing
+source-transfer requirements or evidence of benefit from joint supervision.
+
+Exact paired development data are4bbb1eec9ede66211f1316b2841bb0037032ef975cd6c92d34aba0adb5fed744.
+The pending specieswide feature pack will be checksum-pinned in protocol.json
+before execution. Train151 genes/validate43 in each of three environments;
+collapse guide pseudobulks equally within gene/context. Hidden64/state32,
+nonlinear decoder32, dropout.2, batch32, seed731, AdamW lr.0005/decay.1,
+gradient norm cap1, at most180 epochs with30-epoch patience and1,200-second
+training cap. Each step samples1,024 RNA queries uniformly and observes all20
+ADTs. Loss averages per-query fitting-SD-scaled MSE equally between modalities;
+SD floor.05. Selection uses the same objective over all validation queries.
+Controls encode128 RNA tokens chosen by control-only across-context variance
+plus all20 ADTs, with equal modality weighting. Fitting-only feature statistics
+and shared query amplitudes accompany the artifact. Six initial module checks
+pass. This model has no calibrated likelihood, temporal dynamics or identified
+single-cell transition. Protected and external test outcomes remain excluded.
+
+
+### 2026-09-05 — First paired molecular model and a fixed species-wide graph
+
+**Static feature extension completed.** New Frangieh/static union includes
+18,893 human ENSG rows with1,156 dimensions. All18,063 RNA queries and237
+action genes have explicit rows;16,189 queries and230 actions have peptides.
+Missing proteins remain explicit. All10,231 old rows preserve their first577
+ESM/GO dimensions bitwise. Neighbor aggregation uses a separate pinned23,879
+translated-gene Ensembl116 universe; it no longer depends on requested query
+rows. This deliberately changes physical features for1,385 old genes.
+Full reconstruction, deterministic serialization and subset invariance pass.
+
+Feature artifact
+`data/derived/slp11-frangieh-static/ensembl116-goa2022-fixed-neighbor-v1/frangieh-extended-static-esm-go-fixed-physical-features.npz`,
+SHA-256 `347fd1bf87d8fc3d0b447676082b4bcb64f021c9f12c7df4d1754dc262b2bf72`;
+manifest `5fc95466a547b76b43f4a7223066c119c37abd3fef69a5bf5460ea3cfe245e9c`;
+verification `25d3e1af2e348cb6fd66200464de3f227285d876559c02b9e88dd330783db7f4`;
+fixed graph base `f4bbfe62b73cf6362170996fcf34200cea68da106d687d3c9e994e709e951f40`.
+Successful build104.5 seconds, including72.7 seconds CUDA for13,800 new genes,
+15,921 entity windows/13,832 unique peptide windows. One earlier73-second
+extraction ended at a downstream wrong GO path; it is retained as failed
+work, and a checksum-verified intermediate cache now prevents repeated
+extraction on downstream retries. Thirteen focused checks pass.
+
+**Paired static baseline completed: no general physical-feature gain.**
+Fitting-only three-gene-fold CV chooses alpha from.1 through1,000,000 plus the
+exact mean limit, separately for base577 and physical1156 in each context/head.
+Only Control ADT passes the fixed1% MSE and r-nonregression rule:1.99% gain.
+Other five strata fail; all194 development genes have explicit feature rows.
+RNA CV often selects the mean limit or very strong shrinkage. Source graph
+coverage alone has not supplied useful general RNA prediction here.
+Report `results/slp11-transition/frangieh-specieswide-physical-ridge-v1/report.json`,
+SHA-256 `af1fdb5c00e0bd9d974fb14b4c3ac33e4776093f994e590880cdb46c2d756af7`;
+protocol `73eb94895863d010966e22d1668df968accf47c1d8c96d2da59e57ecf799d066`;
+predictions `1e342a75e4a1cc67d6d0a6e3c1e4acefb95d7a51fad7a1bf47fcbff978c7abfe`.
+CPU9.80 seconds; eight focused checks pass.
+
+**Guide agreement and estimator diagnostic, fitting genes only.** In
+Co-culture/Control/IFNg, gene-matched independent guide-side RNA landscape
+r is .0455/.0242/.0476, versus shuffled -.0044/-.0008/-.0015. ADT r is
+.1449/.0940/.1099. The deterministic split alternates sorted guide groups;
+150/151/151 fitting genes have at least two groups. Smallest-side cell counts
+below20 correspond to much larger errors; equal weighting of rare groups
+amplifies sampling noise. This is agreement between different guide and cell
+populations, not biological replicate evidence or a biological noise ceiling.
+Report `results/slp11-transition/frangieh-guide-reproducibility-v1/report.json`,
+SHA-256 `d521035114e79304edeebfd5784446ddd26c4d31cda27cdf1dc9fd9a0e6fbafc`;
+protocol `ddfdea8bb2be50104cfb997cf86bc7e28c51004dcf1a13b46044a249596d0730`.
+
+A separately frozen fitting-only diagnostic weights guide means by contributing
+cells within the same guide sides. MSE improves13.44–30.47% in all six strata,
+but IFNg ADT r falls .10993 -> .09875, failing the all-stratum rule (5/6 pass).
+This estimator targets the sampled-cell population; the existing equal-guide
+pilot data and decisions remain unchanged. Report
+`results/slp11-transition/frangieh-guide-cell-weighting-v1/report.json`,
+SHA-256 `8569ab235f25ec4e051db5b9c98c03f827960e2cf0709962c14cf497e570f9a9`;
+protocol `c8ef00f5ba46c125959b60e91856ac244ca5208b7ff7b4acc2b670d6c6b35494`.
+
+**Paired state model completed: reject,0/6 strata pass.** The predeclared
+244,096-parameter model selects epoch10 and stops at40 under fixed patience.
+The successful replay takes11.50 seconds including final checks. An earlier
+run completed the same training but failed during target-free reference
+materialization because a helper still expected a targets key. A focused
+regression check and one-line fix remove that dependency; the deterministic
+replay's checkpoint is byte-identical to the retained first checkpoint.
+Neither architecture, objective, selection nor input data changes in replay.
+
+| Environment | Modality | Model MSE | Landscape r | MSE improvement over physical ridge |
+| --- | --- | ---: | ---: | ---: |
+| Co-culture | RNA | .00212584 | .00552 | -.532% |
+| Co-culture | ADT | .02546486 | -.05537 | -2.265% |
+| Control | RNA | .00226308 | .00350 | -4.423% |
+| Control | ADT | .01767453 | .10501 | -.848% |
+| IFNg | RNA | .00201104 | .01105 | -2.881% |
+| IFNg | ADT | .01900680 | .00720 | .559% |
+
+Only Control ADT reaches r>=.10 and still fails its MSE comparison. Gene-paired
+bootstrap1,000/seed731 intervals for its apparent gains over mean/base include
+zero. RNA losses against comparators have wholly negative improvement
+intervals. The model has learned no adequate unseen-intervention RNA map in
+this small, noisy population. Joint supervision benefit is not established.
+
+Model artifact
+`results/slp11-transition/frangieh-paired-state-physical1156-seed731-v2/`;
+protocol SHA-256 `4b611f9c3194a7383a2c3f2b4b484cab07944e24f507dfb2dead874a41242078`;
+report `9aafc148a693a31a3f40c66a34375e213dab87fb9a200b9a02c1199e115579de`;
+checkpoint `a3b57cea1755f70a144f7590d55a9ac11789633d06c8208a3ad39aee1a66b667`;
+predictions `36ebe74677f7bb75e467bf8f225cc313417590772de356f98470d32a5e26b50b`;
+reference `8b82e4781b73a721f995dd218ef341ea8324b87d3c9189bfe40644d436800e73`.
+Independent scoring report
+`results/slp11-transition/frangieh-paired-state-vs-static-scoring-v1/report.json`,
+SHA-256 `d0c577e093198e9060a582cc5852b0db61246daa5772ae0c1e8451addc584b90`;
+scoring protocol `6bda6a78d4115709c420ea2481cfc53f376871228ab11856294b7414470ecd3e`.
+
+Portable CPU inference reloads source, weights, feature transforms, query
+features and control normalizers from the artifact, accepting raw intervention
+features and explicit control means. Three source-context profiles match CUDA
+forecasts to2.38e-7 RNA/2.98e-8 ADT; query chunk drift1.49e-8; empty-action
+identity exact. Verification SHA-256
+`62bc52645e7ea1adcde545c33bae7d410579b52fee8f48f1b59b48e1a1ab9000`.
+This engineering success does not imply molecular accuracy or OMF release
+eligibility. No final holdout, Jurkat or application benchmark is opened.
+
+**Next source-world experiment frozen.** Increase only fitting-derived response
+query rank32 ->128 in the original v2 physical1156/state128 model, using exact
+frozen v2 source fdb4555bd0f7c0a0786539da67048f6985f4ec2f36ef7aa45bd22c7c6bfbb2ef,
+data55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c,
+features2cbf12208461358b1c40b8ca5f51b3ebe6c363119f40a0d16ca87833f8e691f7.
+Hypothesis: the smaller response descriptor restricts learned query behavior;
+the preceding matched ridge compression results motivate this fixed test.
+Uniform rows, seed731, hidden/state128, batch64, basal64 tokens, lr.0005,
+decay.1, dropout.2,180epochs/patience30/1,800-second cap. The existing all-source
+NLL/.10-r/v2 nonregression rule and separate-centroid ridge gate both apply.
+No feature/source/candidate is selected on HepG2 or Jurkat outcomes.
+
+
+**Response-query rank128 result: reject.** The frozen v2 core selects epoch43
+and completes in359.20 seconds. NLL/adjusted r are -.541842/.284365,
+-.250626/.323769 and -.912958/.103958 in K562 essential/RPE1 essential/K562
+GWPS. Every .02 ridge margin fails; essential-context NLL regresses against
+response32, and GWPS adjusted r regresses. Independently centered r is
+.290726/.310331/.110464; RPE1 still trails full ridge .315038. No all-source
+improvement is established by widening this descriptor.
+Root `results/slp11-transition/human-gwps-control-v2-response128-seed731-v1/`;
+protocol SHA-256 `69ba515fda6148052b99008420738c92ca556a7d845d90aa4d724efe8e835812`;
+report `9da205caef08c9ec317f496b16ab7ea393fa3c4dafee6c2fde038938db12724b`;
+checkpoint `42171a72d9412b8a8fc1f97f7d6a44cf335cfb17a023535c32f2f30c07989985`;
+summary `feae2fc83c0fe38f7a0bd81eead3838e4bc7e9115d73568d257fafbf6e9d1822`.
+Empty-control mean/scale identity remains exact.
+
+Repository verification at this stage:577 tests pass,21 skip,17 historical
+PyTorch warnings,42.07 seconds. Newer graph/adapter additions receive their
+focused checks separately. The paired-pilot figure is available as
+`results/slp11-transition/figures/frangieh-paired-pilot-v2.png` and `.pdf`;
+its intervals use the frozen gene-paired scoring report.
+
+**A third human cell line is admitted to adaptive development.** The completed
+HepG2 frozen diagnostic is permanently retired as confirmation evidence. A new
+four-context snapshot appends its hash-train and hash-validation records to
+the three Replogle source contexts, while excluding390 hash-test populations.
+It is not permissible to claim a future HepG2 result is unseen-context
+confirmation after training or selecting on this snapshot. Jurkat remains
+unopened for future frozen context transfer.
+
+Valid artifact `data/derived/slp11-human-four-context-v2/development.npz`,
+SHA-256 `ffe158aaed370e48d384c2970211bd266ef287630cb5382d56c3f7d6083007cf`;
+15,212 records by7,036 RNA queries,12,477 fitting/2,735 validation/zero test.
+HepG2 contributes1,758 fitting and396 validation records,6,789 observed queries
+and247 missing. Every inherited Replogle prefix retains exact dtype, shape
+and logical bytes, including controls and split indices. Stable intervention
+identities do not cross fitting/validation partitions. Target spaces are
+explicitly context-indexed: Replogle author core-control-z summaries and
+SLp-computed HepG2 per-GEM control-z means are not declared identical assays.
+
+The724 Replogle independent control pseudobulks are unchanged. HepG2 has no
+corresponding independent target-space control pseudobulks in this artifact;
+its4,976 controls/56 GEM normalizer statistics remain separate and are not
+fabricated into compatible uncertainty observations. This dataset is not a
+drop-in replacement for the existing three-context exposure launcher. Future
+training requires an explicit objective and uncertainty policy.
+Protocol `93e7bca5c3a56c1bbc1d1daa88af1756e2d6efeb5731225bda00120218d3ff60`;
+manifest `2a20d4b79e9af899ed7db2a101d39496f042ae9dd0287c3cde0e51abfcfbdebf`;
+verification `930dc1bcf63793e3b72254a17d986780fde4dce0d4de69ab82490202796a709b`.
+The initial v1 write changed inherited scalar label shapes and failed its
+exact-prefix check. It is retained as FAILED_VERIFICATION and superseded by
+v2, never used for training. Four focused checks and Ruff pass.
+
+**Published-architecture comparison: first adapter invalidates BatchNorm use.**
+Scouter author code is pinned at0cfddd000e19b72ff033ba67c8315f7bc3304932,
+reproduction code at6f2c83e5a32505038060155ca8257fa094732e35 (MIT). The baseline
+uses its full-panel control compressor/generator widths, separately fitted
+per source context, replacing GenePT with the same static1156 features and
+using our pseudobulk exposure NLL. This is explicitly an adaptation, not a
+reproduction of published Scouter performance.
+
+The32,420,284-parameter context models select epoch1 and fail badly under the
+author-default BatchNorm configuration. Run31.515 seconds; NLL is
+3.39535/2.51400/24.19367. A fitting-only train/eval diagnostic identifies an
+adapter mismatch: one identical pooled control is repeated throughout each
+context's training batches, so its control-encoder batch variance is exactly
+zero while inference uses running statistics. Same-batch train/eval control
+state RMS differences are3.06/3.37/16.67. All losses remain finite and weights
+are unchanged by the diagnostic. This evidence does not isolate the learning
+rate, scheduler or loss as the cause, and is not evidence against the published
+single-cell method. A separately frozen correction will use the author's
+LayerNorm option, all other numerical settings unchanged.
+BN report `results/slp11-transition/human-gwps-scouter-adapted-physical-separate-context-seed731-v1/report.json`,
+SHA-256 `8cb3b87567e3bb671335b3bff842154335338a752aae6299969588d4f0d6df2f`;
+protocol `5bc8df736f98187b4491bd61cc67fb7fe0f9bcfd40c26f1f1c2cbf80e1248273`;
+BN diagnostic `09f013b90d1dda834cdea5f1606f6127bb1842b2f53e8dc2b677d9665994d48b`.
+
+**Explicit per-gene state pilot prepared.** The new application-neutral core
+encodes measured basal RNA into16-dimensional gene states over a pinned
+24,019-node graph, with83,264 directed normalized physical edges. Gene indices
+locate interventions in supplied data, not trainable identity embeddings.
+The unit action value means intervention presence, not measured100% knockdown.
+Two sparse residual message steps update local state; a separate16-dimensional
+global route permits responses beyond the physical graph. Nonlinear molecular
+observations subtract the same basal-state observation, preserving exact
+empty-intervention identity. This tests a joint architectural change, not an
+isolated causal effect of graph messages, and not temporal dynamics.
+
+Actual-graph GPU profiles select batch64 by the predeclared operational rule:
+6.05 GiB reserved and316.5 examples/s versus batch32 at233.4 examples/s.
+A32-epoch, patience10 pilot at lr.001/AdamW decay.1, state16/hidden64, no dropout,
+uniform-row fixed v2 Gaussian scales is projected around1,148 seconds including
+full validation, within1,800 seconds. No profile uses intervention outcomes.
+The same source55def snapshot, mean/ridge/v2 comparisons and independently
+centered landscape requirements apply. Frozen protocol and execution follow
+focused runtime/reload review; this module has not yet shown biological gains.
+
+
+**Scouter LayerNorm correction completed: stable, still reject.** The author's
+supported LayerNorm option replaces BatchNorm in an isolated v2 adaptation;
+widths, static features, pseudobulk endpoints, Adam lr.001/exponential.9
+scheduler,180-epoch maximum, fixed patience and per-context caps are unchanged.
+Identical fitting batches now have bit-exact train/evaluation states and
+predictions; no BatchNorm buffers remain. This resolves the demonstrated
+constant-control normalization mismatch.
+
+Selected epochs20/9/20 give NLL -.502690/-.216914/-.895828, adjusted r
+.229068/.266278/.083514 and independently centered r .243869/.287205/.085868.
+All ridge-margin and v2 nonregression gates fail. Only GWPS avoids independent-r
+regression against ridge, and it remains below.10. This negative result is
+for the explicitly adapted comparator, not the original GenePT/single-cell
+Scouter experiment. Runtime43.469 seconds,32,420,284 parameters per context;
+20 focused checks and Ruff pass. Source reload error is at most5.25e-6.
+Artifact root
+`results/slp11-transition/human-gwps-scouter-adapted-layernorm-separate-context-seed731-v2/`;
+report SHA-256 `627751d579f7779ada0f5f854583bfeb5527904ff120cff8198334e739679528`;
+protocol `3370ed0919c94842d4f296d7f1ada546b68b792d4325b17518402070b0bb09bb`;
+normalization diagnostic `b647d969f5b21c91275fed396124543fb3f2f8ca4003b029d95d6f7574359f43`;
+verification `53b7cd90f28b330113192c5858968c795a3fe152d3e7d58fad2dd0d9667963a5`.
+
+
+### 2026-09-05 — Explicit gene states and nonlinear baseline results
+
+**Gene-state static577 pilot: reject.** On the pinned source-three human CRISPRi
+snapshot (`55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c`),
+the 24,019-node, two-message-step model completed 20 epochs and selected epoch
+10 under the fixed patience rule. Training took 463.97 seconds on one RTX 4070;
+there are 21,361 parameters. All three contexts fail the fixed advancement rule.
+
+| Context | Gene-macro NLL | Training-centroid adjusted r | Independently centered r |
+| --- | ---: | ---: | ---: |
+| K562 essential | -0.487588 | 0.161257 | 0.160445 |
+| RPE1 essential | -0.138994 | 0.157273 | 0.125992 |
+| K562 GWPS | -0.906424 | 0.095262 | 0.097374 |
+
+The model regresses against the frozen v2 candidate in every context. This
+joint architectural test does not establish that physical message passing is
+harmful: it also replaces the encoder, latent width and decoder, and omits
+v2's response-derived query descriptors. Empty-action identity is exact;
+target-free source reload differs by at most 7.15e-7. Seventeen focused tests
+and Ruff pass. Artifacts are under
+`results/slp11-transition/human-gwps-gene-state-base577-state16-seed731-v1/`.
+Report SHA-256: `1eeff9809849c40fea25b733a167d77498e7a5aa88fb1f2d128f954846dddc5b`;
+protocol: `4c676088aee64cbb5953d790fd74f67a7423042b04be704744d957ca3c577000`;
+model: `a01d0b37af9ba7c9334c390f6010624ea560d01539093d6bd35b24eae52c573b`;
+predictions: `bc312427b8dfe385fdcc4f493b2b49f476fd249f7fe6064e864fa80f910fdb59`.
+
+**Next fixed hypothesis.** Adding the already frozen, fitting-derived 32 RNA
+response descriptors and an availability flag to the same gene-state core
+will pass the existing mean/ridge/v2 advancement checks. The new 610-dimensional
+input preserves all original 577 features, graph edges, identities and maps
+exactly. All 7,036 query nodes have descriptors; 5,740 of 8,358 unique action
+nodes have them. Missing descriptors are zero with a false availability flag.
+This modifies shared node/action/query representations together and is not an
+isolated decoder test or purely static prior. No new response basis was fitted.
+The graph SHA-256 is
+`d0a23e4ee3569fd7ace543278ee576d6ffa098a280e863cc3bf09acde2d6c2d2`;
+its verification is `92532775eec1c7a8fa4ff8eaa913eadcefd25171f9630e786032a0c948a825ca`.
+Keep the same seed, batch 64, 32-epoch maximum, patience 10, optimizer, fixed
+Gaussian scales and 1,800-second cap. No held-out context outcomes enter this run.
+
+**Nyström RBF baseline: mixed gains, reject overall.** A 512-landmark RBF
+feature map uses fitting-only standardization, median-distance bandwidth and
+kernel eigensystem, with context-local output heads. Three global gene-hash
+inner folds repeat all fitting transformations. Alpha is selected from the
+fixed grid plus the exact mean limit; evaluation collapses identical genes
+with equal construct weighting. This is a mean-prediction baseline, without
+new likelihood or uncertainty claims. CPU execution took 30.5 seconds.
+
+| Context | MSE improvement over full physical ridge | Independently centered r, kernel / ridge | Fixed decision |
+| --- | ---: | ---: | --- |
+| K562 essential | 3.895% | 0.268840 / 0.269269 | Fail correlation nonregression |
+| RPE1 essential | 3.784% | 0.315091 / 0.315038 | Pass |
+| K562 GWPS | -0.365% | 0.085910 / 0.084352 | Fail MSE improvement |
+
+The fixed rule requires at least 1% lower MSE and correlation nonregression
+in every context. It fails; the K562 essential correlation difference is
+small and is not presented as established biological inferiority. The lower
+MSE in two contexts nevertheless warrants retaining this stronger comparator.
+Model reload, input hashes and identities verify; four focused tests pass.
+Artifacts: `results/slp11-transition/human-gwps-nystrom-rbf512-physical-seed731-v1/`.
+Report SHA-256: `ceff4ea924df07dd930b980929c9227a6719421673974fbc0c065b3deac1184e`;
+protocol: `2e15d9518c81a83cad94f09e6b298aac2b1f3ef37c11407b5eb65f7019df98e6`;
+predictions: `7446d670a1897287e62bf84f74d0f6bc8383a520d1e7b483f4e66753a0dc6da6`.
+These are adaptive development comparisons, not untouched confirmation.
+
+
+### 2026-09-05 — Four-context point baseline and static BP preparation
+
+The fixed physical-feature ridge reproduces the original three source contexts'
+float32 predictions exactly, while extending fitting to the retired HepG2
+adaptive dataset. No Gaussian model or invented HepG2 sampling-control variance
+is used. All 8,358 intervention genes have the pinned physical features.
+Evaluation averages constructs equally within each gene, separately by context.
+
+Ridge MSE improves over the fitting mean by 13.57%, 15.68%, 3.58% and 10.37%
+in K562 essential, RPE1, K562 GWPS and HepG2, respectively. Independently centered
+correlations are .26927, .31504, .08435 and .23638. Three of four contexts pass
+the fixed 1% MSE improvement and r >= .10 rule; GWPS fails the correlation
+threshold. HepG2 ridge MSE is .05787372 versus mean .06456706, on 361 validation
+genes represented by 396 constructs. Its fitting set has 1,665 genes and 1,758
+constructs. These HepG2 results are adaptive development, not confirmation.
+
+Valid artifact root: `results/slp11-transition/human-four-context-physical-ridge-v2/`.
+Report SHA-256: `b88fc44c76a99318942d783041352d588388a0473e57211fb4d360f833158a72`;
+protocol: `605f2be4ef4afe8dbc905a977e36f05ef41985deea7db5323f6b631d0f26ecf0`;
+predictions: `0c40ed63c336d5fb1795466693c733711150ec6de84d9fc21585f1d38fe57bc0`.
+The v1 report is superseded because float32 residuals made a mathematically
+constant mean comparator appear to have a tiny finite adjusted correlation.
+Predictions are unchanged; v2 correctly reports undefined mean correlations.
+Five focused tests and Ruff pass.
+
+A matched source-three/source-four neural experiment is now specified: frozen
+v2 architecture and response descriptors, identical initialization and 12,000
+optimizer steps, explicit fitting-SD-standardized mean MSE, no early stopping
+or checkpoint selection. The added-HepG2 hypothesis requires at least 2% lower
+HepG2 MSE than both the matched source-three arm and within-HepG2 ridge, with
+centered-correlation nonregression; each original source must avoid MSE and
+centered-correlation regression. A separate all-context baseline rule will be
+reported. The new objective and adaptive HepG2 fitting are explicit changes,
+not a continuation of the previous Gaussian likelihood experiment.
+
+**Archived biological-process descriptors prepared.** The same September 2022
+GOA source yields an additional static BP128 representation and presence flag.
+The vocabulary (8,145 direct terms) and SVD are fitted on 6,866 source-three
+fitting intervention identities, without molecular response values. Coverage
+is 92.19% of fitting interventions, 92.69% of validation interventions and
+91.22% of RNA queries. The retained evidence categories exclude IMP, IGI, IEP,
+HMP, HGI and HEP, negated annotations and post-cutoff dates; this does not imply
+that every retained annotation is experimentally established or causal.
+The existing MF/CC rights record remains unchanged; BP has its own scoped
+rights record. No OMF admission is claimed.
+
+Feature SHA-256: `b29cbd70f08e227cddfc013e66cd1032212c8cb62e6e25162965a57101cd1fac`;
+basis: `cc8b8e16176623778b065c92c3eb22e5b28bdd40d6d84594c379c8bab7ae2d9e`;
+verification: `f5252de88b70849b2860485dbe2f5eaa48163c198e91980986bb90def7ffb7ae`.
+Build took 4.06 seconds on CPU2. Four focused tests and exact repeat/projection
+checks pass. A fixed matched-ridge feature screen is the next small test;
+no neural improvement is claimed from coverage alone.
+
+
+### 2026-09-05 — Response-augmented gene states: reject and shelve this configuration
+
+The fixed static577 + response32 + presence pilot completes 19 epochs and
+selects epoch 9, taking 442.64 seconds on the RTX 4070. The 21,889-parameter
+model improves upon static577 NLL in all contexts, but fails the unchanged
+advancement rule in every context.
+
+| Context | NLL | Training-centroid adjusted r | Independently centered r |
+| --- | ---: | ---: | ---: |
+| K562 essential | -0.509165 | 0.196777 | 0.207706 |
+| RPE1 essential | -0.152152 | 0.174359 | 0.180334 |
+| K562 GWPS | -0.909804 | 0.092267 | 0.112006 |
+
+Response descriptors improve NLL over static577 by .02158, .01316 and .00338
+in the table's context order. Nevertheless, essential-gene performance remains
+substantially below ridge and v2. GWPS independently centered correlation
+improves, while its training-centroid correlation regresses against static577.
+The descriptors are fitting-derived quantitative features, not new static
+biology or evidence of generalization to unmeasured readouts.
+
+After checkpoint selection and terminal scoring, a separate diagnostic uses
+only the first 128 fitting rows per context. Disabling the global route causes
+prediction RMS changes .03949/.03672/.01557 in table order; disabling the local
+route causes .00737/.00687/.00488. Both route removals worsen fitting NLL, with
+larger changes for the global route. This establishes reliance within this
+particular trained model, not causal biological pathways or held-gene benefits.
+The audit did not select a checkpoint or use validation ablations.
+
+Decision: retain the implementation and evidence, but shelve this 16-dimensional
+physical-graph configuration. Its compute cost and current accuracy do not
+justify further width/learning-rate sweeps. Continue the matched data-context
+experiment and the separately frozen functional-feature screen instead.
+Empty-action identity is exact; reload drift is at most 1.79e-7; 21 focused
+checks and Ruff pass. CUDA is released.
+
+Artifact root: `results/slp11-transition/human-gwps-gene-state-response32-state16-seed731-v1/`.
+Report SHA-256: `5ded419bca65c9dff6b88d0c4c65897b8d18d4431c1278d7027236295f14cf7a`;
+protocol: `8ee6ed850fd4fa9c9bc271394422efbcaa9dd81cfbb76778c769530aa7921e22`.
+Route audit: `results/slp11-transition/human-gwps-gene-state-response32-state16-route-audit-v1/report.json`,
+SHA-256 `74a8d58bab6b30a092454d1993b0076ad9b66748dabf5792f56e10f13f320769`.
+
+
+### 2026-09-05 — Functional features improve two contexts but do not advance globally
+
+The fixed BP128-plus-presence screen compares matched context-local ridge
+models with physical1156 versus physical1285 inputs. Both choose alpha 10,000
+in all three contexts through the fixed inner-fold procedure. The BP basis is
+frozen and response-free; ridge statistics and targets are fitted within each
+fold. Fitting collapses constructs equally per gene, explaining the small
+differences between the matched physical arm and the historical row-fit ridge.
+
+| Context | BP ridge MSE | MSE gain over matched physical | Centered r, BP / matched physical |
+| --- | ---: | ---: | ---: |
+| K562 essential | .02422074 | 1.488% | .280553 / .269423 |
+| RPE1 essential | .05308906 | 1.532% | .324208 / .314099 |
+| K562 GWPS | .01186866 | .314% | .086451 / .084916 |
+
+Both essential contexts pass. GWPS fails the 1% improvement and r >= .10
+requirements, so the overall decision is reject. Runtime 74 seconds on CPU2;
+six focused tests and reload of all six models pass (maximum drift 1.42e-6).
+Valid root: `results/slp11-transition/human-gwps-bp-ridge-source3-seed731-v2/`.
+Report SHA-256: `8a3d1ba2265dc09bf6856c97c7a791775ef3282594beed269f708f353d895a0a`;
+protocol: `14235464544f229cef047002732c3f2957fb9e95c439ca775eab3d3e688118e2`;
+predictions: `f88efe29faccddbe93a7af1c3e95210b615d9235a3f9ad7d6f9de8530fec498f`.
+The v1 attempt stopped at a comparator-schema assertion before numerical fitting.
+
+A separately frozen test asks whether BP information complements the nonlinear
+Nyström baseline. With the same 512-landmark design and fitting procedure, the
+BP-augmented kernel selects alpha 1 in all contexts. It improves MSE by 1.169%
+and 1.305% over the original kernel in K562 essential and RPE1, with centered r
+improving to .279086 and .325863. Both are approximately 5% lower MSE than the
+historical physical ridge. In GWPS the kernel MSE improves by only .484% and
+centered r regresses to .077974. The fixed all-context rule therefore rejects
+this candidate too; it does not authorize default replacement or a launch claim.
+
+Runtime 31.64 seconds on CPU2; seven focused tests pass. New-model reload drift
+is at most 3.37e-5. The only change to the shared original kernel helper is its
+feature-width guard; frozen 1156-dimensional predictions remain within 1e-4.
+Root: `results/slp11-transition/human-gwps-bp-nystrom-rbf512-seed731-v1/`.
+Report SHA-256: `d8259c864460a21f9a13718b2190aad926ca58dc01409c0fab1220a6fbbd276c`;
+protocol: `254355c38170b002ef00a112460bc5c2e6858cdae5c6b7be29655e3571f9a337`;
+predictions: `1434a0c572728142dc91ac7b1ffb06ddd994badc1f040ef0a1b66f055f7e7725`.
+
+The source frontier figure (`results/slp11-transition/figures/source-frontier-v1.png`
+and PDF/JSON) reads pinned reports and plots MSE and independently centered
+correlation relative to the same ridge baseline. It has been visually checked.
+It displays point estimates, not uncertainty intervals. These adaptive results
+show complementary strengths; none establishes consistent superiority.
+
+
+### 2026-09-05 — Fixed-step context expansion and shared-context kernel results
+
+The matched source3/source4 mean-objective pair completes exactly 12,000 updates
+per arm from the same initialization. Frozen response descriptors, controls,
+query panel, amplitude, architecture and optimizer are shared. Each arm selects
+only its final checkpoint; validation is evaluated once after fitting. No
+uncertainty head is exposed by the mean-only inference runtime.
+
+| Context | Source3 MSE / centered r | Source4 MSE / centered r |
+| --- | ---: | ---: |
+| K562 essential | .02386436 / .291109 | .02389269 / .289411 |
+| RPE1 essential | .05506963 / .285697 | .05437685 / .307313 |
+| K562 GWPS | .01191498 / .099702 | .01191242 / .096951 |
+| HepG2 adaptive | .06345705 / .183870 | .05703625 / .246547 |
+
+Adding HepG2 fitting outcomes improves HepG2 MSE by 10.12% relative to the
+matched source3 model. Its improvement over within-HepG2 ridge is 1.447%, below
+the fixed 2% requirement. K562 essential regresses slightly in both metrics;
+GWPS correlation regresses. RPE1 improves in both metrics. The adaptive rule
+fails, and only K562 essential passes the separate standalone baseline rule.
+This is a single-seed adaptive comparison; small regressions are not declared
+statistically established biological harms. Fixed-update matching also changes
+how optimization exposure is distributed among contexts when one is added.
+
+Both arms finish in about 156 seconds including scoring and checksum-validated
+fresh-process CPU replay. Replay drift is below 6e-7 and empty identity is exact.
+The experiment's prepared v1 is superseded before fitting by v2, which requires
+finite comparator correlations and actual nonempty reload parity. A final
+stdout-only NumPy Boolean serialization error occurred after both complete
+reports were written. All files and reports verify; no retraining was needed.
+The current launcher echo path is corrected; frozen run sources are retained.
+
+Pair report: `results/slp11-transition/human-source3-vs-four-context-mean-objective-seed731-v2/report.json`,
+SHA-256 `34978aac3f366deccd927c3bda11cda1c4e1107ea388ed432d848cf71b02e010`;
+protocol `9f2858397c8589d0c3149b968adddfb6e9deae1204622d2938057705bfdfb580`;
+frozen reference `54cac4bc2e2ee02a6d78f812d5646cf3988154d5ae4f371265b24751f03c99b1`.
+
+A seed-stability extension fixes seeds 732 and 733 for both arms and the
+arithmetic mean of all three seeds before either new fit. The original rules
+remain unchanged. Every seed and context will be reported; no member selection
+is allowed. Extension protocol SHA-256:
+`e63f50b8ca7c17bbc6893141ba5eede121c8fb30ad3d1e36184f9e80cf0b877a`.
+No Jurkat, SL benchmark or protected holdout outcomes enter these experiments.
+
+**Joint context-conditioned kernel: reject.** A separate baseline forms an RBF
+basis from all 6,789 measured basal control queries and takes its tensor product
+with 512 action-kernel coordinates. Gene-hash inner folds exclude each held
+gene across every context. Ridge fits weighted raw outcomes; CV selection uses
+context-local fitting-query SD. The same original physical features are used.
+The final action basis has 511 retained directions and one inert padded column;
+no eigenvalue threshold was relaxed. The shared alpha is 10.
+
+MSE / independently centered r are .02465781/.275109 (K562 essential),
+.05442182/.303515 (RPE1), and .01203163/.076039 (GWPS). MSE regresses against both
+context-local kernel and physical ridge in every context, so this shared kernel
+is not adopted. Runtime 54.42 seconds on CPU2; seven focused tests pass and
+reload drift is at most 6.10e-5. The context-input runtime is an engineering
+capability, not observed transfer evidence.
+
+Report: `results/slp11-transition/human-gwps-joint-context-rbf512-physical-seed731-v2/report.json`,
+SHA-256 `7ac0dd56c72596f6ec8278347e4a7236581beaf56599388ea0f4818f5f544d80`;
+protocol `1210024ba4940e1028604bcfe5d8bc8770171c71d8862b50d99115a64b39de65`;
+model `544a96e28a461037ae888dc6336e4703b7ba447eb50fccdca76b6e26a0519dbc`;
+predictions `0fc2f5223dee0a510f2de90f140cb08ad9b3f519e50d6cee6de62737d9fe963d`.
+
+### 2026-09-05 — Context expansion across seeds and direct cell-state data
+
+The fixed 731–733 seed extension completes all four new 12,000-step CUDA fits.
+Every individual seed fails both the adaptive and standalone rules. The
+predetermined equal-weight three-seed ensembles give:
+
+| Context | Source3 MSE / centered r | Source4 MSE / centered r |
+| --- | ---: | ---: |
+| K562 essential | .02355840 / .300433 | .02366163 / .297001 |
+| RPE1 essential | .05331830 / .309303 | .05421131 / .309230 |
+| K562 GWPS | .01180782 / .099836 | .01180041 / .101938 |
+| HepG2 adaptive | .06322901 / .190077 | .05663613 / .256510 |
+
+HepG2 passes its specific gate: source4 improves MSE by 10.427% over source3
+and 2.138% over within-context ridge. K562 essential and RPE1 regress against
+the matched source3 ensemble, so the adaptive rule still fails. Only K562
+essential and HepG2 pass the standalone rule; GWPS gains .924% over ridge,
+below 2%, while RPE1 is .671% worse. BP-kernel remains better in K562/RPE1
+MSE, and in RPE1 centered correlation. No world-model winner is declared.
+
+All four new fresh-process CPU replay checks agree within 7.2e-7 and preserve
+exact empty-intervention identity. Ten focused checks and Ruff pass.
+Ensemble report SHA-256 `5e3ad61e3a639f9ded5cad0e65ce41184eafa0ffbddbe6bd6e99ceb6bac5d850`;
+predictions `4ca976498710d3a1678c8b4384fd3f1822da693a7b02e6830ba3cf5e5db902b7`;
+directory `results/slp11-transition/human-source3-vs-four-context-mean-objective-ensemble731-733-v1/`.
+The previously recorded protocol and advancement rules remain unchanged.
+
+A subsequent descriptive paired bootstrap resamples intervention genes 2,000
+times, seed 731, conditional on the frozen ensemble predictions. It reports
+95% percentile intervals for improvement in equal-gene mean observed-query MSE:
+
+| Context | Source4 versus source3, % [interval] | Source4 versus ridge, % [interval] |
+| --- | ---: | ---: |
+| K562 essential | -.438 [-1.424, .474] | 3.779 [1.254, 6.474] |
+| RPE1 essential | -1.675 [-3.363, -.228] | -.671 [-3.102, 1.705] |
+| K562 GWPS | .063 [-.214, .376] | .924 [.044, 1.843] |
+| HepG2 adaptive | 10.427 [7.745, 13.257] | 2.138 [.715, 3.503] |
+
+These intervals support a clear HepG2 improvement and RPE1 regression for this
+adaptive population. They do not include training-seed, source, biological
+replicate or adaptive-selection uncertainty, and are not corrected for multiple
+comparisons. They do not change the fixed decision. Report SHA-256
+`e1b4fc2df27bdcac2f88f9656d5ed40572f46060b2f57fbdf694e6c9b72a143e`,
+`results/slp11-transition/human-context-ensemble-uncertainty-v1/report.json`.
+The exact scoring source is retained beside the report; two mask/pairing tests pass.
+
+**Direct paired-cell representation experiment: preparation complete.**
+The Frangieh training/control adapter produces 51 shards with 103,862 paired
+cells: 64,515 fitting intervention cells and 39,347 verified controls. It
+excludes all 19,606 original validation cells before quantitative access;
+original test cells were already outside the access allowlist. RNA comprises
+18,063 stable queries and 320,301,640 sparse nonzero values. Protein contains
+20 matched-isotype-normalized molecular channels. The deterministic barcode
+reconstruction split has 93,397 training and 10,465 validation cells, drawn only
+from original fitting/control populations. Three fitting guide means and all
+three context control means reconstruct the earlier pseudobulk endpoint within
+4.77e-7 RNA / 1.19e-7 protein. Total preparation takes 310 seconds on CPU.
+Ten adapter checks pass. Manifest SHA-256
+`e791b5cf35da96fa71951a4a240ed58b53e278d3c57e44066680abd3f386a9c7`,
+`data/derived/slp11-frangieh/paired-singlecell-train-control-v1/manifest.json`.
+
+The new `slp-1-1-cell-state-v1` core pools molecular values through supplied
+static query features into a shared cell state. It uses no learned gene-ID
+embedding. Its observation map is affine in state, so population averaging
+commutes with molecular decoding. The nonlinear encoder must be applied to
+individual cells before averaging. Five core checks pass, including missing
+values, query permutations/chunking, exact zero-change control identity,
+affine averaging and gradient propagation. Biological training is the next
+experiment; these algebraic checks establish no reconstruction, forecasting,
+temporal or combination capability. The planned latent ridge forecast is a
+test of a learned output representation, not evidence of nonlinear intervention
+dynamics. Original held-gene cells do not train the representation.
+
+**Species-native yeast RNA addition.** Pinned CC BY 4.0 author molecular
+summaries `FC_genotype.Rdata` and `ptb_summary.Rdata` are acquired from Zenodo
+14062629. Their SHA-256 values are
+`c210fe541b0b91bc6eead28aa2265065afceec763ade1abd682c58896299a240` and
+`01c2d54ac838179be29694ed300cb17edac47dd4db23a4018407546e0651b165`.
+A bounded two-pass R-object parser completes in 201.6 seconds at about .57 GiB
+after general conversion exceeds the 6 GiB cap and is stopped. No author
+fitness, SL, third-party comparison, or large raw R object is acquired.
+
+The development adapter contains 3,419 records, 1,732 deletion actions and
+6,340 externally mapped stable SGD queries, taxon 4932. Its control/NaCl
+contexts contain 1,708/1,711 records; 1,687 actions occur in both. There are
+2,789 fitting and 630 validation records, no test records and no overlapping
+intervention genes. Its mask retains 19,411,942 observed targets and one
+all-missing query. No absent value is treated as a measured zero. The source
+exports `names`/`logfoldchanges`; the upstream DE call and precise transform
+are unavailable, so the endpoint is explicitly
+`author-logfoldchanges-unknown-upstream-transform`. There is no raw basal WT
+state, SE, or control replicate to infer. This supports a source-specific
+exploratory test, not calibrated cross-source molecular units.
+
+Dataset SHA-256 `42f754425637bdf0413dbac6c36206737b5e402e04ba9732aa329cf2f1e702d5`;
+verification `9e209e1e43405654ffeea4f363073c5a6690943e65ba1278ac26f3bbd77c704e`;
+directory `data/derived/slp11-yeast-atlas-response/nadal-ribelles-control-nacl-development-v1/`.
+Three focused parser/mask/partition tests pass. No yeast response is relabeled
+as a human outcome, and no Jurkat or SL benchmark outcomes enter these steps.
+
+Primary-methods clarification: the yeast paper describes mutant-versus-WT
+Wilcoxon tests separately within control/stress and calls the effect log2 fold
+change. The remaining uncertainty is the exact computational transform of the
+archived numerical column, not the absence of a documented intended comparison.
+The adapter's conservative value-space tag is retained.
+
+The frozen Frangieh RNA query-feature reference contains 16,206 distinct rows
+among 18,063 queries. There are ten duplicate groups containing 1,867 rows;
+the largest contains all 1,849 completely zero raw static feature rows. Frozen
+normalization maps these to the same nonzero vector. Of 1,874 queries lacking
+protein features, 25 have other GO/physical information. A feature-generated
+decoder cannot distinguish the remaining 1,849 queries in standardized units.
+The first cell-state run retains this fixed panel; a separate static transcript
+sequence extension is being prepared to test this representation limitation.
+
+### 2026-09-05 — First direct paired-cell model and transcript feature repair
+
+The first 802,050-parameter paired-cell state completes 20 epochs in 385.86
+seconds of training, 415.78 seconds including forecast/scoring/reload. The
+selected reconstruction checkpoint is epoch 20. Protocol SHA-256
+`4540978da15d50881a1613a00ad013ebdb48e880a285ed8175ba0ed0818059d2`
+fixes seed 731, batch 256, key/state/hidden dimensions 64/128/256, dropout .1,
+AdamW .0005 with decay .01, 20% input denoising and equally weighted modality
+MSE after fitting-cell standardization. There are 406 actual shard-aware updates
+per epoch. Selection uses only the 10,465 within-fitting-gene validation cells.
+
+Denoised reconstruction standardized MSE is .726345 RNA versus .752021 for the
+training-mean predictor, a 3.414% gain that fails the fixed 5% RNA requirement.
+Protein MSE is .132581 versus .995999, an 86.689% gain. Raw-unit gains are
+9.03% RNA and 88.77% protein; these descriptive raw gains do not replace the
+standardized advancement criterion.
+
+After checkpoint freezing, equal-cell guide states are averaged equally by
+gene/context. Fixed alpha-10000 latent ridge predicts changes from the same
+1156D static action features as earlier baselines. The affine decoder anchors
+these changes at measured context control means. No original validation gene
+cells enter encoder or ridge fitting.
+
+| Environment | RNA MSE / centered r | Protein MSE / centered r |
+| --- | ---: | ---: |
+| Co-culture | .00211750 / -.0020 | .0243601 / .12022 |
+| Control | .00218360 / .02705 | .0174668 / .05667 |
+| IFN gamma | .00196246 / .05279 | .0188979 / .09800 |
+
+Only co-culture protein passes all fixed forecast requirements: MSE improves
+2.713% over mean/base577, 2.172% over physical1156 and 4.338% over the prior
+paired world, with centered r .12022. The remaining five strata fail. The
+joint advancement rule therefore fails. This single adaptive development
+result supports a specific protein-readout improvement, not a general world
+model, new-context transfer or SL claim.
+
+Trained CUDA states and nonempty predictions agree with fresh-process CPU
+inference within 1.07e-6, with exact empty-intervention control identity.
+Report SHA-256 `cada9a66568dda2340a95dd0bbd6b96bcc7af2ac76bf98f9b8f4e1d681bc182f`;
+model `4e26a21287bf268df70b83dbc160e3eeb652ccd98491931bc06b008319a5c8bd`;
+reference `4433edeffcf02f977fbabffd421a9ed7ee262f1c5924213a9be67c995ee8a6e4`;
+predictions `a5cc6724ad55c5d3f2ad709be36a5fcbcb77e7255d7f79af29145556e2a24b96`;
+directory `results/slp11-transition/frangieh-cell-state-ae-latent-ridge-seed731-v1/`.
+
+A separate no-refit full-input reconstruction check gives RNA standardized
+MSE .725915, a 3.471% improvement; protein .028339, a 97.155% improvement.
+Thus selection-time denoising does not explain the weak RNA reconstruction.
+Full-input diagnostic SHA-256
+`e8e9b4c07ef1f5b59f75bf24518b28e71aa9b86ba4758c125e7f8a6e65608ec2`,
+`results/slp11-transition/frangieh-cell-state-full-input-reconstruction-diagnostic-v1/report.json`.
+
+**Transcript descriptor repair, static extraction complete.** Ensembl release
+116 cDNA and ncRNA FASTAs pass source SHA-256 and BSD checksum verification.
+The representative transcript is the longest per stable ENSG gene, with a
+deterministic transcript-ID tie break. Features retain strand-specific 4-mer
+frequencies, log length, ambiguous-base fraction and presence (259 dimensions).
+No molecular outcome, gene symbol or textual description enters extraction.
+The source-specific rights declaration covers only these transcript exports.
+
+The pack has 85,410 species-native rows, including 85,308 present sequences
+and 102 explicit missing union rows. It covers 17,961/18,063 Frangieh RNA
+queries and all 237 metadata-listed intervention genes. Concatenation with the
+frozen query features increases distinct rows from 16,206 to 17,986 and reduces
+the largest unsupported equivalence group from 1,849 to 78. This establishes
+representational coverage, not predictive benefit. Extraction takes 47.56
+seconds on CPU; deterministic reserialization and six focused checks pass.
+
+Pack SHA-256 `af165a97a0169dd7419e86ebdbc5fc3855dc7b868c7f774b817720d8cf3631d3`;
+manifest `0ffa6d367cb5ebc2ef6915573d2a61b562725c1af674c48c9fd62340cbb9d057`;
+directory `data/derived/slp11-human-transcript-sequence/ensembl116-kmer4-v1/`.
+A matched query-feature-only cell-state comparison is now being prepared.
+It leaves intervention features, protein features and outcome populations fixed.
+
+**Yeast summary baseline: reject for joint training.** The CPU2 comparison
+finishes in 200.27 seconds. Linear and rank-256 Nyström baselines select alpha
+100,000 through three fitting-gene folds in both environments. Each environment
+retains all 315 validation genes, including 20 with missing static features;
+presence flags preserve that missingness without dropping rows.
+
+| Environment | Mean MSE | Linear MSE / centered r | Nyström MSE / centered r |
+| --- | ---: | ---: | ---: |
+| Control | 70.53850 | 70.41511 / .023640 | 70.52219 / .011023 |
+| NaCl | 68.15231 | 67.90530 / .027459 | 68.13220 / .014071 |
+
+Every fixed Nyström advancement check fails. Ordinary profile correlation
+near .643 is dominated by the shared response shape; it is not evidence of
+perturbation-specific prediction. A subsequent fitting-only inspection finds
+20.004%/18.560% of control/NaCl values have absolute magnitude above 20; the
+fraction above 10 is essentially identical. Log cell count versus mean absolute
+response has r=-.94824/-.94057. This strong dependence motivates checking raw
+counts and the upstream estimator before any joint model uses these summaries.
+No magnitude clipping or outcome-based row removal is used to improve a score.
+
+The scoring-corrected v2 preserves v1 fits and predictions, fixes undefined
+correlation for constant mean predictions and adds descriptive support strata.
+Report SHA-256 `b51664cd056ea824277afc665d4a3209a3dce73d4fe2f62d87befaac906b4511`;
+fit protocol `15729183c2f37dd5accb2a03a10d7d17dd493bc5427ed1776aa79378336dcfe7`;
+scoring protocol `1bbd2767580f58d708a4c855a1ed0733b096f1552becf32d9ecdc6b6454dc00b`;
+predictions `6700587531c4a1be4158d869ab44dd165238d812dd366c887e54ef827db3a03f`;
+directory `results/slp11-transition/yeast-nadal-static-baselines-seed731-v2/`.
+Target-free reload is exact, six focused tests pass and Ruff is clean.
+
+### 2026-09-05 — Paired-cell PCA separates reconstruction from forecasting
+
+A rank-128 PCA baseline fits the same 93,397 reconstruction-training cells,
+with means and SDs bit-identical to the AE's frozen normalizer. RNA/protein
+standardized coordinates receive weights 1/sqrt(2Q) per head. Seed-731
+160-dimensional Gaussian subspace iteration uses three streaming covariance
+passes and a final Rayleigh eigendecomposition, all float64 on CPU2. No dense
+full-cell matrix is materialized. This is a fixed-assay baseline with learned
+query loadings; it is not a query-feature world architecture.
+
+The protocol is frozen before PCA and stats fitting; latent ridge and PCA are
+both frozen before held-gene forecasting. The same 151 fitting genes/context,
+1,399 exact guides, equal-guide aggregation, physical1156 action normalization,
+fixed alpha10000 and measured controls are used as for the AE.
+
+PCA full-input reconstruction-validation RNA standardized MSE is .704776,
+a 6.282% gain over the training mean; raw MSE .0659574 gives a 14.42% gain.
+Protein standardized MSE is approximately 1.06e-6 because a rank-128 basis can
+retain virtually all variance of the 20-dimensional protein assay. This is
+compression performance on supplied measurements, not protein forecasting.
+
+| Environment | PCA forecast RNA MSE / centered r | PCA forecast protein MSE / centered r |
+| --- | ---: | ---: |
+| Co-culture | .00210968 / .006285 | .0243049 / .124067 |
+| Control | .00216791 / .008310 | .0175257 / .056566 |
+| IFN gamma | .00195337 / .037948 | .0189023 / .092214 |
+
+Only co-culture protein passes the fixed six-stratum comparison, with gains
+2.93% over mean/base577, 2.39% over physical1156 and 4.56% over the earlier
+paired model. The joint rule fails. PCA improves MSE over the cell AE in four
+of six strata by .23–.72%, while centered correlations are mixed. This rejects
+the inference that better cell reconstruction by itself provides useful
+intervention transfer. No model or rule is selected from this comparison.
+
+Runtime 149.86 seconds on CPU2; target-free reload is exact; five focused
+checks and Ruff pass. Report SHA-256
+`e9afd49a315946b68a0862903eb67615d9291080a86c8613f82378110c8cff4f`;
+protocol `b3ba1796d118a959a1c22291d7b62c0f914d4f33752f7b98a2de93344bbfba63`;
+PCA/ridge payload `5070bdb09f9949132d4d610f6ba379d1e96537cd162554897916a8d83c2b2e26`;
+predictions `bd81085f55b33050fe8670bf2f2cb062d32de9134c4b0100eabd6f1f452638c0`;
+directory `results/slp11-transition/frangieh-paired-pca128-latent-ridge-seed731-v1/`.
+Frozen AE comparison supplement SHA-256
+`8c42fc5ec8287043ff796efba8abd56eba7efb74e9a27114e674fd0651aac522`.
+
+The yeast endpoint diagnostic is retained at
+`data/derived/slp11-yeast-atlas-response/nadal-ribelles-fc-endpoint-diagnostic-v1/report.json`,
+SHA-256 `298b7eb3f7c48d5ad91a405e54d2c286a75a248a8fae8be19134413616016a45`.
+Approximately 94–95% of extreme fold changes are negative. Their frequency
+and magnitude are strongly related to cell count, consistent with a numerical
+zero/pseudocount floor, although the missing estimator prevents proving this
+mechanism. Two checks pass. A 2 MiB bounded HTTP prefix confirms the author's
+separate-control/stress archive is gzip-compressed RDX3/XDR with S4 assay/count
+slots. A reference-safe bounded parser and download-throughput profile are
+being prepared; the full count archive has not yet been acquired.
+
+### 2026-09-05 — Stop the paired-cell descriptor and residual-transition branch
+
+The matched transcript-query comparison completes in 382.61 seconds total.
+It appends the 259 static transcript features only to RNA queries; action
+features remain physical1156 and protein queries remain the same 20 channels.
+Transcript normalization fits the 151 fitting intervention genes only; constant
+columns use unit scale and clipping is 10, matching the earlier reference
+convention. All shared initial parameters match the primary model, with new
+query-input columns initialized to zero. Initial forward drift is 7.15e-7.
+
+RNA reconstruction standardized MSE .724703 improves 3.633% over the fitting
+mean, still below 5%; protein .130894 improves 86.858%. Held-gene RNA MSE gains
+over the primary cell model are only approximately .13%, .23% and .22% across
+the three environments. Protein changes are small and mixed. Only co-culture
+protein passes the original forecasting gate, so the overall rule fails.
+The coverage repair is retained as a static resource, but there is no evidence
+to advance this neural cell-state configuration on that basis.
+
+Completed run v3 supersedes two prefit preparations. V1 omitted an explicit
+primary-cell-model descriptive comparator. V2 stopped because the copied helper
+resolved the repository root incorrectly, before shard matrix access or fitting.
+V3 uses a checksum-matched helper with explicit path semantics. Frozen earlier
+artifacts remain unchanged. Fresh CPU replay agrees within 7.15e-7 and empty
+identity is exact. Ten focused checks and Ruff pass.
+
+Report SHA-256 `1c8eacd25cbce223a01c0a91a887f2b3570fb6c444f44fc64eacf3c707a368ef`;
+protocol `4ac9526fc3520b790a20da34c6d01253364e3a49799e8ace7f685f5766a2d17e`;
+model `49a8a52c3caaa2405912e4f76cb416637a04a3e54790fc2b35f55aa057eb7792`;
+reference `f4bd533bdd875b787773d521a4383626ce5df0df7409f958ecb683a32ec49519`;
+predictions `dd496b731075b7dba430fc2b7a09d5904740197e2846b1651283179d25f11c87`;
+directory `results/slp11-transition/frangieh-cell-state-transcript-query-ae-latent-ridge-seed731-v3/`.
+
+A second controlled test freezes PCA128 and latent ridge, adding only a
+181,248-parameter nonlinear action/state residual. The residual consumes raw
+supplied control PCA state and normalized physical1156 action features, with
+128 hidden units, LayerNorm/GELU/dropout .2 and a zero output layer. It starts
+at exact PCA-baseline predictions and forces empty-intervention delta to zero.
+The module has no gene or context-ID embedding. Fixed 1,000 updates use equal
+context sampling, batch 32, AdamW .0005/decay .1 and gradient clipping at 1.
+The decoded mean objective balances RNA/protein after fitting-gene query-SD
+scaling with floor .05. The final checkpoint alone is scored.
+
+This residual worsens MSE relative to PCA in every stratum: co-culture RNA/
+protein by 5.62%/21.31%, control 5.87%/27.01%, IFN gamma 7.24%/17.75%.
+All centered correlations are below .10. The fixed six-stratum rule fails.
+Training takes 8.63 seconds, 23.34 seconds total. Fresh CPU replay is within
+4.77e-7 and exact empty identity is preserved; three core checks and Ruff pass.
+This rejects the specified residual transition, not nonlinear intervention
+modeling in general. Further tuning of this small paired-cell branch is stopped.
+
+Residual report SHA-256
+`b28fbb989cb23ec49abc42978edb51967de4d9387c345ffb5e3593dd8415fc3b`;
+protocol `f63052c2adbc36c6c229d043b7e805746edeb41ab60a6bfb45cbe4f0ce56d5d1`;
+directory `results/slp11-transition/frangieh-pca128-residual-transition-seed731-v1/`.
+
+A no-refit support diagnostic applies max(prediction,0) to every original
+mean/static/paired/cell-state comparator because both processed Frangieh
+measurement spaces are nonnegative. Gene IDs and target arrays align exactly;
+the score checks the mathematical non-increase in squared error for each
+method. Cell-state RNA negative fractions are 2.98%, 5.47% and 2.23%, mostly
+very close to zero. The largest absolute MSE reduction is 6.27e-8 in control;
+all six advancement decisions remain unchanged. This population-forecast
+projection is not evidence of a valid nonlinear single-cell observation map.
+Report SHA-256 `c62ddaa5778591f3c2a480b669eed506668ea7bd2c9caa91efa047bc996f61f8`,
+`results/slp11-transition/frangieh-nonnegative-support-diagnostic-v1/report.json`.
+
+The full repository suite now passes: 677 passed, 21 skipped, 17 historical
+Transformer warnings in 39.62 seconds. Later source additions require their
+own focused checks. No Jurkat, SL benchmark or protected test outcomes enter
+these experiments.
+
+### 2026-09-05 — Matched BP neural test fails; raw yeast counts acquired
+
+Hypothesis: adding direct biological-process annotations to intervention
+features improves the fixed human mean-objective transition beyond its matched
+masked-feature control and BP ridge. Both arms use physical1156 plus BP128
+and one presence channel, with the added columns zero in the control. Shared
+initial parameters match; new action-input weights start at zero. BP statistics
+fit 6,866 source3 intervention genes only (6,330 annotated). Query features,
+controls, sampling and the mean objective remain fixed. Dataset SHA-256 is
+`55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c`;
+BP pack `b29cbd70f08e227cddfc013e66cd1032212c8cb62e6e25162965a57101cd1fac`.
+Each arm trains 12,000 updates with seed 731, batch 64, AdamW .0005/decay .1,
+gradient clip 1, and final-checkpoint-only scoring. CUDA fitting takes
+125.44 seconds for control and 126.97 seconds for BP.
+
+The fixed rule requires at least 2% MSE improvement over both masked control
+and BP ridge in every context, centered correlation at least .10, and no
+correlation regression against those comparators. BP results are:
+
+| Human context | MSE | Independently query-centered r | MSE gain over matched control |
+| --- | ---: | ---: | ---: |
+| K562 essential | .023547257 | .304404 | 1.327% |
+| RPE1 essential | .054595677 | .298346 | .897% |
+| K562 genome-wide | .011865771 | .099592 | .409% |
+
+All contexts fail. RPE1 is 2.84% worse than BP ridge; the BP kernel also
+has lower MSE in both essential-gene contexts. This configuration is shelved.
+The original finalizer incorrectly assumed four contexts. Both trained
+checkpoints were already frozen; a superseding finalization package corrected
+the target-free probe to two rows per source context before validation access.
+There was no refit or decision-rule change. Fresh CPU replay agrees within
+5.52e-7, with exact empty identity in all three contexts. Three focused checks
+and Ruff pass. Report SHA-256
+`5d7c14fff561f02e1a46c353c54fefda5aec8c778edaacea4c5bca5849441060`;
+finalization protocol `ba2953a64417402eb1f22e6d9ec5d7ba4150ca4e4efa493946c4ec781a9ff85d`;
+directory `results/slp11-transition/human-source3-bp-neural-mean-pair-seed731-v2-finalization-v1/`.
+
+The full author-provided separate-environment yeast Seurat archive is acquired:
+`data/sources/nadal-ribelles-2025-yeast-seus-split-v1/full-acquisition-v1/seus_split.RData`,
+5,907,877,873 bytes, published MD5 `65bb56efd8120f32f65c044de5f040aa`,
+SHA-256 `da99869c11d1a6c034454568098aa50bc3313cd4508dbd506d43241b0fb4695d`.
+Four bounded connections completed network acquisition in 1,346.20 seconds;
+allocation, acquisition and hashing took 1,472.80 seconds. Independent streamed
+checksums, contiguous range coverage and atomic final publication were verified.
+The separate CC-BY-4.0 rights scope covers this archive. This is source
+acquisition, not a trained or admitted count model.
+
+Bounded structural parsing takes 113.30 seconds and discovers raw RNA/counts
+matrices of 6,951 queries by 326,438 control-environment cells (181,083,366
+nonzeros) and 384,514 salt-stress cells (205,135,811 nonzeros). These environment
+labels do not identify wild-type cells. Both ordered query rosters match.
+The parser skips quantitative values during inventory; normalized RNA/data
+and SCT assays are not eligible raw-count substitutes. Metadata replay and
+stable-ID interpretation precede the count adapter. Inventory SHA-256
+`c51fdbd303a9cce3253efa4a6ce78631bdb8f5097bac4c68def4d3c72a38808d`.
+The earlier fold-change archive remains excluded from joint training because
+its extreme endpoint values are strongly tied to cell count.
+
+A separate shared human/yeast static GO basis repairs incompatible coordinates
+in the former species-specific SVD packs. It uses direct molecular-function and
+cellular-component annotations from the pinned 2022-09-19 GOA sources, excludes
+NOT and perturbation-derived evidence, and fits 256 components with seed 731
+and seven iterations. Species rows are weighted by inverse square-root species
+population during fitting; output is unweighted binary annotation times the
+shared basis. No quantitative outcomes are used. The pack has 30,862 taxon-keyed
+rows: 6,983 SGD genes and 23,879 translated Ensembl genes, with eligible
+annotation coverage 6,968 and 21,093 respectively. Identical annotation rows
+across species give bit-exact vectors, while biological identities stay separate.
+This establishes compatible static coordinates, not transfer performance.
+Repeat serialization is byte-identical; two focused checks pass. Features
+SHA-256 `fb673cf6053bb7bfe88c6b454cedb662646f7256f094abf9a6df1d2865f873f6`;
+basis `718764f4ebb6ab9ac31dba65d7d6453525e04a98b999aa7dcfeb4c3a1ab62abd`;
+directory `data/derived/slp11-shared-human-yeast-go/goa-2022-09-19-mf-cc-svd256-v1/`.
+
+### 2026-09-05 — Count endpoint core and output-subspace diagnostic
+
+The self-contained `modules/slp-1-1-count-moments-v1/` implements bounded
+equal-cell log1p(CP10k) moments from raw integer counts. The caller fixes a
+biological denominator mask, stable-query mapping and metadata populations.
+Duplicate source rows resolving to one query are summed before normalization;
+unmapped biological rows can remain denominator-only. Observed zero expression
+is retained, while zero-library cells are explicitly excluded and counted.
+Float64 sums and squared sums yield population means and unbiased cell
+variances, with explicit missing support for empty or single-cell populations.
+These variances are cellular dispersion, not independent-replicate uncertainty.
+Seven focused checks and Ruff pass. Source SHA-256
+`53344c00ad4a8615c796a2f41371efc46823eb59e82925e67ff2178d72d004c3`.
+No source counts have yet entered this core; metadata eligibility and the actual
+denominator remain to be frozen after source inspection.
+
+A fitting-row diagnostic measures the actual human decoder subspace. Its
+query encoder followed by linear mean projection restricts centered responses
+to a shared rank at most 128. The BP neural model's subspace captures 31.91%,
+31.22% and 18.62% of standardized fitting-gene landscape variance in K562
+essential, RPE1 and K562 genome-wide respectively. Separate per-context rank128
+PCA projections capture approximately 55.74%, 55.60% and 31.63%. The latter are
+descriptive per-context ceilings, not one feasible shared decoder, and include
+variation that may not be predictable from intervention features. This result
+therefore motivates an alignment test; it does not prove the cause of held-gene
+failure. BP and masked-control subspaces differ by less than .1 percentage point.
+The adaptive-development NPZ is materialized, but only fitting rows enter
+centering, projection or SVD. Diagnostic report SHA-256
+`7692261501d6fcc986e13dfa7016f6ae241370a6d51b51458d31b321a664ae52`,
+`results/slp11-transition/response-query-fitting-subspace-audit-v1.json`.
+A pooled shared-basis comparison is the next discriminating check.
+
+### 2026-09-05 — Shared response basis helps RPE1, fails the all-context rule
+
+A feasible shared rank128 basis is fit to 9,973 gene/context molecular-delta
+profiles from source3 fitting interventions only. Deltas are divided by the
+same frozen per-query amplitude, and each context is weighted by the inverse
+square root of its fitting-gene population. The SVD is uncentered to retain
+mean responses; no context-specific basis or new centroid is added. Shared
+query coordinates are components.T times sqrt(128), supplied as data. Basis
+SHA-256 `a31bb27db40d542dfb541daccebe056415080b457803ec7eb222c303add0b1ee`;
+protocol `df89a6f733775f6ff550bcfdc6d9addcb2f7e2823d326b71f7634b416f17f0bf`;
+representation report `817c74653a248cd350fc659ab495072ada1b3efe43db5f3c2ad2879d0c532d25`.
+Centered standardized fitting-landscape capture rises from 31.91/31.22/18.62%
+to 44.58/51.00/20.63% in K562 essential/RPE1/genome-wide. This is a
+representation diagnostic, not an intervention prediction result.
+
+The new self-contained fixed-query transition removes the 168,960-parameter
+query encoder while retaining the action/context encoders, transition and
+trainable mean projection: 416,000 parameters total. Root review catches a
+prefit initializer error in v1: directly constructing a 1,285-feature model
+does not reproduce the matched BP initializer, which extends a 1,156-feature
+model with 129 zero columns. V1 remains unfitted. Corrected v2 copies every
+shared tensor from the actual pinned extension helper and verifies equality.
+The frozen basis is the only intended numerical representation change.
+
+The fixed diagnostic rule requires at least 1% MSE improvement over matched
+learned-query BP and no centered-correlation regression in every context.
+The stronger ridge/kernel frontier remains a separate advancement comparison.
+Training uses the same 12,000 updates, seed 731, batch 64, equal-context/equal-gene
+weights, AdamW .0005/decay .1, clip 1 and final-checkpoint-only scoring.
+
+| Context | Fixed-basis MSE | Centered r | MSE gain vs learned-query BP | Diagnostic |
+| --- | ---: | ---: | ---: | --- |
+| K562 essential | .023277084 | .301695 | 1.147% | fails correlation nonregression |
+| RPE1 essential | .052092519 | .324392 | 4.585% | passes |
+| K562 genome-wide | .011862750 | .100150 | .025% | fails MSE threshold |
+
+All-context decision: fail. K562 and genome-wide MSE are lower than the BP
+kernel's, while RPE1 remains worse. Against BP ridge, K562 improves 3.90%,
+RPE1 1.88%, genome-wide .05%; only K562 passes the 2% MSE/.10 correlation
+advancement checks. Output alignment therefore contributes to RPE1 error but
+does not resolve generalization across contexts. The residual limitation could
+include action-to-coefficient prediction, regularization or unpredictable
+measurement variation; this experiment does not distinguish them.
+
+Fit time is 120.156 seconds; total 131.39 seconds. Actual trained-GPU probes
+replay in a fresh CPU process from source/model/reference alone within 8.35e-7,
+with exact empty identity. Seven focused checks and Ruff pass. Report SHA-256
+`456ad9480652cf32f7e7be4bf1e3cffa753c76e67eb5082ef88dcf2057bb1ad8`;
+protocol `d7d56c4e94d09dbb6e7210ed73de6ddc018209f1c01ecf6b45bfe11460ab728d`;
+model `d073e4d66bb498dbbc2048f656b90da069318ff8a736860c03436e37a58cc693`;
+predictions `919f9ef7a00b897bde76cf1972f75ab8115a00c6bf52228d67e0cb254e8247f3`;
+directory `results/slp11-transition/human-source3-bp-fixed-response-basis-seed731-v2/`.
+
+### 2026-09-05 — Freeze yeast count measurement and eligible populations
+
+The complete Seurat metadata replay preserves serialized NA separately from
+empty strings. The source-author WT rule is exact assignment_consensus2='WT',
+with kogene agreement. There are 500 WT cells in the control environment and
+458 in NaCl, spanning all 14 and 15 respective source batches. Batch B05 has
+only two WT cells in each environment and NaCl B16 has three. Immediate
+batch-WT subtraction is therefore not adopted: absolute normalized RNA moments
+are retained, allowing later explicit treatment of control uncertainty.
+Metadata report SHA-256
+`1e2308fdb0182b34a7c0eacf361516c32298ac3581d4a858bafab940cd220946`.
+
+The source-row audit identifies 6,683 exact current SGD mappings and 268
+alias/dash candidates among 6,951 biological RNA rows. All 6,951 remain in the
+per-cell denominator. Initial output queries use only the 6,683 exact mappings,
+sorted by stable SGD ID; candidate mappings remain explicit denominator-only
+rows. No artificial barcode row is present in the roster, consistent with
+author processing documentation; native URA3 is retained. Audit report SHA-256
+`b62ffdf7cebe4fbcfc760a379a8407705ecef21c42e6a5a363b07a7cc5434364`;
+mapping `8e40587551a329b94e73989fe284240116645986e00cbd05fc2f1bd52bc01643`;
+denominator roster `4dca4a469a1fea9703ad5282a17cdf0a25dfe3d2bf23a622d139eb75a98c8c80`.
+
+Mutant actions require the bc- assignment prefix and an exact current SGD
+mapping of kogene. Source assignment suffix variants are preserved, not treated
+as separate genes. Global protected roles and development test actions are
+excluded before selected quantitative count decoding. Selection retains
+188,135 control-environment cells (155,520 fitting, 32,115 validation, 500 WT)
+and 221,913 NaCl cells (183,556 fitting, 37,899 validation, 458 WT). Across
+environments the selected action union has 2,013 genes. Control excludes
+37,120 development-test, 92,474 protected-role and 8,709 exact-map-failure cells;
+NaCl excludes 42,766, 109,766 and 10,069 respectively. Selection report SHA-256
+`da1946b114b3462acf37b708aa8f1aa87f69de4063a32e67d3b858077c786e2b`.
+
+Frozen measurement: per-cell ln1p(10000*count/sum_all_6951_RNA_rows), with
+explicit zero-library exclusion and no minimum-cell or expression threshold.
+Absolute sum/squared-sum moments are grouped by environment, batch and stable
+genotype; WT is separate, clone is retained as source metadata. The intended
+population counts before zero-library checks are 23,125 mutant gene/batch
+groups in control and 24,344 in NaCl. Selected count extraction is in progress;
+these are metadata counts, not a completed numerical corpus claim.
+
+A self-contained streaming batch-ridge baseline is prepared in
+`modules/slp-1-1-batch-ridge-v1/`. It fits a shared feature effect with unpenalized
+fitting-derived source-batch intercepts; those intercepts are nuisance effects,
+not WT states or predictions of unseen contexts. Its source SHA-256 is
+`5d897f45ca1318ffe1d447cbafbb1732d0e428efa5f6a7b3dcfe4c32841c18c8`.
+Three focused checks reproduce independent augmented weighted least squares,
+verify constant-batch-shift invariance and reject invalid/unseen-batch inputs;
+Ruff passes. No biological fit has yet used this module.
+
+### 2026-09-05 — Yeast count corpus and complete intervention sequence features
+
+Selected raw extraction completes in 280.72 seconds: control has 104,609,403
+nonzeros and NaCl 118,410,604, all finite positive integer entries. All selected
+410,048 cells have positive libraries. The source and selected-file hashes are
+recorded in the extraction manifest SHA-256
+`18c4b3e2f6cdfd33ce663f11a83cc2cdae65e3cad9ec56e9575cfd2783d9f148`.
+
+Moment aggregation completes in 47.20 seconds, writing 29 shards totaling
+5,095,669,986 bytes: 47,498 populations, comprising 38,978 fitting, 8,491
+validation and 29 WT groups, with 6,683 queries. Shards contain float64
+sums/squared sums, counts, support and source/stable identities. No batch
+correction or WT subtraction is applied. Independent WT means, variances and
+counts match bit-exactly. Nineteen focused checks and Ruff pass. Manifest
+SHA-256 `70a49ecaeb271fc72ecc93ede207c59a816e74d1ae3133bbf3a2803cce5d8eba`;
+protocol `601964f10c4649b95f56cd11ddec9af8b95646aa008aa6cc5f6ef440ca0a42c9`;
+receipt `df3f49a6f37bc8220ff881cb5c50760e6874964c830fff591f29fc7a68b536a2`;
+directory `data/derived/slp11-yeast-atlas-counts/nadal-ribelles-raw-rna-development-v1/`.
+
+The independent WT-only diagnostic reads no mutant count columns. Median WT
+library sizes are 891.5 and 980.5 counts. Weighted between-batch expression-mean
+dispersion is .0127905 in control and .0134510 in NaCl. An independent-cell
+sampling calculation attributes .0093786 and .0100330 to finite-cell sampling,
+leaving signed excess .0034119 and .0034180. Thus batch estimates contain both
+appreciable sampling noise and residual heterogeneity. This is descriptive:
+cell independence ignores clone dependence, and batches are not established
+biological replicates. No normalization or selection rule changes. Diagnostic
+protocol SHA-256 `f9586500ece6561d02848e281b98c1ed738b57cbe2a5945c5a2a82f3fe6a7a46`;
+WT reference `190dc64dd9ee8809f56f82b690265827376c72b36286e46e04b8aebee64fa1b5`;
+directory `results/slp11-transition/yeast-wildtype-batch-diagnostic-v1/`.
+One independent sampling-formula check and Ruff pass.
+
+The shared static feature resource now covers every eligible yeast action.
+The frozen original ESM-2 t6-8M recipe processes 1,395 missing vectors from
+1,354 unique pinned peptides and 1,466 deduplicated windows, taking 14.83 seconds
+of inference. Full-protein overlap-corrected pooling retains proteins up to
+3,744 residues without truncation. A prior 72-entity profile takes 10.3 seconds
+including model load; eight recomputed old vectors agree within 1.43e-6 maximum
+absolute error. All 7,037 existing vectors remain bit-exact in the extension.
+
+The superseding 6,744-row static577 pack combines ESM320, presence and the
+shared MF/CC GO256 coordinates. All 2,013 actions have protein embeddings;
+1,887 have shared GO support. Of 6,683 strict RNA queries, 6,410 have protein
+embeddings and 5,987 have GO support; 273 non-ORF queries retain explicit missing
+protein features. Twelve checks, Ruff, compilation and independent reload pass.
+Extended ESM SHA-256 `dbcfbef8bb4b4c091ab43cacbc9da6700a91b6334896d209390703b9911a854f`;
+static577 `81cda9469380c9efa000a40b2cd5e816a1d397ce777288fa53b0bcf26a55dc25`;
+manifest `1eb86148cdec3a09a86b56fba3e915eddf610398265346410623afec455ce893`;
+directory `data/derived/slp11-yeast-shared-static/current-sgd-strict-query-full-raw-actions-esm8m-complete-shared-go-v2/`.
+
+### 2026-09-05 — Rebuilt yeast RNA: reproducibility and batch-ridge results
+
+The fitting-only split-half diagnostic deterministically alternates barcode-hash
+rank within each genotype/batch stratum with at least two cells. It includes
+335,542 fitting/control cells from 34,515 strata; 4,492 singleton cells are
+excluded from this diagnostic, and all 70,014 development-validation cells are
+excluded before count reads. The underlying development corpus is unchanged.
+Control A/B raw profile correlation is .9036 but independently query-centered
+correlation is .0728; NaCl is .9213 and .1064. Centered A/B MSE is .053474
+and .047722. The same 1,457 genes across environments have centered correlation
+.0948. WT half-profile correlations are .9918/.9925. Shared batch, clone and
+library structure means these measurements are not biological noise ceilings.
+Runtime is 22.06 seconds; eleven checks and Ruff pass. Protocol SHA-256
+`5c7ab40a72494178ca9cb535a60714ff02de2d1b8bf585790bc6c743af28c4fb`;
+report `e8ed9915a92b861a1dd7bce5fb7c9f4a43edf69e512e3d7a74bd42867f77eab3`;
+directory `results/slp11-transition/yeast-rna-fitting-split-half-v1/`.
+
+A metadata-count-stratified supplement reuses the frozen fitting statistics.
+For genes with at least 100 included cells, Control has 613 genes, centered
+A/B correlation .0902 and MSE .009465; NaCl has 727 genes, .1307 and .008143.
+For the same 590 genes with at least 100 cells in both environments, the
+correlations are .0897/.1385 and cross-environment .1132. Sparse sampling
+substantially increases MSE, but modest perturbation-specific reproducibility
+persists in well-supported genes. No cohort or decision rule changes.
+Supplement SHA-256 `82739f209b9983f8153048be6d2e872bd385e71c5eb173b18d738ecc098b7937`.
+
+The batch-aware linear baseline uses context-separate fitting, three exact
+gene-hash inner folds, unique-fitting-gene feature normalization and the fixed
+ridge grid .1 through 1e6 plus the mean limit. Each gene has total weight one;
+its batch populations receive weights proportional to their cell counts.
+Pooled and batch-intercept arms use identical observations, features and
+weights. Controls are not fitted as perturbations. Every final model is frozen
+before development validation; all 346 validation genes per environment remain
+in evaluation. The fixed diagnostic rule requires 2% MSE improvement over
+pooled ridge and both mean limits, with batch-mean-subtracted centered
+correlation at least .10 and no regression versus pooled ridge in each
+environment. Batch means are fitting-derived nuisance effects, not WT states.
+
+| Environment | Pooled ridge MSE | Batch ridge MSE | Batch mean MSE | Batch ridge residual centered r |
+| --- | ---: | ---: | ---: | ---: |
+| Control | .021932717 | .021551289 | .021552728 | .012045 |
+| NaCl | .020496197 | .020231360 | .020232298 | .010976 |
+
+Both arms select alpha 1e6 in both environments. The batch arm improves raw
+MSE 1.74%/1.29% over pooled ridge but only .0067%/.0046% over batch means.
+Raw independently query-centered correlations near .092/.099 mostly reflect
+batch composition; after the same batch reference is removed from both
+prediction and truth, they fall to approximately .01. Both fixed gates fail.
+The extra nuisance parameters provide little evidence of intervention-specific
+prediction. This is a point-baseline result, not a world-model or causal claim.
+
+Runtime is 77.22 seconds, peak RSS 641,736,704 bytes. The runner streams one
+moment shard at a time into sufficient statistics; it never stacks all
+population targets in memory. Root review rejected an earlier unexecuted
+full-stack implementation. Fresh artifact-only CPU prediction replay is exact.
+Eight focused checks and Ruff pass. Protocol-v2 SHA-256
+`2669369cca209616bb891f206ff3670854c9fabb5d041c00d4e1fcc4654fc53e`;
+original report `e15c9b14dc37b4eae01ef1e5bc847860a2d39273c76c930cb12030e622488824`;
+directory `results/slp11-transition/yeast-raw-count-batch-ridge-v1/`.
+
+Root subsequently corrects a remaining constant-profile rounding artifact:
+query centering first subtracts a reference gene row, avoiding accumulated
+common-profile reduction residue. Frozen predictions and all MSEs are
+bit-identical; every nonconstant correlation agrees within 1e-12 and every
+decision is unchanged. Constant pooled means now have undefined perturbation
+correlation. A 346-row common-profile regression check catches the former
+error; nine focused checks pass. Superseding scoring-only report SHA-256
+`291b8b34d9b03b0bedb6a40723cbab07b6fd2c094dbffdb5a5a644141454c128`,
+`results/slp11-transition/yeast-raw-count-batch-ridge-roundoff-scoring-v1/report.json`.
+
+### 2026-09-05 — Action-aligned basal-state input gap
+
+Code inspection confirms that the current transition's action encoder receives
+only static features. Its basal encoder averages 64 context-global query tokens;
+there is no join between the intervention gene and that gene's measured
+control abundance. Only 53 of 8,358 human source3 action genes happen to be
+among those 64 tokens. Control-only sidecars now expose the missing quantity
+without inventing zeros for unmeasured genes: 5,558 human actions are observed
+on the fixed 6,789-gene control panel in all three source contexts; 1,956 of
+2,013 yeast actions have exact WT abundance across the 29 batches, with 57
+explicitly unobserved. Human values use log2 fixed-panel CP10k; yeast values use
+the frozen all-6,951-row ln1p(CP10k) normalization. Units are not conflated.
+
+Audit report SHA-256
+`d8c205e34f2952d15f22f2256dab2f3ef19c7c589d44e930fcff021e8ebd8f4e`;
+human sidecar `57957e763d9f284ae6770dca8c114c2805ccd439a4032bcaf3e6ba23fdf39de3`;
+yeast sidecar `bb5e90e3c2491ab06abef44cdb235aab09756280dfe16451dbd9d250e526ad57`.
+Three focused checks and Ruff pass. A matched human ridge test will compare
+normalized measured abundance against a zero scalar with the same presence
+flag in both arms. No perturbed outcomes enter the sidecar construction.
+
+### 2026-09-05 — Corrected-count yeast neural pilot and three diagnostic decisions
+
+The first neural pilot on the rebuilt yeast RNA endpoint completes exactly
+12,000 updates in 131.81 seconds on the RTX 4070. It uses the frozen minimal
+control-transition core, shared static577 actions and queries, 64 measured WT
+basal tokens, and per-batch WT anchors. Fitting comprises 38,978 populations;
+all 346 development-validation genes in each environment are scored once.
+The fixed advancement rule requires 2% MSE improvement against pooled ridge,
+batch ridge and both mean limits, with batch-reference-subtracted centered
+correlation at least .10 and no regression against defined baselines.
+
+| Environment | Neural MSE | Batch ridge MSE | Neural residual centered r |
+| --- | ---: | ---: | ---: |
+| Control | .022444462 | .021551289 | -.002914 |
+| NaCl | .021143029 | .020231360 | -.005856 |
+
+Every gate fails. Neural MSE is 4.14%/4.51% worse than batch ridge; this candidate
+is rejected. Negative predictions comprise 5.57%/3.46% of entries and remain
+unclipped. Gaussian aggregate means are not a validated cell generator.
+Fresh artifact-only CPU replay differs by at most 7.15e-7; empty intervention
+means are bit-exact. A final stdout serializer fails on numpy.bool_ after all
+scientific artifacts are saved; its workspace fix does not rerun training or
+validation. Five focused checks pass. Report SHA-256
+`fb67323bcf6d3e405cbe8cb7ef0f60086e2b4a9cfbdf5e08194eb88f0270a8e7`;
+model `88fd54046458663035ca5b4f05c483d4a0d1a13f99b29e7aa6f10fe43714324d`;
+directory `results/slp11-transition/yeast-rna-world-transition-seed731-v1/`.
+
+The matched human BP ridge basal-abundance experiment also fails all three
+fixed 1% MSE gates. Control-to-basal MSE is .02422137 to .02421284 in K562,
+.05309320 to .05308351 in RPE1, and .01186840 to .01186696 in genome-wide K562:
+gains of .0352%, .0183% and .0122%. Centered correlations do not regress;
+all selected alphas are 10,000. Explicit presence flags appear in both arms,
+and no unobserved actions are dropped. The missing aligned scalar is therefore
+not a substantial explanation for this ridge formulation's error. Runtime
+288.5 seconds; fresh artifact replay is exact; three focused checks pass.
+Protocol SHA-256 `350c09f9cb6196b50b300ac712b6131334c305f7f5b6641747371bb1e0a0db26`;
+report `95d1f42727e75e5f384bf50da5304fe06bb6db3f9def59611c216b36e7932dc2`;
+directory `results/slp11-transition/human-source3-bp-action-basal-ridge-seed731-v1/`.
+
+A fitting-only yeast representation diagnostic fits rank-32 bases on two of
+three gene folds and measures A/B reproducibility on the third. Positive
+cross-covariance eigenvectors are compared with PCA on the fitting half-average.
+Mean Control correlations are .0728 raw, .4314 PCA and .4346 cross-covariance;
+NaCl is .1064, .5529 and .5564. The cross-covariance gains .0032/.0035 fail the
+fixed +.02 rule in both environments. Projected A/B MSE falls 10.2%/11.0%,
+but held shared-energy trace capture is lower than PCA. All six bases retain
+32 positive eigenvalues. These are representation diagnostics, not intervention
+forecasts; shared batch and clone effects remain. Runtime 13.47 seconds;
+two focused checks pass. Protocol SHA-256
+`741a653d715805c78e308a661cafbe047991aa5940bfea619d25e722b25309b9`;
+report `4aebdcb26bcaa14026a3a44fbed83b6e49160580406715314167f1948b52d6c7`;
+directory `results/slp11-transition/yeast-rna-fitting-crosscov-basis-rank32-v1/`.
+
+The resulting next test asks whether a fitting-derived rank-32 response basis
+improves prediction of the original full RNA measurements for unseen genes.
+It retains full-panel MSE and batch-residual correlation as primary metrics;
+better reconstruction alone cannot advance a candidate. A separate frozen
+checkpoint audit will distinguish fitting error from generalization error.
+
+### 2026-09-05 — Compatible human static pack and integrated verification
+
+A human static577 pack now shares the exact ESM320, explicit protein presence,
+and MF/CC GO256 coordinate system of the yeast pack. Its 24,031 taxon-9606
+stable ENSG rows cover the 23,879 translated Ensembl-116 universe and the full
+10,213-gene source identifier union. This broad static roster is distinct from
+the 7,036-query numerical source3 panel. Protein features cover 10,061 source
+genes and GO features 9,926; missing features remain explicit. Overlapping
+protein vectors and the original GO vectors are bit-identical. Extra genes
+are projected through the existing GO basis without refitting. No molecular
+outcomes enter this pack, and compatible coordinates alone establish no
+cross-species transfer result. Six focused checks pass. Features SHA-256
+`20313e37d70d52253fa7b4b9b569b0fd504686a35be46b0607db1ab1c7484e54`;
+manifest `857e34d73c45f94ef078cc1e2e271f91ec223d51e217f87d5411869457b3fe3c`;
+directory `data/derived/slp11-human-shared-static/ensembl116-source3-esm8m-shared-go-complete-v2/`.
+
+The integrated test suite passes: 745 passed, 21 skipped, 17 historical
+Transformer warnings in 41.30 seconds. No release or SOTA claim follows from
+these engineering checks or adaptive development experiments.
+
+The response-basis diagnostic receives a no-refit scoring supplement. Its
+original protocol subtracts separate fitting-fold query means; this supplement
+also removes each held fold's own separate A/B centroid before applying the
+saved bases. Control raw/PCA/cross-covariance correlations become
+.07248/.41972/.42093; NaCl .10599/.54371/.54569. Thus the substantial projection
+reproducibility persists, while cross-covariance gains only .00121/.00198 over
+PCA and still fails the original +.02 rule. No basis, forecast or data selection
+changes. One translation-invariance/constant-profile check and Ruff pass.
+Supplement SHA-256 `32a5f3a85ce8f0c3809187f4d3f53a3552e7d7b798965633f6d8b27875557ae0`;
+directory `results/slp11-transition/yeast-rna-basis-held-centering-supplement-v1/`.
+
+### 2026-09-05 — Denoised forecasting fails; human exposure and cell-state work
+
+The rank-32 yeast static-ridge forecast test retains all 346 validation genes
+per environment and reconstructs the original 6,683-query measurements.
+Fold-local PCA and positive cross-covariance bases use fitting split halves;
+batch-intercept ridge uses the existing population weights and gene folds.
+Both arms select alpha 100,000 in both environments. Control PCA/cross-covariance
+MSE is .021546857/.021547388, only .0206%/.0181% better than batch ridge;
+NaCl is .020230665/.020230590, gains .0034%/.0038%. Residual centered
+correlations are .01702/.01613 and .01186/.01171. Every fixed 1% MSE and .10
+correlation gate fails. Lower projected discrepancy does not improve full-panel
+forecasting materially; this branch is stopped. Runtime 91.94 seconds, peak
+RSS 714,797,056 bytes; artifact replay and 14 focused/baseline checks pass.
+Frozen protocol SHA-256 `8a9776c8db21284798f0def3ee71a17e33ee7f8e6355b5aaed88a13b96335fd74`;
+report `2b6e040d8c78dccb03feba54837246cf4fd97de566d4d558ccf601b1e1acc8ff`;
+directory `results/slp11-transition/yeast-response-basis-static-ridge-rank32-v1/`.
+
+A metadata-frozen 256-fitting-gene sample per context checks saved neural
+checkpoints against their initializers and baseline fits. Every parameter
+group changes. Human fixed-basis/learned-query fitting MSE is
+.01843/.01894 in K562 essential, .03600/.03710 in RPE1, and .01067/.01063
+in GWPS; each beats ridge on the same sample. Correct independently centered
+correlations are .441/.433 versus ridge .475, .584/.570 versus .486, and
+.151/.170 versus .264. Thus broad fitting-MSE underperformance does not explain
+human failures. Yeast fitting objectives and MSE remain worse than mean/ridge.
+These fitting samples do not identify a causal source of generalization error.
+Root review finds and corrects a centering bug in audit-v2; audit-v3 supersedes
+its correlations, leaving MSE, objective and parameter movement unchanged.
+Five focused checks pass. Corrected report SHA-256
+`97edded6d5ed4e08e1c6e4d16710e498a5b9484fefc17b5e416e675adf9e65c0`,
+`results/slp11-transition/fitting-convergence-audit-v3/report.json`.
+
+A human endpoint diagnostic accesses only 10,719 fitting rows. Spearman
+correlation of log(1+filtered cells) with centered response norm is
+-.4370/-.6605/-.8804 in K562 essential/RPE1/GWPS; on-target reduction versus
+cell count is .0277/.0452/-.0058. On-target reduction versus response norm is
+.1790/.0894/.1343, with exact observed action-query matches in
+1,326/1,519/5,048 rows. Count-dependent dispersion could reflect sampling,
+biology or selection; anticorrelation alone does not prove noise. No quality
+exclusion follows. Measured efficacy is a post-intervention outcome and is
+not an inference input. Bulk P1/P2 population labels are not stable guide IDs.
+Report SHA-256 `4d659204f71b401e48695ecd3b8eb861bf3a1817abb0e53fa1e690e7772af945`;
+protocol `243c74d7369ff74e29d850a1de2f054ea512bdd3815feae502514a5fbe1e9844`;
+three checks pass, runtime 4.37 seconds.
+
+Earlier models already used biological-plus-sampling/exposure variance in
+Gaussian training. The next test applies those existing fitting/control-only
+components to the later fixed-response-basis mean model, changing only its
+loss precision. Precision is .8244632170073302 /
+max(tau^2 + sigma^2 / n, .05^2), with one global fitting-derived scalar matching
+the old weighted mean precision 51.3179990071. It is never renormalized per
+minibatch. All 3 by 7,036 sampling components are marked control-identifiable;
+counts remain absent from the mean/state. Component resource SHA-256
+`d9acd063939535d819cdd70e1fcb9d26c38bf7ac04455958cdf3fc34bdb3425f`;
+preparation report `358791078273166cc2877fe848686905336a74bcc42de120292b0f545b8c2a56`;
+four focused checks pass. This is a prepared experiment, not a positive result.
+
+K562 essential raw single-cell acquisition starts from official Figshare
+file 35773219, version-1 release, under exact-file CC BY 4.0 rights. The source
+is 10,661,879,995 bytes. A four-range profile transfers 256 MiB in 5.890 seconds;
+projected remaining transfer plus hashing is 408 seconds within the 3,500-second
+cap. The file is not yet declared complete here. No second large transfer starts.
+
+In parallel, `modules/slp-1-1-count-latent-state-v1/` introduces an untrained
+conditional Gaussian-state/NB2-observation prototype. A variational cell
+encoder trains from integer counts; the prior receives only static actions
+and measured controls. An analytic lognormal moment correction makes the
+empty-action population mean equal the supplied control rate. Library exposure
+enters observation likelihood and posterior inference, never the prior.
+Six numerical checks pass, including an independent NB distribution oracle,
+Gaussian-integrated means, masking, gradients and query/action invariance.
+This prototype has no biological performance or portable release evidence;
+raw-cell normalization and the training protocol remain to be fixed.
+
+### 2026-09-05 — Exposure result and verified human single-cell source
+
+The fixed-basis exposure-weighted neural experiment completes all 12,000
+updates in 125.91 seconds and fails its all-context advancement rule. K562
+essential MSE is .02324116 (gain .154%), RPE1 .05153812 (gain 1.064%), and
+GWPS .01188233 (regression .165%) against the frozen fixed-basis mean model.
+Centered correlations improve to .30991/.33379/.10572, respectively. Only
+RPE1 passes the fixed 1% MSE/nonregressing-correlation rule. This changes
+optimization usefully for response shape but is not a general mean-forecast
+advance. Fresh artifact-only CPU replay differs by at most 5.36e-7; empty
+means and repeat means are exact. Eight focused checks pass. Report SHA-256
+`d79f010b8ca1cece4ec3c8b3395e843564818da36f1945c38863417dadc1f16d`;
+receipt `f517bb2edbc66401de6464bb79b38749b9ab1185a6178ff40359bf76f790750d`;
+directory `results/slp11-transition/human-source3-bp-fixed-response-basis-exposure-objective-seed731-v2/`.
+
+The 10,661,879,995-byte K562 essential raw single-cell H5AD finishes downloading
+and passes upstream MD5 `4f1122ce1c7f13299a68df6459a266d3` and local SHA-256
+`3e5a63a9e892b21029bb55fca4e12517a49aad7af6c14133ca63d12cf68c6cee`.
+Total acquisition time is 530.59 seconds including Windows preallocation,
+transfer and whole-file hashes. It contains 310,385 cells, 8,563 unique ENSG
+queries, 2,057 action genes, 2,273 exact guide-pair/population combinations,
+48 GEM groups and 10,691 verified NT cells. Metadata routes 209,013 fitting
+cells over 1,443 genes, 47,914 development-validation cells over 305 genes,
+and 42,767 excluded test cells over 309 genes. A deterministic cell hash
+within fitting genes/controls gives 197,804 reconstruction-training cells and
+21,900 reconstruction-held cells. Guide pairs and GEM groups are preserved;
+they are not asserted to be independent biological replicates.
+
+Source path `data/sources/replogle-2022-k562-essential-singlecell-v1/K562_essential_raw_singlecell_01.h5ad`;
+acquisition receipt SHA-256 `8f6d01ef1b47a848a7a97b57b91c1061336deeb528aedc182ef7e6a0f725b807`;
+metadata audit `8b4eba21fe17f0082960bac9c66daf11ce9e3e9d1e3f1706ef30dba6c7d61270`;
+routing sidecar `47c89c5082c0a9d4008c6b567407c530933a36fb7603621c37cbe913143f15ad`.
+
+An allowlisted 8,192-row count profile takes 10.58 seconds, peaks at 1.10 GB
+RSS and projects a 518-second shard build. Sampled counts are exact finite
+nonnegative integers with no zero libraries. The retained-panel sums are
+94.3%–99.4% of metadata UMI totals, consistent with upstream gene filtering.
+The denominator remains the exact sum across the 8,563 retained columns;
+metadata-total agreement is a diagnostic, not grounds to discard valid counts.
+Profile-v2 preserves that clarification before full conversion. The four
+role-specific shard paths keep fitting, controls, reconstruction-held and
+development-validation cells distinct; excluded test rows are never selected.
+Full conversion is still running at this entry.
+
+Root's count-state core now factors its first control-encoder linear map and
+encodes unique measured contexts once per optimizer step, avoiding repeated
+cell-by-query-by-feature tensors. Eight numerical checks pass, including
+gradient parity with explicit concatenation and repeated context encoding.
+Its 516,129-parameter, full-8,563-query CPU forward/backward smoke takes .140
+seconds at batch two and has finite gradients. Source SHA-256
+`75df347a82151074c0ce6f4c732106e70ed17126aff07d017294894421d30bac`.
+The prototype is still untrained. Its contract explicitly distinguishes fixed
+posterior-panel encoding, arbitrary decoder queries, smoothed basal identity,
+library-conditioned count factors and non-identifiable latent/noise components.
+
+### 2026-09-05 — Raw-cell count-state pilot inputs and execution
+
+K562 raw-cell conversion is complete. The canonical manifest is
+`data/derived/slp11-human-k562-essential-raw-cells-v2/manifest.json`, SHA-256
+`859b3fb0b0aeb830e25dce17e86edfc2d8ec3fcdbcec57beeeebf6d1a8faf685`.
+Its 132 CSR shards contain 188,195 fitting intervention cells, 9,609 fitting
+NT controls, 21,900 reconstruction-held cells and 47,914 development-validation
+cells. No excluded test rows were selected; there are no zero libraries.
+The original 900-second build cap stopped after 75 valid fitting shards. An
+explicit 2,400-second execution amendment preserved and checksum-verified that
+prefix; the remaining conversion finished in 235.46 seconds at 4.918 GB peak
+RSS. This changed the operational allowance, not routing or the endpoint.
+
+The sole random-access training pack contains 197,804 by 8,563 uint16 counts
+(maximum 3,161), SHA-256
+`e9bbfe69bd59cedf7131bd176632bb9fbd8dce59a0789ed7e18896ac34e4b511`.
+It was built in 44.15 seconds at 1.148 GB peak RSS. Training gathers bounded
+rows from this memory map rather than materializing a dense float32 corpus.
+The static577 pack SHA-256 is
+`6706f8867adedef8822897bc275ea90680584f84afd24771e4beb3c8ecf07659`;
+the exact action/query roster is
+`f2ee702a0714ca7f11f4fd2aa96f4c1825617c0e4f2bcdac42135cd0ba938d7b`.
+It contains 8,752 species-native ENSG entities with ESM8M sequence features and
+shared direct GO MF/CC coordinates. All 8,537 prior-pack overlaps are bit-exact.
+There are 358 all-zero static rows, including 352 queries and seven actions;
+the model cannot distinguish their static descriptions. Normalization uses
+only the 1,443 unique fitting action genes.
+
+All 48 experimental GEM groups have 109–265 reconstruction-training NT cells.
+The control reference uses only those 9,609 cells and the explicit formula
+`10000 * (pooled_query_count + .5) / (pooled_library + .5 * 8563)`.
+Reference SHA-256
+`c72d28e9eb6633fa237b11e0c16258d875eadaacf31e5b8b3def862150b36d13`.
+Independent rebuilds of static features, the roster and control rates match
+their original artifact bytes exactly.
+
+The matched anchored static ridge is frozen before development evaluation:
+`results/slp11-transition/k562-essential-count-anchored-static-ridge-seed731-v1/`.
+Model SHA-256
+`dbb669d2eb8d844ec9be7c88a2ed21f5592de434d1b2e916412bda4a52fe1cf3`.
+Three fitting-gene folds select alpha 1,000 with MSE .0040148722, versus
+.0043316485 for the anchored mean. The endpoint is the natural logarithm of
+one plus each gene's equal-cell mean CP10k. The anchor uses that gene's GEM
+cell proportions and the frozen smoothed control rates. All 8,563 queries
+remain scored. Fitting takes 1.97 seconds on two CPU threads; copied-source
+artifact reload is exact. Twelve focused checks pass.
+
+Before biological fitting, an independent Poisson teacher smoke trains the
+count-state core on 64 scalar action values and evaluates 63 interleaved held
+values. Prior-only mean MSE is .44435 against control-only 16.06151 after 500
+updates in 3.15 seconds; the empty-action mean remains exact. This verifies
+simple action-conditioned interpolation, not biological or out-of-distribution
+prediction. Report SHA-256
+`56d85848160a9590c548d1560e0a6c81f9e42a7668742467ba62fedb19ccaaa9`.
+
+The biological pilot hypothesis is that cell-level count-state learning
+improves held-gene aggregate means over both matched anchored mean and ridge.
+The fixed advancement rule requires at least 1% lower full-panel MSE than
+both baselines, and anchor-subtracted independently query-centered correlation
+at least .10 and no lower than ridge, over all 305 development genes. Accessible
+modalities are fitting raw RNA counts, NT controls, static sequence/GO and
+experimental metadata. Neither counts nor library totals enter the prior.
+The fixed fit is 12,000 updates, batch 128 with 64 GEM-uniform controls and
+64 gene/population-uniform intervention cells, seed 731, AdamW .0005 with .01
+weight decay, clipping at one, beta-one normalized ELBO and final checkpoint
+only. Protocol SHA-256
+`a85d2ab7cb83760a818614f20ab28d2936c3604c4f9236293c18b355391b89e7`.
+A target-free full-shape CUDA profile projects 353 seconds and uses 1.158 GB
+allocated GPU memory. Execution has started; biological results are pending.
+This is an adaptive K562 development experiment with a changed endpoint and
+data representation, not a causal ablation of the earlier author-z model.
+
+RPE1 essential raw single-cell acquisition is also complete in 447.77 seconds:
+`data/sources/replogle-2022-rpe1-essential-singlecell-v1/rpe1_raw_singlecell_01.h5ad`,
+8,700,873,216 bytes, upstream MD5 `6a2a9d0d2bf4ec147f4d1104043b268c`,
+SHA-256 `9b05ef1f81526216fa008d677e9e0d03dce9a2f7a95499a4fb81e505e9d88ef1`.
+Metadata contains 247,914 cells, 8,749 stable ENSG queries, 2,390 resolved action
+genes, 56 GEM groups and 11,485 verified NT controls. Global routing gives
+158,538 fitting cells over 1,666 genes, 39,014 validation cells over 360 genes,
+38,419 excluded test cells and 458 unresolved-action cells. The unresolved
+symbols RBM14-RBM4, PRSS50 and NEDD8-MDP1 remain excluded rather than being
+assigned ambiguous stable identities. Reconstruction routing gives 142,601
+training targets plus 10,350 controls and 17,072 held cells. Every K562 fitting
+action is also a RPE1 fitting action under the same global gene split. Query
+overlap is 7,226. Routing sidecar SHA-256
+`10f3d313a5671122bde10a9bd586e3a2808d6f9b554f737ddcbbc28becc5e2f2`;
+metadata report `323bece05ee1ccf2d51dad336ce3a671a47cc32f0a92db711be6683b5b3f668a`.
+No RPE1 count values were read by this audit. A subsequent authorized build
+will initially convert fitting, control and reconstruction-held rows only,
+using the exact retained 8,749-column library denominator. RPE1 quantitative
+validation, test and unresolved rows remain unselected.
+
+The K562 count fit finishes all 12,000 updates in 413.43 seconds. The first
+100-update loss average is 1.07548 and the final average 1.02882. Final
+reconstruction loss is 1.02695 per query and KL is 15.95 per cell, with ten
+latent units above the diagnostic KL threshold. Final lower-variance-bound
+fractions are 2.04% for the prior and 1.73% for the posterior; upper-bound
+fractions are zero. Every parameter group changes. These training diagnostics
+do not establish forecast accuracy.
+
+The frozen execution stops before development evaluation because its strict
+CPU/GPU absolute-CP10k replay tolerance of 1e-5 is exceeded: maximum difference
+3.0518e-5, relative difference 2.921e-7 and absolute ln1p difference 2.074e-7.
+Repeated CPU predictions and empty-action identity are bit-exact. The original
+failed numerical check is preserved. A separate continuation will verify an
+explicit relative-CP10k/absolute-ln1p tolerance of 1e-6 and perform an isolated
+CPU subprocess replay before scoring the unchanged checkpoint. This is a
+numerical verification amendment, not model selection or changed biological
+advancement criteria. Full focused repository suite at this point: 806 passed,
+21 skipped and 17 historical transformer warnings in 52.47 seconds.
+
+### 2026-09-05 — Count-state result and a matched molecular-mean continuation
+
+The first K562 count-state pilot fails its fixed advancement rule. On all
+305 adaptive development genes and 8,563 queries, neural MSE is .0037701751
+with independently query-centered, anchor-subtracted correlation .1877687.
+Static ridge achieves .0035845848/.2221895; the anchored mean MSE is .0039796800
+and the pure control MSE .0043260864. Thus neural gains 5.26% over the mean
+but regresses 5.18% against ridge. All predictions are nonnegative. This is
+evidence of learned intervention signal, not a successful candidate.
+
+The unchanged model SHA-256 is
+`c7cc6a369f8b63d936c535f7cc59439fec38033202d4b98616b02270df74f3f8`,
+reference `8020753e9e2597b08cb94c5351772be05986b286f61e0f7a26be26fbfabae4f6`.
+An isolated artifact-only CPU subprocess passes the amended replay gate, with
+maximum relative CP10k difference (unit floor) 2.921e-7 and maximum absolute
+ln1p difference 2.074e-7. Repeated CPU and empty means are exact. The final
+pre-development freeze is `FROZEN-BEFORE-DEVELOPMENT-V3.json`, SHA-256
+`a8936f7e6a8f1ebed65a91ce4b91d8f375c5cf61b1fe300ddb1c8b681eb57208`.
+The original failed strict tolerance is not retroactively marked passed.
+Final report directory
+`results/slp11-transition/k562-essential-count-latent-state-seed731-portable-finalization-v2/`,
+report SHA-256 `62a8cb6a766ac3eb0b8767d8905178c407cfe87cc53e7e153954572e51470bbb`.
+Forecasts were saved before the single development aggregation, SHA-256
+`1f1b956abbe292b0f209df99c202073f62c49f9ba5cc8fe998289dcbce59c3b3`.
+Only aggregate metrics were persisted; gene-bootstrap uncertainty is not
+available from this report. No protected test or benchmark was opened.
+
+Four fixed antithetic posterior draws on all 21,900 reconstruction-held cells
+give negative ELBO 1.02366279 per query (reconstruction 1.02171012,
+KL 16.72067 per cell). These cells come from fitting genes/controls and are
+not independent biological replicates or held-intervention evidence.
+
+The separately prefixed 128-gene fitting diagnostic selects genes by identity
+hash before reading moments. Neural prior MSE/r is .0038934575/.3381267,
+final-fitting ridge .0032204794/.5035930, and anchored mean MSE .0044650042.
+All four profiles use the same gene-specific GEM control anchor. Predicted
+total CP10k has minimum/median/maximum 9822.49/10016.86/10199.48. The 6.73-second
+CPU-only diagnostic preserves its original scientific protocol; its v2
+execution accepts the explicit amended replay freeze filename. Protocol
+SHA-256 `419702cfc107087dce01360175c14a475b3360b9f0667d024e14c86f26c5da8d`;
+directory `results/slp11-transition/k562-essential-count-prior-fitting-audit-v2/`.
+
+A complementary, predeclared fitting-only variance diagnostic on those exact
+128 genes neutralizes the intervention variance term without refitting. MSE/r
+becomes .0038721202/.3469245, still substantially behind ridge. Weighted RMS
+log-ratio terms are .0618242 from the mean and .0123350 from variance; forecast
+ln1p RMS difference is .00476193. Variance contributes modestly, not a dominant
+mass or variance failure. Report SHA-256
+`c7a9243621143e9f6eccfd5c614e11edd53898d042c9d9c7458988b666cd389c`;
+runtime 2.75 seconds on two CPU threads; three focused checks pass. Neither
+fitting diagnostic reads reconstruction-held, development or test outcomes.
+The fit gap motivates testing the molecular mean objective; it does not prove
+a particular optimization or representation cause.
+
+The next fixed hypothesis is that adding aggregate molecular-mean supervision
+closes this prior fit gap while retaining cell likelihood. Two arms start from
+the exact saved checkpoint with new AdamW optimizers, seed 1731, and 4,000
+updates: count ELBO alone, or ELBO plus .1 times population-mean MSE divided
+by the frozen final-fitting anchored-mean MSE. The auxiliary batch samples 16
+fitting genes uniformly, mixes prior CP10k over their fitting-cell GEM
+proportions before ln1p, and uses all 8,563 queries. Its dropout is disabled
+while retaining gradients so it matches the inference mean. Cell sampling,
+learning rate, decay and clipping match the previous fit. Both final models
+and forecasts must freeze before the common development aggregation.
+
+Advancement still requires at least 1% lower MSE than mean and ridge with
+centered residual r at least .10 and no lower than ridge. It additionally
+requires reconstruction-held negative ELBO no more than 1% worse than either
+the original model or the matched count-only continuation. A new self-contained
+helper implements only differentiable rate mixing and scaled molecular MSE,
+SHA-256 `f9dc1fc1d7c6f1071f5bdb98e45a5140116cb583975bf3a76892814883989cd9`.
+Four numerical checks pass, including an independent analytic gradient oracle.
+The helper is a composite training objective, not a calibrated likelihood.
+
+RPE1 raw-cell preparation meanwhile finishes in 250.03 seconds at 3.517 GB RSS.
+The bounded reader closes each source-row-span memory map after copying only
+selected rows. Canonical manifest SHA-256
+`3d7ca31f945ffb193070eb463eaa328e374c9f12f3c0e3162a5e189f24d0fe9e`
+in `data/derived/slp11-human-rpe1-essential-raw-cells-v1/` describes 85 CSR
+shards: 142,601 fitting, 10,350 controls and 17,072 reconstruction-held cells.
+The sole uint16 training pack is [152951,8749], maximum 3,061, SHA-256
+`6df95d35bd725dd935e368859391a99fc7e82f2019b1700eabfc744c01481ba6`;
+CSR parity is exact. Fitting moments are [1666,8749], SHA-256
+`d15def86aead06b0bc75ab63c77513735ec7c57d65012bff72f3947bc654895c`;
+control moments [56,8749], SHA-256
+`5aceba5fb4874811aac797be14d1947a9fca866d11178d5f8fe2bdc534df6f61`.
+All GEMs have 107–231 fitting controls. Development, test and unresolved count
+rows remain unselected. Five focused RPE checks pass.
+
+RPE1 raw static577 features cover 9,032 species-native entities, SHA-256
+`621e1e9f0dffc740ef42382b1b2898f629edd5037e8a02d411e8d30e815ed816`.
+The exact source query/action roster SHA-256 is
+`b9e1b169c2be4ac756e94f465009dc5bef80d06bc0652950c3cf6916d26d1e56`.
+All 7,517 K562-pack overlaps are bit-exact. There are 229 all-zero queries and
+seven all-zero actions. Separate RPE1/K562 fitting-roster normalization
+statistics retain float64 precision; their artifact SHA-256 is
+`d397dfdb08973ccf9884d504a1279042cc470cba2ff5341c770443d0c7915951`.
+All five static artifacts reproduce byte-for-byte; six focused checks pass.
+
+### 2026-09-05 — Mean-auxiliary result, transfer limits and joint-training readiness
+
+The matched count-state continuations complete from the same frozen K562
+checkpoint. Both use seed 1731 and 4,000 updates; count-only takes 142.25
+seconds and the population-mean auxiliary arm 227.95 seconds. Forecasts for
+all 305 development genes and 8,563 queries were frozen before the single
+development aggregation. The auxiliary arm reaches MSE .0037003113 and
+independently query-centered, anchor-subtracted correlation .2113435, versus
+.0037579845/.1888186 for the count-only continuation, .0039796800 for the
+anchored mean and .0035845848/.2221895 for static ridge. Reconstruction-held
+negative ELBO is 1.023829 per query for the auxiliary arm and 1.023354 for
+count-only, within the fixed one-percent preservation limits. The auxiliary
+model improves the mean but remains 3.23% worse in MSE than ridge and has lower
+correlation, so the advancement rule fails. Portable CPU replay and exact
+empty-action means pass for both arms. Model SHA-256 values are
+`994ad65b310dae8e815a568ca3cece2d4922125fdf22f331f36d237016a58154`
+for mean-auxiliary and
+`b2de5c729647a8e40bfa134820dd0dcc4e07088fe67d7346a9f329ac919a248a`
+for count-only; frozen forecast SHA-256
+`899205bfbf61ea948ff1786086286e8ae50eda3fafc24e4ec580fe23a748331e`.
+Report SHA-256
+`3b14c241f7419eb004b03813089bee948e5c033b82d8bc27bc126d90cc4fb6fa`;
+directory
+`results/slp11-transition/k562-essential-count-latent-mean-aux-continuation-seed1731-v1/`.
+
+Paired resampling of the 305 gene-level errors supports the mean-auxiliary gain
+over the anchored mean: its 95% relative-MSE interval is [2.56%, 11.09%]. Its
+gain over count-only is less certain, [-1.59%, 4.33%]. Against static ridge the
+interval is entirely unfavorable, a relative regression of [.84%, 5.69%],
+with an absolute candidate-minus-ridge MSE interval
+[3.08e-5, 1.99e-4]. These intervals summarize the same adaptive development
+genes and are not independent confirmation. Report SHA-256
+`226fa63e6aa2951efc06436c7768ff48c0a4c78ec7ca14e89f8ade1bf6c1d9dc`;
+directory
+`results/slp11-transition/k562-count-mean-aux-paired-gene-intervals-v1/`.
+
+The frozen K562 count checkpoint is also applied to an externally supplied
+RPE1 control reference without fitting on RPE1 perturbation outcomes. Source-
+only comparator predictions were frozen before RPE1 fitting moments were
+opened. Subsequent descriptive scoring on RPE1 fitting moments gives, over all
+1,666 genes and 7,226 common queries, MSE/correlation .0135802/.140215 for the
+K562 count prior and .0130571/.129555 for the transferred K562 static ridge.
+The prior's correlation is .00714 on the 223 RPE1-only action genes. Across the
+1,523 RPE1-only queries it is .00740 and MSE .0134922, worse than the pure RPE1
+control anchor at .0131716. An RPE1-fitted ridge is substantially better but is
+an unequal, context-supervised descriptive reference. The checkpoint was never
+fit to RPE1; this demonstrates functional control-context substitution, not
+useful unfitted-context intervention transfer. No RPE1 development or test
+counts were read. Report SHA-256
+`bd22db75ad27d2dab5a71cebbaa9e64dc72437bd42a9065a8a32dc9db5b4fdd6`;
+directory
+`results/slp11-transition/k562-prior-rpe1-unfitted-context-fitting-score-v1/`.
+
+Two fitting-only static-feature screens reject additional descriptors before
+development access. A 71-dimensional dual-guide sequence-composition
+descriptor changes three-fold gene-held OOF MSE from .0040148722 to
+.0040560207 in K562 and from .0095232508 to .0096626124 in RPE1, regressions
+of 1.02% and 1.46%. The fixed one-percent improvement rule fails in both
+contexts, so no development model is fitted. Report SHA-256
+`8bcd695ebf5c53c6cd81a4cfaba0e35a9e6a17d30b7ad0b97f21497759b8790c`;
+directory
+`results/slp11-transition/replogle-guide-composition-ridge-fitting-cv-v1/`.
+
+The second descriptor uses only reconstruction-training non-targeting controls.
+For each source it residualizes per-cell ln1p(CP10k) on log library within GEM,
+then computes 64 leave-self-out correlations against one fixed static-derived
+random anchor shared over the exact 7,226 common queries. Split-half reliability
+passes its predeclared gate: all 8,563 K562 and 8,749 RPE1 queries are defined,
+with median cosine .780733 and .900498. Independent full-source replay is
+byte-identical. These stable coordinates still fail the fitting-only forecast
+gate after appending a presence flag: K562 OOF MSE changes from .0040148722 to
+.0040156010, a .018% regression, while RPE1 improves to .0094715688, only
+.543%. No development model or neural feature tuning follows. Stability report
+SHA-256
+`6f90802b9090fefae5775002328170d8aee85206549fa29f669ff9937303f473`;
+CV report SHA-256
+`296275ac7c152ccf966a0e1be81208790964bce1600f44df8168af15a76175e2`;
+directories `results/slp11-transition/human-control-coexpression-reliability-v1/`
+and `results/slp11-transition/replogle-control-coexpression-ridge-fitting-cv-v1/`.
+
+The outcome-free K562/RPE1 joint registry passes its identity and static-space
+contract. Shared static577 contains 10,267 exact ENSG entities; all 7,517
+overlap rows are bit-exact, K562's 1,443 fitting actions are a strict subset of
+RPE1's 1,666, action roles have no conflicts, and the 48 plus 56 source/GEM
+context identities are unique. Each source keeps its native query axis and
+full-panel count denominator; no joint target matrix is constructed. Registry
+SHA-256
+`4de798e53a4d8149c200088e054caa4c9b71ecea91e6c00c68ecd3a6c938127c`;
+report SHA-256
+`d4a85c77139c4fe348dddc81ec0fdfb7d7ddd797dead4be4888ac26b8a13a3b8`.
+The self-contained shared training step copies count core SHA-256
+`75df347a82151074c0ce6f4c732106e70ed17126aff07d017294894421d30bac`
+and molecular-mean helper SHA-256
+`f9dc1fc1d7c6f1071f5bdb98e45a5140116cb583975bf3a76892814883989cd9`;
+training-step SHA-256
+`da544a7b969ddda4f6f4b44c77a8327c8be394746e6ea81ab012e56cc03a4062`.
+It encodes one source's full control table once per step and keeps cell ELBO
+and dropout-free population-mean losses separate while alternating native
+panels. Four registry checks and five shared-training-step numerical checks
+pass, but no joint biological training has run and no launch or transfer claim
+follows from code readiness.
+
+### 2026-09-05 — Shared-context training and response-rank diagnostic
+
+The real panel adapter now loads both full native training packs in 7.41
+seconds on two CPU threads. It reconstructs both saved control references
+exactly: K562 has 197,804 cells, 8,563 queries, 1,443 fitting actions and 48
+contexts; RPE1 has 152,951 cells, 8,749 queries, 1,666 fitting actions and 56
+contexts. Adapter SHA-256 is
+`a8f1ee3537041d20e1dda330c20ec0f73b3265ac63024eb3114ec1161d072c66`.
+Five adapter checks pass, including identity alignment and read-only metadata.
+
+The matched shared-context experiment freezes protocol SHA-256
+`2b21d0aa4f609b5bc9d68632225b596783420efd0bd590aad4d3229d505a1954`
+in `results/slp11-transition/human-essential-count-shared-context-seed731-v1/`.
+Both arms start with seed 731 and the same shared static577 normalizer, train
+12,000 count-only updates, reset the optimizer, then train 4,000 updates with
+the fixed population-mean auxiliary objective. The joint arm alternates K562
+and RPE1 equally, so each source receives half the exposure of the K562-only
+arm at equal total compute updates. The fixed advancement rule requires at
+least 1% lower K562 MSE than K562-only, at least 1% lower MSE than both mean
+and static ridge in each source, centered residual correlation at least .10
+and no lower than ridge in each source, and K562 reconstruction-held ELBO no
+more than 1% worse than K562-only. Accessible modalities are fitting raw
+counts, measured controls and static protein/GO features. Actual full-panel
+mean-auxiliary steps take .03596/.03768 seconds in K562/RPE1; conservative
+16,000-step projections are 575/589 seconds and peak reserved GPU memory is
+2.51 GiB. Each arm has a fixed 1,500-second cap. The source snapshots and
+query axes remain those pinned by the joint registry; rejected guide and
+coexpression features are excluded. Training and subsequent frozen evaluation
+are pending at this entry; no advancement decision follows from the profile.
+
+A separate fitting-only diagnostic tests whether a rank-32 response map can
+preserve full static ridge MSE within 1% in both contexts. It solves exact
+rank-constrained regularized least squares, retaining an unpenalized intercept,
+the existing three global gene folds, fold-local feature normalization and
+alpha 1,000 previously selected in fitting CV. Predeclared ranks are 32, 64,
+128, 256 and full. K562 OOF MSE is respectively .0038846644, .0039201181,
+.0039693314, .0040080611 and .0040148722; RPE1 is .0092495505, .0093253380,
+.0094254571, .0095072644 and .0095232508. Rank 32 improves full ridge by
+3.24% and 2.87%, with gains in every fold, passing the sufficiency diagnostic.
+This does not establish that the nonlinear count model's latent dimension is
+adequate: the diagnostic learns native-panel output loadings and does not
+require a feature-query decoder or forecast unmeasured queries. It argues
+against enlarging the latent dimension solely to reproduce ridge's response
+rank. No development or test outcomes are opened and no development model is
+fitted by this diagnostic. Runtime is 7.47 seconds on two CPU threads.
+
+Rank protocol SHA-256:
+`2996c5f79694b6d4f879f2ba7e56e25bce48c685df5dde3515fe60ff905a67d2`;
+report SHA-256:
+`8adcd2b064d327a4d7b8df1ff82027263b535bf6334fe93fea674ec8c906e6b6`;
+per-gene error SHA-256:
+`6dedc60daa4e327482288698b57c689604c6a81f41b55aec4ad5712b73fa9180`;
+directory `results/slp11-transition/human-essential-count-response-rank-audit-v1/`.
+Three numerical tests pass, including a direct augmented-design SVD oracle,
+rank-one recovery and full-rank parity. The preceding consolidated suite passes
+884 tests with 21 skips and 17 historical warnings; these three new checks are
+additional. These are native exploratory experiments, not admitted OMF releases.
+
+### 2026-09-05 — Joint count model rejected; decoder conflict not supported
+
+The frozen matched experiment completes 16,000 updates per arm in 562.98
+seconds for K562-only and 585.44 seconds for joint training. Saved checkpoints
+are unchanged through finalization: K562-only SHA-256
+`49f782166291f8ae658f6895f92e1d1268b599a74fda50f206cacb039bf7afbb`
+and joint
+`cff1f691130bdf78bc574dfdcc449d5aeb8a3f81914f37ecf3f8c49686b87dff`.
+A post-training four-row replay helper incorrectly returned a 16-row chunk;
+an append-only finalizer corrects the slice. Its first continuation also used
+a probe filename inconsistent with the isolated verifier; the second corrects
+that operational mismatch. Neither correction changes weights, training or
+evaluation rules. GPU and isolated CPU replay pass before both source-native
+forecast bundles are frozen. Forecast-freeze SHA-256:
+`9f6233f0e9c3cfc54f06cadc28c63dae2430733691c22ed9df4481f9fbbef523`.
+
+Development evaluation uses 305 K562 genes over 8,563 queries and 360 RPE1
+genes over 8,749 queries. Metrics below are absolute log1p-mean-CP10k MSE
+and independently query-centered, control-anchor-subtracted profile Pearson.
+
+| Source | Model | MSE | Residual Pearson |
+|---|---|---:|---:|
+| K562 | Anchored mean | .0039796800 | Undefined |
+| K562 | Static ridge | .0035845848 | .2221895 |
+| K562 | K562-only count state | .0036937959 | .2087663 |
+| K562 | Joint count state | .0036797558 | .2038649 |
+| RPE1 | Anchored mean | .0093290643 | Undefined |
+| RPE1 | Static ridge | .0084534410 | .2652432 |
+| RPE1 | K562-only count state | .0122427031 | .0783603 |
+| RPE1 | Joint count state | .0090943861 | .2423476 |
+
+Joint training improves mean MSE by 7.536% in K562 and 2.516% in RPE1,
+but regresses ridge by 2.655% and 7.582%, with lower correlations in both.
+K562 improves only .380% relative to matched K562-only, below the required
+1%. The forecast gate fails. Four-draw antithetic reconstruction-held ELBO on
+21,900 K562 cells is 1.023770603 for K562-only and 1.026722211 for joint,
+a .2883% regression within the 1% preservation bound. Reconstruction does
+not rescue the failed forecast decision. Joint fitting MSE/correlation is
+.00324242/.40676 in K562 and .00670896/.58248 in RPE1; the larger RPE1
+fitting-to-development gap remains a generalization limitation.
+
+Evaluation completes in 29.3 seconds on two CPU threads, aggregating exactly
+47,914 K562 and 39,014 allowlisted RPE1 development cells. No protected test
+or unresolved RPE1 rows are selected. This opens RPE1 development counts for
+adaptive molecular development; it is not untouched confirmation. Report:
+`results/slp11-transition/human-essential-count-shared-context-development-evaluation-v2/report.json`,
+SHA-256 `ca6438891609689cd2b00b0d9987f5ba44ff1270b1a3a3cb076b488a8bd25e07`.
+Reconstruction diagnostic SHA-256:
+`d773b0f0140fed2c28418c611ce5df06a9032fc3ba8a58f3e123c9a81e2a5074`.
+The model remains rejected, with no SL benchmark, SOTA or launch claim.
+
+The next fitting-only diagnostic freezes a local optimization hypothesis:
+strong conflict requires median shared-query-loading gradient cosine below
+-.25 and at least 75% negative batch cosines in each joint-training source.
+Sixteen fixed batches per arm/source use seed 2831, 64 fitting controls plus
+64 gene/population-balanced targets, and 16 unique fitting population genes.
+Separate gradients use cell ELBO and the actual .1-weighted normalized
+population-mean objective, preserving training dropout behavior. No optimizer
+step occurs. Joint median cosine is .164729 in K562 and .314777 in RPE1;
+all 16 cosines are positive in both contexts. K562-only also has entirely
+positive samples, medians .217220/.357153. Joint auxiliary/count gradient
+norm ratios have medians 2.88859/2.41526. The strong-conflict hypothesis is
+rejected for these sampled checkpoint gradients; a split decoder is not
+justified by that proposed mechanism. This does not exclude conflict earlier
+in training or other representation limits. CUDA computation takes 2.25
+seconds after loading, on fitting data only.
+
+Gradient protocol SHA-256:
+`2764e6ed824b36f0169acc00a699c0c2fcd63efafa56789a28a38bc57435a065`;
+report SHA-256:
+`7c5d6eb71d1660b283d8fc01424e0ef50bdfd52b0d1d142e573eb44030654818`;
+directory `results/slp11-transition/human-essential-count-objective-gradient-audit-v1/`.
+
+### 2026-09-05 — Rank-32 response model retained; static query decoder loses signal
+
+A new fixed follow-up to the positive fitting-only rank diagnostic fits rank
+32, alpha 1,000 on all fitting genes separately in K562/RPE1. Both models and
+both source-native development forecasts are frozen before one access to the
+existing development truth bundles. The rule requires at least 1% lower MSE
+than full static ridge in both sources, centered residual Pearson at least .10
+and no regression versus ridge. K562 MSE/correlation is .0034327136/.2487532
+versus ridge .0035845848/.2221895; RPE1 is .0081592422/.285890 versus ridge
+.0084534410/.2652432. Relative MSE improvements are 4.237% and 3.480%.
+Every gate passes. The rank-32 model also improves the rejected joint count
+model by 6.71%/10.28%. It is retained as the strongest measured-panel response
+model in this comparison and becomes a stronger neural comparator. Runtime is
+10.33 seconds on two CPU threads; three exact-formula/reload/query tests pass.
+
+The model maps raw static action features into a 32-dimensional state with an
+unpenalized intercept and fitted native-panel query loadings. These are
+quantitative descriptors learned from fitting outcomes; they are not static
+biological priors. No learned action IDs, new-query prediction, cell generator,
+nonlinear dynamics or independent confirmation is established. No protected
+test or SL benchmark outcomes are opened.
+
+Protocol SHA-256:
+`c6d854117b1da1fa37e3fea0b9c64b82ae37a8fcd4a451e4bf011c3e1487299f`;
+report SHA-256:
+`f1f97a9cb5d4b782db969f6ed0aa83a4ab39ea81b6534e575253252fe9bc49af`;
+K562 model SHA-256:
+`6267584a4a69dc30899b18d0c9660e0c73d2b8383a1e4911571295a1ea57ae44`;
+RPE1 model SHA-256:
+`ff864e96d02fb81b64baadc36c164de61a01d9e7d31a2609f78b64d48107be70`;
+directory `results/slp11-transition/human-essential-count-response-rank32-seed731-v1/`.
+
+Descriptive 10,000-resample paired-gene bootstrap intervals with seed 731 put
+the rank-32 MSE improvement over ridge at [3.64%,4.92%] in K562 and
+[3.11%,3.90%] in RPE1. These are conditional on the adaptive development
+cohorts and fixed checkpoints, not biological-replicate, seed or context
+uncertainty. The comparison report and checked PNG/SVG are in
+`results/slp11-transition/human-essential-count-response-comparison-v1/`.
+
+The unchanged models are packaged locally in `local-research-inference-v1/`
+under the rank-32 result directory. The 12.73 MB bundle includes native
+controls, static feature caches and self-contained inference source. It
+requires explicit caller-supplied experimental-group weights, mixes control
+rates before `ln1p`, and adds signed residual predictions without clipping or
+renormalization. Seven feature/metadata probe rows per source reproduce the
+frozen forecasts to maximum absolute error 8.88e-16. Isolated CPU CLI loading
+works without the training corpus and preserves caller arrays. Seven focused
+core/API tests pass. Bundle manifest SHA-256:
+`0a181cc51fa29990e175b74e261687ac4af5a4796aeda8eeb0763d825252dbd5`.
+This is a local research bundle, not an uploaded or admitted OMF release.
+
+A separate fitting-only diagnostic tests recovery of the supervised query
+loadings from static features. Within each of the three global fitting-gene
+folds it derives rank-32 loadings only from the other two folds, scales each
+loading coordinate by query-panel RMS, and trains a 577-to-256-to-32 GELU
+decoder with a linear residual path. Both output layers start at zero; AdamW
+uses learning rate .001, weight decay .01, seed 731, 2,000 updates and 1,024
+uniformly sampled queries per update. There is no early stopping or sweep.
+The frozen rule requires OOF MSE within 1% of the exact teacher in both sources.
+
+K562 decoder OOF MSE is .0040238448 versus teacher .0038846644, a 3.583%
+regression; RPE1 is .0095703299 versus .0092495505, a 3.468% regression.
+Every fold regresses. Standardized descriptor reconstruction MSE averages
+.32951/.31151. The rule fails, supporting a static-query representation limit
+under this decoder and optimizer, rather than a universal impossibility claim.
+The 174,656-parameter experiment takes 31.28 seconds and peaks at 81.1 MB
+CUDA allocation. Three numerical tests pass; no development, reconstruction-
+held or protected test values enter this experiment. Protocol SHA-256:
+`e622b0319631c2178e1d947715cc78e081ca73c0dac874492920d06528468a1b`;
+report SHA-256:
+`c8d5defb29b890db5463af3c9ead4d1431b5fe4a285d7d2a910731251e85884c`;
+directory `results/slp11-transition/human-essential-count-query-decoder-capacity-fitting-v1/`.
+
+### 2026-09-05 — Matched count training with fitted response-query descriptors
+
+The next experiment tests whether retaining the supervised query descriptors
+can improve the molecular count forecast, after the static-feature decoder
+failed to reproduce their predictive signal. Each source supplies 33 fitted
+query coordinates: the retained rank-32 model's query loading plus its residual
+intercept. Columns are divided by their native-panel RMS, without centering
+or cross-source rotation. These quantitative descriptors come only from the
+existing full-fitting response models. Static577 query features are appended
+with either these 33 values or 33 zeros; action features receive exact zero
+padding in both arms. Both count models therefore have the same 610-column
+input width and parameter count. Counts, targets, control references and
+sampling are unchanged. Source-native descriptors do not support unmeasured
+query or new-context claims.
+
+The sole feature adapter validates source, experimental context, query order,
+rank and alpha. Real PanelData integration preserves the original quantitative
+objects in both modes. Four focused checks pass. Feature-manifest SHA-256:
+`8af044cedd683364ca789dd083f6c815740b8111fd59aec0aa326fdb734a27ba`;
+adapter SHA-256:
+`6a47563e97fd4cd710788917b35e40e5895abb5da340d66b8e53f5189f141807`;
+feature directory
+`data/derived/slp11-human-count-response-query33/rank32-alpha1000-full-fitting-v3/`.
+
+Both arms alternate K562/RPE1 for 12,000 count updates and 4,000 mean-auxiliary
+updates, with identical seed 731 initialization, sampling, optimizer reset,
+learning rate, loss weights and final-only checkpoint selection. The fixed
+rule requires response33 MSE at least 1% lower than both zero33 and the retained
+rank-32 response model in each context, centered residual Pearson at least .10
+and no lower than rank32, and K562 reconstruction-held ELBO no more than 1%
+worse than zero33. Each arm has a 1,500-second limit on the RTX 4070.
+
+The actual untrained full-panel artifact smoke passes every arm/context GPU
+and isolated CPU replay before training: maximum absolute log1p discrepancies
+are 3.48e-7/3.07e-7. Each arm has its own query reference. Actual mean-auxiliary
+step profiles project 625.4 seconds for zero33 and 596.0 seconds for response33,
+with peak reserved GPU memory 2.70 GB. Protocol SHA-256:
+`d860cc04df1aa672106d399bdb71314a90f770b6ccfc2a5bb36af398a0950d61`;
+runner SHA-256:
+`d63d91e953744997f48e68449fc9486110b18e0f64f4c54a63a0c1324ce9fad5`;
+run directory
+`results/slp11-transition/human-essential-count-response-query33-seed731-v2/`.
+Training is running at this entry. Both fitted models and all forecasts must
+be fixed before the saved adaptive development truth is scored. Protected
+test and SL benchmark outcomes remain unused.
+
+### 2026-09-05 — Response-query count comparison completed and rejected
+
+Both fixed 16,000-update arms complete: zero33 takes 587.69 seconds and
+response33 580.54 seconds. All four trained arm/context GPU and isolated CPU
+artifact replays pass, with maximum log1p discrepancy below 7.72e-7. Model
+SHA-256 values are
+`b66ffc9afef109ae48d53e40781fdd0b8ccee90522fc44665e38eaca309f80e1`
+for zero33 and
+`7120c198921a73abebcfa406aa8fe5d18dcc9a15ca13ddb82a0aedbe99217cf0`
+for response33. Both models and all forecasts are frozen before development
+truth access; forecast-freeze SHA-256 is
+`b58c25e0edf2351caf1609c1ba339b8bbc4592f17b3a4d568de34f0e62172cd4`.
+
+| Source | Model | Development MSE | Centered residual Pearson |
+|---|---|---:|---:|
+| K562 | Zero33 count control | .0036813121 | .1981368 |
+| K562 | Response33 count candidate | .0036423909 | .2368486 |
+| K562 | Retained rank32 | .0034327136 | .2487532 |
+| RPE1 | Zero33 count control | .0092027190 | .2405053 |
+| RPE1 | Response33 count candidate | .0090348808 | .2624321 |
+| RPE1 | Retained rank32 | .0081592421 | .2858901 |
+
+Response33 improves its matched count control by 1.057% in K562 and 1.824%
+in RPE1, passing that component in both sources. It remains 6.108%/10.732%
+worse than rank32, with lower centered correlation, so the overall fixed rule
+fails. K562 reconstruction-held ELBO improves from 1.02680755 to 1.02299069
+on 21,900 cells, a .3717% improvement. Reconstruction/query improves from
+1.02490777 to 1.02074377, while KL/cell increases from 16.2679 to 19.2403.
+Thus the descriptor does not merely trade away count reconstruction.
+
+Fitting MSE gains of 11.65%/10.85% shrink to 1.06%/1.82% on development
+genes. The descriptors recover some useful query information, but the
+intervention-to-response generalization gap remains. The simpler rank32 model
+is retained; this neural candidate is rejected without protected test or SL
+benchmark access. Report SHA-256:
+`b76647a1930137bf017b05a9f7b0a01b96ed1035a5bc64ad239e74cd7cf09c87`;
+per-gene score SHA-256:
+`e3f765169f18c577f286bbd840207cb9403f536acc6090eeb6e03087b642efc4`;
+directory `results/slp11-transition/human-essential-count-response-query33-seed731-v2/`.
+The consolidated suite passes 908 tests with 21 skips and 17 historical
+warnings; the final 12 focused feature/inference/runner checks also pass.
+This closes the matched experiment without a launch claim.
+
+### 2026-09-05 — Combinatorial CRISPRi source acquired, outcomes not opened
+
+The primary Adamson et al. Cell 2016 experiment, GEO GSE90546 sample
+GSM2406677/10X005, supplies K562 dCas9-KRAB CRISPRi for the full factorial
+set of three UPR sensors. Stable deposited identifiers are ATF6
+ENSG00000118217, EIF2AK3/PERK ENSG00000172071 and ERN1/IRE1
+ENSG00000178607. Their existing global split buckets are 11, 30 and 79:
+the first two are fitting genes and ERN1 is validation. Every ERN1-containing
+combination therefore remains validation; no action set maps to the protected
+test role. The eight biological backgrounds are control, three singles,
+three doubles and the triple. Drug contexts are tunicamycin 4 micrograms/mL
+for six hours, thapsigargin 100 nM for four hours and DMSO for six hours.
+There are 14,856 deposited assignment records, 14,820 intended assignments
+and 13,516 intended author-labelled good-coverage singlets. These are metadata
+counts, not expression-filtered admission decisions.
+
+The official compressed count matrix is downloaded without decoding its
+header or expression values: 199,715,348 bytes, SHA-256
+`36392a38e727e5cf3c4c2eff4b0d19f4b16009926aabcc80d002256345c714b4`,
+MD5 `a1a557368d0b860278b905d7c15f78c3`. GEO supplies matching content length
+but no remote checksum. The source's 32,738 unique unversioned ENSG queries
+overlap the current K562 panel at 8,365 identifiers; 198 current queries are
+absent from Adamson. Only ATF6 is in the current K562 query panel; EIF2AK3
+and ERN1 remain explicitly unmeasured there. All three have static protein
+features. No absent query is filled by symbol matching or relabelled as an
+observed measurement. This panel mismatch must be resolved in an explicit
+evaluation protocol before applying a count model to this new source.
+
+Metadata report SHA-256:
+`bca82c2cf7bfa444e8c58a6fd012bb7a3a3cc344070768eff77d21a632644e05`;
+manifest SHA-256:
+`5032e0a546b6e4742150dd4e61ff70291657757e26c7f6df0cc3737f07fc2dac`;
+directory `data/sources/adamson-2016-gse90546-epistasis-raw-count-v1/`.
+Training use follows the recorded GEO public-data policy with citation;
+redistribution remains conditional. This is preparation for a narrow
+combination-state test, not broad SL or combination-generalization evidence.
+The distinct 82-gene GSM2406681 screen is not merged into this source.
+
+Primary references: [Adamson et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC5315571/),
+[GEO GSE90546](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE90546),
+[GEO data policy](https://www.ncbi.nlm.nih.gov/geo/info/disclaimer.html).
+
+### 2026-09-05 — Return to SLp-1: grounding the missing composition operator
+
+The investigator requested an architectural reassessment rather than further
+optimization of response-ridge and count-decoder variants. Executable inspection
+of frozen `model/v1/world.py` and `modules/training/world.py` found that SLp-1's
+shared modality/action Transformer is reusable as an inductive action-set
+interface. Its strong supervised readouts are evidence for useful features;
+they are not evidence that sequential state updates were learned correctly.
+Static-relation consistency trained `T(T(0,A),B)` toward another model prediction.
+Measured molecular doubles trained simultaneous endpoints or residual heads.
+No audited v1 path trained `T(E(y_A observed),B)` against the measured double
+endpoint. The poor sequential results therefore leave a specific untested
+factorization, rather than establishing that all state-conditioned composition
+is ineffective. We preserve frozen v1 and reconstruct its attention principle
+in a new, self-contained 142,720-parameter module.
+
+**Hypothesis and fixed rule, before biological training.** Observed-background
+edge supervision will improve held-combination molecular prediction over a
+capacity-matched simultaneous endpoint model and fixed additive/linear controls.
+The three-seed mean must reduce pooled MSE at least 5% against every baseline,
+not regress in any fold against the best pooled baseline, have positive
+centered nonadditive correlation, and worsen at least 1% when conditioning
+parents are swapped while preserving the correct observed additive reference.
+This is a falsifiable first composition test, not an SL or temporal-dynamics
+claim. All forecasts precede held-combination scoring; no adaptive epoch or
+hyperparameter selection is performed.
+
+**Exact accessible data.** Norman 2019 GEO GSE133344, Homo sapiens NCBI:9606,
+K562 simultaneous CRISPRa, day-five RNA endpoint; existing per-cell full-library
+log2(CP10k+1), core-control-standardized development payload SHA-256
+`ab81e7ed07d7f111b3dfc964cece28a2db7de0dcf5975f6ff1a3bc2db0be683e`.
+Only original fitting rows are used: 71 equally construct-weighted single
+endpoints and 59 canonical double endpoints, with both observed constituent
+singles for every pair. Three fixed pair folds contain 23, 19, and 17 doubles.
+The common single-defined panel has 7,182 observed queries. Static ESM320,
+protein-presence1 and GO256 descriptors come from the existing payload SHA-256
+`7b3d78af66f013e2d1df3a3f98924707ed111bc795757753e82a5e8f495408b5`.
+No global validation/test outcomes or SL labels enter this run. Rights remain
+the recorded Norman GEO public molecular research rights. This is known-gene
+composition interpolation in one context, with observed singles available.
+
+The two arms use the same 32-state, 64-wide, two-layer attention core, identical
+seeds 731–733, 1,000 AdamW updates, and equal single/pair class weighting. The
+operator's pair class averages simultaneous, A-to-AB and B-to-AB losses. Each
+fold's observation basis is fitted only to its fitting endpoints. A fixed
+nonadditive readout adds the state-dependent increment difference
+`f(z_A,B)-f(0,B)` (averaged over orders) to observed additive singles. Thus an
+action-only offset yields exactly zero correction even if single predictions
+are biased. Autonomous rollout is a separate secondary endpoint. The controls
+include observed additive singles, a fitting mean nonadditive correction,
+scalar-weighted additive response, symmetric single-state ridge, and the
+matched endpoint attention arm.
+
+Native CUDA profiling uses fitting data only: 30 updates take 0.75 seconds for
+endpoint attention and 1.171 seconds for the observed operator, projecting
+576 seconds for all 18 fits. The hard run limit is 2,700 seconds. Seven focused
+loader/operator checks pass. WSL is available but its former disposable OMF
+runtime and CLI are absent; no new OMF health or admission claim is made. This
+authorized native research run is not an executor fallback or release.
+The profile is retained under
+`results/slp11-transition/norman-observed-composition-profile-v1/`.
+
+### 2026-09-05 — Observed-background composition completed; primary rejected
+
+The first execution retained one fitting endpoint checkpoint and stopped before
+held scoring because fused PyTorch 2.11 evaluation attention differed between
+CPU and CUDA by 4.60e-4 on a fitting-state probe. Disabling the fused MHA
+fastpath reduced the difference to 1.13e-6. The corrected runtime was declared
+before the new run; the aborted directory remains intact. No scientific
+hyperparameter or advancement threshold changed.
+
+All 18 fixed fits finish in 517.25 seconds on the RTX 4070. Maximum CPU/CUDA
+state replay discrepancy across saved checkpoints is 1.91e-6. The data,
+operator and CPU inference checks pass 13 focused tests. Every forecast is
+fixed before held-combination scoring. The exact endpoint is mean squared
+error on the common 7,182-query, core-control-standardized RNA panel, with
+equal canonical-combination weight. Centered nonadditive correlation subtracts
+the observed additive singles and separately removes the across-combination
+mean of predicted and measured residuals before per-pair Pearson correlation.
+
+| Fixed model/readout | Pooled MSE | Centered nonadditive Pearson |
+|---|---:|---:|
+| Observed additive singles | .01863243 | .00000 |
+| Fitting mean residual correction | .01815324 | -.15874 |
+| Scalar-weighted observed additive | .01659083 | .43537 |
+| Symmetric observed-state ridge | .01615076 | .28563 |
+| Matched endpoint attention, anchored difference ensemble | .01809699 | .25434 |
+| Observed-state operator, anchored difference ensemble | .01778909 | .21780 |
+| Conditioning-state swaps, same correct additive anchor | .01839678 | .15097 |
+| Autonomous operator rollout ensemble, secondary | .01520345 | .48685 |
+
+The primary operator improves its matched endpoint readout by 1.70% and
+conditioning swaps worsen pooled MSE by 3.42%. It therefore uses some useful
+background information. However, it is 10.14% worse than ridge, with regressions
+against ridge in every fold, and fails the fixed advancement rule. The paired
+59-combination descriptive bootstrap places its relative gain at
+[-17.58%, -4.42%]; shared intervention genes and fitting folds make this a
+conditional interval rather than independent biological uncertainty.
+
+| Fold (held combinations) | State ridge MSE | Primary operator MSE | Secondary autonomous MSE |
+|---|---:|---:|---:|
+| 0 (23) | .01572963 | .01748818 | .01460008 |
+| 1 (19) | .01896241 | .01955134 | .01693923 |
+| 2 (17) | .01357810 | .01622663 | .01407979 |
+
+The predeclared autonomous rollout ensemble has 5.87% less pooled MSE than
+ridge and 18.40% less than observed additive singles. It remains worse than
+ridge in fold 2. Individual seeds 731/732/733 have MSE
+.01717545/.01652007/.01739727, all worse than ridge; averaging matters.
+This is a promising secondary diagnostic, not a pass. A locked-weight
+follow-up will compare autonomous composition with predicted additive singles
+and direct simultaneous endpoints to distinguish learned interaction from
+single-response prediction and ensemble denoising. It will not revise the
+primary decision or tune these weights.
+
+The 59 doubles span 42 genes; 39 held pairs have both parents present in other
+fitting doubles, 16 have one parent without another fitting double, and four
+have neither. All parents still have fitting single endpoints. This support
+distribution further limits extrapolation claims. No original global held-gene
+outcomes, external SL labels, or new species outcomes were evaluated.
+
+Run directory:
+`results/slp11-transition/norman-observed-composition-seeds731-733-v2/`.
+Protocol SHA-256:
+`d74c1a3605740cf7324a96620d2cef5fc193a0683c6f7109ec1e00309c9fa233`;
+forecast SHA-256:
+`c282bab72c6ae7d6708ecf833d27a92d0a02d23ca4325406623a799e20433831`;
+report SHA-256:
+`6582550971068ae2f56efea64435e016ded454bf9b2f06cd203c1c0e37a27f1b`.
+The complete per-seed and per-fold metrics are retained in the report.
+The standalone CPU wrapper requires the exact observed-single query axis,
+value space and raw static features; artifact replay is not OMF promotion.
+
+### 2026-09-05 — Locked rollout decomposition: tentative, unstable interaction signal
+
+The follow-up changes no fitted parameters, epochs, seeds, features or primary
+decision. A separate CPU script freezes all new forecasts from the existing
+18 checkpoints before scoring. It asks whether the promising predeclared
+autonomous result exceeds predicted additive singles and a matched direct
+endpoint. This is a post-hoc mechanism audit, not an advancement test.
+
+| Locked three-seed readout | Pooled MSE |
+|---|---:|
+| Observed singles projected into fitting response basis, additive | .01605801 |
+| Endpoint model: predicted singles, additive | .01596753 |
+| Operator: predicted singles, additive | .01607189 |
+| Endpoint model: direct simultaneous endpoint | .01549159 |
+| Operator: direct simultaneous endpoint | .01642505 |
+| Operator: autonomous two-order rollout | .01520345 |
+
+Autonomous composition improves its own predicted-additive baseline by 5.40%
+and its simultaneous endpoint by 7.44%. Its improvement over the matched
+endpoint model's direct simultaneous prediction is only 1.86%. It regresses
+against predicted additive in fold 2 and against the matched direct endpoint
+in fold 0. Descriptive gene-multiplicity-weighted bootstrap intervals are
+[-0.21%, 11.03%] and [-3.95%, 7.01%] for these two principal contrasts.
+They are conditional sensitivity summaries, not independent confirmatory
+intervals. They include zero. Projecting observed additive singles alone also
+removes substantial error, showing why raw additive comparison overstates the
+evidence for emergent composition.
+
+The fixed primary rejection stands. The evidence motivates retaining the
+observed-state operator as an experimental factorization, with much stronger
+composition support and an independent context needed before another emergence
+claim. It does not justify copying the entire frozen v1 architecture, scaling
+this pilot, or replacing the retained K562/RPE1 response model. The scientific
+change is to ground state updates in measured perturbed backgrounds and judge
+them against both additive and direct-endpoint alternatives. The broad
+world-model/SL objective remains unfulfilled.
+
+The audit script is `scripts/audit_slp11_compositional_rollout.py`; artifacts
+are under the original run's `secondary-rollout-audit-v1/`. Report SHA-256:
+`9daa9e86e5d70f813d582c05ea0a936947b86371cc2b38ebcc133ea73664e531`.
+Autonomous CPU recomputation matches the earlier CUDA forecasts within 1.05e-6.
+The separate public inference wrapper also reproduces the primary forecasts
+on one actual held pair per fold for all nine operator checkpoints, maximum
+expression-space discrepancy 8.76e-7. Checks and weight/basis/code hashes are
+retained in `cpu-inference-replay.json` and `artifact-manifest.json`.
+
+### 2026-09-05 — OMF 2 migration and a usable retained-model build
+
+The project now uses pinned OMF 2.0.0, upstream revision
+`75f002b4226b32dd428f5fec0efe9b950db0c6d5`, on Ubuntu 24.04/CPython 3.12.3.
+The bootstrap installs upstream runtime/build locks with required hashes.
+`scripts/omf2.sh` pins the runtime for both the CLI and dependency subprocesses.
+Doctor reported ready, zero failures and catalog version 2. All 31 existing
+concrete project/module/workload/evaluation/binding/policy resources checked
+against the actual upstream registry validated; `omf.dev/v1alpha1` remains
+correct. Unsupported OMF 1 policy keys were removed. Development source is
+captured in archive mode, without requiring a commit before each run.
+
+The active `experiment.yaml` now builds the retained rank-32 response model
+through self-contained train/evaluate scripts in
+`modules/slp-1-1-response-omf2/`. This is a migration of an existing numerical
+model, not a newly competitive neural world model. The numerical acceptance
+criterion was reproduction of the retained development scores and forecasts;
+there was no architecture search or new biological hypothesis in this work.
+Evaluation also retains the detailed report as a declared OMF artifact.
+
+Inputs are derived from Replogle human K562/RPE1 essential-gene CRISPRi
+measurements and the existing 577-component static ESM/GO descriptors. Training
+has 1,443 K562 and 1,666 RPE1 intervention means; development has 305 and 360
+interventions respectively. The query axes contain 8,563 and 8,749 genes.
+The target is ln1p(mean CP10K), anchored to the original source/GEM control
+mixture. This linear model uses intervention means rather than fitting individual
+cell counts. Preparation checks intervention disjointness, query ordering and
+metadata/truth identity. Separate captured training/development manifests now
+record raw-input and panel SHA-256 values and sizes. No final holdout or SL
+benchmark was opened.
+
+The final candidate's DatasetSnapshot revisions are:
+
+- Training: `sha256:3dc11e8787d67a6e295497c59a63d4787ff9eb31b1d0a4996a8a6785b84d4947`.
+- Development: `sha256:d288986b0d41808fed0123c3251c09547176e90a9b753ad45533b75fb35257de`.
+
+| OMF 2 model | K562 MSE | K562 centered r | RPE1 MSE | RPE1 centered r |
+|---|---:|---:|---:|---:|
+| Full ridge | .00358458479909 | .222189473422 | .00845344099081 | .265243194826 |
+| Rank 32 | .00343271360076 | .248753210926 | .00815924214789 | .285890123781 |
+
+These reproduce the prior results: rank 32 reduces development MSE by 4.24% and
+3.48%. The full-ridge run completed successfully but its evaluation correctly
+does not pass the rank-32 advancement criteria. The candidate and its captured
+reproduction both pass. Baseline/candidate data revisions differ because source
+receipts were added inside the captured directories after the initial baseline;
+the molecular arrays and numerical implementation are unchanged. The dependency
+lock also gained a verified CPython 3.11 Linux wheel hash before candidate capture.
+
+Successful OMF runs:
+
+- Full ridge: `01a07326-a1fb-79a8-8d6a-ea3359aadf1e`.
+- Rank 32: `01a0732a-789a-7dab-84fe-264a28e89c2e`.
+- Captured reproduction: `01a0732c-26ac-7624-81c8-d81718de6857`.
+
+OMF measured 10.12 stage wall seconds/9.83 CPU seconds for full ridge and
+5.78 stage wall seconds/5.90 CPU seconds for rank 32, excluding admission and
+environment preparation. No GPU or paid remote compute was used. Reproduction
+returns identical reported scores; this is numerical reproducibility, not a
+claim that separate run artifact manifests have identical digests.
+
+The candidate's model directory artifact is
+`sha256:9b593d28f62f16343b68e6628c96c2370f74f9da82b37acce479d3dd0abd3f2f`.
+OMF exported actual weights, inference code, dependencies and manifest under
+`results/omf2-migration-v1/export-rank32/artifacts/model/`, together with captured
+source, experiment definition, model card and evidence. The model directory is
+approximately 4.77 MB. Export is not a dataset download or installed runtime.
+
+`scripts/verify_slp11_omf2_export.py` exercised exported inference for every
+existing development intervention in a fresh CPython 3.12 environment containing
+NumPy 2.2.6 and threadpoolctl 3.6.0, with no OMF installation. It supplied only
+static features and control anchors to the inference subprocesses. All
+5,761,355 returned values match retained forecasts within 2.66e-15 (K562) and
+7.99e-15 (RPE1), with exact query identity and matching weight digests. The
+verification report is `results/omf2-migration-v1/standalone-replay-v2/report.json`.
+The first CLI attempt exposed Conda Python 3.13 selection and correctly failed
+dependency hashes; the launcher fixes that. The first standalone verifier exposed
+symlink resolution selecting base Python; preserving the venv executable fixes it.
+Neither failure was accepted as model evidence.
+
+A real local release, `slp11-response-rank32-omf2-20260905`, was saved and read
+back with `omf.release/v2` format and no aliases. Its revision is
+`sha256:283f75a26c26433681a54fb9b9fcdf007806487d0c037f7c50e185d7e004c115`.
+It is unpromoted and was not uploaded or deployed. The release records the
+absence of vulnerability evidence; no substitute evidence was created.
+The separate OMF ModelPackage service still needs tested artifact materialization;
+this does not prevent the now-verified standalone directory inference.
+
+Focused checks passed: nine model serialization, standalone inference, data
+partition and factory-isolation tests. Two upstream schema tests explicitly skip
+in the default Python environment lacking OMF dependencies; the actual upstream
+registry independently validated all 31 concrete resources in a dependency-equipped
+environment. Shell syntax and changed Python syntax checks passed. Logs, review
+HTML/JSON, export, resource validation and release receipts are retained under
+`results/omf2-migration-v1/`; installation diagnostics are in
+`results/omf2-installation.log`.
+
+The operating decision is to build one joint observation/transition model with
+mechanism-aware interventions and assay-specific queried decoders. K562/RPE1
+raw-cell populations and Norman observed single/double relations should train
+the same state representation, with CRISPRi/a and measurement semantics preserved.
+The chosen implementation scope is now in `MODEL_CARD.md`. Broader independent
+combination and context coverage is needed for an emergence claim. This migration
+makes the current model manufacturable and usable; it neither implements that
+next shared neural model nor changes the evidence that SLp-1.1 is not yet SOTA.

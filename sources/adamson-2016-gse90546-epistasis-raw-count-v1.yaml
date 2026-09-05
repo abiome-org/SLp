@@ -1,0 +1,68 @@
+schema: slp.source-acquisition/v1
+id: adamson-2016-gse90546-upr-epistasis-raw-count-v1
+status: acquired-opaque-not-decoded-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  accession: GEO:GSE90546
+  sample: GEO:GSM2406677
+  sraExperiment: SRX2400167
+  landingUrl: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2406677
+  articleDoi: 10.1016/j.cell.2016.11.048
+rights: rights/adamson-2016-gse90546-epistasis-raw-count-public-molecular.yaml
+context:
+  id: adamson-2016-k562-crispri-upr-epistasis
+  cellLine: K562
+  effector: dCas9-KRAB
+  perturbation: simultaneous-zero-single-double-or-triple-CRISPRi
+  targetStableIds:
+    ATF6: ENSG00000118217
+    EIF2AK3_PERK: ENSG00000172071
+    ERN1_IRE1: ENSG00000178607
+  globalRoles:
+    ENSG00000118217: train
+    ENSG00000172071: train
+    ENSG00000178607: validation
+  combinationRouting: test-if-any-test-else-validation-if-any-validation-else-train
+allowlist:
+  - name: GSM2406677_10X005_matrix.mtx.txt.gz
+    localPath: data/sources/adamson-2016-gse90546-epistasis-raw-count-v1/GSM2406677_10X005_matrix.mtx.txt.gz
+    bytes: 199715348
+    sha256: 36392a38e727e5cf3c4c2eff4b0d19f4b16009926aabcc80d002256345c714b4
+    md5: a1a557368d0b860278b905d7c15f78c3
+    remoteLastModified: 2016-11-25T22:24:23Z
+    remoteChecksumOffered: false
+metadataDependencies:
+  sourceRecord: sources/adamson-2016-gse90546-epistasis-metadata-v1.yaml
+  geneAxis:
+    path: data/sources/adamson-2016-gse90546-metadata-v1/GSM2406677_10X005_genes.tsv.gz
+    sha256: a804084f5c41b55746aea5c932935937f0580aa375b205ecd75f445cb54fd5ad
+  cellAssignments:
+    path: data/sources/adamson-2016-gse90546-metadata-v1/GSM2406677_10X005_cell_identities.csv.gz
+    sha256: fc9cb6314594345057c1b937fa0c7947399f073196a3104963da609be7b74d14
+identityAudit:
+  report: data/sources/adamson-2016-gse90546-epistasis-raw-count-v1/metadata-report.json
+  reportSha256: bca82c2cf7bfa444e8c58a6fd012bb7a3a3cc344070768eff77d21a632644e05
+  manifest: data/sources/adamson-2016-gse90546-epistasis-raw-count-v1/manifest.json
+  manifestSha256: 5032e0a546b6e4742150dd4e61ff70291657757e26c7f6df0cc3737f07fc2dac
+  actionContextRecords: 24
+  biologicalActionSets: 8
+  queryAxisExactOverlapWithCurrentK5628563: 8365
+access:
+  matrixDownloaded: true
+  compressedBytesHashed: true
+  matrixHeaderRead: false
+  matrixValuesRead: 0
+  matrixDecoded: false
+  molecularOutcomesAggregated: false
+requirementsBeforeOutcomeAccess:
+  - freeze exact query axis and no-fill missing-query policy
+  - freeze combination constituent routing before any matrix decode
+  - isolate every ERN1-containing population as validation
+  - freeze forecast protocol and molecular advancement rule
+limitations:
+  - Only ATF6 of the three target genes is measured in the current K562 8563-query panel.
+  - The 8365-gene exact stable-ID intersection is the directly comparable query axis; no symbol merge is permitted.
+  - The compressed matrix has been acquired and hashed but remains outcome-unopened.

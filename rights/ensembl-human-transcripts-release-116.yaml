@@ -1,0 +1,26 @@
+license: Ensembl-data-no-restrictions
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/
+evidence: https://jun2026.archive.ensembl.org/info/about/legal/disclaimer.html
+scope: >-
+  Ensembl-produced GRCh38 release 116 cdna.all and ncrna transcript FASTA
+  sequences, plus their CHECKSUMS and README files. Exact bytes and hashes
+  are pinned in sources/ensembl-human-transcripts-release-116.yaml.
+rightsBasis: >-
+  The publisher states that access and use of its generated data are
+  unrestricted. The fetched release-116 legal page is retained and hashed
+  in the acquisition manifest. Attribution is preserved.
+thirdPartyCaveat: >-
+  This scope covers the named Ensembl transcript sequence exports only;
+  it does not extend to linked third-party databases or annotations.
+attribution: Ensembl release 116, Homo sapiens GRCh38 transcripts, EMBL-EBI.
+purposeRestrictions:
+  staticFeatureGeneration: true
+  molecularOutcomeTrainingCorpus: false
+  syntheticLethalityLabels: false
+exclusions:
+  - ab initio transcript predictions
+  - free-text gene descriptions or symbols as model features
+  - unlisted files and mutable current-release paths

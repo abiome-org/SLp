@@ -1,0 +1,41 @@
+schema: slp.source-acquisition/v1
+id: ensembl-human-transcripts-release-116
+status: downloaded-static-source-upstream-checksum-verified
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+  assembly: GRCh38
+release: 116
+rights: rights/ensembl-human-transcripts-release-116.yaml
+manifest: data/sources/ensembl116-human-transcripts-v1/manifest.json
+allowlist:
+- url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+  path: data\sources\ensembl116-human-transcripts-v1\cdna\Homo_sapiens.GRCh38.cdna.all.fa.gz
+  bytes: 183898799
+  sha256: 683eb19310c40bf1396e4718f45afa2ce86755717c0990f47a171f535d248ea1
+- url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/cdna/CHECKSUMS
+  path: data\sources\ensembl116-human-transcripts-v1\cdna\CHECKSUMS
+  bytes: 115
+  sha256: 87191f13342a3eeb6513291cc7de999e2816d4b1d05ea14150156608e93f775f
+- url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/cdna/README
+  path: data\sources\ensembl116-human-transcripts-v1\cdna\README
+  bytes: 2558
+  sha256: a5bbf7e19cc9070b01e75e00605bd441e49f6f1a243fc5ff4a929567201eeae7
+- url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/ncrna/Homo_sapiens.GRCh38.ncrna.fa.gz
+  path: data\sources\ensembl116-human-transcripts-v1\ncrna\Homo_sapiens.GRCh38.ncrna.fa.gz
+  bytes: 41013640
+  sha256: 7f03bb303e939517b322f7887a74c1ee15bbb82a6affbb54f0be84e82f89cff1
+- url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/ncrna/CHECKSUMS
+  path: data\sources\ensembl116-human-transcripts-v1\ncrna\CHECKSUMS
+  bytes: 59
+  sha256: fbd252863a8e46b770b00ee64348b47194712a0854d45e9f9fb8ed1c9a71361f
+- url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/ncrna/README
+  path: data\sources\ensembl116-human-transcripts-v1\ncrna\README
+  bytes: 1613
+  sha256: 43010af69f7bc7c962b4bb17c5d09ca4d335fc11444b62cb671662b22bbbac40
+legalEvidence:
+  url: https://jun2026.archive.ensembl.org/info/about/legal/disclaimer.html
+  sha256: f720b37f37a1781320c4c0bb08ab1abcde741e63d9586a57cbf498b8d79b2126
+endpoint: static strand-preserving transcript sequence; no quantitative intervention
+  outcome

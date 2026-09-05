@@ -1,0 +1,89 @@
+schema: slp.source-acquisition/v1
+id: replogle-2022-k562-rpe1-author-normalized-pseudobulk-v2
+status: acquired-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  accession: figshare-plus:20029387
+  version: 1
+  versionDoi: 10.25452/figshare.plus.20029387.v1
+  metadataUrl: https://api.figshare.com/v2/articles/20029387
+  articleDoi: 10.1016/j.cell.2022.05.013
+rights: rights/figshare-replogle-2022-processed-perturb-seq-cc-by-4.0.yaml
+identity:
+  primaryNamespace: Ensembl-gene
+  readoutField: var/gene_id
+  actionField: obs/gene_transcript
+  displaySymbolsAreIdentity: false
+  versionPolicy: source contains unversioned Ensembl gene IDs; do not map by symbol
+valueSpace:
+  id: author-per-gemgroup-core-control-z-score-pseudobulk-mean-v1
+  signed: true
+  evidence:
+    paperMethod: >-
+      Per-cell UMI counts are scaled to the experiment's median core-control UMI
+      count, then each gene is z-normalized against core controls separately in
+      each gemgroup.
+    authorBulkArtifact: normalized_bulk_01
+    aggregation: perturbation-population arithmetic mean of normalized cell values
+    authorCodeRepository: https://github.com/thomasmaxwellnorman/Perturbseq_GI
+    authorCodeCommit: 3b25109aeb9c0c2026bd70abd50304a0ad4e5395
+    authorCodeMethod: CellPopulation.groupby_apply dispatches pandas mean
+  doNotApplyAgain:
+    - library-size normalization
+    - log transform
+    - control z-normalization
+allowlist:
+  - name: K562_essential_normalized_bulk_01.h5ad
+    figshareFileId: 35780870
+    url: https://ndownloader.figshare.com/files/35780870
+    localPath: data/sources/human/K562_essential_normalized_bulk_01.h5ad
+    bytes: 79766954
+    upstreamMd5: 30496767641cd2e660ee6ecb5baee132
+    sha256: c1ca6456c9c9f1aa2b02c496eb64d1dc3e6a852edbd744d682b8d2c95fd36829
+    context: replogle-2022-k562-essential-day-6
+  - name: rpe1_normalized_bulk_01.h5ad
+    figshareFileId: 35775512
+    url: https://ndownloader.figshare.com/files/35775512
+    localPath: data/sources/human/rpe1_normalized_bulk_01.h5ad
+    bytes: 95350546
+    upstreamMd5: 6f1e7d6a09e2f869759e3c4526b7f171
+    sha256: a3c5bfd0f15d63938bc80c9b8874b9cd761e3a23caf5ffe7966bae4e887ec89d
+    context: replogle-2022-rpe1-essential-day-7
+acquisition:
+  downloadedAt: 2026-09-04
+  exactBytesAndUpstreamMd5Verified: true
+  localSha256Computed: true
+  localFilesIgnoredByGit: true
+derivedContract:
+  queryPanel: exact sorted Ensembl intersection across both normalized artifacts
+  queryCount: 7226
+  split: sha256(slp11-development-v1|731|9606|ENSG), first 8 bytes modulo 100
+  controls: source rows marked core_control only
+  numCellsField: obs/num_cells_filtered
+  numCellsRole: likelihood-only measurement precision; forbidden as predictor input
+  contextBasalExpression:
+    source: raw bulk source-marked core-control rows only
+    transform: log2(1 + 10000*x/sum(x_shared_7226)) then mean across control populations
+    role: measured context input; distinct from author-z-score target/reference space
+  nonfinitePolicy: retain fixed query identity and mark individual values unobserved
+rawContextAllowlist:
+  - name: K562_essential_raw_bulk_01.h5ad
+    figshareFileId: 35773070
+    bytes: 79766954
+    upstreamMd5: 8321d5d3ffc99db2a5c71edca4189735
+    sha256: 80de95e54fcbca0e0537d569b43ec92fde6bd0482801505504baebe3118dcadf
+    access: core-control rows only for context basal expression
+  - name: rpe1_raw_bulk_01.h5ad
+    figshareFileId: 35775581
+    bytes: 95350546
+    upstreamMd5: 74765fa87635467a869ea972356ae0e7
+    sha256: 603c655f1cfa41d649baf3ae63fca224cc11f297e40d4ed59d390b1e8d2e2db2
+    access: core-control rows only for context basal expression
+limitations:
+  - K562 and RPE1 differ in cell line, sampling day, and screened action population.
+  - Pseudobulk rows are cell-population means with unequal contributing cell counts.
+  - The normalized artifacts collapse gemgroups after source normalization and do not expose per-gemgroup composition.
+  - Acquisition and derivation do not constitute OMF admission or candidate evidence.

@@ -1,0 +1,26 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.7554/eLife.81856
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+evidence:
+  - https://pmc.ncbi.nlm.nih.gov/articles/PMC9829409/
+  - https://elifesciences.org/articles/81856
+  - https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only elife-81856-supp4-v2.xlsx (7359746 bytes, SHA-256
+  5ba9c6a4eaec4939359db851a9631cc47f5f0c5628328902a848f6a63571fd28)
+  and elife-81856-supp12-v2.csv (483703 bytes, SHA-256
+  514e0e3351a85fc7cd54a6043e8c2bbd3c91d2761e0cbf87c7203d1150178191).
+rightsBasis: >-
+  The eLife open-access article and its supplementary files are distributed
+  under CC BY 4.0, which permits use, adaptation, and redistribution with
+  attribution and change notice.
+attribution: >-
+  Replogle JM et al. (2022). Maximizing CRISPRi efficacy and accessibility
+  with dual-sgRNA libraries and optimal effectors. eLife 11:e81856.
+  https://doi.org/10.7554/eLife.81856
+exclusions:
+  - phenotype columns as predictive inputs
+  - other eLife supplements and linked sequencing data

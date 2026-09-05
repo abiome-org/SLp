@@ -1,0 +1,39 @@
+name: slp-1-1-response-omf2
+objective: Reproduce the retained native-panel rank-32 molecular response model under OMF 2.0.
+modelCard: MODEL_CARD.md
+data:
+  training:
+    source: data/derived/slp11-omf2-response-v1/training
+    rights: {license: CC-BY-4.0, trainingAllowed: true}
+  development:
+    source: data/derived/slp11-omf2-response-v1/development
+    rights: {license: CC-BY-4.0, trainingAllowed: true}
+train:
+  source: modules/slp-1-1-response-omf2
+  inputs: [training]
+  dependencies: requirements.lock
+  command: [python3, train.py, --data, "{inputs[training]}", --output, "{output}/model", --rank, "{parameters[rank]}", --alpha, "{parameters[alpha]}"]
+  artifacts: {model: model}
+evaluate:
+  source: modules/slp-1-1-response-omf2
+  inputs: [development, model]
+  dependencies: requirements.lock
+  command: [python3, evaluate.py, --data, "{inputs[development]}", --model, "{inputs[model]}", --output, "{output}"]
+  metrics: metrics.json
+  artifacts: {report: report.json}
+metrics:
+  k562_mse: {direction: minimize, maximum: 0.00350}
+  rpe1_mse: {direction: minimize, maximum: 0.00830}
+  k562_centered_pearson: {minimum: 0.10}
+  rpe1_centered_pearson: {minimum: 0.10}
+primaryMetric: k562_mse
+baseline: full-ridge
+candidates:
+  full-ridge:
+    rationale: Establish the full feature-linear comparator using the same captured data and implementation.
+    parameters: {rank: 0, alpha: 1000.0}
+  rank32:
+    rationale: Manufacture the retained compact response model.
+    parameters: {rank: 32, alpha: 1000.0}
+limits: {timeoutSeconds: 600, cpuSeconds: 600}
+executor: local

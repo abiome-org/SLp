@@ -1,0 +1,102 @@
+schema: slp.source-acquisition/v1
+id: replogle-2022-k562-gwps-author-normalized-pseudobulk-v3
+status: acquired-derived-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  accession: figshare-plus:20029387
+  version: 1
+  versionDoi: 10.25452/figshare.plus.20029387.v1
+  metadataUrl: https://api.figshare.com/v2/articles/20029387
+  landingUrl: https://plus.figshare.com/articles/dataset/20029387
+  articleDoi: 10.1016/j.cell.2022.05.013
+rights: rights/figshare-replogle-2022-k562-gwps-cc-by-4.0.yaml
+context:
+  id: replogle-2022-k562-gwps-day-8
+  cellLine: K562
+  biologicalSystem: chronic-myeloid-leukemia-cell-line
+  perturbation: single-gene-CRISPRi
+  assayScale: genome-scale
+  samplingTime: day-8-post-transduction
+  distinctFrom:
+    context: replogle-2022-k562-essential-day-6
+    sameAssayOrCells: false
+    evidence:
+      - official Figshare v1 describes distinct day-8 genome-scale and day-6 essential-scale experiments
+      - 2262 of 2276 shared population identifier suffixes have different filtered-cell counts
+    identityRule: retain shared action populations under separate context IDs
+identity:
+  primaryNamespace: Ensembl-gene
+  readoutField: var/gene_id
+  actionField: terminal ENSG token in obs/gene_transcript
+  displaySymbolsAreIdentity: false
+  unresolvedPolicy: quarantine every non-control row without an exact terminal ENSG token
+allowlist:
+  - name: K562_gwps_normalized_bulk_01.h5ad
+    figshareFileId: 35773217
+    url: https://ndownloader.figshare.com/files/35773217
+    localPath: data/sources/human/K562_gwps_normalized_bulk_01.h5ad
+    bytes: 374587922
+    upstreamMd5: a3dfaa94ea8724217f5ecb1e14a5f0c8
+    sha256: 37e48c474d8b5dead4151f96ea8f5fe7bbe6beb10eeea48685b740c3f74490a2
+    role: author-normalized-pseudobulk-molecular-targets
+  - name: K562_gwps_raw_bulk_01.h5ad
+    figshareFileId: 35774443
+    url: https://ndownloader.figshare.com/files/35774443
+    localPath: data/sources/human/K562_gwps_raw_bulk_01.h5ad
+    bytes: 374587922
+    upstreamMd5: 4570b53c9d62ff6df281e622f0350060
+    sha256: 7cec96b3b76169abbf6b6ab9d10bf00d71d942d89e63292351f745e130b154db
+    role: source-marked-core-controls-only-for-basal-context-expression
+valueSpace:
+  targets: author-per-gemgroup-core-control-z-score-pseudobulk-mean-v1
+  context: log2-1p-cp10k-shared-panel-raw-core-control-mean-v1
+  targetDoNotApplyAgain: [library-size-normalization, log-transform, control-z-normalization]
+derived:
+  directory: data/derived/slp11-human-gwps
+  queryPanel:
+    fixedCount: 7226
+    sha256: 645b8d563b440a4b7ab6a3bb42450594b408c4e7cb84e4fe2789a6620174f12c
+    sourcePresent: 7079
+    sourceAbsent: 147
+    absentRule: observed=false with stored zero value
+  split: sha256(slp11-development-v1|731|9606|ENSG), test greater than validation greater than train
+  development:
+    path: data/derived/slp11-human-gwps/replogle-k562-rpe1-gwps-author-normalized-development-v3.npz
+    bytes: 370434698
+    sha256: baac863d7050fbd71ac332a680215af1e400f759ad441534019905bd521fda96
+    contexts: 3
+    records: 13058
+    train: 10719
+    validation: 2339
+  gwpsTestOnly:
+    path: data/derived/slp11-human-gwps/replogle-k562-gwps-author-normalized-test-only-v3.npz
+    bytes: 56978814
+    sha256: f6243de9cd8e35f2fc19996412ed2f88a3b7b6fab374c7515831cf95968b9f94
+    access: sealed; mechanically routed and not numerically analyzed
+coverage:
+  interventionRows: 10656
+  stableActionGenes: 9852
+  trainActionGenes: 6864
+  validationActionGenes: 1491
+  testActionGenes: 1497
+  newTrainGenesVersusExistingHuman: 5200
+  newValidationGenesVersusExistingHuman: 1131
+  newTrainValidationGenesVersusExistingHuman: 6331
+  trainValidationGenesMissingCurrentStaticFeatures: 2201
+  allGenesMissingCurrentStaticFeatures: 2626
+  coreControlPopulations: 514
+  unresolvedRowsQuarantined: 17
+deduplication:
+  normalizedAndRawPopulationIdsExact: true
+  rawOutcomeRowsIncluded: false
+  rawUse: core controls only
+  sharedEssentialPopulationSuffixes: 2276
+  sharedEssentialHandling: retained because assay, sampling day, and contributing cells differ; context-prefixed record IDs prevent collisions
+limitations:
+  - The genome-scale source measures 7,079 of the fixed 7,226 response queries; masks retain the 147 absent queries.
+  - Existing static features cover 7,226 of 9,852 GWPS action genes and require extension before using all development records in a feature-conditioned model.
+  - Pseudobulk rows have unequal contributing-cell counts; counts are likelihood metadata and are forbidden as predictor inputs.
+  - This acquisition is not an OMF admission, confirmation candidate, or benchmark result.

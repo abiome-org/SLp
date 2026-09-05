@@ -1,0 +1,61 @@
+schema: slp.source-acquisition/v1
+id: replogle-2022-rpe1-essential-raw-singlecell-v1
+status: acquired-metadata-audited-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  accession: figshare-plus:20029387
+  version: 1
+  versionDoi: 10.25452/figshare.plus.20029387.v1
+  metadataUrl: https://api.figshare.com/v2/articles/20029387
+  articleDoi: 10.1016/j.cell.2022.05.013
+rights: rights/figshare-replogle-2022-rpe1-essential-singlecell-cc-by-4.0.yaml
+allowlist:
+  name: rpe1_raw_singlecell_01.h5ad
+  figshareFileId: 35775606
+  url: https://ndownloader.figshare.com/files/35775606
+  localPath: data/sources/replogle-2022-rpe1-essential-singlecell-v1/rpe1_raw_singlecell_01.h5ad
+  bytes: 8700873216
+  upstreamMd5: 6a2a9d0d2bf4ec147f4d1104043b268c
+  sha256: 9b05ef1f81526216fa008d677e9e0d03dce9a2f7a95499a4fb81e505e9d88ef1
+context:
+  id: replogle-2022-rpe1-essential-day-7
+  interventionMode: CRISPRi
+  assay: single-cell RNA UMI counts
+  sourceValueSpace: raw counts stored as float32
+plannedAccess:
+  metadataFirst: true
+  expressionPolicy: >-
+    Before any X access, route cells by the existing global stable-action hash;
+    fitting actions and verified non-targeting controls may enter future
+    development shards, validation cells remain separate, and test-action cells are excluded.
+  guidePolicy: retain exact author guide, gene_transcript, gemgroup and barcode provenance
+  noEfficacyForecastInput: true
+acquisition:
+  downloader: scripts/acquire_replogle_rpe1_essential_singlecell.py
+  maximumConnections: 4
+  rangeBytes: 67108864
+  maximumSecondsIncludingHash: 3500
+  completedAt: 2026-09-05
+  totalSeconds: 447.766
+  receipt: data/sources/replogle-2022-rpe1-essential-singlecell-v1/complete.json
+  receiptSha256: 08752afa3ce1c8373caacb7e3931c82175a760f1e9c038470ad3c24f758b657e
+metadataAudit:
+  cells: 247914
+  sourceQueries: 8749
+  actionGenesResolved: 2390
+  stableGuidePairs: 2662
+  gemGroups: 56
+  controls: 11485
+  unresolvedCellsQuarantined: 458
+  expressionValuesRead: false
+  routingSidecar: data/derived/slp11-human-rpe1-essential-singlecell-metadata-v1/cell-routing-metadata.npz
+  routingSidecarSha256: 10f3d313a5671122bde10a9bd586e3a2808d6f9b554f737ddcbbc28becc5e2f2
+  report: results/slp11-transition/rpe1-essential-singlecell-metadata-audit-v1/report.json
+  reportSha256: 323bece05ee1ccf2d51dad336ce3a671a47cc32f0a92db711be6683b5b3f668a
+limitations:
+  - This source snapshot is not an OMF admission or a trained model.
+  - The metadata-only routing audit is complete; no matrix values have been read.
+  - Three unresolved source action aliases covering 458 cells remain quarantined from quantitative access.

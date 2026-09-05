@@ -1,0 +1,46 @@
+schema: slp.source-acquisition/v1
+id: go-sgd-2022-09-19
+status: downloaded-exploratory-static-feature-source-not-admitted
+organism:
+  name: Saccharomyces cerevisiae S288C
+  speciesTaxon: 4932
+  strainTaxon: 559292
+source:
+  publisher: Gene Ontology Consortium
+  annotationProvider: Saccharomyces Genome Database
+  release: "2022-09-19"
+  exactDownloadUrl: https://release.geneontology.org/2022-09-19/annotations/sgd.gaf.gz
+  releasePage: https://release.geneontology.org/2022-09-19/products/pages/downloads.html
+  formatDocumentation: https://geneontology.org/docs/go-annotation-file-gaf-format-2.2/
+rights: rights/go-sgd-2022-09-19-cc-by-4.0.yaml
+object:
+  localIgnoredPath: data/sources/sgd-go/sgd-2022-09-19.gaf.gz
+  retrievedAt: "2026-09-04"
+  lastModified: "2022-09-21T23:32:07Z"
+  bytes: 3742380
+  sha256: cb991189e29e847e1a0437baf5d786a8cff0cab2bc7d58f97251f5e5df11a535
+  decompressedBytes: 26993070
+  decompressedSha256: fc526528dd492c76be75121506e56b9b2b1edc904712a9028f3a94af77bfdea5
+content:
+  gafVersion: "2.2"
+  goReleaseDate: "2022-09-19"
+  generatedByGoc: "2022-09-20T19:04"
+  generatedBySgd: "20220912"
+  annotationRows: 120950
+  stableSgdObjectIds: 6983
+  organismTaxon: "taxon:559292"
+featurePolicy:
+  includeAspects: [F, C]
+  annotationDateMaximumInclusive: "2022-12-31"
+  excludeQualifier: NOT
+  excludeEvidence: [HEP, HGI, HMP, IEP, IGI, IMP]
+  directTermsOnly: true
+  geneticInteractionAnnotationsAllowed: false
+  syntheticLethalityAnnotationsAllowed: false
+  quantitativeOutcomeFittingAllowed: false
+  staticFeatureGenerationAllowed: true
+admission:
+  omfDatasetSnapshotAdmitted: false
+  note: >-
+    This exact download is retained only as an ignored exploratory source.
+    The declaration makes no OMF admission, lineage, or release claim.

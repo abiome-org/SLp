@@ -1,0 +1,28 @@
+license: NCBI-GEO-public-data-policy
+trainingAllowed: true
+redistributionAllowed: conditional
+attributionRequired: true
+source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE264667
+evidence:
+  - https://www.ncbi.nlm.nih.gov/geo/info/disclaimer.html
+  - https://www.ncbi.nlm.nih.gov/geo/info/faq.html
+  - https://doi.org/10.1038/s41588-025-02169-3
+scope: >-
+  Molecular single-cell expression and guide-assignment data deposited by the
+  authors under GEO accession GSE264667, limited to the exact files documented
+  in sources/nadig-2025-gse264667-unseen-context-candidate.yaml.
+rightsBasis: >-
+  NCBI states that it places no restrictions on use or distribution of GEO
+  data and describes released GEO records as available for reuse. NCBI also
+  cautions that submitters may retain patent, copyright, or other rights.
+  Training is allowed for this public research dataset with citation;
+  redistribution therefore remains conditional on downstream review.
+attribution: >-
+  Nadig A, Replogle JM, Pogson AN, et al. Transcriptome-wide analysis of
+  differential expression in perturbation atlases. Nature Genetics 57,
+  1228-1237 (2025). DOI: 10.1038/s41588-025-02169-3. GEO GSE264667.
+exclusions:
+  - synthetic-lethality benchmark labels or outcomes
+  - pretrained quantitative weights or predictions
+  - locally derived arrays, splits, checkpoints, and reports
+  - files outside the exact GSE264667 allowlist

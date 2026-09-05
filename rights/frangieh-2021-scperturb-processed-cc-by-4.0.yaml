@@ -1,0 +1,35 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.5281/zenodo.10044268
+evidence:
+  - https://zenodo.org/api/records/10044268
+  - https://creativecommons.org/licenses/by/4.0/
+  - https://singlecell.broadinstitute.org/single_cell/terms
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only FrangiehIzar2021_RNA.h5ad (upstream MD5
+  dc438f53c476a3dd562898654d48ed15) and
+  FrangiehIzar2021_protein.h5ad (upstream MD5
+  9d9337e30af69ffdcf5e831f96616ed1) from scPerturb Zenodo record
+  10044268, immutable version 1.3. The Zenodo record describes these as a
+  secondary upload of datasets from scPerturb.org and applies CC BY 4.0.
+rightsBasis: >-
+  The immutable Zenodo record identifies its license as CC BY 4.0. That
+  license permits copying and adaptation for any purpose with attribution and
+  an indication of changes. Separately, Broad Single Cell Portal's current
+  terms state that public study data are available for unrestricted public
+  view, redistribution, and reuse. This file does not extend either statement
+  to DUOS-controlled raw sequence data.
+attribution: >-
+  Frangieh CJ, Melms JC, Thakore PI et al. Multimodal pooled
+  Perturb-CITE-seq screens in patient models define mechanisms of cancer
+  immune evasion. Nature Genetics 53, 332-341 (2021).
+  DOI: 10.1038/s41588-021-00779-1. Processed AnnData packaging: Peidli S et
+  al., scPerturb, Zenodo record 10044268 version 1.3.
+exclusions:
+  - DUOS-000124 controlled raw sequencing data
+  - files in Zenodo record 10044268 other than the two exact allowlisted H5ADs
+  - authenticated Single Cell Portal downloads not present in this snapshot
+  - locally derived arrays, splits, checkpoints, predictions, or benchmark data

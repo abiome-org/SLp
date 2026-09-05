@@ -1,0 +1,29 @@
+license: NCBI-GEO-public-data-policy
+trainingAllowed: true
+redistributionAllowed: conditional
+attributionRequired: true
+source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE90546
+evidence:
+  - https://www.ncbi.nlm.nih.gov/geo/info/disclaimer.html
+  - https://www.ncbi.nlm.nih.gov/home/about/policies/
+  - https://doi.org/10.1016/j.cell.2016.11.048
+scope: >-
+  The GSE90546 UPR epistasis experiment metadata allowlisted in
+  sources/adamson-2016-gse90546-epistasis-metadata-v1.yaml. Future use of the
+  deposited UMI count matrix requires adding its exact hash to the allowlist;
+  this record does not admit expression values by itself.
+rightsBasis: >-
+  NCBI states that it places no restrictions on use or distribution of GEO
+  molecular data. NCBI also states that submitters may retain patent,
+  copyright, or other rights and that NCBI does not transfer those rights.
+  Training is allowed for this public research dataset with citation;
+  redistribution remains conditional on downstream review.
+attribution: >-
+  Adamson B et al. A Multiplexed Single-Cell CRISPR Screening Platform Enables
+  Systematic Dissection of the Unfolded Protein Response. Cell.
+  2016;167:1867-1882.e21. DOI: 10.1016/j.cell.2016.11.048.
+  GEO accession GSE90546.
+exclusions:
+  - synthetic-lethality benchmark labels or outcomes
+  - publisher supplementary material not acquired under this rights basis
+  - files outside the exact allowlist

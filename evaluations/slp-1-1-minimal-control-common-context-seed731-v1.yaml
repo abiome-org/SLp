@@ -1,0 +1,73 @@
+schema: slp.predeclared-molecular-development/v1
+id: slp-1-1-minimal-control-common-context-seed731-v1
+status: completed-development-rule-failed
+hypothesis: A minimal algebraic control anchor with one shared training-only query amplitude preserves exact no-intervention identity without regressing from the original TransitionWorld on held intervention genes.
+purpose: Isolate control anchoring and transferable decoder amplitude from the extra response-state and pair capacity changes in the failed control-transition-v1 pilot.
+inputs:
+  perturbationDevelopment:
+    path: data/derived/slp11-human-gwps-fixed-panel-context-v1/replogle-k562-rpe1-gwps-complete-panel-development-v2-fixed-control-context.npz
+    sha256: 55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c
+    allowedContexts: [replogle-2022-k562-essential-day-6, replogle-2022-rpe1-essential-day-7, replogle-2022-k562-gwps-day-8]
+    testRows: 0
+  staticFeatures:
+    path: data/derived/slp11-human-gwps-static/ensembl116-goa2022-fixed-basis-v1/gwps-extended-static-esm-go-features.npz
+    sha256: a2f3153478c00c191e5a9e218badb3327a180a56948a4c9c6a6926cc506ff02b
+  commonControlDescriptors:
+    developmentPath: data/derived/slp11-human-gwps-fixed-panel-context-v1/replogle-k562-rpe1-gwps-complete-panel-development-v2-fixed-control-context.npz
+    developmentSha256: 55def8f73e026b453a7250c82a2c3478db0290e2cca4f26e02ba1100c3f3384c
+    hepG2ControlPath: data/derived/slp11-human-gwps-fixed-panel-context-v1/nadig-hepg2-fixed-panel-control-context-v1.npz
+    hepG2ControlSha256: 382626401ee38e8d5084ac9f86ffc44bd10408826fb85a94ede8eb908cdf5b27
+    fixedPanelRosterPath: data/derived/slp11-human-gwps-fixed-panel-context-v1/fixed-context-query-ids.txt
+    fixedPanelRosterSha256: 046891d3ceb0766e3fd09441677d6ae078fa7ac7d81ddb1f1c30866007d0d959
+    fixedPanelQueries: 6789
+    contract: identical fixed query panel; control-only molecular values; Replogle K562/RPE1 and HepG2 contexts
+  originalComparator:
+    path: results/slp11-transition/human-gwps-complete-panel-fusion-response32-seed731-v1/model/report.json
+    sha256: bc6bf402fd029db9c9b1018b9bbaa19322e5b0832e31e60bc0a619affe6dfc4f
+model:
+  module: modules/slp-1-1-control-transition-v2/transition_model.py
+  topology: original action/context/query encoders plus one transition MLP and bilinear mean decoder
+  controlIdentity: exact for empty or fully masked action sets
+  decoderAmplitude:
+    contextDependence: forbidden
+    formula: per-query RMS of gene-grouped OOF mean residuals pooled over all three fitting contexts, floored at 0.05
+    role: molecular-delta amplitude only
+  observationUncertainty: separate context/query exposure Gaussian fitted from training OOF residuals and controls; never a mean/state input
+  interactionBranch: absent
+training:
+  seed: 731
+  hidden: 128
+  stateDim: 64
+  dropout: 0.2
+  learningRate: 0.0005
+  weightDecay: 0.1
+  batchSize: 64
+  maximumEpochs: 180
+  patience: 30
+  maximumSeconds: 1800
+  queryResponseRank: 32
+  contextTokens: 64
+  runs: 1
+selection: minimum equal-context development gene-macro Gaussian NLL
+advancementRule:
+  everyReplogleContext:
+    minimumNllGainAgainstMean: 0.02
+    minimumNllGainAgainstRidge: 0.02
+    minimumCentroidAdjustedPearson: 0.10
+    noNllRegressionAgainstOriginalSeed731: true
+    noAdjustedPearsonRegressionAgainstOriginalSeed731: true
+boundaries:
+  hepG2PerturbationRowsConsumed: false
+  testOutcomesConsumed: false
+  benchmarkDataConsumed: false
+  controlOnlyHepG2DescriptorMayBeConsumed: true
+  claimsBeforeRun: none
+execution:
+  output: results/slp11-transition/human-gwps-fixed-context-minimal-control-response32-seed731-v1
+  reportSha256: 665edc70ce283df3187ea0a16485e36f2b3c061fdb5d933065c5b1f85cddf3f9
+  checkpointSha256: 429791272736c59ae77cca72ccd5a6b51f60736c2213493fa6d924f215611d2d
+  bestEpoch: 61
+  elapsedSeconds: 414.609
+  advancementPassed: false
+  exactControlIdentityPassed: true
+  interpretation: The minimal anchor clears the correlation floor and improves over mean, but its NLL gain over ridge is below 0.02 in all contexts and it regresses from the original seed731 model on preregistered context metrics.

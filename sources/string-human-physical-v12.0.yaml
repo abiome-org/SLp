@@ -1,0 +1,34 @@
+schema: slp.source-acquisition/v1
+id: string-human-physical-v12.0
+status: downloaded-verified-exploratory-static-relations
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+version: '12.0'
+rights: rights/string-human-physical-v12.0.yaml
+files:
+  - url: https://stringdb-downloads.org/download/protein.physical.links.full.v12.0/9606.protein.physical.links.full.v12.0.txt.gz
+    bytes: 11766797
+    sha256: b28f494f58e1ace634ef1fe41734ada5be37f151e3168bb9658bc6ca1dd1a954
+  - url: https://stringdb-downloads.org/download/protein.aliases.v12.0/9606.protein.aliases.v12.0.txt.gz
+    bytes: 19777800
+    sha256: b65f730b993ed0c1bd72edf4565d3d425db42861101b29699704810e8f125680
+localIgnoredDirectory: data/sources/string-human-physical-v12.0
+featureRule:
+  score: direct human experiments
+  minimumInclusive: 700
+  scale: 1000
+  excludedChannels: [textmining, database, experiments_transferred, database_transferred, homology, combined_score]
+  stableIdentity: unique exact Ensembl_gene ENSG alias; never symbols
+  genePairRule: symmetric max-confidence collapse; remove self edges
+  knownFeatureGraph: induced on the 10231 cached human genes
+  features: original577 plus confidence-weighted known-neighbor mean577, log1p degree and neighbor-present flag
+  edges: 34155
+  genesWithNeighbors: 3145
+  artifact: data/derived/slp11-human-physical/direct-experiments700-v1/human-esm-go-physical-features.npz
+  sha256: 2cbf12208461358b1c40b8ca5f51b3ebe6c363119f40a0d16ca87833f8e691f7
+limitations:
+  - Physical associations do not establish causal direction or quantitative molecular responses.
+  - The 2023 static graph is used retrospectively, not as evidence of a pre-2022 prediction.
+  - Missing graph coverage remains explicit and does not imply biological isolation.
+admissionClaim: false

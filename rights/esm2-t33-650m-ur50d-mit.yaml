@@ -1,0 +1,18 @@
+license: MIT
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://huggingface.co/facebook/esm2_t33_650M_UR50D
+revision: 08e4846e537177426273712802403f7ba8261b6c
+evidence: https://huggingface.co/facebook/esm2_t33_650M_UR50D/tree/08e4846e537177426273712802403f7ba8261b6c
+scope: >-
+  Exact locally cached ESM-2 t33 650M model files allowlisted in
+  sources/esm2-t33-650m-ur50d-static-protein-model.yaml.
+rightsBasis: >-
+  The pinned Hugging Face model card declares the MIT license. This record
+  covers static protein representation extraction with the exact cached files.
+attribution: Meta AI ESM-2, facebook/esm2_t33_650M_UR50D.
+purposeRestrictions:
+  staticFeatureGeneration: true
+  molecularOutcomeTrainingCorpus: false
+  syntheticLethalityLabels: false

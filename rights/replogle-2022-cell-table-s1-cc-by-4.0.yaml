@@ -1,0 +1,26 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.1016/j.cell.2022.05.013
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+evidence:
+  - https://pmc.ncbi.nlm.nih.gov/articles/PMC9380471/
+  - https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only Cell 2022 Table S1, publisher filename
+  1-s2.0-S0092867422005979-mmc1.xlsx, 1340967 bytes, SHA-256
+  1e8d67490d562a48c03a641fc6170119548b19bc6dfe64a7cca1f6c3b6d506ae.
+rightsBasis: >-
+  The open manuscript states that the article is distributed under CC BY 4.0;
+  Table S1 is the article's supplementary guide-library content. CC BY 4.0
+  permits use, adaptation, and redistribution with attribution and change notice.
+attribution: >-
+  Replogle JM et al. (2022). Mapping information-rich genotype-phenotype
+  landscapes with genome-scale Perturb-seq. Cell 185:2559-2575.e28.
+  https://doi.org/10.1016/j.cell.2022.05.013
+exclusions:
+  - molecular expression matrices and molecular outcomes
+  - supplementary growth phenotypes as predictive inputs
+  - files other than the exact Table S1 workbook
+  - learned embeddings of author guide identifiers

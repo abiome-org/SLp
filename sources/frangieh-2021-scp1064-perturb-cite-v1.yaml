@@ -1,0 +1,150 @@
+schema: slp.source-acquisition/v1
+id: frangieh-2021-scp1064-perturb-cite-processed-v1
+status: acquired-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+biologicalSystem:
+  sourceDescription: patient-derived melanoma cell model
+  perCellPatientIdentityAvailable: false
+  perCellReplicateOrPlateAvailable: false
+identity:
+  primaryNamespace: Ensembl-gene
+  displaySymbolsAreIdentity: false
+  readoutField: var/ensembl_id
+  actionField: obs/perturbation
+  actionMapping: >-
+    Exact source-local join from obs/perturbation to unique var/gene_symbol,
+    retaining only values whose paired var/ensembl_id is an unversioned ENSG
+    identifier. No cross-source symbol merge is allowed.
+  queryIdentityCaveat: >-
+    var/ensembl_id contains 18,063 unversioned ENSG identifiers and 5,649
+    symbol-like fallback identifiers. Only ENSG entries are immediately usable
+    as stable query identities; fallback entries require an explicit versioned
+    mapping or quarantine.
+source:
+  studyAccession: SCP1064
+  studyUrl: https://singlecell.broadinstitute.org/single_cell/study/SCP1064
+  articleDoi: 10.1038/s41588-021-00779-1
+  articlePmc: PMC8376399
+  authorCode: https://github.com/klarman-cell-observatory/Perturb-CITE-seq
+  processedDepositDoi: 10.5281/zenodo.10044268
+  processedDepositConceptDoi: 10.5281/zenodo.7041848
+  processedDepositVersion: '1.3'
+  processedDepositPublicationDate: '2022-08-22'
+rights: rights/frangieh-2021-scperturb-processed-cc-by-4.0.yaml
+modalities:
+  - paired-single-cell-rna-umi-counts
+  - paired-single-cell-antibody-derived-tag-umi-counts
+intervention:
+  mode: CRISPR-Cas9 loss-of-function
+  design: modified-CROP-seq
+  sourceTargetSymbols: 248
+  stableActionEnsemblIds: 237
+  unresolvedActionSymbols: 11
+  unresolvedActionSymbolList:
+    - APOC2
+    - ATP5MD
+    - GAS5
+    - HLA-H
+    - LEF1-AS1
+    - LRRC75A-AS1
+    - NUP50-AS1
+    - SLC7A5P1
+    - SNHG6
+    - TMEM173
+    - TYR
+  guideProvenance: >-
+    obs/guide_id retains single- and semicolon-delimited multi-guide labels;
+    obs/sgRNA is a harmonized primary-guide label. Guide labels are provenance
+    only and must not be learned identity shortcuts.
+conditions:
+  - id: Control
+    cells: 57627
+    exposure: no added immune challenge
+  - id: IFNgamma
+    sourceLabel: IFNγ
+    cells: 87590
+    exposure: 1 ng/mL IFN-gamma for 16 hours
+  - id: T-cell-co-culture
+    sourceLabel: Co-culture
+    cells: 73114
+    exposure: autologous tumor-infiltrating lymphocyte co-culture for 48 hours
+preprocessing:
+  upstream: >-
+    Author repository documents Cumulus 0.14.0 CellRanger v3 with GRCh38
+    3.0.0 and default parameters; cells with fewer than 200 detected genes or
+    more than 18 percent mitochondrial genes were removed, and genes detected
+    in fewer than 200 cells were removed.
+  rnaValueSpace: sparse integer UMI counts; no log or library-size normalization in X
+  proteinValueSpace: sparse integer antibody-derived-tag UMI counts; no normalization in X
+  futureModelConstraint: >-
+    RNA and protein require distinct observation heads and explicitly frozen
+    normalization. Paired-cell status does not make their numerical scales
+    interchangeable.
+allowlist:
+  - name: FrangiehIzar2021_RNA.h5ad
+    url: https://zenodo.org/api/records/10044268/files/FrangiehIzar2021_RNA.h5ad/content
+    localPath: data/sources/frangieh-2021-scp1064-v1/FrangiehIzar2021_RNA.h5ad
+    bytes: 1458928348
+    upstreamMd5: dc438f53c476a3dd562898654d48ed15
+    sha256: cc42ef38bcf703a00e0c77c7945dd53159b12d814c438ae8afeaed9bc71f48d1
+    upstreamChecksumVerified: true
+    shape: [218331, 23712]
+  - name: FrangiehIzar2021_protein.h5ad
+    url: https://zenodo.org/api/records/10044268/files/FrangiehIzar2021_protein.h5ad/content
+    localPath: data/sources/frangieh-2021-scp1064-v1/FrangiehIzar2021_protein.h5ad
+    bytes: 24714445
+    upstreamMd5: 9d9337e30af69ffdcf5e831f96616ed1
+    sha256: 1f85827b5afad11a30d8ac99399772231110a1c3723bed6ecf7981a12cc3dbcc
+    upstreamChecksumVerified: true
+    shape: [218331, 24]
+metadataArtifacts:
+  zenodoRecord:
+    localPath: data/sources/frangieh-2021-scp1064-v1/zenodo-record-10044268.json
+    sha256: 594e72bb61d3d1f5196ca9d734d71a062ab2825c13c5adda5143ff457cd3c430
+  scpStudyRecord:
+    localPath: data/sources/frangieh-2021-scp1064-v1/scp1064-study.json
+    sha256: abd92c4981c7afcf9a248b34933165ed1f4d76f1cc4acb52338f1a1235191151
+  metadataAudit:
+    localPath: data/sources/frangieh-2021-scp1064-v1/h5ad-metadata-audit.json
+    sha256: 718a0cdcc497ef0b54afb955906901a061ccea7b79b26122875f6c541b7e674f
+metadataCensus:
+  pairedCells: 218331
+  exactPairedCellOrder: true
+  rnaQueries: 23712
+  stableEnsemblRnaQueries: 18063
+  proteinFeatures: 24
+  controlCells: 57605
+  targetingCells: 160726
+  patientField: absent
+  replicateOrPlateField: absent
+splitDesign:
+  rule: sha256('slp11-development-v1|731|9606|ENSG'); first 8 bytes big-endian modulo 100
+  buckets:
+    train: 0-69
+    validation: 70-84
+    test: 85-99
+  stableActionCounts:
+    train: 151
+    validation: 43
+    test: 43
+  exclusion: >-
+    Before any outcome aggregation, route every cell whose stable target gene
+    hashes to test into a separate unopened snapshot across all three
+    conditions and both modalities. Keep controls separate. Quarantine the 11
+    unresolved target symbols.
+accessNotes:
+  scpProcessedCsv: >-
+    Official SCP1064 metadata lists processed RNA, protein, guide assignment,
+    and metadata files, but direct download endpoints returned HTTP 401 without
+    an authenticated portal session on 2026-09-04. No authentication bypass
+    was attempted.
+  rawReads: DUOS-000124 controlled; not accessed
+acquisition:
+  downloadedAt: '2026-09-04'
+  acquisitionScript: scripts/acquire_frangieh_perturb_cite.py
+  acquisitionScriptSha256: 190836dba5e9812c67302d839085ec2be8a73ad00c6fab0c376298e6bb99fb00
+  auditScript: scripts/audit_frangieh_perturb_cite_metadata.py
+  auditScriptSha256: e02dd48792dd8a990ddb4a545d0cb197a56aef0c6f7859f32963e33c0140a0a0

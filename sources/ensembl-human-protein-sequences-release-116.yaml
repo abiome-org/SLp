@@ -1,0 +1,76 @@
+schema: slp.source-acquisition/v1
+id: ensembl-human-protein-sequences-release-116
+status: downloaded-verified-exploratory-static-feature-source
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+  assembly: GRCh38.p14
+source:
+  publisher: Ensembl, EMBL-EBI
+  release: 116
+  releaseDate: 2026-06
+  releaseArchive: https://ftp.ensembl.org/pub/release-116/
+  directory: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/pep/
+  documentation: https://www.ensembl.org/info/data/ftp/index.html
+rights: rights/ensembl-human-protein-sequences-release-116.yaml
+allowlist:
+  - name: Homo_sapiens.GRCh38.pep.all.fa.gz
+    url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz
+    localPath: data/derived/slp11-human-sequence/source/ensembl-116/Homo_sapiens.GRCh38.pep.all.fa.gz
+    bytes: 23319936
+    upstreamBsdSum: 21612
+    upstreamBlocks1024: 22774
+    sha256: 9b43da92651b35814597af6a8b18f500b768679a49fa4678224f384917ce7668
+    decompressedSha256: 3f1ef9848ae79d3810ef5c7bff3482d7fb0554618adf7f3655828e918f50a7c5
+    records: 382428
+    uniqueStableEnsemblGenes: 23879
+    role: all-Ensembl-gene-translations
+  - name: CHECKSUMS
+    url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/pep/CHECKSUMS
+    localPath: data/derived/slp11-human-sequence/source/ensembl-116/CHECKSUMS
+    bytes: 112
+    sha256: 2b5910595a13a02e17a94271a5169a1b329d81018e10f72a0f7cc9c46ae9b7f2
+    role: upstream-BSD-checksum-manifest
+  - name: README
+    url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/pep/README
+    localPath: data/derived/slp11-human-sequence/source/ensembl-116/README
+    bytes: 2432
+    upstreamBsdSum: 50964
+    upstreamBlocks1024: 3
+    sha256: e3b45d40a0ad5fd0240e6f92db4b46ab5518abe77c2fa3d35d770a5f435fd9a3
+    role: pinned-FASTA-header-and-content-semantics
+identity:
+  entityNamespace: Ensembl-gene
+  entityPattern: ^ENSG[0-9]+$
+  fastaGeneField: exact gene:ENSG[0-9]+.<version> header token
+  mappingRule: remove the Ensembl source version suffix, then join the exact stable ENSG ID
+  displaySymbolsUsedForIdentity: false
+  longestPeptideRule: >-
+    For each stable ENSG gene, select the greatest peptide length. Break an
+    equal-length tie by ascending stable ENST transcript ID and then ascending
+    stable ENSP protein ID. Versioned source IDs remain in provenance.
+sequenceNormalization:
+  selectionLengthBasis: source peptide character count
+  supportedEsmAlphabet: ACDEFGHIKLMNPQRSTVWYXBUZO.-
+  internalStopPolicy: map every source '*' residue to ESM unknown residue X and record counts
+  terminalStopStripping: false
+featurePolicy:
+  staticFeatureSourceAllowed: true
+  includeHeldEntitySequences: true
+  quantitativeOutcomesAllowed: false
+  benchmarkLabelsAllowed: false
+  symbolsOrDescriptionsAsFeatures: false
+  identifierDerivedNumericFeatures: false
+validation:
+  requireExactAllowlistedFiles: true
+  requireUpstreamBsdChecksum: true
+  requireLocalSha256: true
+  requireGzipIntegrity: true
+  requireExactHeaderIdentityFields: true
+  preserveMissingEntityRows: true
+limitations:
+  - This is a downloaded exploratory source, not an admitted OMF DatasetSnapshot.
+  - pep.all contains all translations, including isoforms and alternate-locus annotations; the frozen longest-peptide rule is a deterministic representation choice.
+  - Ensembl warns that parts of its distribution may carry third-party constraints; this use is limited to the Ensembl-produced GRCh38 protein translation file named above.
+  - Static protein availability does not imply that a gene was observed or perturbed in either human context.

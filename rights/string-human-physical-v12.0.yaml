@@ -1,0 +1,14 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://version-12-0.string-db.org/cgi/download?species_text=Homo+sapiens
+licenseEvidence: https://version-12.string-db.org/cgi/access
+scope: STRING version 12.0 human physical links and exact Ensembl gene aliases
+attribution: STRING Consortium, version 12.0; identify the direct-experiment filtering and derived neighbor feature transformation.
+rightsBasis: STRING states all data and download files are available under Creative Commons BY 4.0.
+purposeRestrictions:
+  staticPhysicalRelations: true
+  quantitativeInterventionOutcomes: false
+  syntheticLethalityLabels: false
+omfAdmissionClaimed: false

@@ -1,0 +1,133 @@
+schema: slp.source-acquisition/v1
+id: norman-2019-gse133344-combination-crispra-v1
+status: acquired-derived-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  accession: GEO:GSE133344
+  landingUrl: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE133344
+  supplementUrl: https://ftp.ncbi.nlm.nih.gov/geo/series/GSE133nnn/GSE133344/suppl/
+  articleDoi: 10.1126/science.aax4438
+  authorRepository: https://github.com/thomasmaxwellnorman/Perturbseq_GI
+  authorRepositoryRevision: 3b25109aeb9c0c2026bd70abd50304a0ad4e5395
+  authorRepositoryTree: a2819515d4e112e47b91fea450a1ae45830d9a53
+authorCodeEvidence:
+  localIgnoredPath: data/sources/norman-2019/Perturbseq_GI-3b25109
+  analysisNotebook: GI_generate_populations.ipynb
+  analysisNotebookSha256: 9c2a6fcc370a38cb5ca0b8c00e501e48b000ba41badc667154e3c97bdc075dde
+  codeLicense: LGPL-3.0
+  codeLicenseSha256: 7d3a95e5e06978064ed3f8e2b7c8f845e7fd8a405294727cc708f94cb83b8059
+  semanticUse: >-
+    The notebook supplies the eligible-cell predicates and confirms that the
+    author population operation is an arithmetic cell mean. No repository
+    code or serialized author model is copied into the derived artifact.
+rights: rights/norman-2019-geo-public-molecular.yaml
+context:
+  id: norman-2019-k562-crispra-day5
+  cellLine: K562
+  biologicalSystem: chronic-myelogenous-leukemia-cell-line
+  perturbation: simultaneous-single-or-double-CRISPRa-activation
+  endpoint: day-5-post-transduction-single-cell-RNA-UMI-abundance
+  protocolNote: transduced cells were isolated after three days and grown two more days
+  sourceMetadataConflict: >-
+    The GEO SOFT growth-protocol field calls the engineered K562 line
+    dCas9-KRAB, while the GEO series design, article, guide identities, and
+    author analysis describe CRISPR activation/overexpression. The importer
+    records the intervention as CRISPRa and retains this conflict explicitly.
+allowlist:
+  - name: GSE133344_filtered_matrix.mtx.gz
+    localPath: data/sources/norman-2019/GSE133344_filtered_matrix.mtx.gz
+    bytes: 1130430845
+    sha256: 7af10888c29be7e5be0466af100dfd6c5f1bc87f6d7cbfcb48270248d3639120
+    matrixMarketShape: [33694, 111668]
+    matrixMarketNonzeros: 362199631
+  - name: GSE133344_filtered_barcodes.tsv.gz
+    localPath: data/sources/norman-2019/GSE133344_filtered_barcodes.tsv.gz
+    bytes: 429928
+    sha256: 49529cff274aada5757e0b5ce320133437282398a22af14afc314e16eecade66
+  - name: GSE133344_filtered_genes.tsv.gz
+    localPath: data/sources/norman-2019/GSE133344_filtered_genes.tsv.gz
+    bytes: 264791
+    sha256: 0dcba3cf4f3095b3fc1fa31b402c562bca7eea8d7d9ffd753e7b446dc37b9e3d
+  - name: GSE133344_filtered_cell_identities.csv.gz
+    localPath: data/sources/norman-2019/GSE133344_filtered_cell_identities.csv.gz
+    bytes: 1956905
+    sha256: daf30337e7f6f07096d57e0d81db784bef00c87bd1fc927f018792c2f7af81e4
+  - name: GSE133344_family.soft.gz
+    localPath: data/sources/norman-2019/GSE133344_family.soft.gz
+    bytes: 3780
+    sha256: 2f8620323a32518df603f361452f60a4379fdb9448151678e941c2e8f40ef9ab
+identity:
+  actionNamespace: Ensembl-gene
+  queryNamespace: Ensembl-gene
+  actionMapping: >-
+    Exact author guide-target labels are mapped through the author-repository
+    GRCh38-1.2.0 GTF at the pinned revision. Only unique exact gene_name to
+    stable unversioned ENSG mappings are accepted; output does not store symbols.
+  mappingFile: data/sources/norman-2019/Perturbseq_GI-3b25109/data_sharing/cellranger-GRCh38-1.2.0_only_genes.gtf
+  mappingBytes: 7593284
+  mappingSha256: 796bb1f1d36c75462fea32e87cc54c66e2ee7b60a2e6eed3b6e0c02e8df7908b
+  globalQueryRoster: data/derived/slp11-human/query-ids.txt
+  globalQueryRosterCount: 7226
+  globalQueryRosterSha256: 645b8d563b440a4b7ab6a3bb42450594b408c4e7cb84e4fe2789a6620174f12c
+populationProbe:
+  sourceCells: 111668
+  identityRows: 111445
+  eligibleCells: 91168
+  omittedMatrixBarcodesWithoutIdentity: 223
+  eligibleUnresolvedActions: 0
+  actionGenes: 105
+  records:
+    control: 1
+    singles: 105
+    doubles: 131
+  eligibleCellsByActionCount:
+    control: 9702
+    single: 47269
+    double: 34197
+split:
+  seed: 731
+  constituentRule: sha256(slp11-development-v1|731|9606|ENSG), first 8 bytes big-endian modulo 100
+  constituentBuckets: {train: 71, validation: 16, test: 18}
+  combinationPriority: test if any test constituent; else validation if any validation; else train
+  recordCounts: {control: 1, train: 130, validation: 40, test: 66}
+derived:
+  diagnosticOnly: true
+  supersededForTrainingBy:
+    path: data/derived/slp11-norman-author-normalized-v2/norman-2019-author-normalized-development-v2.npz
+    sha256: ab81e7ed07d7f111b3dfc964cece28a2db7de0dcf5975f6ff1a3bc2db0be683e
+    reason: >-
+      The preferred v2 adapter performs author-consistent per-cell full-library
+      log2-CP10K normalization before control standardization and population
+      aggregation while retaining exact guide constructs.
+  directory: data/derived/slp11-norman
+  developmentFile:
+    path: data/derived/slp11-norman/norman-2019-development-v1.npz
+    bytes: 2647058
+    sha256: 318736dbbf34a15fdf8e4da95a5876a8e56fcb8c6041c83c96910a835ad3de29
+    splitScope: [control, train, validation]
+  testOnlyFile:
+    path: data/derived/slp11-norman/norman-2019-test-only-v1.npz
+    bytes: 1034666
+    sha256: a20f9197d6a0cb73ec967569069f3bdfeac39953ebe8ebdffa5b8b9e43a7b5d4
+    splitScope: [test]
+    access: sealed until candidate and rule lock
+  manifest:
+    path: data/derived/slp11-norman/manifest.json
+    sha256: bed5eaf50a1f4dc0315cee7e3df47f1faa14a067b457de75062c0932abcc3150
+  actionRoster:
+    path: data/derived/slp11-norman/action-ids.txt
+    count: 105
+    sha256: 99fb1e24574b4bd6c76ea329008ba87fa2352bf6fa97242d033ad79abd78eb1e
+aggregation: >-
+  Arithmetic mean raw UMI count per source guide-target population, followed
+  by log2(1 + 10000*x/sum(x)) over the 7,184 source-present genes in the fixed
+  7,226-gene global query panel. The 42 absent queries remain present as
+  observed=false zero columns.
+limitations:
+  - The source does not deposit the author's normalized population-mean CSV; this adapter derives a transparent pseudobulk from official raw filtered UMI data.
+  - Only 42 of 105 Norman action genes are currently present in the 7,542-entity human static-feature universe; combination modeling needs a pinned feature extension for the other 63.
+  - The test-only file was routed mechanically and no test outcome metrics or numeric summaries were computed.
+  - This is public molecular-response data, not a synthetic-lethality benchmark or an OMF admission.

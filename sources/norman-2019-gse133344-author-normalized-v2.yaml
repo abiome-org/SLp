@@ -1,0 +1,59 @@
+schema: slp.source-derivation/v1
+id: norman-2019-gse133344-per-cell-control-normalized-v2
+status: derived-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  parent: sources/norman-2019-gse133344.yaml
+  accession: GEO:GSE133344
+  rights: rights/norman-2019-geo-public-molecular.yaml
+  authorRepositoryRevision: 3b25109aeb9c0c2026bd70abd50304a0ad4e5395
+inputs:
+  matrix:
+    path: data/sources/norman-2019/GSE133344_filtered_matrix.mtx.gz
+    bytes: 1130430845
+    sha256: 7af10888c29be7e5be0466af100dfd6c5f1bc87f6d7cbfcb48270248d3639120
+  barcodes:
+    path: data/sources/norman-2019/GSE133344_filtered_barcodes.tsv.gz
+    bytes: 429928
+    sha256: 49529cff274aada5757e0b5ce320133437282398a22af14afc314e16eecade66
+  genes:
+    path: data/sources/norman-2019/GSE133344_filtered_genes.tsv.gz
+    bytes: 264791
+    sha256: 0dcba3cf4f3095b3fc1fa31b402c562bca7eea8d7d9ffd753e7b446dc37b9e3d
+  identities:
+    path: data/sources/norman-2019/GSE133344_filtered_cell_identities.csv.gz
+    bytes: 1956905
+    sha256: daf30337e7f6f07096d57e0d81db784bef00c87bd1fc927f018792c2f7af81e4
+  queryRoster:
+    path: data/derived/slp11-human/query-ids.txt
+    entries: 7226
+    sha256: 645b8d563b440a4b7ab6a3bb42450594b408c4e7cb84e4fe2789a6620174f12c
+transform:
+  implementedBy: SLp; computed from author raw counts, not an author-precomputed normalized matrix
+  library: full 33694-source-gene UMI total for each eligible cell
+  cellValue: log2(1 + 10000 * gene_umi / full_source_library_umi)
+  targetAggregation: arithmetic mean of transformed cells within exact author guide construct
+  targetStandardization: per-query core-control-cell mean and population standard deviation
+  missingness: source-absent query or zero core-control variance
+  countRole: likelihood exposure only; never a molecular mean feature
+controls:
+  eligibleCoreCells: 9702
+  pseudobulks: 20
+  partition: deterministic SHA-256 shuffle, disjoint unequal groups proportional to 1..20
+  purpose: sampling-variance calibration
+routing:
+  method: constituent-priority stable gene split inherited unchanged from v1
+  priority: test then validation then train
+  testArtifactAnalyzed: false
+outputs:
+  directory: data/derived/slp11-norman-author-normalized-v2
+  development: norman-2019-author-normalized-development-v2.npz
+  testOnly: norman-2019-author-normalized-test-only-v2.npz
+  manifest: manifest.json
+limitations:
+  - Core-control cells are reused to define target centering/scaling and disjoint control pseudobulks for uncertainty calibration.
+  - Unequal control pseudobulk sizes identify exposure-associated variance but do not prove a purely technical noise mechanism.
+  - This retrospective single-source K562 CRISPRa dataset does not establish combination transfer by itself.

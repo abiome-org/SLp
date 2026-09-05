@@ -1,0 +1,28 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.25452/figshare.plus.20029387.v1
+evidence:
+  - https://api.figshare.com/v2/articles/20029387
+  - https://plus.figshare.com/articles/dataset/20029387
+  - https://creativecommons.org/licenses/by/4.0/
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only K562_gwps_normalized_bulk_01.h5ad (Figshare file 35773217, MD5
+  a3dfaa94ea8724217f5ecb1e14a5f0c8) and K562_gwps_raw_bulk_01.h5ad
+  (Figshare file 35774443, MD5 4570b53c9d62ff6df281e622f0350060)
+  from immutable Figshare+ dataset version 1.
+rightsBasis: >-
+  The Figshare record declares CC BY 4.0 and records the depositors'
+  confirmation that the files may be publicly distributed under the selected
+  license. CC BY 4.0 permits copying and adaptation with attribution and an
+  indication of changes.
+attribution: >-
+  Replogle JM et al. Mapping information-rich genotype-phenotype landscapes
+  with genome-scale Perturb-seq. Cell. 2022. DOI: 10.1016/j.cell.2022.05.013.
+  Processed datasets: https://doi.org/10.25452/figshare.plus.20029387.v1
+exclusions:
+  - all single-cell files in Figshare dataset 20029387
+  - K562 essential-scale and RPE1 files covered by their separate rights record
+  - derived arrays, splits, checkpoints, predictions, and benchmark data

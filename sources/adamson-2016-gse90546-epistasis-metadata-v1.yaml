@@ -1,0 +1,85 @@
+schema: slp.source-acquisition/v1
+id: adamson-2016-gse90546-upr-epistasis-metadata-v1
+status: acquired-metadata-audited-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  accession: GEO:GSE90546
+  sample: GEO:GSM2406677
+  landingUrl: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE90546
+  articleDoi: 10.1016/j.cell.2016.11.048
+  pmid: 27984733
+  pmc: PMC5315571
+  bioproject: PRJNA354963
+  sraStudy: SRP094654
+rights: rights/adamson-2016-gse90546-public-molecular.yaml
+context:
+  id: adamson-2016-k562-crispri-upr-epistasis
+  cellLine: K562
+  effector: dCas9-KRAB
+  perturbation: simultaneous-zero-single-double-or-triple-CRISPRi
+  targetGenes: [ATF6, PERK/EIF2AK3, IRE1/ERN1]
+  endpoint: single-cell-RNA-UMI-abundance
+  geneticBackgrounds: 8
+  chemicalContexts: 3
+  totalConditions: 24
+  timing: >-
+    Five days total growth before chemical induction. After two days of
+    combined growth following pooling and selection, cells received DMSO for
+    6 hours, 4 ug/mL tunicamycin for 6 hours, or 100 nM thapsigargin for
+    4 hours.
+  gemgroupMapping:
+    1: tunicamycin-4ug-per-mL-6h
+    2: thapsigargin-100nM-4h
+    3: DMSO-6h
+allowlist:
+  - name: GSE90546_family.soft.gz
+    localPath: data/sources/adamson-2016-gse90546-metadata-v1/GSE90546_family.soft.gz
+    bytes: 3441
+    sha256: 447e72e6b66b18ef4f50fbc2289790e6d2bc11db090583945e29fac3a557630f
+    role: GEO series and sample provenance
+  - name: GSM2406677_10X005_cell_identities.csv.gz
+    localPath: data/sources/adamson-2016-gse90546-metadata-v1/GSM2406677_10X005_cell_identities.csv.gz
+    bytes: 184186
+    sha256: fc9cb6314594345057c1b937fa0c7947399f073196a3104963da609be7b74d14
+    role: author-deposited per-cell guide-barcode assignment
+  - name: GSM2406677_10X005_barcodes.tsv.gz
+    localPath: data/sources/adamson-2016-gse90546-metadata-v1/GSM2406677_10X005_barcodes.tsv.gz
+    bytes: 58348
+    sha256: 0525bc03ebd7ba7c0b7a777ff9a739330fdaa092568363c9e0e7b85ebce15895
+    role: processed count-matrix cell axis only
+  - name: GSM2406677_10X005_genes.tsv.gz
+    localPath: data/sources/adamson-2016-gse90546-metadata-v1/GSM2406677_10X005_genes.tsv.gz
+    bytes: 257091
+    sha256: a804084f5c41b55746aea5c932935937f0580aa375b205ecd75f445cb54fd5ad
+    role: processed count-matrix gene axis only
+remoteExpression:
+  downloaded: false
+  valuesRead: false
+  name: GSM2406677_10X005_matrix.mtx.txt.gz
+  bytes: 199715348
+  url: https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM2406nnn/GSM2406677/suppl/GSM2406677_10X005_matrix.mtx.txt.gz
+guideBarcodeReads:
+  gemgroup1: {sample: GSM2406678, sraExperiment: SRX2400168}
+  gemgroup2: {sample: GSM2406679, sraExperiment: SRX2400169}
+  gemgroup3: {sample: GSM2406680, sraExperiment: SRX2400170}
+metadataAudit:
+  manifest: data/sources/adamson-2016-gse90546-metadata-v1/manifest.json
+  manifestSha256: f719db33511240ff42ec61a94e056b19614492cd865fb57a8d62add817497793
+  assignmentRows: 14856
+  intendedAssignmentRows: 14820
+  intendedGoodCoverageSingleCellRows: 13516
+  intendedGuideIdentityLabels: 9
+identity:
+  depositedAssignment: guide-target-plus-plasmid-label
+  stableGeneMappingPrepared: false
+  requirement: >-
+    Freeze an exact guide-to-unversioned-Ensembl mapping before reading any
+    expression values; do not join by display symbols during model fitting.
+limitations:
+  - This is a full factorial experiment over three UPR sensors, not a broad combinatorial-gene screen.
+  - The two pMJ144 control barcode identities represent the same non-targeting biological background.
+  - GSM2406681 is a separate mostly singleton 82-gene UPR library experiment and must retain separate source identity.
+  - No raw expression values, SRA reads, benchmark labels, or protected outcomes were acquired or read.

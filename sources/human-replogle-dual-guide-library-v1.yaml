@@ -1,0 +1,54 @@
+schema: slp.source-acquisition/v1
+id: replogle-2022-dual-guide-library-v1
+status: acquired-metadata-audited-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  articleDoi: 10.1016/j.cell.2022.05.013
+  pmc: PMC9380471
+  officialWorkbookUrl: https://ars.els-cdn.com/content/image/1-s2.0-S0092867422005979-mmc1.xlsx
+rights: rights/replogle-2022-cell-table-s1-cc-by-4.0.yaml
+allowlist:
+  name: 1-s2.0-S0092867422005979-mmc1.xlsx
+  localPath: data/sources/replogle-2022-dual-guide-library-v1/1-s2.0-S0092867422005979-mmc1.xlsx
+  bytes: 1340967
+  sha256: 1e8d67490d562a48c03a641fc6170119548b19bc6dfe64a7cca1f6c3b6d506ae
+  sheets:
+    - TabB_K562_day6_library
+    - TabC_RPE1_day7_library
+metadataPolicy:
+  expressionValuesRead: false
+  molecularOutcomesRead: false
+  exactJoinKey: sgID_A + '|' + sgID_B
+  punctuationNormalization: comma-to-hyphen only in multi-transcript suffixes
+  identityPolicy: stable Ensembl action IDs remain primary; guide IDs are provenance
+  sequencePolicy: preserve Cell Table S1 targeting-sequence orientation literally
+  coordinatePolicy: preserve author coordinate and strand; genome assembly explicitly unknown
+relatedSource:
+  doi: 10.7554/eLife.81856
+  role: later finalized dual-guide libraries and sequence-convention audit
+  rights: rights/replogle-2022-elife-dual-guide-supplements-cc-by-4.0.yaml
+  files:
+    - path: data/sources/replogle-2022-dual-guide-library-v1/elife-81856-supp4-v2.xlsx
+      sha256: 5ba9c6a4eaec4939359db851a9631cc47f5f0c5628328902a848f6a63571fd28
+      bytes: 7359746
+    - path: data/sources/replogle-2022-dual-guide-library-v1/elife-81856-supp12-v2.csv
+      sha256: 514e0e3351a85fc7cd54a6043e8c2bbd3c91d2761e0cbf87c7203d1150178191
+      bytes: 483703
+limitations:
+  - The integer coordinate in sgID is not assigned a genome assembly by Table S1.
+  - Author phenotype and rank fields are excluded from the adapter.
+  - This source record is not an OMF admission or a model claim.
+
+metadataAudit:
+  report: results/slp11-transition/replogle-dual-guide-library-audit-v2/report.json
+  reportSha256: 6f3fa9d7359ff628c6325777704bfe543e6575fbd8f98b8eb7d33c5da1be86de
+  sidecar: data/derived/slp11-human-replogle-guide-library-v2/guide-pair-metadata.npz
+  sidecarSha256: c3e5e2167ac9fa0517caf7d8bbeed80d19212d9935fed991816954dcfea16b1c
+  pairUnion: 2752
+  k562PairCoverage: 2273/2273
+  rpe1PairCoverage: 2662/2662
+  targetingSequencesObserved: 2752
+  unresolvedStableActions: 5

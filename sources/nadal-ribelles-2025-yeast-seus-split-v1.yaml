@@ -1,0 +1,135 @@
+schema: slp.source-acquisition/v1
+id: nadal-ribelles-2025-yeast-seus-split-v1
+status: complete-source-bytes-verified-awaiting-streaming-schema-admission
+organism:
+  name: Saccharomyces cerevisiae
+  ncbiTaxon: 4932
+identity:
+  primaryNamespace: SGD
+  displaySymbolsAreIdentity: false
+source:
+  accession: zenodo:14062629
+  versionDoi: 10.5281/zenodo.14062629
+  conceptDoi: 10.5281/zenodo.14062628
+  primaryUrl: https://zenodo.org/records/14062629
+  metadataUrl: https://zenodo.org/api/records/14062629
+  articleDoi: 10.1038/s41467-025-57600-4
+  createdAt: 2025-02-14T07:19:19.891256Z
+  updatedAt: 2025-02-14T07:19:20.518841Z
+rights: rights/slp-1-1-nadal-ribelles-yeast-seus-split-cc-by-4.0.yaml
+modalities:
+  - single-cell-transcriptome-counts
+interventions:
+  - constitutive-gene-deletion
+contexts:
+  - id: slp:untreated-control
+  - id: CHEBI:26710
+    label: sodium chloride
+    concentration: {value: 0.4, unit: UCUM:mol/L}
+    duration: {value: 15, unit: UCUM:min}
+allowlist:
+  - name: seus_split.RData
+    bytes: 5907877873
+    upstreamChecksum: md5:65bb56efd8120f32f65c044de5f040aa
+    url: https://zenodo.org/api/records/14062629/files/seus_split.RData/content
+    role: candidate-raw-rna-counts-and-cell-metadata
+  - name: README.txt
+    bytes: 2050
+    upstreamChecksum: md5:1fa718ad98d6eacbf6134372299f2b83
+    localSha256: 268533b10c59d3f4ca941ff31ac8b9c108b61f55f00d85792d44b3a90b3b9da8
+    role: schema-and-provenance-only
+excludedFiles:
+  - seu.RData
+  - FC_genotype.Rdata
+  - ptb_summary.Rdata
+  - fitness and competition files
+  - third-party data files
+profileProtocol:
+  hypothesis: >-
+    The immutable archive endpoint can deliver an exact 64 MiB byte range
+    within 180 seconds, making a separately authorized full acquisition
+    operationally feasible.
+  fixedAcceptanceRule: >-
+    Require HTTP 206, Content-Range bytes 0-67108863/5907877873,
+    Content-Length 67108864, exactly 67108864 streamed bytes, and elapsed
+    wall time no greater than 180 seconds. A prefix hash cannot verify the
+    expected full-file MD5.
+  requestRange: bytes=0-67108863
+  maximumElapsedSeconds: 180
+  output: data/sources/nadal-ribelles-2025-yeast-seus-split-v1/prefix-profile-v1/seus_split-first-64mib.bin
+  report: data/sources/nadal-ribelles-2025-yeast-seus-split-v1/prefix-profile-v1/profile.json
+  previousPrefixRetainedSeparately: data/derived/slp11-yeast-atlas-response/nadal-ribelles-fc-endpoint-diagnostic-v1/seus_split-prefix-2mib.bin
+profileResult:
+  completedAtLocalDate: 2026-09-04
+  httpStatus: 206
+  contentRange: bytes 0-67108863/5907877873
+  contentLength: 67108864
+  receivedBytes: 67108864
+  prefixSha256: e1e31e63dd538f30b266ce1cccaa092d2427ac7fb2a22a9048e54814c32c913d
+  elapsedSeconds: 74.17200000002049
+  throughputBytesPerSecond: 904773.5533622049
+  throughputMiBPerSecond: 0.8628593000051545
+  projectedFullDownloadSecondsAtProfileRate: 6529.675686303929
+  reportSha256: f18b7de22e32d19089d5e0ad021e65c9df545de56e52f5a7a76e088d14693788
+  fullArchiveMd5Verified: false
+  interpretation: >-
+    The exact ranged transfer passes its fixed acceptance rule. At the observed
+    rate a complete transfer would take about 109 minutes, subject to network
+    variation; this profile does not establish full-file integrity or parser
+    feasibility.
+parallelProfileResult:
+  requestRanges:
+    - bytes=67108864-83886079
+    - bytes=83886080-100663295
+    - bytes=100663296-117440511
+    - bytes=117440512-134217727
+  connectionCount: 4
+  eachRangeBytes: 16777216
+  receivedBytes: 67108864
+  everyHttpStatus: 206
+  everyContentRangeVerified: true
+  elapsedSeconds: 26.610000000102445
+  aggregateThroughputMiBPerSecond: 2.4051108605694704
+  projectedFullDownloadSecondsAtProfileRate: 2342.591139691103
+  reportSha256: 4c59d31e1287290bb7663b116c80e4eeeb06e86d2eae7a9717f15c87a589745d
+  decision: proceed-under-3600-second-full-acquisition-cap
+fullAcquisitionProtocol:
+  connectionCount: 4
+  rangeBytes: 67108864
+  maximumWallSeconds: 3600
+  resumeLedger: data/sources/nadal-ribelles-2025-yeast-seus-split-v1/full-acquisition-v1/download-ledger.json
+  partialOutput: data/sources/nadal-ribelles-2025-yeast-seus-split-v1/full-acquisition-v1/seus_split.RData.partial
+  finalOutput: data/sources/nadal-ribelles-2025-yeast-seus-split-v1/full-acquisition-v1/seus_split.RData
+  completeMarker: data/sources/nadal-ribelles-2025-yeast-seus-split-v1/full-acquisition-v1/complete.json
+  publicationRule: >-
+    Atomically publish the final path only after exact byte count, upstream MD5
+    equality, whole-file SHA-256 calculation, complete range coverage, and
+    elapsed time no greater than 3600 seconds.
+fullAcquisitionResult:
+  status: complete-verified
+  bytes: 5907877873
+  md5: 65bb56efd8120f32f65c044de5f040aa
+  sha256: da99869c11d1a6c034454568098aa50bc3313cd4508dbd506d43241b0fb4695d
+  seededVerifiedProfileBytes: 134217728
+  downloadedRanges: 87
+  rangeBytes: 67108864
+  maximumConnections: 4
+  networkElapsedSeconds: 1346.2030000002123
+  wholeFileHashElapsedSeconds: 10.375
+  totalElapsedSeconds: 1472.7970000000205
+  completeMarkerSha256: cdc50de95ab83c70825d25bb144150d746847a2ce9cede3eaba08c9f27d1ade7
+  finalLedgerSha256: 6fabba473ccf99cf45083d5d4800131b1b6c3e893994455f35f225693b0f082a
+  independentWholeFileHashVerified: true
+  contiguousLedgerCoverageVerified: true
+  partialPathAbsentAfterPublication: true
+  admissionStatus: >-
+    Source bytes and rights are verified. Quantitative admission remains
+    pending a bounded streaming parse that verifies Seurat objects, RNA raw
+    count semantics, cell metadata, and held-intervention exclusion before
+    selected value access.
+restrictions:
+  - do not download the complete archive under this prefix-only protocol
+  - do not combine this prefix with any prior prefix
+  - do not decode quantitative values for model fitting
+  - verify the full-file MD5 only after a separately authorized complete download
+  - preserve condition, cell, clone, genotype, batch, and count-layer provenance

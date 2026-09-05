@@ -1,0 +1,265 @@
+schema: slp.source-acquisition/v1
+id: nadig-2025-gse264667-unseen-context-candidate-v1
+status: hepg2-and-jurkat-acquired-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  accession: GEO:GSE264667
+  bioproject: PRJNA1100571
+  articleDoi: 10.1038/s41588-025-02169-3
+  articlePmid: 40259084
+  geoRelease: 2024-05-05
+  geoLastUpdate: 2025-05-07
+rights: rights/nadig-2025-gse264667-public-molecular.yaml
+candidate:
+  preferredContext: HepG2
+  perturbation: CRISPRi dual-sgRNA knockdown
+  endpoint: day 7 post-transduction single-cell RNA sequencing
+  role: frozen cross-study and cell-context molecular diagnostic
+  expressionValuesAccessed: perturbed-cells-processed-after-world-and-baseline-forecast-freeze
+  jurkatExpressionValuesAccessed: none
+  acquisitionPurpose: schema and identity audit before a locked confirmation protocol
+officialDataFiles:
+  - name: GSE264667_hepg2_raw_singlecell_01.h5ad
+    url: https://ftp.ncbi.nlm.nih.gov/geo/series/GSE264nnn/GSE264667/suppl/GSE264667_hepg2_raw_singlecell_01.h5ad
+    bytes: 5614460941
+    sha256: e1ad7c3c5a201c861a207a858aa7e59f5e6ac1955674c415f7de0d1dadadb52e
+    localPath: data/sources/nadig-2025-gse264667-hepg2-v1/GSE264667_hepg2_raw_singlecell_01.h5ad
+    downloaded: true
+    officialChecksumPublished: false
+  - name: GSE264667_jurkat_raw_singlecell_01.h5ad
+    url: https://ftp.ncbi.nlm.nih.gov/geo/series/GSE264nnn/GSE264667/suppl/GSE264667_jurkat_raw_singlecell_01.h5ad
+    bytes: 9366490264
+    sha256: ffbe15f2c8f7ffcfd7b0ba9e6937d4ebc2d03b0179fa8234648a59bcb82c04a3
+    localPath: data/sources/nadig-2025-gse264667-jurkat-v1/GSE264667_jurkat_raw_singlecell_01.h5ad
+    downloaded: true
+    officialChecksumPublished: false
+  - name: GSE264667_RAW.tar
+    url: https://ftp.ncbi.nlm.nih.gov/geo/series/GSE264nnn/GSE264667/suppl/GSE264667_RAW.tar
+    bytes: 16321884160
+    sha256: unavailable-without-download
+    downloaded: false
+acquiredHepG2:
+  directory: data/sources/nadig-2025-gse264667-hepg2-v1
+  acquisitionScript: scripts/acquire_nadig_hepg2.py
+  matrix:
+    shape: [145473, 9624]
+    dtype: float32
+    storage: contiguous-uncompressed-dense
+    valuesInspected: targeted-cells-transformed-under-frozen-diagnostic-protocol
+  schemaAudit:
+    name: h5ad-metadata-audit.json
+    bytes: 2640
+    sha256: f6f1c459f47a7ea9ba792e177a60dd38843a862c7a4cd5c4b738b7c32ae6f4f7
+  observedActionRoster:
+    name: observed_action_roster.txt
+    entries: 2391
+    bytes: 38244
+    sha256: 0246380cc5df37baedab5c5e75ce312930b6222fb456072d613dc7fd61dc203d
+  expressionQueryRoster:
+    name: expression_query_roster.txt
+    entries: 9624
+    bytes: 153984
+    sha256: f5f16acc62ed26efbac0911ba3c56a2a419ffccaa51e41c1c0e8b37fdfa3a257
+acquiredJurkat:
+  directory: data/sources/nadig-2025-gse264667-jurkat-v1
+  acquisitionScript: scripts/acquire_nadig_jurkat.py
+  matrix:
+    shape: [262956, 8882]
+    dtype: float32
+    storage: contiguous-uncompressed-dense
+    valuesInspected: false
+  schemaAudit:
+    name: h5ad-metadata-audit.json
+    bytes: 2685
+    sha256: 3394935d22f6eda54a0d61afa3aa69ed062e6cf07306d529a3f9f07c7c6bb8d9
+  controls:
+    identity: non-targeting
+    cells: 12013
+    gemGroups: 55
+    cellsPerGemMinimum: 39
+    cellsPerGemMedian: 224.0
+    cellsPerGemMaximum: 290
+    expressionValuesRead: false
+  targets:
+    exactGeneTranscriptPopulations: 2544
+    stableTargetGenes: 2390
+    stableTargetCells: 250494
+    unresolvedTargetCellsQuarantined: 449
+    populationIdentityConflicts: 0
+  observedActionRoster:
+    name: observed_action_roster.txt
+    entries: 2390
+    bytes: 38240
+    sha256: 6aa0d32ca8a17411ea3ef3ddc082081d728c2bc727d7302f39a9de72c949b712
+  expressionQueryRoster:
+    name: expression_query_roster.txt
+    entries: 8882
+    bytes: 142112
+    sha256: 72b48099949f860b1b171768cd5dbaf0e8faeadc48f0e44753c24532a17b35d0
+  crossCellLineIdentity:
+    sharedStableActionsWithHepG2: 2389
+    hepg2OnlyStableAction: ENSG00000134690
+    jurkatOnlyStableAction: ENSG00000149503
+    sharedExpressionQueries: 7632
+metadataAllowlist:
+  directory: data/sources/nadig-2025-gse264667-unseen-context-metadata-v1
+  files:
+    - name: GSE264667_family.soft.gz
+      bytes: 20764
+      sha256: 64efb6b39b877abc62e39b97724995eb051f5c45a65de862b16b6341700aeac4
+    - name: GEO_filelist.txt
+      bytes: 24403
+      sha256: b6c6ad09494140f23be4c77231f811bcbe7dba9915f392cb4af5e4e7cd57521f
+    - name: GEO_supplementary_directory.html
+      bytes: 938
+      sha256: 6c039787972851d41efeed1c168e0c389ef5f530f9ab51222cc362fdfc1eb31f
+    - name: GEO_miniml_directory.html
+      bytes: 597
+      sha256: 9803541672cd087e5f9182a1704374b29fc93e7257c999720f7f1b68302c3efa
+    - name: GSM8225076_hepg2_1_features.tsv.gz
+      bytes: 406895
+      sha256: aa676c76cba51f20b8ec99bbc9b1d76c82ea92b9a9bf1e8ff1207567f0942b76
+    - name: 41588_2025_2169_MOESM4_ESM.xlsx
+      bytes: 5146825
+      sha256: 8021bde3a53529ac9708ea529e2c0d213cdabf9bd14496910624018f00f9fc72
+    - name: PMC11244993_fulltext.xml
+      bytes: 182604
+      sha256: 220b3a99662d62d1c22ffb1e4e7f3d4fabd23d4c592bae5906db03012cfb134d
+    - name: dJR092_library_action_roster.tsv
+      bytes: 53140
+      sha256: 54a0d9dba97c7ec8229667e88f92fee39417379b2e7546b943f9fd560aa83036
+    - name: hepg2_expression_query_roster.txt
+      bytes: 585616
+      sha256: f374572af3a73ddc7c05ec599f47a58976ad6ed1cceb391d9a7a415ad25e22d3
+    - name: replogle_action_overlap.txt
+      bytes: 32432
+      sha256: 9802ba906e04f850baa7bc84d6d8dd15b9fb4094632cf5b865acd2a05f14b503
+rosters:
+  library:
+    source: final-publication Supplementary Table 20, sheet ST20
+    dualGuideConstructs: 2688
+    targetingConstructs: 2552
+    uniqueTargetEnsemblGenes: 2395
+    nonTargetingConstructs: 130
+    constructsMissingEnsemblIdentity: 6
+  expressionFeatures:
+    source: official HepG2 gem-group 1 10x features.tsv.gz
+    geneExpressionFeatures: 36601
+    crisprGuideCaptureFeatures: 5346
+    identityNamespace: stable unversioned Ensembl gene IDs
+  acquiredH5ad:
+    observedTargetEnsemblGenes: 2391
+    expressionEnsemblGenes: 9624
+    identityNamespace: stable unversioned Ensembl gene IDs
+  overlapWithCurrentDevelopment:
+    replogleInterventionGenes: 2027
+    presentInLibraryRoster: 2027
+    replogleReadoutGenes: 7226
+    presentInHepG2ExpressionRoster: 7226
+    presentAmongObservedH5adInterventions: 2026
+    presentInAcquiredH5adQueryPanel: 6947
+experimentalMetadata:
+  gemGroupsPerCellLine: 56
+  officialNominalPerturbationsPerCellLine: 2393
+  medianCellsPerPerturbation:
+    HepG2: 45
+    Jurkat: 83
+  controls: >-
+    Supplementary Table 20 contains 130 non-targeting dual-guide constructs.
+    The acquired H5AD contains 4976 cells assigned gene_id=non-targeting, with
+    5 to 123 controls in every one of the 56 gem groups (median 91.5).
+normalization:
+  authorAnalysis: >-
+    Raw counts were summed within perturbation or non-targeting-control cells
+    separately for each gem group. DESeq2 used its median-of-ratios size factor,
+    perturbation status, and fixed gem-group effects to estimate log2 fold
+    changes and standard errors.
+  authorNormalizedPseudobulkDeposited: false
+  endpointCompatibility: >-
+    Author DESeq2 log2 fold changes and standard errors are not the same value
+    space as the Replogle per-gem-group control-z-score population means.
+  slpControlOnlyArtifact:
+    path: data/derived/slp11-human/nadig-hepg2-control-normalization-v1/control-normalization.npz
+    sha256: 3f72db203e989cb60d9ecd65874a11d2c83af0772a8011bafcb559a65c459951
+    sourceTransform: >-
+      Counts are scaled with the recorded full-cell UMI_count to the median
+      non-targeting-control depth, then centered and divided by the sample
+      standard deviation of controls within each gem group and query.
+    targetUmi: 16019.5
+    valueSpace: slp-per-gem-control-z-score-linear-umi-v1
+    authorEndpointEquivalent: false
+    expressionRowsRead: non-targeting controls only
+  jurkatSlpControlOnlyArtifact:
+    path: data/derived/slp11-human/nadig-jurkat-control-normalization-v1/control-normalization.npz
+    sha256: 81c46faac7728b737a610c4bf401b4fd49b3ae03dbd11e1093620b5af4b7d169
+    sourceTransform: >-
+      Counts are scaled with the recorded full-cell UMI_count to the median
+      non-targeting-control depth, then centered and divided by the sample
+      standard deviation of controls within each gem group and query.
+    targetUmi: 10906.0
+    valueSpace: slp-per-gem-control-z-score-linear-umi-v1
+    authorEndpointEquivalent: false
+    expressionRowsRead: 12013 non-targeting controls only
+    perturbedExpressionRowsRead: 0
+  fiveContextFixedPanelDescriptors:
+    directory: data/derived/slp11-human-gwps-five-context-v1
+    reportSha256: e030d70c45d3239799447df22b066a57bbdebd5e608eed9004c6b93e34906b4f
+    fixedPanelRoster: data/derived/slp11-human-gwps-five-context-v1/fixed-context-query-ids.txt
+    fixedPanelRosterSha256: 1a863ba69f514ba9c1f3752cebde707af4a54ecbf1b54000d7e1320207838a79
+    originalQueryAxis: 7036
+    guaranteedSharedQueries: 6517
+    denominator: exact shared 6517-query panel
+    developmentSha256: e925b4406bd1a1ad3ebe0dd31de5e6d356d65b54cdbe908b650ee47844c85c81
+    hepg2DescriptorSha256: f3489d95c8dc09010a2d5f673f44fe3886082f9dedd23607e850d481b4299fa7
+    jurkatDescriptorSha256: 8b9fb82a00029b88bd7a7a3206a631704e7ac0669c3f06a8c255a970f47b5c5c
+    replogleExpressionRowsRead: core-control aggregates only
+    hepg2ExpressionRowsRead: 4976 non-targeting controls only
+    jurkatExpressionRowsRead: 12013 non-targeting controls only
+    nadigPerturbedExpressionRowsRead: 0
+  commonPooledContextDescriptor:
+    path: data/derived/slp11-human-gwps-common-context-v1/nadig-hepg2-common-control-context-v1.npz
+    sha256: 8d8f833d15f8f56df69079203c3d6a879b0ffec1f8d6e3f8474af89c01a391cf
+    status: superseded-unproven-cross-source-full-denominator
+    alignedQueries: 7226
+    observedQueries: 6947
+    valueSpace: control-pooled-log2-1p-cp10k-full-library-v1
+    formula: >-
+      log2(1 + 10000 * total non-targeting-control query UMIs /
+      total non-targeting-control full-cell UMIs)
+    perturbedExpressionRowsRead: 0
+  fixedPanelCommonContextDescriptor:
+    path: data/derived/slp11-human-gwps-fixed-panel-context-v1/nadig-hepg2-fixed-panel-control-context-v1.npz
+    sha256: 382626401ee38e8d5084ac9f86ffc44bd10408826fb85a94ede8eb908cdf5b27
+    fixedPanelRoster: data/derived/slp11-human-gwps-fixed-panel-context-v1/fixed-context-query-ids.txt
+    fixedPanelRosterSha256: 046891d3ceb0766e3fd09441677d6ae078fa7ac7d81ddb1f1c30866007d0d959
+    alignedTargetQueries: 7036
+    observedContextTokens: 6789
+    valueSpace: control-pooled-log2-1p-cp10k-fixed-shared-panel-v1
+    formula: >-
+      log2(1 + 10000 * pooled non-targeting-control query count /
+      pooled non-targeting-control count summed over the exact fixed 6789-gene panel)
+    perturbedExpressionRowsRead: 0
+  futureStreamingMolecularAdapter:
+    module: modules/slp-1-1-world-transition-v1/hepg2_data.py
+    plan: results/slp11-transition/hepg2-streaming-adapter-plan-v1/plan.json
+    planSha256: 47324560a091d122cedee655e10b2703dc39c9e8edbbad3da2d369fdf31662ff
+    status: planned-not-executed
+    requiredExecutionFlag: --execute-perturbed
+    endpoint: slp-per-gem-control-z-score-cell-mean-v1
+    endpointProvenance: SLp-computed; not Nadig DESeq2
+    exactConstructPopulations: 2544
+    stableTargetGenes: 2390
+    targetedCells: 140138
+    unresolvedTargetCellsQuarantined: 359
+    outputQueries: 7036
+    perQueryCellCounts: required
+    perturbedExpressionRowsReadDuringPlan: 0
+limitations:
+  - Non-targeting control rows were opened only to fit normalization and measured basal context; no perturbed expression row was opened, summarized, fitted, or scored.
+  - The library roster is broader than the set of perturbations observed after cell filtering.
+  - One current intervention and 279 current readouts are absent from the acquired H5AD panel.
+  - GEO publishes no H5AD checksum; the exact byte count and local SHA-256 are pinned.
+  - Acquisition and schema audit do not constitute OMF admission or confirmation evidence.

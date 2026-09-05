@@ -1,0 +1,100 @@
+schema: slp.scientific-design-review/v1
+reviewId: slp-1-1-principal-scientist-audit-2026-09-04
+status: design-decision-not-executable-run-authorization
+reviewedGitCommit: 399ae15
+scope: molecular-only; external benchmark truth remains closed
+existingEvidence: preserve all frozen modules, splits, resource revisions and prior results
+programHypothesis: intervention-conditioned molecular predictions transfer to unseen intervention genes and biological contexts
+decision: retain the provenance boundary and sparse query interface; replace the biological consumer and complete baseline evaluation before scaling
+
+nextStudy:
+  name: yeast-proteome-held-gene-feasibility
+  status: blocked-pending-clean-handoff-and-new-consumer
+  hypothesis: A small nonlinear conditional mean model improves held-gene perturbation-specific protein predictions over fitting-only mean and feature-bilinear ridge using identical static features.
+  organism: Saccharomyces cerevisiae
+  ncbiTaxon: 4932
+  biologicalContextCount: 1
+  action: constitutive-single-gene-deletion
+  endpoint: observed-positive-source-normalized-MaxLFQ-log2-protein-intensity
+  estimand: prediction of measured proteins conditional on source detection and the sampled viable deletion population
+  claimLimit: retrospective same-source same-context feasibility; no cross-context, cross-species, joint-population, temporal, combination or synthetic-lethality claim
+  programAdvancement: false
+  compute: no training authorized by this design document; freeze a sub-hour local pilot only after prerequisites pass
+
+pinnedExistingInputs:
+  pretrain: omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-composite-corpus-v1@sha256:e91cad825b8a2e972da293902c630331a92ab664c5d14a95a65ff38090db6c48
+  pretrainArchiveSha256: 0a5322c46e15e8a15d17000e8993c0ad642fcc70bc8fff00cbba8fb2905708bf
+  compositionAuditSha256: 898e4069b2bd9575bd7380b57ed6214bf3d75043feb401c0fa50371972623c52
+  staticFeatures: omf://abiome/slp/datasetsnapshot/slp-1-1-sequence-statistics-feature-block-v1@sha256:e9733974c551bca3af93c4cb488972f5167da5e7e3cf48ef5803348cd20d91e5
+  heldRoster: omf://abiome/slp/datasetsnapshot/slp-1-1-held-roster-v1@sha256:1b9a4800370a5398bf83e0a636007f466bf6ca5a6232e2ebb8fc64c5beb63450
+  basalReference: omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-basal-control-v1@sha256:5abaa79409a9e342785ce610083908ffe5054353ddc1c728ab91ddaa704e112a
+  protectedValidationMetadataOnly: omf://abiome/slp/datasetsnapshot/slp-1-1-proteome-observation-molecular-validation-v1@sha256:6bdefb2ff86c56a5d86fadcf9ffd8c6e3d759183fde6a706d18086a6e2f2341a
+  validationAccess: distinct evaluator only after rights and physical isolation; this review does not open truth
+  finalAccess: forbidden before candidate and decision lock
+  reward: disabled
+  benchmark: forbidden
+
+unchangedNumericalFloors:
+  note: retain MODEL_CARD floors; this review neither edits historical gates nor makes the yeast pilot sufficient for the program hypothesis
+  leakageViolations: 0
+  benchmarkLabelRecords: 0
+  minimumNllDeltaNatsPerObservedTargetAgainstEachBaseline: 0.02
+  minimumRelativeNllImprovementAgainstEachBaseline: 0.02
+  minimumTrainingCentroidAdjustedPearson: 0.10
+  minimumProtectedSpeciesAndSourceNllDelta: 0.0
+  relativeNllCaveat: continuous-density NLL can be zero or negative and changes under rescaling; freeze value space and an explicit denominator convention before any run, never silently substitute MSE
+  acceptance: all registered criteria must pass for one frozen candidate; a diagnosticPassed flag cannot authorize advancement
+
+consumerRequirements:
+  - Consume the exact two-file corpus bundle and v1.5 signed handoff; reverify signature and composite identities before allocating a model.
+  - Join all entities by NCBI taxonomy ID plus stable source ID, including target-free inference.
+  - Route only covariates marked world into representation inputs; audit sample locators stay excluded.
+  - Carry identical basal-context semantics and allowed covariates through fitting and target-free prediction.
+  - Resolve only likelihoods requested by the admitted query; a Gaussian-only corpus must not require an NB ontology entry.
+  - Use a new immutable consumer and prediction contract; never modify frozen numerical modules in place.
+  - Batch independent query operations with declared floating-point tolerances; test panel, ordering, padding, chunk and batch behavior.
+  - Declare device, target budget, record coverage, optimizer steps and wall-time cap explicitly; never inherit the CPU smoke workload as a biological schedule.
+
+modelComparison:
+  startingFamily: small residual conditional-mean operator with a fitted mean reference, static action/query features and an explicit basal-state path
+  alternatives: [feature-bilinear-ridge, small-set-encoder-query-decoder]
+  initialLikelihood: Gaussian in the fixed proteome log2 value space
+  sequenceStatistics: weak feature-control arm only; retain for matched comparisons
+  richerFeatures: admit an order-sensitive frozen sequence representation separately with exact model revision, source rights, extraction and normalization hashes; no benchmark-derived annotations
+  experimentalOrder: first compare architectures at identical features and budget; then compare feature packs at fixed architecture
+  combinationBranch: defer until combination molecular outcomes and a held-combination protocol can identify non-additivity
+  populationBranch: defer shared stochastic state or other joint generative construction until replicate or cell distributions support the objective
+  reinforcement: disabled; likelihood baselines and deterministic continuation precede any reward experiment
+
+evaluationRequirements:
+  baselines: [matched-basal-context-only, fitting-perturbation-mean, txpert-additive, feature-bilinear-ridge]
+  probabilisticBaselines: freeze scales using only gene-grouped out-of-fold fitting residuals; no held validation or benchmark calibration
+  ridgeSelection: preregister fitting-only gene-grouped folds and regularization grid; group all records and compound actions involving an intervention together
+  missingness: predict the full preregistered panel, score observed values without zero imputation, report coverage and detection dependence
+  weighting: report per-intervention macro metrics as primary plus per-observed-target NLL; never treat readout count as independent biological sample size
+  uncertainty: paired resampling at intervention-gene level within source/species; preserve replicate clusters and report every frozen seed
+  sourceNormalization: upstream release used plate/global statistics before our split; resolve that dependency or explicitly limit to processed-release retrospective prediction
+  sourceNoise: sample-row IDs are not evidence of independent biological replicates; bound/DE metrics require verified replicate structure
+  negativeControls: action-feature permutation within fitting strata and mean-only prediction; frozen before protected evaluation
+  stageGate: complete source/species baseline-NLL comparison in the evaluator, not the trainer
+
+broaderDataRequirements:
+  contextTransfer: rights-admitted molecular interventions across distinct biological contexts with matching unperturbed profiles and whole-context outcome exclusion
+  speciesTransfer: independently admitted human molecular source plus within-species held-gene tests and a separately locked transfer test
+  combinationTransfer: measured molecular combinations, with all held constituent outcomes excluded for both-gene-cold claims
+  temporalDynamics: time-resolved perturbational evidence and an explicit transition objective
+  yeastAtlas: existing genotype inventory is identity evidence only; quantitative admission and count/library-size contracts remain separate prerequisites
+
+downstreamBenchmarkDecision:
+  historicalSlp1: retrospective only; never becomes a new untouched confirmation set
+  primaryFutureEndpoint: context-specific experimentally measured genetic-interaction or viability endpoint with screened negatives and declared population
+  unknownPairs: unlabeled, not automatically experimentally negative
+  comparisons: label-free application scores separate from fold-local supervised readouts; mean/additive/linear/degree/feature/published methods on identical splits and modalities
+  coldStart: both evaluation genes absent from every fitting quantitative trajectory and supervised-readout training edge
+  ranking: report AUPRC with prevalence, precision and recall at frozen experimental budgets, and uncertainty; AUROC alone is insufficient
+  confirmation: lock candidate, application score, sign, calibration and threshold before independently controlled final or prospective evaluation
+
+unresolvedAuthorizationAndRuntime:
+  - Independent custodian public key, signed recipient-bound authorization and separate training/evaluation stores are required.
+  - Restoring an audit CLI is not a portable runtime closure or training authorization.
+  - Native producer lineage, rights enforcement and inference artifact materialization remain separate OMF release gates.

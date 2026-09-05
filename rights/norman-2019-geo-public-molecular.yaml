@@ -1,0 +1,27 @@
+license: NCBI-GEO-public-data-policy
+trainingAllowed: true
+redistributionAllowed: conditional
+attributionRequired: true
+source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE133344
+evidence:
+  - https://www.ncbi.nlm.nih.gov/geo/info/disclaimer.html
+  - https://www.ncbi.nlm.nih.gov/home/about/policies/
+  - https://doi.org/10.1126/science.aax4438
+scope: >-
+  Only the five exact GSE133344 supplemental files and hashes allowlisted in
+  sources/norman-2019-gse133344.yaml, used as molecular-response training data.
+rightsBasis: >-
+  NCBI states that it places no restrictions on the use or distribution of
+  GEO data. NCBI also states that submitters may retain patent or other rights
+  and that NCBI does not transfer rights. Training is allowed for this public
+  research dataset with citation; redistribution therefore remains
+  conditional on downstream review rather than being asserted categorically.
+attribution: >-
+  Norman TM et al. Exploring genetic interaction manifolds constructed from
+  rich single-cell phenotypes. Science. 2019;365:786-793.
+  DOI: 10.1126/science.aax4438. GEO accession GSE133344.
+exclusions:
+  - synthetic-lethality benchmark labels or outcomes
+  - pretrained quantitative weights or predictions
+  - derived local arrays, splits, checkpoints, and manifests
+  - files outside the exact GSE133344 allowlist

@@ -1,0 +1,37 @@
+schema: slp.source-acquisition/v1
+id: tahoe-100m-metadata-v1
+status: metadata-acquired-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+source:
+  repository: https://huggingface.co/datasets/tahoebio/Tahoe-100M
+  revision: 2dc57900b7981cfcf5e211527169a0b006546a95
+rights: rights/tahoe-100m-cc0-1.0.yaml
+localMetadataManifest: data/sources/tahoe-100m-metadata-2dc57900/manifest.json
+acquisitionScope: >-
+  README, license, gene, sample, drug and cell-line metadata only. Remote
+  Parquet footer inspection established schemas and file sizes; no complete
+  expression or differential-expression shard is locally acquired.
+modalities:
+  - single-cell-rna-counts
+interventions:
+  type: small-molecule-exposure
+  identity: canonical-chemical-structure
+  dose: source sample metadata, preserving concentration and unit
+  vehicle: plate-matched DMSO_TF
+  time: unverified-not-yet-used
+identity:
+  cellContext: Cellosaurus
+  molecularQuery: source gene token to stable Ensembl mapping
+  genesAreLearnedIds: false
+  chemicalActionIsGeneKnockout: false
+cautions:
+  - Source MOA notes include GPT-curated fields; exclude them from features.
+  - Some treatments contain multiple compounds; parse rather than flatten.
+  - Sample metadata QC summaries are not basal expression profiles.
+  - First raw expression entry is a CLS marker and must be removed.
+  - Author differential-expression baseMean is not a control-only basal state.
+  - Author DE uses gene symbols; require unique source-local stable mapping.
+  - No source-specific model, training snapshot or score exists yet.

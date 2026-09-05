@@ -3,6 +3,13 @@
 
 
 Scope and central conclusion  
+
+Current scientific scope (September4,2026): the active SLp-1.1 objective is
+held-intervention molecular-state prediction, with SL as a downstream test.
+Earlier benchmark-first positioning below records a proposed publication
+direction and is not a training or selection instruction. The implemented
+models and completed failures are described in `MODEL_CARD.md` and
+`docs/results.md`; literature ambitions are not empirical results.
   
 Synthetic lethality (SL) is a context-dependent interaction in which each single perturbation is compatible with viability but their combination is lethal. More general negative genetic interactions or synergistic fitness defects should not be called SL unless the single-perturbation tolerance and lethality criteria are met. Most computational SL systems treat SL as supervised link prediction: encode two genes, optionally add a cancer or cell-line context, and learn a binary or ranking score from known SL pairs. The SL-Predict formulation would be different. It would learn an intervention-conditioned cellular transition, then decode the predicted state into molecular measurements and viability. SL would be measured as a non-additive viability consequence of the predicted double perturbation rather than as the direct training target of the transition model.  
   
@@ -690,3 +697,113 @@ The 2025 large perturbation model provides a direct precedent for separating per
 34. Large perturbation model: [https://doi.org/10.1038/s43588-025-00870-1](https://doi.org/10.1038/s43588-025-00870-1)
 35. Systema perturbation-specific evaluation: [https://doi.org/10.1038/s41587-025-02777-8](https://doi.org/10.1038/s41587-025-02777-8)
 36. Costanzo global yeast genetic-interaction map and downloads: [https://thecellmap.org/yeast/costanzo2016/](https://thecellmap.org/yeast/costanzo2016/)
+
+September4,2026 implementation-focused update
+
+[Scouter](https://doi.org/10.1038/s43588-025-00912-8) is a directly relevant
+lightweight baseline: it compresses a control transcriptome, concatenates
+fixed GenePT text embeddings and decodes a perturbed transcriptome. Its
+published training samples individual control/perturbed cells and fits models
+separately by dataset. The reported comparisons emphasize top20 differentially
+expressed genes. A pseudobulk adaptation with protein features would change
+both inputs and sampling and must not be called an exact reproduction. Our
+current aggregate source data and perturbation-specific full-panel metrics
+therefore require an explicit adapted comparison, or acquisition of the
+matching single-cell data. Its primary code is
+[PancakeZoy/scouter](https://github.com/PancakeZoy/scouter).
+
+[Frangieh2021 Perturb-CITE-seq](https://doi.org/10.1038/s41588-021-00779-1)
+provides paired RNA and surface-protein measurements under control,
+interferon-gamma and T-cell co-culture conditions. This is useful for testing
+observation heads and within-study environmental transfer. Public processed
+data are listed at Broad SCP1064; raw data have a separate DUOS access route.
+Acquisition does not imply that differently normalized RNA and protein values
+can share one measurement decoder.
+
+
+### 2026-09-05: context breadth and chemical intervention data
+
+Tahoe-100M's [publisher dataset](https://huggingface.co/datasets/tahoebio/Tahoe-100M)
+provides RNA counts, source-local Ensembl/token relations, chemical structures,
+dose-bearing sample records and plate-matched DMSO controls. The pinned revision
+is `2dc57900b7981cfcf5e211527169a0b006546a95`, with publisher CC0 terms.
+Its 50-cell-line design motivates a separate typed chemical-intervention arm;
+chemical exposure is not interchangeable with genetic deletion or CRISPRi.
+Locally acquired metadata do not yet constitute a training dataset.
+
+[Arc's 2026 challenge announcement](https://arcinstitute.org/news/virtual-cell-challenge-2026)
+emphasizes perturbation prediction in unseen cell contexts from measured
+controls. This is aligned with our stated scientific question. Challenge
+outcomes have not been acquired or used for model selection here. Competition
+participation is not required for the current development experiments.
+
+[Nadal-Ribelles et al. 2025](https://www.nature.com/articles/s41467-025-57600-4)
+profiles yeast deletion strains in control and 0.4 M NaCl for 15 minutes.
+The methods describe within-condition mutant-versus-WT Wilcoxon testing and
+log2 fold changes. The acquired `FC_genotype.Rdata` preserves the authors'
+`logfoldchanges` column, but the supplied summary script starts from upstream
+CSV files and does not establish the numerical estimator or assay transform.
+Consequently the current adapter preserves a source-specific endpoint rather
+than assuming compatibility with other log-normalized expression datasets.
+The [author archive](https://zenodo.org/records/14062629) also includes unrelated
+fitness and third-party comparisons; those are not part of this RNA acquisition.
+
+### 2026-09-05: current virtual-cell comparison scope
+
+[Arc's current project page](https://arcinstitute.org/virtual-cell-initiative)
+now lists STATE version 1.0 in Cell. This supersedes the older preprint-status
+note for that specific release. The publisher full text was not retrievable
+in this check, so this is a verified release-status update, not a new independent
+architecture or performance audit. The existing State embedding/transition
+precedent remains relevant; neither molecular-state representation nor
+population-conditioned forecasting is a new category introduced by SLp.
+
+The current [Systema paper](https://www.nature.com/articles/s41587-025-02777-8)
+and [27-method, 29-dataset benchmark](https://www.nature.com/articles/s41592-025-02980-0)
+continue to support testing perturbation-specific effects and cellular-context
+generalization separately. Their published rankings cannot establish how an
+unreproduced comparator performs on our current raw-count normalization,
+static modalities and gene splits. The new count-state prototype is therefore
+an internal experiment with matched count-derived controls and ridge, not a
+published-method reproduction or a SOTA result.
+
+### 2026-09-05 — World-model reassessment: composition must be grounded
+
+The return to frozen SLp-1 identifies a distinction between supporting a
+rollout API and learning an action operator from observed perturbed backgrounds.
+SLp-1's measured doubles supervised simultaneous endpoints; its sequential
+consistency compared model-generated states. The new pilot therefore tests
+observed single-to-double endpoint relations before expanding model capacity.
+The endpoints are not measured sequential trajectories, so this factorization
+must not be described as recovered temporal dynamics.
+
+Recent primary work considered for the redesign:
+
+- [U-Pert: Unbalanced perturbation dynamics for cell-fate design](https://www.biorxiv.org/content/10.64898/2026.06.30.735555v1)
+  (2026 preprint; [author project](https://qiangweipeng.github.io/UPT/)) uses
+  condition- and context-conditioned flow matching with velocity and growth
+  fields. Its author figures report genetic response, held drug/context/dose
+  tuples, and held-donor cytokine analyses. This motivates explicitly modeling
+  how actions depend on state. It does not by itself establish genetic
+  combination emergence. Endpoint recovered-cell abundance mixes biological
+  growth with capture and sampling; SLp will not label a learned count head
+  as viability without an appropriate experimental measurement model.
+- [MultiFlow](https://github.com/liuq-lab/MultiFlow)
+  ([August 2026 preprint](https://doi.org/10.64898/2026.08.20.746112)) provides
+  coupled flow matching for paired RNA–ATAC perturbation responses. It is
+  relevant to a future multiomic observation model; this round does not have
+  the paired RNA–ATAC inputs needed for a matched reproduction. No numerical
+  advantage over SLp is inferred from its abstract or repository description.
+- [Perturbation response decomposition enables biologically aligned
+  generalization to unseen perturbations and cellular contexts](https://www.biorxiv.org/content/10.64898/2026.07.24.740459v1.full)
+  (July 2026 preprint) separates shared response from perturbation-specific
+  structure and cautions that capacity alone need not improve generalization.
+  The actionable evaluation principle is to remove additive singles and the
+  cross-combination residual average when measuring nonadditive prediction.
+  An improvement in total profile correlation alone is insufficient.
+
+These are architecture and evaluation precedents, not copied implementations
+or independently reproduced results. For the first test, the simpler
+SLp-1-style attention core is sufficient to isolate observed-background
+supervision. Fitting a large flow model before establishing this capability
+would confound the scientific comparison.

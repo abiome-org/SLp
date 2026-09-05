@@ -1,0 +1,135 @@
+schema: slp.source-acquisition/v1
+id: replogle-2022-k562-rpe1-raw-pseudobulk-development-v1
+status: acquired-not-admitted
+admissionClaim: false
+organism:
+  name: Homo sapiens
+  ncbiTaxon: 9606
+identity:
+  primaryNamespace: Ensembl-gene
+  displaySymbolsAreIdentity: false
+  readoutField: var/gene_id
+  actionField: obs/gene_transcript
+  actionParseRule: terminal ENSG[0-9]+ token only; preserve the complete original row ID
+  versionPolicy: source contains unversioned Ensembl gene IDs; do not map or merge by symbol
+source:
+  accession: figshare-plus:20029387
+  version: 1
+  versionDoi: 10.25452/figshare.plus.20029387.v1
+  primaryUrl: https://doi.org/10.25452/figshare.plus.20029387.v1
+  landingUrl: https://plus.figshare.com/articles/dataset/_Mapping_information-rich_genotype-phenotype_landscapes_with_genome-scale_Perturb-seq_Replogle_et_al_2022_processed_Perturb-seq_datasets/20029387
+  metadataUrl: https://api.figshare.com/v2/articles/20029387
+  articleDoi: 10.1016/j.cell.2022.05.013
+  publishedAt: 2022-06-09T04:56:24Z
+rights: rights/figshare-replogle-2022-processed-perturb-seq-cc-by-4.0.yaml
+modalities:
+  - single-cell-derived-pseudobulk-rna-counts
+interventions:
+  - single-gene-CRISPRi
+endpoint: per-perturbation-cell-mean-raw-UMI-abundance
+upstreamValueSpace:
+  quantity: arithmetic mean of raw single-cell UMI abundance within each perturbation population
+  summedCounts: false
+  fractionalValuesExpected: true
+  likelihoodConstraint: do not apply a negative-binomial likelihood to these fractional means
+  evidence:
+    repository: https://github.com/thomasmaxwellnorman/Perturbseq_GI
+    commit: 3b25109aeb9c0c2026bd70abd50304a0ad4e5395
+    path: perturbseq/cell_population.py
+    method: CellPopulation.average calls groupby_apply with the pandas mean operation
+contexts:
+  - id: replogle-2022-k562-essential-day-6
+    cellLine: K562
+    biologicalSystem: chronic-myeloid-leukemia-cell-line
+    assayScale: essential-gene
+    samplingTime: day-6-post-transduction
+  - id: replogle-2022-rpe1-essential-day-7
+    cellLine: RPE1
+    biologicalSystem: retinal-pigment-epithelial-cell-line
+    assayScale: essential-gene
+    samplingTime: day-7-post-transduction
+allowlist:
+  - name: K562_essential_raw_bulk_01.h5ad
+    figshareFileId: 35773070
+    url: https://ndownloader.figshare.com/files/35773070
+    localPath: data/sources/human/K562_essential_raw_bulk_01.h5ad
+    bytes: 79766954
+    upstreamMd5: 8321d5d3ffc99db2a5c71edca4189735
+    sha256: 80de95e54fcbca0e0537d569b43ec92fde6bd0482801505504baebe3118dcadf
+    upstreamChecksumVerified: true
+    context: replogle-2022-k562-essential-day-6
+  - name: rpe1_raw_bulk_01.h5ad
+    figshareFileId: 35775581
+    url: https://ndownloader.figshare.com/files/35775581
+    localPath: data/sources/human/rpe1_raw_bulk_01.h5ad
+    bytes: 95350546
+    upstreamMd5: 74765fa87635467a869ea972356ae0e7
+    sha256: 603c655f1cfa41d649baf3ae63fca224cc11f297e40d4ed59d390b1e8d2e2db2
+    upstreamChecksumVerified: true
+    context: replogle-2022-rpe1-essential-day-7
+metadataProbe:
+  date: 2026-09-04
+  initialAccessScope: HDF5 schema, dimensions, obs annotations, and var annotations
+  format:
+    container: AnnData HDF5
+    XStorageDtype: float32
+    obsIndex: gene_transcript
+    varIndex: gene_id
+  K562:
+    matrixShape: [2285, 8563]
+    targetingRows: 2176
+    nonTargetingControlRows: 109
+    uniqueActionEnsemblGenes: 2057
+    uniqueReadoutEnsemblGenes: 8563
+    filteredCellCountSummedFromObs: 310385
+    allActionRowsClassified: true
+  RPE1:
+    matrixShape: [2679, 8749]
+    targetingRowsWithEnsemblId: 2544
+    nonTargetingControlRows: 130
+    unresolvedActionRows: 5
+    uniqueActionEnsemblGenes: 2390
+    uniqueReadoutEnsemblGenes: 8749
+    filteredCellCountSummedFromObs: 247914
+    unresolvedOriginalRowIds:
+      - 5587_NEDD8-MDP1_P1P2_nan
+      - 6828_PRSS50_P2_nan
+      - 6829_PRSS50_P1_nan
+      - 7155_RBM14-RBM4_P1_nan
+      - 7156_RBM14-RBM4_P2_nan
+  sharedAcrossContexts:
+    actionEnsemblGenes: 2055
+    readoutEnsemblGenes: 7226
+numericProbe:
+  date: 2026-09-04
+  authorizedPublicSourceRead: true
+  K562:
+    nonFiniteValues: 0
+    negativeValues: 0
+    fractionalValues: 19438159
+    allZeroRows: 0
+  RPE1:
+    nonFiniteValues: 0
+    negativeValues: 0
+    fractionalValues: 23073189
+    allZeroRows: 0
+  interpretation: >-
+    The fractional nonnegative matrices agree with the author code's
+    mean-population semantics. They are not summed integer count matrices.
+acquisition:
+  downloadedAt: 2026-09-04
+  localFilesIgnoredByGit: true
+  exactBytesAndUpstreamMd5Verified: true
+  localSha256Computed: true
+limitations:
+  - These compact files are pseudobulk summaries, not independent single-cell observations.
+  - K562 and RPE1 differ in sampling day and screened action population as well as cellular context.
+  - The five RPE1 rows without terminal Ensembl IDs must remain quarantined unless a pinned source-native mapping resolves them.
+  - Gene symbols are annotations only and must never replace taxon-9606 Ensembl identities.
+  - This acquisition is not an OMF admission, split, training run, validation result, or transfer claim.
+nextIngestionTask: >-
+  Implement a bounded metadata-first AnnData adapter that verifies each SHA-256,
+  preserves (9606, Ensembl gene ID) keys and original obs row IDs, quarantines
+  unresolved actions, separates non-targeting controls, audits X sparsity and
+  count semantics, then constructs source/context-stratified fitting-only
+  pseudobulks without using held-gene or benchmark outcomes.

@@ -1,0 +1,23 @@
+{
+  "schema": "slp.omf-toolchain-pin/v1",
+  "version": "2.0.0",
+  "source": {
+    "repository": "https://github.com/abiome-org/OpenModelFactory.git",
+    "tag": "v2.0.0",
+    "tagObjectRevision": "419672f71579c782d593ba5c0b73ff79db01d5b7",
+    "revision": "75f002b4226b32dd428f5fec0efe9b950db0c6d5",
+    "path": "data/tooling/omf-2.0-75f002b"
+  },
+  "runtime": {
+    "path": "data/tooling/omf2-runtime",
+    "python": ">=3.11,<3.13",
+    "preferredInterpreters": [
+      "/usr/bin/python3.12",
+      "/usr/bin/python3.11"
+    ]
+  },
+  "locks": [
+    "requirements.runtime.lock",
+    "requirements.build.lock"
+  ]
+}

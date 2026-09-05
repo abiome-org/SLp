@@ -1,0 +1,42 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: Zenodo record 14062629, author-produced yeast molecular summary files
+evidence:
+  - https://zenodo.org/api/records/14062629
+  - https://doi.org/10.1038/s41467-025-57600-4
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only FC_genotype.Rdata and ptb_summary.Rdata from Zenodo record 14062629.
+  FC_genotype.Rdata contains the authors' per-genotype differential-expression
+  names/logfoldchanges tables for control and NaCl conditions. ptb_summary.Rdata
+  contributes genotype identity and cell_number only. This record does not make
+  an OMF admission claim.
+sourceFiles:
+  FC_genotype.Rdata:
+    bytes: 426313173
+    upstreamMd5: 176a299578152124db7f4a40b730f985
+    sha256: c210fe541b0b91bc6eead28aa2265065afceec763ade1abd682c58896299a240
+    url: https://zenodo.org/api/records/14062629/files/FC_genotype.Rdata/content
+  ptb_summary.Rdata:
+    bytes: 345032
+    upstreamMd5: 5b04718fa4b2025c4ec2a464ffed6ab1
+    sha256: 01c2d54ac838179be29694ed300cb17edac47dd4db23a4018407546e0651b165
+    url: https://zenodo.org/api/records/14062629/files/ptb_summary.Rdata/content
+rightsBasis: >-
+  Zenodo identifies the deposited record as CC BY 4.0. The linked open-access
+  article describes the authors' yeast knockout single-cell transcriptome atlas
+  and its control and 0.4 M NaCl conditions.
+attribution: >-
+  Nadal-Ribelles, Mariona et al. (2025), A single-cell resolved
+  genotype-phenotype map using genome-wide genetic and environmental
+  perturbations, Nature Communications 16:2645,
+  https://doi.org/10.1038/s41467-025-57600-4; data deposited at Zenodo,
+  https://doi.org/10.5281/zenodo.14062629.
+exclusions:
+  - fitness and competition measurements
+  - Costanzo, Replogle, Kemmeren, Jackson, Gasch, and other third-party files
+  - full Seurat objects and merged count matrices
+  - any source file other than the two exact molecular summaries named above
+  - synthetic-lethality annotations or benchmark labels

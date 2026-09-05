@@ -1,0 +1,41 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: Zenodo record 14062629, author-produced separately processed yeast Seurat objects
+evidence:
+  - https://zenodo.org/api/records/14062629
+  - https://doi.org/10.1038/s41467-025-57600-4
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only seus_split.RData and the README/Zenodo metadata needed to interpret it
+  from Zenodo record 14062629. The archive contains the authors' separately
+  processed Control and NaCl Seurat objects. This declaration records source
+  rights and does not itself admit a quantitative OMF snapshot.
+sourceFiles:
+  seus_split.RData:
+    bytes: 5907877873
+    upstreamMd5: 65bb56efd8120f32f65c044de5f040aa
+    url: https://zenodo.org/api/records/14062629/files/seus_split.RData/content
+  README.txt:
+    bytes: 2050
+    upstreamMd5: 1fa718ad98d6eacbf6134372299f2b83
+    sha256: 268533b10c59d3f4ca941ff31ac8b9c108b61f55f00d85792d44b3a90b3b9da8
+    url: https://zenodo.org/api/records/14062629/files/README.txt/content
+rightsBasis: >-
+  Zenodo identifies the deposited record as CC BY 4.0. The linked open-access
+  article describes the authors' Saccharomyces cerevisiae knockout
+  single-cell transcriptome atlas in control and 0.4 M NaCl conditions.
+attribution: >-
+  Nadal-Ribelles, Mariona et al. (2025), A single-cell resolved
+  genotype-phenotype map using genome-wide genetic and environmental
+  perturbations, Nature Communications 16:2645,
+  https://doi.org/10.1038/s41467-025-57600-4; data deposited at Zenodo,
+  https://doi.org/10.5281/zenodo.14062629.
+exclusions:
+  - seu.RData, the 42.9 GB merged representation
+  - fitness and competition measurements
+  - third-party human or yeast datasets
+  - author-derived differential-expression, fold-change, leverage, clustering, or significance values as model targets
+  - every deposited file other than seus_split.RData and README.txt
+  - synthetic-lethality annotations or benchmark labels

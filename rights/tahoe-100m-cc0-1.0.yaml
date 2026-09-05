@@ -1,0 +1,18 @@
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: false
+source: https://huggingface.co/datasets/tahoebio/Tahoe-100M
+revision: 2dc57900b7981cfcf5e211527169a0b006546a95
+licenseEvidence:
+  path: data/sources/tahoe-100m-metadata-2dc57900/LICENSE.md
+  sha256: 82fe759ab83e7619dfe956bb8b295b0ce640ed3706b68b871c15645a0f695a6b
+  url: https://huggingface.co/datasets/tahoebio/Tahoe-100M/blob/2dc57900b7981cfcf5e211527169a0b006546a95/LICENSE.md
+scope: >-
+  Files distributed by tahoebio/Tahoe-100M at the exact repository revision.
+  This records the publisher's CC0 dedication, not separate rights in external
+  linked databases or third-party model weights.
+scientificAttribution: >-
+  Tahoe-100M, Tahoe Bio (formerly Vevo Therapeutics), 2025.
+  A Giga-Scale Single-Cell Perturbation Atlas for Context-Dependent Gene
+  Function and Cellular Modeling.

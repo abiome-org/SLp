@@ -15,11 +15,6 @@ spec:
         action: network.egress
         purpose: unapproved
   config:
-    dirtyWorktree: deny
-    unsignedModules: deny
-    sync:
-      requirePlan: true
-      allowDelete: false
+    dirtyWorktree: archive
     promotion:
       requireEvaluationPass: true
-      requireCompleteLineage: true

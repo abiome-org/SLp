@@ -1,0 +1,33 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://release.geneontology.org/2022-09-19/annotations/sgd.gaf.gz
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+evidence: https://pmc.ncbi.nlm.nih.gov/articles/PMC11912841/
+scope: >-
+  SGD-authored Gene Ontology annotations distributed in the exact
+  GO Consortium 2022-09-19 SGD GAF object pinned by
+  sources/go-sgd-2022-09-19.yaml.
+rightsBasis: >-
+  The SGD project's authoritative database update states that all information
+  and materials provided by SGD are available under CC BY 4.0. The feature
+  artifact is a deterministic numeric adaptation of the exact pinned SGD
+  annotation rows after the declared static-feature filters.
+attribution: >-
+  Saccharomyces Genome Database (SGD), Stanford University, and the Gene
+  Ontology Consortium. Engel SR et al. (2025), Saccharomyces Genome Database:
+  Advances in Genome Annotation, Expanded Biochemical Pathways, and Other Key
+  Enhancements, GENETICS 229(3), iyae185.
+purposeRestrictions:
+  staticFeatureGeneration: true
+  quantitativeOutcomeTrainingCorpus: false
+  geneticInteractionOrSyntheticLethalityLabels: false
+exclusions:
+  - linked third-party records not contained in the exact pinned GAF object
+  - biological-process annotations
+  - negated annotations
+  - perturbation-derived evidence IMP, IGI, IEP, HMP, HGI, and HEP
+  - annotations dated after 2022-12-31
+technicalAccessIsRightsEvidence: false
+omfAdmissionClaimed: false

@@ -1,0 +1,29 @@
+license: NCBI-GEO-public-data-policy
+trainingAllowed: true
+redistributionAllowed: conditional
+attributionRequired: true
+source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE90546
+evidence:
+  - https://www.ncbi.nlm.nih.gov/geo/info/disclaimer.html
+  - https://www.ncbi.nlm.nih.gov/home/about/policies/
+  - https://doi.org/10.1016/j.cell.2016.11.048
+scope: >-
+  Only GSM2406677_10X005_matrix.mtx.txt.gz (199715348 bytes, SHA-256
+  36392a38e727e5cf3c4c2eff4b0d19f4b16009926aabcc80d002256345c714b4)
+  and the metadata dependencies pinned by
+  sources/adamson-2016-gse90546-epistasis-raw-count-v1.yaml.
+rightsBasis: >-
+  NCBI states that it places no restrictions on use or distribution of GEO
+  molecular data. NCBI also states that submitters may retain patent,
+  copyright, or other rights and that NCBI does not transfer those rights.
+  Training is allowed for this public research dataset with citation;
+  redistribution remains conditional on downstream review.
+attribution: >-
+  Adamson B et al. A Multiplexed Single-Cell CRISPR Screening Platform Enables
+  Systematic Dissection of the Unfolded Protein Response. Cell.
+  2016;167:1867-1882.e21. DOI: 10.1016/j.cell.2016.11.048.
+  GEO accession GSE90546.
+exclusions:
+  - other GSE90546 experiments or raw sequencing reads
+  - synthetic-lethality benchmark labels or outcomes
+  - derived local arrays, forecasts, checkpoints, and evaluation results

@@ -1,0 +1,30 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.25452/figshare.plus.20029387.v1
+evidence:
+  - https://api.figshare.com/v2/articles/20029387
+  - https://creativecommons.org/licenses/by/4.0/
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only the two exact public files K562_essential_raw_bulk_01.h5ad
+  (Figshare file 35773070, MD5 8321d5d3ffc99db2a5c71edca4189735) and
+  rpe1_raw_bulk_01.h5ad (Figshare file 35775581, MD5
+  74765fa87635467a869ea972356ae0e7) from immutable Figshare+ dataset
+  version 1, DOI 10.25452/figshare.plus.20029387.v1.
+rightsBasis: >-
+  The public Figshare API identifies dataset version 1 as CC BY 4.0 and states
+  that the depositors confirmed the files may be publicly distributed under
+  the selected license. CC BY 4.0 permits copying and adaptation for any
+  purpose with attribution and an indication of changes.
+attribution: >-
+  Replogle, Joseph; Weissman, Jonathan (2022). "Mapping information-rich
+  genotype-phenotype landscapes with genome-scale Perturb-seq" Replogle et
+  al. 2022 processed Perturb-seq datasets. Figshare+.
+  https://doi.org/10.25452/figshare.plus.20029387.v1
+exclusions:
+  - every other file in Figshare dataset 20029387
+  - raw sequencing files and linked deposits
+  - locally derived arrays, splits, checkpoints, predictions, or benchmark data
+  - any later Figshare article or file revision

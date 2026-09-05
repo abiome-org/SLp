@@ -1,0 +1,83 @@
+schema: slp.external-code-inspection/v1
+id: txpert-public-code-08d82eea
+status: inspected-not-executed-not-admitted
+repository: https://github.com/valence-labs/TxPert
+revision: 08d82eea86746b044cf7531f4ec8c5f60e1cb73f
+tree: 4e7515646f77f1d4b1929e848a0f1658d2c29144
+revisionDate: "2026-01-09T15:13:38-05:00"
+paper:
+  title: "TxPert: using multiple knowledge graphs for prediction of transcriptomic perturbation effects"
+  doi: https://doi.org/10.1038/s41587-026-03113-4
+localIgnoredInspectionPath: data/derived/slp11-txpert-code/TxPert-08d82eea
+license:
+  declaration: Recursion Non-Commercial End User License Agreement
+  file: license.pdf
+  sha256: 4c122113951fc4c74c65a7f13cb2e85e47dfafa18612fad50918f684655721da
+  limitation: >-
+    Treat the repository as inspection-only until its EULA is reviewed for the
+    intended use; do not copy or redistribute implementation code by assuming
+    an open-source license.
+inspectionBoundary:
+  codeExecuted: false
+  pretrainedWeightsDownloaded: false
+  quantitativePredictionsDownloaded: false
+  benchmarkLabelsDownloaded: false
+  note: >-
+    main.py was deliberately not executed because it automatically downloads a
+    Zenodo cache containing data and pretrained checkpoints.
+keyFileHashes:
+  README.md: 7dc16dbf94db7ca0dd6ad1e1ce8c220fb3e829dfa1a826f7fba0beb229673519
+  configs/config-gat.yaml: b6ed95b489be1670bfeedc4f91dd82c1ba993cd8a605576fedd5750c8a5838ea
+  configs/config-exphormer.yaml: 1e3735cb66d430d7fe6c074673b3ae153004edac0a773e9c4f3752d5ff76d8aa
+  configs/config-exphormer-mg.yaml: 4c08f30c31939aef554763c201f2dbbd120edddd71aa75b4f2664373e3543a2e
+  gspp/models/txpert.py: 790a0d3fc24860d9d1142ec95195f2836231d7313fad91e7e3dfe021e1922dd2
+  data/preprocessing_utils.py: 548fc452aac1121505ea3b7bc17fd743ada6960975e227e856114e830e52e04e
+publicConfiguration:
+  common:
+    basalEncoder: MLP
+    latentDimensions: 64
+    decoderHiddenDimensions: 512
+    decoderDropout: 0.2
+    batchNormalization: true
+    loss: MSE
+    batchSize: 64
+    batchMatchedAverageControls: true
+    randomSeed: 1
+  gat:
+    graph: STRING-v11.5-top-20
+    layers: 4
+    hiddenDimensions: 128
+    heads: 2
+    skip: concatenate
+    dropout: 0.2
+    selfLoops: true
+    edgeWeightsUsed: false
+  exphormer:
+    graph: STRING-v11.5-top-20
+    layers: 4
+    hiddenDimensions: 128
+    heads: 2
+    skip: concatenate
+    dropout: 0.1
+    expanderDegree: 3
+    reverseEdges: true
+  publicExphormerMultiGraph:
+    graphs: [STRING-v11.5-top-20, GO-top-20]
+    limitation: >-
+      The paper's strongest unseen-single configuration also used proprietary
+      PxMap and TxMap graphs, so the public two-graph configuration cannot
+      reproduce that headline model.
+trainingReproductionGaps:
+  - The public main.py exposes checkpoint inference and baselines but no training entry point.
+  - >-
+    PertPredictor defaults to AdamW learning rate 0.001 and zero weight decay,
+    but the released inference configs do not establish the tuned training
+    schedule, epoch count, or stopping rule.
+  - >-
+    The paper states perturbation-group target ratios 0.5625/0.1875/0.25 for
+    train/validation/test, while data/preprocessing_utils.py defaults yield
+    0.65/0.10/0.25; neither should replace the fixed local split.
+  - >-
+    The released implementation uses symbol-indexed learned perturbation ID
+    embeddings and pickle split files, which do not satisfy the SLp stable-ID,
+    ID-vocabulary-free, or no-pickle contracts without adaptation.
