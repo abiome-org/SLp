@@ -16,6 +16,15 @@ SLp-1 is frozen proof-of-concept work. Its architecture and gene universe are
 not defaults here. Its historical card is [docs/model-card.md](docs/model-card.md).
 The full experiment and correction ledger is [docs/results.md](docs/results.md).
 
+The latest compositional candidate is v3: 961,669 parameters and 16 state slots,
+trained for 30,000 updates. It substantially improves MCF10A held-pair prediction
+through calibrated response priors and predicted-parent training. Its mean MSE
+ratio across the five primary molecular endpoints is 1.00090 relative to v2,
+so it is retained as a candidate rather than replacing all earlier components.
+The historical SLp-1 .89339 AUROC is withdrawn: its sparse relation lookup could
+return another pair's features. A corrected supervised comparison is separate
+from the molecular model and omits that lookup.
+
 ## What users can do
 
 For a supported context, users supply one or more statically described genetic
@@ -59,7 +68,7 @@ observed background exactly.
 
 ## Current architecture
 
-The current eight-context model has 910,725 parameters, width 128, four state
+The retained v2 eight-context model has 910,725 parameters, width 128, four state
 slots, four attention heads, three mechanism IDs, and five assay IDs. It
 distinguishes CRISPRi, CRISPRa and Cas9 knockout and keeps these endpoint systems
 separate:
@@ -177,6 +186,40 @@ forecast, while reliable MCF10A intervention prediction and transfer to this
 held medium are not established. Observed-parent forecasts use measured single-intervention outcomes
 at inference and are a separate information setting.
 
+## Compositional candidate
+
+The v3 candidate adds an action-cardinality branch, gentler control-expression
+binding, 16 state slots, a perturbation-specific direction loss, and scheduled
+training from detached model-predicted intermediate states. Small-panel priors
+use fitting-only descriptor-group cross-validation to shrink toward the shared
+response. Fitting combinations determine a bounded shared-template saturation
+coefficient. These prior corrections account for much of the MCF10A gain.
+
+| v3 source | MSE | v2 MSE |
+|---|---:|---:|
+| K562 essential | .00330539 | .00331249 |
+| RPE1 essential | .00809654 | .00808808 |
+| K562 genome-wide, unique gene | .01175279 | .01176522 |
+| HepG2, unique gene | .05642351 | .05632339 |
+| Norman autonomous, fold 0 | .01505347 | .01498042 |
+| MCF10A full day 0, autonomous held pairs | .002860 | .005498 |
+| MCF10A full day 6, autonomous held pairs | .003470 | .006292 |
+| MCF10A TGF-beta1 day 6, autonomous held pairs | .004402 | .009029 |
+
+MCF10A in-context predictions now beat unchanged control, although the revised
+prior alone is competitive or better. Minimal-medium autonomous MSE improves
+to .005819 from .009614 but remains above unchanged control (.004282).
+These are development comparisons; the medium was previously inspected.
+
+The v3 standalone bundle is
+`results/slp11-transition/joint-world-compositional-research-export-v1/`, with
+checkpoint SHA-256 `464c55f82316880f6a206d3fd91bdf46db99a90435ed854275c58426104e9aa4`.
+All 26 payloads and eight contexts passed isolated Linux replay without OMF;
+maximum Windows/Linux drift was 1.79e-7. Training took 1,451 seconds on the RTX
+4070 with 2,491 MiB peak allocated GPU memory. The new
+`experiment-compositional-world.yaml` validates under pinned OMF 2; this training
+run used native Windows CUDA.
+
 ## Data scope
 
 Training uses Replogle K562/RPE1 essential CRISPRi, author K562 genome-wide
@@ -236,8 +279,8 @@ and external publication have not been completed.
 
 - Results are population-mean forecasts on measured native panels.
 - The neural model does not define a cell distribution or temporal process.
-- RPE1 currently favors the linear backbone over the neural model. MCF10A
-  currently favors retaining the measured control state in absolute MSE.
+- RPE1 favors the linear backbone over the neural model. MCF10A held-medium
+  transfer still favors retaining the measured control state in absolute MSE.
 - Norman composition is measured across three folds at one seed; the eight-context
   extension has one completed fold.
 - GWPS and HepG2 are adaptive development contexts.

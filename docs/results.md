@@ -196,6 +196,19 @@ A provenance audit of this ablation also found that the scaled directory's plain
 
 The ablation's fold-level outputs are published at `results/ablations/musl-cv3-relation-topology-v1/` on `potteryrage/SLp`: the four result JSONs (SLp-1 and compact, each with and without the observed-relation block) and an audit with input checksums, reconstruction verification levels and the paired deltas. The compact checkpoint is SHA-256 `7832b1108d30f3d66b5e1d09f3e2771f1280227575a35bad445535070c208691`; the SLp-1 checkpoint is the released `177991d2c0aec316985e3f47949fdcdf381e71ef24d9c0adcf6d1bde1e0d3b78`.
 
+The later audit against the complete 213,700-pair MuSL roster found a material
+lookup defect in that historical observed-relation block. Its unchecked
+`searchsorted` lookup neither canonicalized unordered pairs nor verified an
+exact key: only 29,860 roster pairs (13.97%) occur in the 646,186-pair table in
+either orientation, so most queries received an unrelated adjacent row. Table
+membership is also benchmark-roster-derived and is not admitted as a support
+feature. The reported .89339 AUROC/.89143 AP stacked result is therefore
+withdrawn as a valid comparison baseline and retained only as historical audit
+evidence. The corrected bridge omits all six coordinates and uses the frozen
+world pair embedding, 40 pair summaries, and nine independently sourced public
+relation coordinates, totaling 1,081 label-free features. No MuSL labels were
+opened during this correction.
+
 ## External experimental tests
 
 The four-source sequential score was locked before downloading outcomes from Harle et al. 2025 (`10.6084/m9.figshare.25954027.v4`). The official hit rule is `mean_norm_gi < -0.5`, FDR below 0.01 and neither gene singly depleted. The intervention-cold primary set contains 157 paralog pairs, 3,496 pair-cell-line measurements and 400 hits. The fixed score correlates in the wrong direction with mean negative interaction strength (Spearman rho **-0.2531**, pair-bootstrap 95% CI -0.4020 to -0.1011; two-sided permutation p=0.00150) and gives 0.4819 macro AUROC. No sign reversal was permitted. This locked confirmation failed.
@@ -6552,3 +6565,129 @@ The validated `experiment-context-world.yaml` provides an OMF 2 replay contract
 with explicit evaluation-only CROP-seq inputs, but it has not been executed.
 The completed five-context OMF execution/export is recorded separately above.
 No external release was uploaded, promoted, or deployed.
+
+### 2026-09-05 — Compositional v3 training and standalone export
+
+The v3 candidate implements 16 state slots, a summed action-cardinality branch,
+less saturated control-expression binding, perturbation-specific direction loss
+(weight .05), and scheduled detached predicted-parent conditioning. The latter
+ramps to .5 of selected observed-parent examples after 1,000 updates over 4,000
+updates. Both action orders are sampled. This addresses the difference between
+measured-parent training and autonomous rollout without inventing cell trajectories.
+Small-panel response priors use descriptor-group-out fitting predictions to
+shrink toward the shared response; fitting combinations estimate a bounded
+shared-template saturation coefficient. No SL labels enter these components.
+
+Training snapshot is `slp11-joint-world-context-transfer-v2-training-r4`, manifest
+SHA-256 `8d9beb1e77bbb4ef9ada2c48f8fd5396d1a1ab3425ca28e39073f67e11a27cab`.
+The same eight human contexts and normalization conventions as v2 are retained.
+MCF10A minimum-medium outcomes remain absent from fitting. Accessible modalities
+are population RNA, static sequence/protein/GO descriptors, STRING64 and control
+expression. The pre-run protocol fixes seed 731, fold 0, 30,000 updates, final
+checkpoint selection, and a five-endpoint mean candidate/baseline MSE ratio of
+at most .98 with K562/RPE1 ratios individually at most 1.02.
+
+Fitting-only MCF10A prior shrinkage is 0/.12917657/0 for full day 0/full day 6/
+TGF-beta1 day 6. Shared-template saturation is 1 in these contexts and .11117382
+in Norman, estimated from fitting combination outcomes. Other contexts use zero
+saturation. Leave-descriptor-group-out MCF10A single-response MSE decreases from
+.00344193 to .00312037 (mean-only .00312173, zero .00460394). This is fitting
+cross-validation evidence, not an independent molecular test.
+
+Output `joint-world-compositional-seed731-fold0-v3` completed all 30,000 updates
+in 1,450.953 seconds on native Windows RTX 4070 CUDA, with 961,669 parameters
+and 2,490.68 MiB peak allocated memory. The final safetensor SHA-256 is
+`464c55f82316880f6a206d3fd91bdf46db99a90435ed854275c58426104e9aa4`.
+Pinned OMF 2 doctor/context/capabilities succeeded and
+`experiment-compositional-world.yaml` parsed successfully. This run used native
+CUDA, not an OMF training executor; the definition supplies a replay contract.
+
+Evaluation `joint-world-compositional-seed731-fold0-v3-eval30000` took 53.049 s.
+Its report SHA-256 is
+`2111ec77d1c11dab1b3d4c39fa4f85377408a6cff97f08cd858fc3a83d10f2a2`.
+
+| Primary endpoint | v3 MSE | v3/v2 MSE |
+|---|---:|---:|
+| K562 essential | .003305393 | .997858 |
+| RPE1 essential | .008096537 | 1.001046 |
+| K562 genome-wide, unique intervention gene | .011752787 | .998943 |
+| HepG2, unique intervention gene | .056423514 | 1.001778 |
+| Norman autonomous, held combinations fold 0 | .015053470 | 1.004877 |
+
+Mean ratio 1.000900 does not meet .98; individual K562/RPE1 bounds pass. v3 is
+retained for MCF10A and the frozen downstream comparison, without replacing all
+retained molecular components or claiming overall advancement.
+
+| MCF10A held pairs | Direct MSE | Autonomous MSE | Revised prior MSE | Control MSE |
+|---|---:|---:|---:|---:|
+| Full day 0 | .002817 | .002860 | .002789 | .004130 |
+| Full day 6 | .003443 | .003470 | .003611 | .004659 |
+| TGF-beta1 day 6 | .004185 | .004402 | .004046 | .007119 |
+| Minimal day 6, 27 views | .005801 | .005819 | .005608 | .004282 |
+
+Large v2-relative in-context gains are mostly explained by the calibrated prior.
+Autonomous centered correlations are .7426/.7328/.7808 in the three fitting
+environments and .6989 in minimal medium. Revised-prior values are
+.7513/.7263/.8015/.7146 respectively. Held-medium transfer remains weaker than
+retaining control. The previously inspected minimal environment is retrospective.
+
+New export `joint-world-compositional-research-export-v1` contains 26 verified
+payloads; manifest SHA-256
+`ef6ca3ce64661cf4e7f2fed23d90bc8d91d90b3e78c00337824735c02491e99d`.
+All eight adapters passed five target-free requests each in isolated Linux
+CPython 3.12 with OMF unavailable, using the pinned dependency lock. Maximum
+Windows/Linux forecast drift was 1.78814e-7, below 1e-5; empty actions were exact
+within each runtime. Portability report SHA-256
+`e5a499095e3714ccdd5cf501de6f5c41b986dec999355fdfdde9b98c7a53c76a`.
+No external release or service promotion is implied by this research export.
+
+### 2026-09-05 — Frozen molecular-to-SL comparison protocol
+
+The application bridge extracts 1,054 symmetric coordinates from the fixed v3
+step-30,000 K562 model: eight width-128 latent blocks and 30 full-supported-panel
+response summaries. These include direct nonadditivity and complete two-order
+sequential increments. Basal decoding is cached once and single-gene priors,
+states, forecasts and decoded parent states once per gene; pair inference needs
+three changed-state decodes. A real four-pair comparison against ordinary
+inference agrees within 2.384e-7 over all coordinates. This is exact caching up
+to numerical batching drift, not distillation or query subsampling.
+
+The official MuSL CV3 roster contains 213,700 unique canonical pairs across
+seeds 42/432 and five folds per seed. Exact static-feature mapping covers
+7,683/7,684 genes. TRIM16L (ENSG00000108448) is uncovered: 52 training and three
+test fold-membership occurrences are excluded without label inspection.
+Roster manifest SHA-256 is
+`4c198bcc7783a44dd8a94c3f3315f7989647fc2befa18c56883cb3876b4e8ced`;
+pair-roster SHA-256 is
+`a6e8a2dfc0fd89256b580fe3ee7813f25e6dd1a3c4467ce8ce5b6a5fd97048e4`.
+Outer folds are checked for disjoint stable gene IDs before training labels are
+read. Across all ten test folds, one pair occurrence also has an exact molecular
+double-intervention fitting outcome; this is RNA, not an SL label. Single-action
+measurements may cover test genes. The claim is cold genes with respect to
+SL-supervised fitting, not intervention-isolated world-model pretraining.
+
+The corrected frozen SLp-1 baseline has 1,081 coordinates: 1,032 model-derived
+pair coordinates, 40 state-summary coordinates and nine independently measured
+public relation coordinates. The six invalid sparse-relation coordinates are
+omitted entirely, including table-membership indicators. Source IDs are joined
+exactly. CUDA extraction of all pairs took 26.2 seconds; all numeric blocks are
+finite. Baseline manifest SHA-256 is
+`2f4d4677383b47dd46798823c4dc59ff7c1ca6787aea860102deed08bc100b63`.
+This supersedes the invalid historical .89339 AUROC comparison described in the
+earlier erratum; historical source and artifacts remain intact.
+
+The separate `slp-1-1-sl-readout-v1` fits baseline and baseline-plus-world
+LightGBM models. Each outer training fold uses a deterministic stable-gene hash
+to hold approximately 20% of genes for inner validation, with mixed pairs omitted.
+Training-only log loss selects tree counts (maximum 1,000, patience 50) and a
+nonnegative augmented-model blend on a 0:.05:1 grid. Fixed parameters are 31
+leaves, learning rate .03, feature fraction .7, L2 1, minimum child size 30,
+seed 123 and four CPU threads. The models refit on each complete outer training
+fold. All ten folds' predictions and models are frozen before the scoring phase
+reads any test label. The world model is never fitted to these labels.
+
+Reports retain all arms, folds and seeds, AUROC, average precision, separately
+named trapezoidal PR-AUC, and F1 at .5. F1 at test prevalence is descriptive,
+not a deployment threshold. The official MuSL paper aggregate and its different
+test-selected checkpoint protocol are documented in `docs/litreview.md`.
+SynLeaF uses a different population/split and cannot supply a matched CV3 score.

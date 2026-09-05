@@ -807,3 +807,53 @@ or independently reproduced results. For the first test, the simpler
 SLp-1-style attention core is sufficient to isolate observed-background
 supervision. Fitting a large flow model before establishing this capability
 would confound the scientific comparison.
+
+### MuSL CV3 and SynLeaF comparison scope (2026-09-05 audit)
+
+The exact published pan-cancer comparator for the official MuSL `CV3_bins_32`
+protocol is MuSL, *Multimodal deep learning for generalizable prediction of
+synthetic lethality from sequence, transcriptomic, and network data* (Fang et
+al., 2026, [IEEE DOI](https://doi.org/10.1109/JBHI.2026.3698476),
+[official code](https://github.com/JieZheng-ShanghaiTech/MuSL)). Its repository
+figure reports five-fold CV3 mean ± standard deviation of **0.7895 ± 0.0585
+AUROC**, **0.8018 ± 0.0728 AUPR**, and **0.7363 ± 0.0345 F1**. No published
+per-fold or seed-42/seed-432 result table is present in the pinned repository,
+and the figure is not tied to either seed; local results must therefore compare
+all ten fold/seed rows and their macro mean with the published aggregate rather
+than assign the paper values to a particular seed.
+
+The data protocol is a pan-cancer binary SL graph over 7,684 genes, with
+positive pairs drawn from the repository's integrated human SL table. CV3
+partitions genes 80:20 and admits only train–train pairs to fitting and
+test–test pairs to evaluation. Random non-SL pairs are sampled within each gene
+partition at the same count as positives, giving a 1:1 class ratio. The current
+stable-ID roster covers 7,683 genes and omits its explicitly receipted handful
+of unmatched pairs, so coverage must accompany any comparison. This is a
+pan-cancer knowledge-label benchmark using TCGA bulk expression plus PPI and
+ESM2 inputs; it is not a K562 perturbation-population benchmark even when K562
+molecular world features are added to the readout.
+
+Metric names and selection differ materially. The official code min–max scales
+each fold's probabilities, computes AUROC with `roc_auc_score`, and calls
+`auc(recall, precision)` on `precision_recall_curve` **AUPR**; this is
+trapezoidal PR-AUC, not scikit-learn average precision. It searches 50 F1
+thresholds with three refinements on the test fold. More seriously, each
+epoch's test-fold AUPR selects the reported checkpoint. A clean frozen-readout
+evaluation should retain average precision and fixed-threshold diagnostics as
+its own metrics, optionally report trapezoidal PR-AUC as a formula-matched
+secondary number, and describe AUROC as the closest direct paper comparison;
+it must not describe the published F1 or test-selected checkpoint as matched.
+These statements were verified against pinned official source revision
+`f8021cfc618fafae8c330b694d0fa7c46db5f1a5` without opening fold label files.
+
+SynLeaF, *A Dual-Stage Multimodal Fusion Framework for Synthetic Lethality
+Prediction Across Pan- and Single-Cancer Contexts* (Xing et al., submitted 23
+March 2026, [arXiv:2603.22369](https://arxiv.org/abs/2603.22369)), uses a
+Cross-VAE/Product-of-Experts omics encoder, an RGCN knowledge-graph encoder and
+validation-selected teacher-distillation or unimodal-ensemble fusion. It tests
+pan-cancer plus eight cancer-specific datasets assembled from SynLethDB 2.0,
+ELISL, TCGA and a biomedical knowledge graph under its own CV1/CV2 definitions.
+The inspected primary manuscript does not establish identity with MuSL's
+released `CV3_bins_32` pairs, seeds or entirely unseen-both-gene split.
+SynLeaF is therefore architectural context for multimodal fusion, not a matched
+numerical comparator for this MuSL CV3 readout.

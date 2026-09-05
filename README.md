@@ -133,6 +133,23 @@ research model, not an externally published release.
 
 ## Project layout and compatibility
 
+The newer [v3 compositional module](modules/slp-1-1-joint-world-v3/CONTRACT.md)
+adds 16 state slots, action-cardinality conditioning, scheduled predicted-parent
+training, and fitting-only shared-response calibration. Its completed 30,000-step
+checkpoint improves MCF10A held pairs substantially; broader molecular endpoints
+remain near v2. It is retained as a candidate, with exact comparisons in the card.
+The standalone bundle is
+`results/slp11-transition/joint-world-compositional-research-export-v1/`.
+Its eight contexts pass isolated Windows/Linux replay with maximum drift 1.79e-7.
+
+The equivalent OMF 2 definition is
+[experiment-compositional-world.yaml](experiment-compositional-world.yaml).
+Native training uses the same v2 corpus and v3 trainer with `--steps 30000
+--state-slots 16 --direction-weight 0.05 --rollout-fraction 0.5
+--rollout-warmup 1000 --rollout-ramp 4000` in addition to the settings above.
+The [SL readout](modules/slp-1-1-sl-readout-v1/CONTRACT.md) separately fits frozen
+molecular features to SL labels; it does not update the world model.
+
 - `experiment.yaml` and `modules/slp-1-1-response-omf2/`: active captured-script
   training, evaluation and portable baseline inference.
 - `experiment-joint-world.yaml` and `modules/slp-1-1-joint-world-v1/`: verified
