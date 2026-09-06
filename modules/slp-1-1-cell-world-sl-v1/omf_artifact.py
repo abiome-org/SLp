@@ -23,11 +23,14 @@ def main(a):
                     if not (destination/name).resolve().is_relative_to(destination):raise ValueError('runtime entry escapes output')
                 archive.extractall(destination)
             runtime=destination
-        subprocess.run([sys.executable,str(Path(__file__).parent/'replay.py'),'--bundle',str(a.bundle),'--request',str(a.request),
+        functional=json.loads((a.bundle/'manifest.json').read_text()).get('schema')=='slp.cellular-genomic-world/v1'
+        replay='functional_replay.py' if functional else 'replay.py'
+        subprocess.run([sys.executable,str(Path(__file__).parent/replay),'--bundle',str(a.bundle),'--request',str(a.request),
             '--reference',str(a.reference),'--output',str(a.output),'--device','cpu'],check=True,
             env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','PYTHONPATH':str(runtime)})
         report=json.loads((a.output/'report.json').read_text());benchmark=json.loads((a.bundle/'benchmark-scores.json').read_text())
-        errors=report['reference_max_errors'];passed=report['passed'] and set(errors)=={'sl_score','fold_decoder_scores','label_free_response_similarity','features'}
+        errors=report['reference_max_errors'];label_free='label_free_excess_fitness_loss' if functional else 'label_free_response_similarity'
+        passed=report['passed'] and set(errors)=={'sl_score','fold_decoder_scores',label_free,'features'}
         metrics={'passed':passed,'compatibilityPassed':passed,'sl_auroc':benchmark['macro']['world']['auroc'],
             'sl_ap':benchmark['macro']['world']['ap'],'score_max_error':errors['sl_score'],'feature_max_error':errors['features']}
         (a.output/'metrics.json').write_text(json.dumps(metrics,indent=2)+'\n')

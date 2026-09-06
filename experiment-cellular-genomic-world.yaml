@@ -1,0 +1,42 @@
+name: slp-1-1-cellular-genomic-world
+objective: Retain and replay the trained molecular world, common viability landscape, conditional interventions, and separate SL decoder. Native quantitative training is recorded in the artifact; this retention performs zero optimization.
+modelCard: MODEL_CARD.md
+data:
+  candidate:
+    source: results/slp11-transition/cellular-genomic-world-predictor-v2
+    rights: {license: local research world and derived descriptors; source rights receipts retained, trainingAllowed: true}
+  request:
+    source: results/slp11-transition/cellular-genomic-world-request-v1.npz
+    rights: {license: public gene identifiers used for local numerical replay, trainingAllowed: false}
+  reference:
+    source: results/slp11-transition/cellular-genomic-world-native-replay-v2/predictions.npz
+    rights: {license: project-derived inference outputs, trainingAllowed: false}
+  readout-runtime:
+    source: data/derived/slp11-sl-linux-runtime-v1/runtime.zip
+    rights: {license: numerical packages with component license files retained, trainingAllowed: false}
+train:
+  source: modules/slp-1-1-cell-world-sl-v1
+  inputs: [candidate]
+  dependencies: requirements-linux.lock
+  command: [python3, omf_artifact.py, --phase, materialize, --bundle, '{inputs[candidate]}', --output, '{output}/model']
+  artifacts: {model: model}
+evaluate:
+  source: modules/slp-1-1-cell-world-sl-v1
+  inputs: [model, request, reference, readout-runtime]
+  dependencies: requirements-linux.lock
+  command: [python3, omf_artifact.py, --phase, replay, --bundle, '{inputs[model]}', --request, '{inputs[request]}', --reference, '{inputs[reference]}', --runtime, '{inputs[readout-runtime]}', --output, '{output}/replay']
+  metrics: replay/metrics.json
+  artifacts: {report: replay/report.json, predictions: replay/predictions.npz}
+metrics:
+  sl_auroc: {direction: maximize}
+  sl_ap: {direction: maximize}
+  score_max_error: {direction: minimize, maximum: 0.00001}
+  feature_max_error: {direction: minimize, maximum: 0.0002}
+primaryMetric: sl_auroc
+baseline: cellular-genomic-world
+candidates:
+  cellular-genomic-world:
+    rationale: Molecular generation and nonlinear state viability trained on species-native quantitative observations; human SL is decoded downstream.
+    parameters: {}
+limits: {timeoutSeconds: 900, cpuSeconds: 900}
+executor: local

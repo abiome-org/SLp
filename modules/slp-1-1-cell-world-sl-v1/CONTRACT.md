@@ -45,3 +45,27 @@ application outputs and do not replace molecular generation in the world API.
 Data, simulation features and trained decoder payloads are artifact contents,
 not repository contents. The bridge accepts an explicit self-contained world
 artifact, and inference needs no repository-relative imports or training data.
+
+## Cellular and genomic functional world
+
+`functional_bridge.py` reads a separately trained quantitative functional world.
+For its capacity architecture, the label-free SL decoder reads the negative
+second finite difference of one predicted viability landscape. It averages
+both query orders and three source-fixed observed contexts. The sign follows
+the gene-effect endpoint and is never chosen from benchmark results. Yeast
+single/double relative fitness and human single-gene effects train this world;
+human SL labels do not. The untrained control resets the functional component
+while retaining the same frozen molecular signatures and descriptor inputs.
+
+`functional_decoder.py` optionally trains the same fold-local SL readout protocol
+on 768 symmetric coordinates of the 256-dimensional intervention-state change
+and 15 predicted conditional-fitness coordinates. It does not receive direct
+raw descriptors. All models/predictions are fixed before test-label scoring.
+
+`functional_predict.SLpWorld` retains the generative molecular component at
+`.molecular` and the continuous functional component at `.functional`.
+`actions_from_descriptors` runs the molecular world for novel descriptor inputs;
+the registry merely caches those simulations for known genes. `predict_pairs`
+returns the label-free excess-loss score and separate supervised decoder
+scores. The standalone bundle includes actual weights, observed contexts,
+normalizers, descriptors, source and dependency contracts for both components.

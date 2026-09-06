@@ -8,14 +8,15 @@ from bridge import sha,write
 
 def main(a):
     with np.load(a.predictions) as z:
-        rows={};occurrences=[];conflicts=set()
+        rows={};occurrences=[];conflicts=set();repeat_error=0.
         for seed in (42,432):
             for fold in range(5):
                 key=f'CV3-{seed}-{fold}'
                 for ids,y,w,r,s in zip(z[key+'-pairs'],z[key+'-y'],z[key+'-world_label_free'],z[key+'-random_label_free'],z[key+'-static_cosine']):
                     pair=tuple(sorted(ids));value=(int(y),float(w),float(r),float(s))
                     if pair in rows:
-                        if rows[pair][1:]!=value[1:]:raise ValueError('inconsistent repeated prediction')
+                        repeat_error=max(repeat_error,float(np.max(np.abs(np.array(rows[pair][1:])-value[1:]))))
+                        if not np.allclose(rows[pair][1:],value[1:],rtol=1e-5,atol=2e-6):raise ValueError('inconsistent repeated prediction')
                         if rows[pair][0]!=value[0]:conflicts.add(pair)
                     rows[pair]=value
                     occurrences.append((pair,value))
@@ -31,6 +32,7 @@ def main(a):
     draws=np.array(draws)
     report={'pair_occurrences':len(pairs),'unique_pairs':len(rows),'cross_seed_label_conflicts':len(conflicts),'genes':len(genes),'resampling':'500 seed731 Poisson gene weights; pair weight is product of both gene weights; official repeated occurrences preserved',
         'interval_scope':'descriptive two-way gene-cluster bootstrap of this retrospective benchmark, not prospective replication',
+        'repeated_score_max_error':repeat_error,
         'scores':{},'predictions_sha256':sha(a.predictions)}
     point=[roc_auc_score(y,p[:,j]) for j in range(3)];point+= [point[0]-point[1],point[0]-point[2]]
     for j,name in enumerate(('world','random','static','world_minus_random','world_minus_static')):

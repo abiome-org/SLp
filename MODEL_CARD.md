@@ -1,17 +1,85 @@
-# SLp-1.1 cellular world model
+# SLp-1.1 cellular and genomic world model
 
-SLp-1.1 learns molecular state, genetic-intervention dynamics, and distributions
-over RNA/protein observations. The current model has **14,118,917 trainable
-parameters**. Its training targets are molecular measurements. Its molecular core has no
-synthetic-lethality training target or fitted linear response backbone. A separate
-SL decoder now reads its simulated single- and double-intervention consequences.
+SLp-1.1 learns molecular state, genetic-intervention dynamics, RNA/protein
+observation distributions, and a nonlinear functional viability landscape.
+Its two components contain **15,123,593 learned parameters**: 14,118,917 in the
+generative molecular world and 1,004,676 in the functional world. They are
+trained on quantitative observations; human SL classification is downstream.
+The functional action encoder consumes molecular-world simulations and static
+biological descriptors. This is a factorized world; its components were trained
+in stages, with separate latent spaces.
 
 The implementation is [cell-world-v1](modules/slp-1-1-cell-world-v1/CONTRACT.md).
 The earlier population models and supervised SL readouts remain historical
-baselines. The following SL scores are measured on this cellular world itself.
+baselines. The following SL scores are measured on the world components.
 
 
-## Synthetic-lethality capability
+## Current world and SL decoding
+
+The [functional world](modules/slp-1-1-genomic-fitness-world-v1/CONTRACT.md)
+represents observed basal context, applies interventions in a common functional
+state, and decodes one nonlinear viability function V. Conditional fitness is
+V(z+A+B)-V(z+A); the double effect is V(z+A+B)-V(z). Their finite difference
+defines the fixed excess-loss SL readout. Signed curvature supports aggravating
+and rescuing effects. This is a learned observation of state, with persistent
+intervention composition and exact fitness-path consistency.
+
+Functional pretraining uses **4,182,121 observed human gene/cell effects** for
+5,034 fitting genes across 843 contexts and **1,818,947 yeast double-deletion
+measurements**, including their raw single-mutant fitness. Human and yeast
+identifiers, assays and endpoints remain native. No human SL-pair label enters
+this training. The capacity phase ran 20,000 updates in 683 seconds on one
+RTX 4070; molecular development loss selected update 9,000. Its weights are
+`a0968b69b4409ac7faa34687b7ae3c3725c34d958e6587e783fa42fb9f1db818`.
+
+| Official MuSL CV3, ten cold-SL-gene folds | AUROC | Average precision |
+|---|---:|---:|
+| Trained world + downstream SL decoder | **.787830** | **.780602** |
+| Untrained functional component + same decoder | .734081 | .729673 |
+| Direct descriptors + same decoder protocol | .798579 | .802964 |
+| Trained world, fixed excess-fitness-loss decoder | .554577 | .579712 |
+| Untrained functional component, fixed excess-loss decoder | .476810 | .482464 |
+
+The trained world improves the downstream decoder in **all ten folds**. Its mean
+AUROC gain over the matched untrained functional component is **.053749**, with
+a fixed-model gene-bootstrap interval **[.036096,.072308]**. This establishes
+measurable SL transfer through a downstream decoder in this retrospective
+protocol. The functional control retains the same frozen molecular signatures;
+the comparison isolates functional quantitative pretraining, not the entire
+molecular pretraining history. The direct-descriptor classifier remains slightly
+stronger. These results are not an independent SOTA determination.
+
+The fixed excess-loss decoder uses no human SL training. Its pooled CV3 AUROC
+is .550026, interval [.522725,.580480]. A five-initialization untrained-control
+score ensemble reaches .532974; the trained-minus-ensemble interval
+[-.017970,.055588] includes zero. Thus the strongest attribution evidence is
+the downstream-decoder comparison, not a claim that label-free attribution is
+settled. Label-free SLAMR performance is weaker than the earlier RNA response
+readout: MRR .143896 in Jurkat and .100902 in K562. All controls remain in the ledger.
+
+Held fitness MSE is .127015 for human gene effects versus .218405 for the
+fitting-context mean. Yeast double log-fitness MSE is .062741 versus .069742
+for its fitting mean; interaction-residual MSE .004269 does not beat the
+fitting residual mean .004242. The world predicts useful quantitative state
+and SL features, while fine interaction generalization remains a limitation.
+
+The standalone research artifact is
+`results/slp11-transition/cellular-genomic-world-predictor-v2/`.
+`functional_predict.SLpWorld` exposes joint `encode`, `intervene`, and `decode`,
+as well as molecular generation, native functional queries, descriptor-driven
+new-gene action encoding, and named-gene SL predictions. The SL decoder reads
+783 coordinates from predicted functional states and fitness observations;
+there is no raw-descriptor bypass. Its fitted SL labels are restricted to each
+training fold. All twenty decoder/control artifacts replay all 22,175 held-out
+prediction occurrences exactly.
+
+OMF 2 run `01a0781b-935a-75e9-a73c-55e9487d83fc` passes complete Linux
+artifact replay: CUDA/CPU SL score error 0 and feature error 1.14e-5. The
+immutable research export is
+`results/slp11-transition/cellular-genomic-world-omf2-export-v1/artifacts/model`.
+This verifies standalone inference; it is separate from a production service release.
+
+## Earlier molecular-only SL decoder
 
 The complete pipeline is **molecular state -> genetic interventions -> predicted
 molecular consequences -> SL decoder**. The 14.12M-parameter core stays frozen.

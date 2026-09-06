@@ -7356,3 +7356,152 @@ The first attempt failed directory-snapshot path validation before admission;
 packaging the same numerical dependencies as a bounded archive resolved it.
 No OMF runtime record was edited. This replay retains completed native training
 and performs zero optimization steps; it is not a ModelPackage service release.
+
+## 2026-09-06: continuous fitness and conditional genomic state
+
+The completed cellular-world SL decoder above motivated extending the world
+with functional outcomes. A 414,978-parameter continuous DepMap observation
+head trained for 5,000 updates in 23.76 seconds, selecting update 750 using
+fitness development loss. Inputs are frozen molecular-world signatures and
+action encodings, not SL pairs. Its held-gene/held-cell raw gene-effect MSE is
+.271824 against .520954 for a fixed fitting-data mean; gene-centered MSE is
+.052025 against .051980. A fixed positive cosine of its predicted fitness
+profiles gives MuSL CV3 AUROC .536667 versus .558022 for its untrained head.
+This extension improves general fitness prediction but does not improve the
+SL application; it is retained as development evidence, not promoted over the
+previous predictor. Artifacts: `cell-world-fitness-v1`,
+`cell-world-fitness-forecasts-v2`, `cell-world-fitness-sl-benchmarks-v1`.
+
+The next implemented component is a shared functional state with genetic
+interventions and queried continuous fitness observations. It uses human raw
+single-intervention gene effects and species-native yeast single/double
+relative fitness. Exact systematic yeast ORFs map to SGD CURIEs, never human
+ortholog labels. The published epsilon and p-value fields are unused.
+Source: Costanzo et al. Data File S1, author companion distribution of
+[Dryad 10.5061/dryad.4291s](https://datadryad.org/dataset/doi:10.5061/dryad.4291s),
+with the published dataset's CC0 terms. The raw archive SHA-256 is
+`05adf2aa309e5336cd1c3045eb033a2bc7b24e6f249d57a0cc25549ec6772522`.
+It was streamed without extracting its 1.19 GB NxN table.
+
+Corpus `slp11-genomic-fitness-world-v1` contains 1,818,947 fitting and 80,937
+held-gene yeast deletion-pair observations at 30 C, plus 5,034 human fitting
+and 1,300 human development genes across 843 fitting cell contexts. Seed-731
+Bernoulli .25 sampling is independent of outcomes; 773,133 sampled mixed-held
+yeast rows are omitted. The human raw gene-effect input SHA-256 is
+`9b47d5dc8c1c983f6fca4a5e4d089e26f2ef727bb8358dcbacbfd06a044203c6`.
+The frozen generative RNA/protein weights remain
+`9ecffff8d83e41878da638847d77a950077d2270e2cf6dc951d3e9e0309c4a15`.
+
+The initial functional model uses 256 state coordinates, shared descriptor
+encoding, a persistent action-conditioned transition, and an assay-conditioned
+continuous query decoder. A static-descriptor reconstruction objective preserves
+action information. The molecular selection objective is fixed as yeast double
+log-fitness MSE + 4 times nonadditive residual MSE + .3 times human raw/centered
+fitness loss. Training is bounded at 20,000 updates and 3,000 seconds on one
+RTX 4070. No SL benchmark selects this checkpoint. The separate fixed SL rule
+is negative symmetrized excess conditional gene effect, averaged over three
+observed fitting contexts chosen from molecular context coordinates alone.
+These are endpoint-derived conditional predictions, not measured time courses.
+
+The initial conditional-head run completed 20,000 updates in 500 seconds,
+selecting update 9,000: human MSE .124492, yeast double log-fitness MSE .067864,
+and yeast residual MSE .004275 versus .004242 for the fitting residual mean.
+An additional 10,000-update, 243-second interaction-weighted curriculum selected
+its initial checkpoint; it is retained without replacing that checkpoint.
+
+The subsequent capacity architecture replaces independent conditional scoring
+with a single shared state viability decoder. Actions compose in a common
+256-coordinate functional state; a linear, signed-quadratic and nonlinear
+observation function decodes viability. Both conditional and double effects
+are finite differences of that function. Native numerical checks establish
+path composition, order-invariant endpoint fitness, nonzero nonlinear
+interaction, and curvature gradients. The capacity phase is fixed at 20,000
+updates, with interaction MSE weight 100 in both fitting and molecular checkpoint
+selection; it uses the same corpus and no external SL outcomes.
+
+### Completed capacity world and downstream transfer
+
+The selected capacity world contains 1,004,676 parameters and was trained for
+20,000 updates in 682.61 seconds, selecting update 9,000. Together with the
+frozen 14,118,917-parameter molecular world it forms a 15,123,593-parameter,
+staged, factorized model. The common API encodes molecular and functional
+observations, applies the same gene interventions to both state components,
+and decodes RNA/protein values and quantitative fitness. The molecular
+component also retains its generative observation distributions.
+
+- Corpus manifest SHA-256: `d5d2b021123cb60fc8dd48a64244c392eace07d1845d91f5c4976e92790634e0`.
+- Capacity weights SHA-256: `a0968b69b4409ac7faa34687b7ae3c3725c34d958e6587e783fa42fb9f1db818`.
+- Downstream decoder lock: `5059485cfdf56ea3d9a47ce2de32664971965354a0647846fb896664bc39ed56`.
+- Label-free prediction archive: `b05cce2b3b0cd3326525edbca4a534a4a54bb54c695e03c9cc2ec791702baffc`.
+
+The corpus integrity check verifies every payload hash, native human/yeast
+identity, finite measured targets, and zero fitting/development intervention
+overlap. It counts 4,182,121 known human fitting effects and 1,087,551 human
+development effects. Capacity development metrics are human MSE .127015
+(fitting-context mean .218405), yeast double log-fitness MSE .062741 (fitting
+mean .069742), and yeast residual MSE .004269 (fitting residual mean .004242).
+Residual correlation is .047347. The model improves broad fitness prediction
+but remains weak on the held-gene yeast interaction landscape.
+
+The separate downstream SL decoder reads 768 symmetric coordinates of the
+predicted functional state change and 15 quantitative fitness coordinates.
+It contains no raw-descriptor bypass. The same fixed LightGBM protocol and
+training-gene-held inner selection are used as in the earlier cellular decoder.
+Fitting all twenty models takes 302.90 seconds. The primary model and every
+fold prediction are frozen before test labels are opened.
+
+| MuSL CV3 macro, seeds 42/432, five folds each | AUROC | AP |
+|---|---:|---:|
+| Trained capacity world + SL decoder | .787830 | .780602 |
+| Untrained functional component + same decoder | .734081 | .729673 |
+| Direct descriptors + same decoder, retained matched baseline | .798579 | .802964 |
+| Trained world, fixed excess-loss decoder | .554577 | .579712 |
+| Untrained functional component, fixed excess-loss decoder | .476810 | .482464 |
+
+World/untrained AUROC by fold is: seed42, .768498/.730341,
+.766797/.744725, .774165/.700337, .806907/.768470, .773602/.691333;
+seed432, .790030/.708923, .794795/.737121, .827883/.745084,
+.764388/.739104, .811240/.775375. The trained representation improves all ten
+folds. Mean gain .053749 has a 500-draw, shared-gene-weight bootstrap interval
+[.036096,.072308]. World-minus-direct-descriptors is -.010748, interval
+[-.027536,.009130]. The matched control retains the frozen molecular signatures
+and resets only the functional component; this isolates functional pretraining.
+
+The no-human-SL-training excess-loss score reaches CV1/CV2/CV3 AUROC
+.550822/.552091/.554577. For both originally molecular-held genes, corresponding
+macro AUROCs are .597359/.577631/.585388, on 1,771/2,859/357 occurrences.
+Pooled CV3 AUROC is .550026, interval [.522725,.580480]. The seed1731 control
+comparison is positive, but five fixed random initializations (1731–1735) have
+pooled AUROCs .476724, .489683, .547322, .519298, .534616. Their mean-score
+ensemble reaches .532974; the trained-minus-ensemble interval is
+[-.017970,.055588]. Stronger label-free attribution is therefore unresolved;
+the reproducible positive attribution is the supervised downstream decoder.
+
+Label-free SLAMR MRR for trained/untrained/static is A549
+.318155/.338844/.331723, Jurkat .143896/.144903/.269867, and K562
+.100902/.140645/.159564. These results regress from the earlier RNA-response
+readout; no retrospective per-benchmark rule switch is made. All folds, exact
+coverage and immutable input hashes are retained in
+`genomic-capacity-world-label-free-v1/scores.json` and
+`genomic-capacity-world-sl-decoder-v1/scores.json`.
+
+All twenty saved decoders replay all 22,175 held-out occurrences per arm with
+zero prediction error and no label access. The complete standalone world is
+`cellular-genomic-world-predictor-v2`. Native CUDA replay verifies joint molecular
+and functional state, descriptor-driven action regeneration (max error 1.67e-6),
+path composition (5.96e-8), endpoint order (1.04e-7), and pair-symmetric SL scores.
+The initial artifact layout triggered OMF 2's Path-versus-string tree sorting
+bug before admission. Prefix-ambiguous directory names were replaced in a new
+artifact; v1 was preserved and v2 predictions replay bit-for-bit. No upstream
+runtime or `.omf` records were edited.
+
+OMF 2 run `01a0781b-935a-75e9-a73c-55e9487d83fc` succeeded with
+`passed: true` and `compatibilityPassed: true`. Evaluation revision is
+`sha256:fdc1b12c9983ba3bb2bb83ca9049bebcaa71b551ecf757f6200faeee180b5a11`.
+The model artifact digest is
+`sha256:4599163136917c58bc729cbe746e744a882da8cd898b62e705e351fe454cbc70`.
+Windows/CUDA versus Linux/CPU SL score error is zero; world-feature error is
+1.1444e-5. The immutable OMF export is
+`cellular-genomic-world-omf2-export-v1/artifacts/model`.
+This successful artifact replay retains completed native quantitative training;
+it performs zero optimization and does not assert ModelPackage service promotion.

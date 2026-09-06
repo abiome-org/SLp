@@ -33,9 +33,9 @@ def rank_metrics(y,score):
     return {'mrr':float(1/(np.flatnonzero(truth)[0]+1)),'recall20':float(truth[:20].sum()/y.sum())}
 
 
-def run(a):
+def run(a,representation_loader=representations,model_receipts=None,scorer=pair_scores):
     a.output.mkdir(parents=True,exist_ok=False)
-    ids,w=representations(a.world);ri,r=representations(a.random);assert np.array_equal(ids,ri)
+    ids,w=representation_loader(a.world);ri,r=representation_loader(a.random);assert np.array_equal(ids,ri)
     lookup={g:i for i,g in enumerate(ids)}
     with np.load(a.roster/'genes.npz') as z:
         assert np.array_equal(ids,z['gene_ids']);raw=z['action_features']
@@ -58,7 +58,7 @@ def run(a):
                 cold=np.array([ids[l] in held and ids[rr] in held for l,rr in pair])
                 key=f'{protocol}-{seed}-{fold}';arrays[key+'-y']=y;arrays[key+'-pairs']=ids[pair];arrays[key+'-molecular-held']=cold
                 for arm,emb in embeddings.items():
-                    score=pair_scores(emb,pair);arrays[key+'-'+arm]=score
+                    score=scorer(emb,pair);arrays[key+'-'+arm]=score
                     for subset,mask in (('all',np.ones(len(pair),bool)),('both_molecular_held',cold)):
                         if len(np.unique(y[mask]))<2:continue
                         rows.append({'suite':'MuSL','protocol':protocol,'seed':seed,'fold':fold,'arm':arm,'subset':subset,
@@ -79,7 +79,7 @@ def run(a):
                 if not kept:continue
                 pair=np.array([[l,rr] for l,rr,_ in kept]);y=np.array([label for _,_,label in kept])
                 for arm,emb in embeddings.items():
-                    score=pair_scores(emb,pair);result=rank_metrics(y,score)
+                    score=scorer(emb,pair);result=rank_metrics(y,score)
                     if result is not None:per_arm[arm].append(result)
             for arm,rr in per_arm.items():rank_rows.append({'cell':cell,'fold':fold,'arm':arm,'queries_with_positive':len(rr),
                 'total_pairs':total,'excluded_missing_static':excluded,**{k:float(np.mean([x[k] for x in rr])) if rr else None for k in ('mrr','recall20')}})
@@ -90,7 +90,8 @@ def run(a):
                 rr=[x for x in rows if x['protocol']==protocol and x['subset']==subset and x['arm']==arm]
                 macro[f'{protocol}/{subset}/{arm}']={'folds':len(rr),'n':sum(x['n'] for x in rr),**{k:float(np.mean([x[k] for x in rr])) for k in ('auroc','ap','pr_auc')}}
     np.savez_compressed(a.output/'predictions.npz',**arrays)
-    write(a.output/'scores.json',{'rule':'equal-context positive single-response cosine, frozen before any evaluation; no SL training',
+    write(a.output/'scores.json',{'rule':getattr(a,'rule','equal-context positive single-response cosine, frozen before any evaluation; no SL training'),
+        'additional_model_receipts':model_receipts or {},
         'musl':rows,'musl_macro':macro,'slamr':rank_rows,'receipts':receipts,'source_sha256':sha(__file__),
         'molecular_world_sha256':sha(a.bundle/'model.safetensors'),'predictions_sha256':sha(a.output/'predictions.npz'),
         'scope':'retrospective benchmark; both_molecular_held restricts both genes to the original global molecular exclusion roster; SLAMR uses pan-context predictions'})

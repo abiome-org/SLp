@@ -1,39 +1,53 @@
 # SLp-1.1
 
-The cellular world model now has an operational **synthetic-lethality decoder**.
-It simulates single and double interventions, then scores their molecular
-consequences. On official MuSL CV3 it reaches **.6682 AUROC / .6686 AP**, versus
-.6342/.6230 for the same decoder over an untrained world. Its fixed readout using
-no SL labels reaches .5400 AUROC. See [MODEL_CARD.md](MODEL_CARD.md) for controls,
-coverage and the distinction between molecular pretraining and decoder training.
+SLp-1.1 is a **cellular and genomic world model** with RNA/protein generation,
+persistent genetic interventions and a shared nonlinear viability landscape.
+It is pretrained on molecular observations, human single-gene fitness and
+species-native yeast double-deletion fitness. SL is decoded downstream.
+
+On official MuSL CV3, the trained world plus its SL decoder reaches
+**.7878 AUROC / .7806 AP**, versus .7341/.7297 for the same decoder over an
+untrained functional component. The trained world wins all ten folds; its mean
+AUROC gain has a gene-bootstrap interval [.0361,.0723]. The fixed excess-loss
+readout uses no human SL labels and reaches .5546 AUROC. See
+[MODEL_CARD.md](MODEL_CARD.md) for the complete controls and pretraining mix.
 
 The local complete predictor is
-`results/slp11-transition/cell-world-sl-predictor-v2/`. With the dependencies in
+`results/slp11-transition/cellular-genomic-world-predictor-v2/`. With the dependencies in
 its `requirements.lock` available:
 
 ```python
 import sys
 from pathlib import Path
-bundle = Path("results/slp11-transition/cell-world-sl-predictor-v2").resolve()
+bundle = Path("results/slp11-transition/cellular-genomic-world-predictor-v2").resolve()
 sys.path.insert(0, str(bundle))
-from predict import SLPredictor
-model = SLPredictor(bundle, device="cuda")
+from functional_predict import SLpWorld
+model = SLpWorld(bundle, device="cuda")
 result = model.predict_pairs([("BRCA1", "PARP1"), ("BRCA2", "PARP1")])
 print(result["sl_score"])
+print(result["label_free_excess_fitness_loss"])
 ```
 
 The scores are research predictions, not calibrated clinical probabilities.
-`model.world` retains molecular encoding, interventions and RNA/protein generation.
+The joint `encode → intervene → decode` API returns molecular and fitness
+consequences. `model.molecular` retains RNA/protein generation;
+`model.functional` exposes native conditional fitness and viability decoding.
 The implementation and reproducible benchmark entrypoints are in
 [the SL application module](modules/slp-1-1-cell-world-sl-v1/CONTRACT.md).
-The complete build is one bounded command using the indexed local molecular data
-and official benchmark snapshots:
+The functional training implementation and data contract are in
+[the genomic world module](modules/slp-1-1-genomic-fitness-world-v1/CONTRACT.md).
+`experiment-cellular-genomic-world.yaml` retains and replays the complete artifact
+with OMF 2. Source, checkpoints and exact results are recorded in the model card
+and result ledger.
+
+The earlier molecular-only decoder can still be reproduced with its original
+bounded command using the indexed molecular data and benchmark snapshots:
 
 ```powershell
 python modules/slp-1-1-cell-world-sl-v1/run.py --root . --bundle results/slp11-transition/cell-world-v1-generative-research-export-v1 --output results/my-world-sl
 ```
 
-It simulates the world and controls, trains fold-local decoders, scores both
+That historical command simulates the molecular world and controls, trains fold-local decoders, scores both
 benchmark suites, verifies saved predictions, and exports a named-gene predictor.
 
 

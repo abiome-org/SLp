@@ -9,14 +9,20 @@ from decoder import labels
 
 def main(a):
     lock=json.loads((a.fit/'fit-manifest.json').read_text());folds=[];all_genes=set()
+    static_fit=getattr(a,'static_fit',None) or a.fit
+    static_lock=json.loads((static_fit/'fit-manifest.json').read_text())
     for seed in (42,432):
         for fold in range(5):
             file=f'seed{seed}-fold{fold}-predictions.npz'
             if sha(a.fit/file)!=lock['files'][file]:raise ValueError('changed predictions')
+            if sha(static_fit/file)!=static_lock['files'][file]:raise ValueError('changed static predictions')
             with np.load(a.fit/file) as z:
                 ids=z['pair_ids'].astype(str);all_genes.update(ids.reshape(-1))
+                with np.load(static_fit/file) as s:
+                    if not np.array_equal(s['pair_ids'],ids) or not np.array_equal(s['source_row'],z['source_row']):raise ValueError('static fold mismatch')
+                    static=s['static']
                 folds.append({'ids':ids,'y':labels(a.labels/f'test_labels_seed{seed}.pkl',fold)[z['source_row']],
-                              'p':np.stack([z[arm] for arm in ('world','random','static')],1)})
+                              'p':np.stack([z['world'],z['random'],static],1)})
     lookup={g:i for i,g in enumerate(sorted(all_genes))}
     for fold in folds:fold['ix']=np.array([[lookup[g] for g in row] for row in fold['ids']])
     rng=np.random.default_rng(731);draws=[]
@@ -30,7 +36,8 @@ def main(a):
     point=np.r_[point,point[0]-point[1],point[0]-point[2]];draws=np.array(draws)
     report={'method':'500 seed731 Poisson gene-weight draws shared across all ten folds; macro AUROC recomputed per draw',
         'scope':'retrospective gene-cluster uncertainty with fixed trained models; does not include model-retraining or biological-replication uncertainty',
-        'fit_manifest_sha256':sha(a.fit/'fit-manifest.json'),'scores':{name:{'auroc':float(point[j]),'interval95':np.quantile(draws[:,j],[.025,.975]).tolist()}
+        'fit_manifest_sha256':sha(a.fit/'fit-manifest.json'),'static_fit_manifest_sha256':sha(static_fit/'fit-manifest.json'),
+        'scores':{name:{'auroc':float(point[j]),'interval95':np.quantile(draws[:,j],[.025,.975]).tolist()}
             for j,name in enumerate(('world','random','static','world_minus_random','world_minus_static'))}}
     write(a.output,report);print(json.dumps(report,indent=2))
 
@@ -38,4 +45,5 @@ def main(a):
 if __name__=='__main__':
     p=argparse.ArgumentParser()
     for name in ('fit','labels','output'):p.add_argument('--'+name,type=Path,required=True)
+    p.add_argument('--static-fit',type=Path)
     main(p.parse_args())
