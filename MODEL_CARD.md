@@ -245,30 +245,40 @@ Norman archives are CC0 1.0 with scoped rights records. SLIM is pinned at commit
 
 ## Downstream SL evidence
 
-The first corrected downstream readout is complete on MuSL CV3: two seeds,
+The completed downstream comparisons use MuSL CV3: two seeds,
 five gene-disjoint folds each, 22,175 test-fold pair occurrences, with tree counts
-and blending selected only inside training folds. Its ten-fold macro results are:
+and blending selected only inside training folds. Ten-fold macro results are:
 
 | Frozen feature basis | AUROC | Average precision | Trapezoidal PR-AUC |
 |---|---:|---:|---:|
 | Corrected SLp-1 baseline | .780607 | .780161 | .779912 |
 | Baseline plus v3 world features | .783783 | .785635 | .785378 |
-| Training-selected blend | .784587 | .785751 | .785502 |
+| V1 training-selected blend | .784587 | .785751 | .785502 |
+| Baseline plus direct static descriptors | .819917 | .819565 | .819430 |
+| Same descriptors plus v3 world features | .824707 | .825893 | .825761 |
+| V2 training-selected blend | .824366 | .824985 | .824854 |
+| Locked feature-family selector | .816732 | .816269 | .816066 |
 
-The blend improves AUROC by .003980 and AP by .005590. AUROC improves in six
-folds, decreases in three and is unchanged in one. All 20 serialized readout
-models replay the saved predictions exactly. This is supervised SL prediction
+The direct control uses the same 642 raw gene descriptors as the world model,
+through pairwise sum, absolute difference and product. It accounts for most of
+the improvement over the older compressed feature basis. Adding world features
+still improves AUROC by .004790 and AP by .006327 over this matched control,
+with gains in seven/eight of ten folds respectively. Both families' 40 serialized
+readout models reproduce their saved predictions exactly. This is supervised SL prediction
 from frozen molecular features, not label-free emergence. World pretraining is
 not isolated from all quantitative measurements of SL-test genes. One uncovered
 gene excludes three test-fold pair occurrences. Earlier use of this benchmark
 also makes these retrospective results, not independent confirmation.
 
-The published MuSL CV3 aggregate is .7895 AUROC and .8018 trapezoidal PR-AUC;
-our current readout does not exceed it. Its test-selected checkpoint protocol
-differs from our training-only selection. SynLeaF uses different data and split
-definitions, so no matched head-to-head claim is made. A direct static-descriptor
-control is being completed to distinguish learned world information from the
-raw descriptors available to that model.
+The family selector chooses v1 or v2 separately in each fold using lower inner
+validation log loss, before v2 scoring: eight folds choose v2 and two choose v1.
+Its .816732 AUROC is the primary locked selection result; it is retained even
+though the predefined v2 blend later scores higher. The selected result exceeds
+the published MuSL CV3 means (.7895 AUROC, .8018 trapezoidal PR-AUC). This is a
+comparison to the reported aggregate, not an independent matched rerun: coverage,
+accessible feature modalities and checkpoint-selection protocols differ, and the
+benchmark has been used retrospectively. SynLeaF uses different data and split
+definitions, so no matched head-to-head or general SOTA claim is made.
 
 ## Artifacts and API status
 

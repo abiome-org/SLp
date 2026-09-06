@@ -6798,3 +6798,63 @@ prediction lock is `0840c60533c2ec3c37470abcde3e36bd65cd9257ee33a0951af4f3abaf09
 The receipt explicitly records retrospective scope and prior inspection of v1
 scores. V2's 20 serialized boosters independently reproduce all predictions
 exactly, without label access.
+
+### 2026-09-05 — Descriptor-matched SL result and locked family selection
+
+Readout v2 finished its ten folds in 1,657.47 seconds (directory creation to
+fit-manifest write), using the same four-thread native LightGBM runtime as v1.
+Its 3,007-coordinate control combines the frozen baseline with direct sum,
+absolute difference and product of the 642 descriptors. The 4,061-coordinate
+world arm adds the same frozen v3 world features. All decisions use the original
+inner gene split and fixed parameter/early-stopping/blend rule.
+
+Fit-manifest SHA-256:
+`cae81700342aa3ba2b66055a3c2fc54cc2a2853140079979458f70e310532c29`.
+Score SHA-256:
+`0570a3a68ad27a8e73da2ea46cbc049b31e6fce307b436ee84fc9641d0cd1ae9`.
+
+| Seed/fold | Static control AUROC / AP | World-augmented AUROC / AP | V2 training blend AUROC / AP |
+|---|---:|---:|---:|
+| 42/0 | .853730 / .844049 | .860919 / .854397 | .860919 / .854397 |
+| 42/1 | .770931 / .761704 | .797129 / .790902 | .791869 / .785203 |
+| 42/2 | .835521 / .824372 | .839912 / .827696 | .840168 / .828423 |
+| 42/3 | .834322 / .853630 | .836791 / .853857 | .836968 / .854525 |
+| 42/4 | .774781 / .784105 | .776230 / .792217 | .775264 / .784882 |
+| 432/0 | .793691 / .795592 | .785101 / .792281 | .785101 / .792281 |
+| 432/1 | .857720 / .850309 | .857135 / .848850 | .859597 / .851406 |
+| 432/2 | .866204 / .873209 | .866014 / .873243 | .866965 / .874095 |
+| 432/3 | .845365 / .844465 | .846195 / .847025 | .847323 / .846802 |
+| 432/4 | .766908 / .764219 | .781647 / .778456 | .779481 / .777832 |
+| Ten-fold macro | .819917 / .819565 | .824707 / .825893 | .824366 / .824985 |
+
+World features add .004790 AUROC and .006327 AP beyond direct access to their
+raw descriptors, with positive differences in seven and eight folds respectively.
+Most improvement from v1 to v2 comes from the direct descriptors. Macro
+trapezoidal PR-AUC is .819430/.825761/.824854 and F1 at .5 is
+.681432/.694741/.690909 for control/world/blend. The separate prevalence-matched
+diagnostic F1 is .750787/.755434/.755786. These are distinct from paper F1
+thresholds optimized on test labels.
+
+V2 blend seed-42 mean AUROC/AP is .821038/.821486 with sample fold standard
+deviations .035903/.034925; seed-432 means are .827693/.828483 with deviations
+.042083/.041284. These describe fold variability, not independent biological
+replication or confidence intervals.
+
+The pre-score family selector chooses v1 in seed-432 folds 2 and 4, despite
+those v2 test rows later scoring higher. Those selections are retained. Its
+ten-fold result is **.816732 AUROC, .816269 AP, .816066 trapezoidal PR-AUC and
+.682886 F1 at .5**. Seed-42 means are .821038/.821486; seed-432 means are
+.812426/.811052. Selector score SHA-256 is
+`3aa253d97a9ec037d096ca957692ec999fc8f324d5670f1c80b2aaba790f7d1d`.
+The primary locked selection therefore exceeds reported MuSL CV3 means of
+.7895 AUROC and .8018 trapezoidal PR-AUC. This is a retrospective comparison to
+an aggregate; it is not an independent rerun with matched modalities or proof
+of general SOTA. SynLeaF's data/splits are different.
+
+Independent replay of all 20 v2 boosters reproduces every prediction exactly.
+A separate saved-JSON audit confirms all selector choices follow lower inner
+loss and every selected score equals its chosen source row. The audit SHA-256
+is `78c0416077f465e1d4051b8ed183643df0ec708b1f36fe000c27e2dd9218e412`.
+Outputs are `joint-world-compositional-musl-static-readout-v2`,
+`joint-world-training-selected-musl-readout-v1` and `joint-world-musl-comparison-v1`.
+V4 molecular training is separate and has not contributed to these SL features.

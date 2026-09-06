@@ -158,6 +158,14 @@ Native training uses the same v2 corpus and v3 trainer with `--steps 30000
 The [SL readout](modules/slp-1-1-sl-readout-v1/CONTRACT.md) separately fits frozen
 molecular features to SL labels; it does not update the world model.
 
+The completed [descriptor-matched comparison](modules/slp-1-1-sl-readout-v2/CONTRACT.md)
+reaches .8244 AUROC/.8250 average precision for its predefined training blend on
+MuSL CV3. The feature-family selector fixed before v2 scoring reaches .8167
+AUROC/.8163 AP; this is the primary locked selection, above the reported MuSL
+.7895 AUROC mean. Results remain retrospective, with differences in feature
+modalities, coverage and selection protocol. The model card reports all controls,
+including the additional gain from world features beyond the same raw descriptors.
+
 - `experiment.yaml` and `modules/slp-1-1-response-omf2/`: active captured-script
   training, evaluation and portable baseline inference.
 - `experiment-joint-world.yaml` and `modules/slp-1-1-joint-world-v1/`: verified
