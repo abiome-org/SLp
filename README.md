@@ -139,6 +139,16 @@ prediction. [experiment-latent-world.yaml](experiment-latent-world.yaml) capture
 the corresponding training workflow. Molecular evaluation reports both orders,
 direct prediction, RNA-reencoded rollout and observed-parent prediction separately.
 
+The completed [v5 prior-anchored module](modules/slp-1-1-joint-world-v5/CONTRACT.md)
+encodes accumulated molecular-prior responses into the carried latent state.
+After 30,000 updates, its persistent-latent Norman MSE improves by 5.01% over
+v4. The wider molecular comparison retains the earlier defaults. V5's separate
+research bundle is `results/slp11-transition/joint-world-prior-latent-research-export-v1/`;
+both direct and latent routes pass isolated Windows/Linux replay across eight
+contexts at maximum drift 3.73e-7. Use `--rollout latent` with the same joint-world
+request contract above. [experiment-prior-latent-world.yaml](experiment-prior-latent-world.yaml)
+records its validated OMF 2 training/evaluation definition.
+
 ## Project layout and compatibility
 
 The newer [v3 compositional module](modules/slp-1-1-joint-world-v3/CONTRACT.md)

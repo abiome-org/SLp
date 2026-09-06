@@ -6958,3 +6958,73 @@ research rankings from prepared features, without probability calibration.
 This local usable artifact is not an external model release or an OMF service
 deployment. The reusable plot script renders all ten fold values and macro
 means from saved score JSONs, without additional label access.
+
+### 2026-09-05 — Completed prior-anchored latent world v5
+
+V5 completed all 30,000 fixed updates in 1,756.14 seconds on the RTX 4070,
+using 961,669 parameters and 2,651.56 MiB peak allocated memory. The ten focused
+core/training/inference checks and real 20-update smoke run passed before this
+training. All eight input shards matched the fixed snapshot manifest; captured
+module files matched the pre-run protocol, and all source prior calibrations
+and response scales matched v4 exactly. The 134 combination rows also passed
+the explicit pair/parent descriptor, cardinality and basal-state alignment
+checks. The completed native CUDA run is
+`joint-world-prior-latent-seed731-fold0-v5`; evaluation uses only the fixed final
+checkpoint and previously defined molecular development populations.
+
+Checkpoint SHA-256:
+`cc86db4d3f66368ff4ef25e0c428144d75ee6c1b30648341ef270749c0eb613b`.
+Evaluation report SHA-256:
+`6f1edadb071133abd5b5b00a4b4afd27014e8c2f5de32f2ab6101f0e191ed792`.
+Prediction artifact SHA-256:
+`897a12698e955fe8ab885db030a88ffec2748e115c9d642db468f2ff25b78908`.
+
+| Fixed endpoint | V5 MSE | Ratio to retained v2 |
+|---|---:|---:|
+| K562 essential held genes | .003324780 | 1.003710 |
+| RPE1 essential held genes | .008154574 | 1.008221 |
+| Genome-wide K562 unique held genes | .011760639 | .999611 |
+| HepG2 unique held genes | .056471989 | 1.002638 |
+| Norman latent two-order average | .015312901 | 1.022195 |
+
+The fixed five-endpoint mean ratio is **1.007275**, above the .98 advancement
+threshold. K562/RPE1 satisfy their 1.02 caps. V5 is retained as a corrected
+latent-state candidate, not substituted for all retained defaults. This decision
+is also recorded by independent saved-JSON arithmetic in `comparison.json`,
+SHA-256 `83a55f85016d488c61dcc109ec0905c95c2e293962c4cb380c698c10f3afe727`.
+
+The prior-anchor correction improves Norman persistent-latent MSE by **5.012%**
+relative to v4's .016120884, with no added parameters. V5's direct/RNA-reencoded/
+observed-parent MSE is .0156971/.0150517/.0147270; its frozen prior and predicted
+additive are .0160650/.0164950. Latent A-then-B and B-then-A MSE is
+.0160693/.0158616. Centered nonadditive correlation is .4506 for their average,
+.4730 for direct, .4653 for RNA-reencoded, .4654 for observed-parent, .4334 for
+the prior, and .4098 for predicted additive. These are seed-731/fold-0 human
+population endpoints. They support improved latent composition relative to
+v4, not independent biological replication, temporal dynamics or emergence.
+
+| MCF10A pair endpoint | Direct | RNA-reencoded | Latent | Prior | Unchanged control |
+|---|---:|---:|---:|---:|---:|
+| Full medium day 0 | .00283297 | .00287493 | .00289086 | .00278903 | .00412984 |
+| Full medium day 6 | .00350712 | .00352789 | .00355654 | .00361142 | .00465950 |
+| TGF-beta1 day 6 | .00428515 | .00447736 | .00439807 | .00404553 | .00711903 |
+| Minimal medium day 6, 27 pair views | .00594758 | .00594032 | .00604708 | .00560798 | .00428156 |
+
+The three trained environments remain better than unchanged control, with most
+benefit supplied by the frozen calibrated prior. Minimal-medium transfer remains
+above unchanged-control error. All route, subset and source metrics remain in
+the report; this previously inspected medium is not independent confirmation.
+
+The immutable standalone bundle is
+`joint-world-prior-latent-research-export-v1`, manifest SHA-256
+`3698574903c9e7c68e09bf4a8959f4a0bf33f08d923bd5239a394dc847293c47`.
+Both direct and latent inference verify all 26 payload files and replay all eight
+contexts in isolated Linux CPU Python with OMF unavailable. Maximum native/Linux
+drift is `3.0547380447387695e-7` for direct and `3.725290298461914e-7` for latent,
+below `1e-5`; empty-action observations are exact within each runtime. Direct
+and latent replay report SHA-256 values are respectively
+`85f9177ca3de22bb82bd9d702d9e06d978eb3cf8c00bab6a9e9f815bcecb49d6` and
+`e3cbd7a424de7ab36b26977295cfc7989f87d21cb77cbdd0fb7401089bc41a2e`.
+No inference override was used. No SL model, feature, threshold or selection was
+updated from v5 results. This completed local research export is separate from
+external publication and OMF service promotion.

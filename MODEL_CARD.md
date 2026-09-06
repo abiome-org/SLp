@@ -16,11 +16,13 @@ SLp-1 is frozen proof-of-concept work. Its architecture and gene universe are
 not defaults here. Its historical card is [docs/model-card.md](docs/model-card.md).
 The full experiment and correction ledger is [docs/results.md](docs/results.md).
 
-The latest compositional candidate is v3: 961,669 parameters and 16 state slots,
-trained for 30,000 updates. It substantially improves MCF10A held-pair prediction
-through calibrated response priors and predicted-parent training. Its mean MSE
-ratio across the five primary molecular endpoints is 1.00090 relative to v2,
-so it is retained as a candidate rather than replacing all earlier components.
+The latest molecular candidate is v5: 961,669 parameters and 16 state slots,
+trained for 30,000 updates. It carries learned latent residuals through encoded
+molecular-prior anchors. This improves its persistent-latent Norman combination
+MSE by 5.01% over v4, but does not replace the retained components across all
+five primary endpoints. V3 remains the frozen world-feature source for the
+completed synthetic-lethality readout. Its calibrated priors substantially
+improve MCF10A held-pair prediction relative to the original eight-context model.
 The historical SLp-1 .89339 AUROC is withdrawn: its sparse relation lookup could
 return another pair's features. A corrected supervised comparison is separate
 from the molecular model and omits that lookup.
@@ -227,8 +229,19 @@ not replace the retained model. Both direct and persistent-latent exported
 routes pass isolated Windows/Linux replay across eight contexts at maximum
 absolute drift 1.79e-7. V5 transports learned latent residuals through encoded
 accumulated molecular-prior anchors, correcting the omission of that prior from
-carried state; its fixed protocol is recorded in the ledger before training.
+carried state. Its completed latent Norman MSE is .01531290, a 5.01% reduction
+from v4; RNA-reencoded MSE is .01505173. K562/RPE1 MSE is .00332478/.00815457,
+genome-wide K562 unique-gene MSE is .01176064, and HepG2 is .05647199.
+The fixed mean-ratio rule does not advance v5 over retained v2. It is retained
+as a corrected latent-state candidate, with no claim of emergent causal dynamics.
 The SL application remains on the frozen v3 checkpoint.
+
+The v5 bundle is `results/slp11-transition/joint-world-prior-latent-research-export-v1/`.
+Its final checkpoint SHA-256 is
+`cc86db4d3f66368ff4ef25e0c428144d75ee6c1b30648341ef270749c0eb613b`.
+All 26 payloads and eight contexts pass isolated Windows/Linux CPU replay for
+both direct and latent routes, with maximum drift 3.73e-7 and no OMF import.
+Training took 1,756.14 seconds with 2,651.56 MiB peak allocated GPU memory.
 
 The selected SL readout is exported separately as an inference-only bundle at
 `results/slp11-transition/joint-world-selected-sl-predictor-export-v2/`.
