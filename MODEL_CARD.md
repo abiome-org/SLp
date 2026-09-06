@@ -2,12 +2,63 @@
 
 SLp-1.1 learns molecular state, genetic-intervention dynamics, and distributions
 over RNA/protein observations. The current model has **14,118,917 trainable
-parameters**. Its training targets are molecular measurements. It contains no
-synthetic-lethality classifier or fitted linear response backbone.
+parameters**. Its training targets are molecular measurements. Its molecular core has no
+synthetic-lethality training target or fitted linear response backbone. A separate
+SL decoder now reads its simulated single- and double-intervention consequences.
 
 The implementation is [cell-world-v1](modules/slp-1-1-cell-world-v1/CONTRACT.md).
 The earlier population models and supervised SL readouts remain historical
-baselines; their benchmark numbers do not describe this model.
+baselines. The following SL scores are measured on this cellular world itself.
+
+
+## Synthetic-lethality capability
+
+The complete pipeline is **molecular state -> genetic interventions -> predicted
+molecular consequences -> SL decoder**. The 14.12M-parameter core stays frozen.
+The SL decoder receives 1,080 coordinates derived from molecular simulations in
+K562, RPE1 and HepG2; it receives no direct raw gene descriptors or legacy SL
+classifier outputs. An additional fixed response-cosine decoder needs no SL labels.
+
+| Official MuSL CV3, ten cold-gene folds | AUROC | Average precision |
+|---|---:|---:|
+| Cellular world + trained SL decoder | **.668168** | **.668591** |
+| Untrained world + same SL decoder protocol | .634180 | .623050 |
+| Direct descriptors + same SL decoder protocol | .798579 | .802964 |
+| Cellular world, fixed label-free response score | .540000 | .532153 |
+| Untrained world, fixed label-free response score | .517388 | .518348 |
+
+The pretrained world improves the world-only SL decoder mean by .033989 AUROC and
+.045541 AP over the untrained control. It improves AUROC in eight of ten folds.
+The descriptor-only classifier is stronger than the current world-only decoder.
+The gene-cluster interval for the world-minus-random AUROC difference is
+[-.001690,.069390], including zero; the mean gain alone is not conclusive attribution.
+The SL decoder is fitted to training-fold SL labels; the label-free row is not.
+
+The fixed label-free decoder also scores MuSL CV1/CV2 at .531706/.533703 AUROC.
+In SLAMR scenario 3, its mean reciprocal rank is .208321 in Jurkat and .126011
+in K562, versus .086240/.069912 for the untrained-world control. Exact coverage,
+all folds and direct descriptor controls are in the result ledger.
+
+The measured capability is SL prediction from the molecular world,
+with both a trained downstream decoder and an executable no-SL-training readout.
+The pooled label-free CV3 AUROC is .54014 with a descriptive gene-bootstrap 95%
+interval [.51874,.56141]. Its world-minus-random interval includes zero; the
+mean gain alone is not conclusive pretraining attribution for that label-free
+score. These retrospective benchmarks support the stated predictive capability,
+not an unrestricted claim about causal reasoning or leading every SL benchmark.
+
+The complete research predictor is
+`results/slp11-transition/cell-world-sl-predictor-v2/`, including the actual world
+weights, ten SL decoders, three molecular contexts and descriptors for 7,683 human
+genes. `SLPredictor.predict_pairs` accepts exact gene symbols or stable IDs;
+`predict` accepts biological descriptors for additional supported genes. The
+ensemble is for subsequent inference; benchmark scoring uses each test fold's
+own decoder. The molecular generation API remains available as `predictor.world`.
+
+All 30 saved world/control decoders reproduce 22,175 test occurrences exactly.
+On 32 descriptor-to-score requests, Linux CPU and Windows CUDA produce identical
+ensemble SL scores; maximum molecular-feature drift is 1.72e-5. This verifies
+standalone research inference, separately from a service deployment.
 
 ## Training status
 
@@ -149,10 +200,8 @@ The full report is
 SHA-256 `71a62bd15f3de634319ce2785f0ddce89c9ca6573eb7e18b02bb0cf3b026e8a4`.
 
 These molecular development sets have been inspected during prior work and this
-run. They are not independent prospective confirmation. No synthetic-lethality
-benchmark labels are used by this model's training or evaluation. Emergence,
-state-of-the-art SL prediction and general causal transfer are not established
-by the architecture or parameter count.
+run. They are not independent prospective confirmation. The molecular core uses no synthetic-lethality labels. The separate SL
+application uses the explicit training-fold and label-free protocols above.
 
 The completed standalone artifact is
 `results/slp11-transition/cell-world-v1-generative-research-export-v1/`.

@@ -1,0 +1,42 @@
+name: slp-1-1-cell-world-sl-decoder
+objective: Retain the trained molecular world and SL decoder, replaying gene-descriptor-to-SL inference. Native decoder training is recorded separately; this workflow performs zero optimization steps.
+modelCard: MODEL_CARD.md
+data:
+  candidate:
+    source: results/slp11-transition/cell-world-sl-predictor-v2
+    rights: {license: local research model and derived static descriptors; source receipts retained, trainingAllowed: true}
+  request:
+    source: results/slp11-transition/cell-world-sl-request-v1.npz
+    rights: {license: derived static gene descriptors for local research replay, trainingAllowed: false}
+  reference:
+    source: results/slp11-transition/cell-world-sl-native-replay-v1/predictions.npz
+    rights: {license: project-derived numerical replay outputs, trainingAllowed: false}
+  readout-runtime:
+    source: data/derived/slp11-sl-linux-runtime-v1/runtime.zip
+    rights: {license: installed numerical packages with component license files retained, trainingAllowed: false}
+train:
+  source: modules/slp-1-1-cell-world-sl-v1
+  inputs: [candidate]
+  dependencies: requirements-linux.lock
+  command: [python3, omf_artifact.py, --phase, materialize, --bundle, '{inputs[candidate]}', --output, '{output}/model']
+  artifacts: {model: model}
+evaluate:
+  source: modules/slp-1-1-cell-world-sl-v1
+  inputs: [model, request, reference, readout-runtime]
+  dependencies: requirements-linux.lock
+  command: [python3, omf_artifact.py, --phase, replay, --bundle, '{inputs[model]}', --request, '{inputs[request]}', --reference, '{inputs[reference]}', --runtime, '{inputs[readout-runtime]}', --output, '{output}/replay']
+  metrics: replay/metrics.json
+  artifacts: {report: replay/report.json, predictions: replay/predictions.npz}
+metrics:
+  sl_auroc: {direction: maximize}
+  sl_ap: {direction: maximize}
+  score_max_error: {direction: minimize, maximum: 0.00001}
+  feature_max_error: {direction: minimize, maximum: 0.0002}
+primaryMetric: sl_auroc
+baseline: molecular-sl
+candidates:
+  molecular-sl:
+    rationale: Frozen 14.12M-parameter world, three molecular contexts, and fold-local SL decoders with explicit random-world controls.
+    parameters: {}
+limits: {timeoutSeconds: 600, cpuSeconds: 600}
+executor: local

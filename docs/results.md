@@ -7210,3 +7210,149 @@ Every manifest payload was rehashed after export; the directory contains exactly
 the manifest and its listed files, including the unchanged trained checkpoint.
 These checks establish standalone numerical compatibility, not biological
 performance or an approved ModelPackage service deployment.
+
+## 2026-09-06: connecting the cellular world to synthetic-lethality decoding
+
+The requested completion is molecular world simulation followed by an SL decoder.
+The final generative checkpoint remains frozen at SHA-256
+`9ecffff8d83e41878da638847d77a950077d2270e2cf6dc951d3e9e0309c4a15`.
+No SL labels update its encoder, intervention dynamics, flow or molecular decoder.
+The application module is `modules/slp-1-1-cell-world-sl-v1/`.
+
+The scientific claim under evaluation is that molecular pretraining makes SL
+information available through predicted intervention consequences: world-only
+SL decoding should outperform the same decoder over an untrained world, and a
+fixed response-similarity score should discriminate SL without SL training.
+All arms, including the direct-descriptor control, are retained. These criteria
+assess specific transfer claims; no result is suppressed for failing them.
+
+Before label access, the application fixes K562/RPE1/HepG2 fitting-control
+contexts, 512 molecular queries per context, 192 encoding queries and seeded
+projections. Single/double predictions produce 1,080 molecular-state/response
+coordinates; raw descriptors are absent from the world decoder's input.
+The untrained control has the same shape and a seeded nonzero final dynamics
+projection to avoid the training initializer's trivial all-zero responses.
+The descriptor control receives symmetric sum/difference/product of the same
+642 biological input coordinates. No legacy SL classifier is used in any arm.
+
+The exact data are the previously pinned cellular training index v5 and the
+MuSL stable-ID roster v1 (213,700 pairs, 7,683 supported genes). Source fitting
+rows define every molecular context and scale. Trained/random simulation took
+113.11/114.70 seconds on the RTX 4070. Real-artifact checks pass with maximum
+feature replay difference 3.82e-6 and pair-order difference 1.20e-7. All ten
+outer and inner SL splits have disjoint stable gene IDs. No subagents are used.
+
+The SL decoder uses the fixed LightGBM protocol (31 leaves, learning rate .03,
+maximum 1,000 trees, inner gene-held log-loss early stopping after 50 rounds),
+fitting world, random-world and descriptor arms independently. All ten models
+and predictions are saved before test scoring. The primary decoder is world-only;
+there is no test-selected blend or fallback to raw descriptors.
+
+The separate no-SL-training decoder is positive cosine of predicted single
+molecular responses, equally averaged over the three fixed contexts. Its sign,
+contexts and normalization are fixed before scoring. It is evaluated in all
+MuSL CV1/CV2/CV3 folds and the three available SLAMR scenario-3 cell populations.
+Direct normalized-descriptor cosine and untrained-world cosine are controls.
+The original global molecular-held roster additionally defines a both-genes-held
+subset, without constructing a new outcome-dependent partition. SLAMR uses the
+same pan-context score and makes no matched target-cell context claim.
+
+### Completed SL decoding and benchmark results
+
+Decoder fitting completed all thirty models in 735.20 seconds on four native
+CPU threads. The world weights never changed. The fitting process did not read
+test labels. The independent fixed label-free evaluator scored its already
+frozen predictions while the predetermined supervised fitting process was still
+running; no supervised setting or feature was changed from those scores. The
+supervised scoring phase then verified its completed prediction lock before
+reading test labels.
+
+| Seed/fold | World AUROC / AP | Untrained-world AUROC / AP | Descriptor AUROC / AP |
+|---|---:|---:|---:|
+| 42/0 | 0.697380 / 0.717490 | 0.527415 / 0.532277 | 0.821682 / 0.815137 |
+| 42/1 | 0.662505 / 0.635526 | 0.604429 / 0.578879 | 0.797398 / 0.788547 |
+| 42/2 | 0.660708 / 0.676343 | 0.639089 / 0.631076 | 0.778719 / 0.777836 |
+| 42/3 | 0.639839 / 0.624636 | 0.639818 / 0.648016 | 0.805795 / 0.827107 |
+| 42/4 | 0.610652 / 0.618917 | 0.655564 / 0.615944 | 0.766279 / 0.767991 |
+| 432/0 | 0.595290 / 0.584411 | 0.648254 / 0.632890 | 0.784433 / 0.789361 |
+| 432/1 | 0.704837 / 0.710224 | 0.649586 / 0.639244 | 0.812294 / 0.805205 |
+| 432/2 | 0.728206 / 0.740035 | 0.701459 / 0.710155 | 0.837735 / 0.850629 |
+| 432/3 | 0.682049 / 0.688068 | 0.667993 / 0.648681 | 0.788821 / 0.797001 |
+| 432/4 | 0.700217 / 0.690260 | 0.608191 / 0.593338 | 0.792630 / 0.810829 |
+| Macro | 0.668168 / 0.668591 | 0.634180 / 0.623050 | 0.798579 / 0.802964 |
+
+The world-only decoder gains .033989 AUROC/.045541 AP over untrained-world
+features, with eight positive AUROC fold differences. The direct-descriptor
+classifier remains stronger. The primary is the world-only decoder regardless
+of this comparison; no classifier blend substitutes for it. This is a working
+molecular world with a trained SL decoder, not a renamed static classifier.
+
+The fixed no-SL-training world readout scores .540000 AUROC/.532153 AP on CV3;
+untrained-world scores .517388/.518348. The independently computed NumPy
+response-cosine benchmark agrees up to small float32 tie differences. On CV1
+and CV2, the same fixed rule scores .531706/.523544 and .533703/.524221 AUROC/AP.
+Both-molecular-held CV3 includes 357 test occurrences over ten folds and gives
+.539973 macro AUROC; its small sample size is retained explicitly.
+
+For pooled CV3, 500 seed-731 Poisson gene-weight bootstrap draws give label-free
+world AUROC .540141, interval [.518745,.561407]. World-minus-random is .024738,
+interval [-.007270,.054395]; the latter does not exclude zero. All 22,175
+occurrences are retained, including the official cross-seed label conflicts for
+ten of 21,039 unique pairs. The bootstrap shares weights across genes and repeated
+pairs; it does not treat overlapping folds as independent replications.
+
+| SLAMR scenario 3 | World MRR / Recall20 | Random MRR / Recall20 | Static cosine MRR / Recall20 |
+|---|---:|---:|---:|
+| A549, four evaluable folds | .400413 / 1.000000 | .249550 / 1.000000 | .331723 / 1.000000 |
+| Jurkat, five folds | .208321 / .509419 | .086240 / .334422 | .269867 / .422800 |
+| K562, five folds | .126011 / .312878 | .069912 / .210334 | .159564 / .349191 |
+
+These are fixed pan-context molecular scores, not target-cell-context predictions.
+A549 has only 2/4/6/4/0 positive queries by fold and small candidate sets, so
+Recall20 saturation is uninformative; its fifth fold has no evaluable positives.
+Exact unmapped pair exclusions are 0/0/54/26/26 of 210/210/210/182/182 A549
+pairs; 556/556/142/690/680 of 5112/5112/5112/5112/4970 Jurkat pairs; and
+954/800/954/326/480 of 6806/6806/6806/6806/6642 K562 pairs. All controls use
+identical supported populations. No score, sign, context or checkpoint selection
+uses these test results.
+
+### Executable predictor and replay
+
+`cell-world-sl-predictor-v2` contains the actual molecular world weights, ten
+world-only SL decoders, three molecular context inputs and a descriptor registry
+for 7,683 human genes. It accepts exact gene symbols or stable IDs, or explicit
+642-dimensional descriptors. Unknown symbols and self pairs are rejected; pair
+order does not alter scores. The standalone named-gene example executes
+BRCA1/PARP1 and BRCA2/PARP1. Its numerical values are research predictions, not
+new biological confirmations or calibrated clinical probabilities.
+
+All thirty serialized fold/control decoders replay all 22,175 held-out prediction
+occurrences bit-for-bit without label access. Thirty-two complete raw-descriptor
+requests also pass Windows CUDA versus Linux CPU replay: ensemble score error 0,
+per-fold score error 2.78e-17, label-free score error 3.58e-7, and molecular-feature
+error 1.72e-5. Actual runtimes are Torch 2.11.0+cu128, NumPy 2.4.4 and LightGBM
+4.6.0; Linux supplies the numerical readout packages as an explicit separate
+runtime input to the retained OMF torch environment.
+
+- `cell-world-sl-features-v1/manifest.json` SHA-256 `fe454412262440f940924008fa6b816235a556e658fcf24c16122a290717769d`.
+- `cell-world-sl-random-features-v1/manifest.json` SHA-256 `b4da27e08db00bdd52fa004e2844b75d2a86185746d1dce6b372251ea6a9a711`.
+- `cell-world-sl-decoder-v2/fit-manifest.json` SHA-256 `ba57ae2a734f8f73f22889e061e47785527054c18d20c7d705f5840cd03af07a`.
+- `cell-world-sl-decoder-v2/scores.json` SHA-256 `0a052a3b14d924a7d4d8bdd5765e6be6885b4cf0e2a40fc15af6acd0f69a14be`.
+- `cell-world-sl-zero-shot-v1/scores.json` SHA-256 `e53510f53da6a5e744910c70b995dd394c1de1a757ef8c61bb334e0b3d5a782e`.
+- `cell-world-sl-predictor-v2/manifest.json` SHA-256 `086369a19a38d08dc0a5a85eb23cc2993dfca6407b19e939c4fb980cd5ed24d5`.
+
+The fixed-model gene-cluster interval for supervised world-minus-random macro
+AUROC is [-.001690,.069390] around .033989. This interval also includes zero;
+strong pretraining attribution needs additional evidence beyond the mean gains.
+No model is selected from this uncertainty calculation.
+
+OMF 2 run `01a077d3-2bc9-7cb4-bc48-943132030431` successfully materialized and
+replayed the complete predictor. EvaluationResult revision:
+`sha256:44ce24d971cae1a7dccdea85c06adf1892bdf30095bbe080ae512e7ec863ea84`.
+The exported model artifact digest is
+`sha256:37ca8307bdf163d571a530b9014486284f2efef895ea587457c4cb91de468e4e`;
+the export is `cell-world-sl-omf2-export-v1`. Every payload hash was rechecked.
+The first attempt failed directory-snapshot path validation before admission;
+packaging the same numerical dependencies as a bounded archive resolved it.
+No OMF runtime record was edited. This replay retains completed native training
+and performs zero optimization steps; it is not a ModelPackage service release.

@@ -1,5 +1,43 @@
 # SLp-1.1
 
+The cellular world model now has an operational **synthetic-lethality decoder**.
+It simulates single and double interventions, then scores their molecular
+consequences. On official MuSL CV3 it reaches **.6682 AUROC / .6686 AP**, versus
+.6342/.6230 for the same decoder over an untrained world. Its fixed readout using
+no SL labels reaches .5400 AUROC. See [MODEL_CARD.md](MODEL_CARD.md) for controls,
+coverage and the distinction between molecular pretraining and decoder training.
+
+The local complete predictor is
+`results/slp11-transition/cell-world-sl-predictor-v2/`. With the dependencies in
+its `requirements.lock` available:
+
+```python
+import sys
+from pathlib import Path
+bundle = Path("results/slp11-transition/cell-world-sl-predictor-v2").resolve()
+sys.path.insert(0, str(bundle))
+from predict import SLPredictor
+model = SLPredictor(bundle, device="cuda")
+result = model.predict_pairs([("BRCA1", "PARP1"), ("BRCA2", "PARP1")])
+print(result["sl_score"])
+```
+
+The scores are research predictions, not calibrated clinical probabilities.
+`model.world` retains molecular encoding, interventions and RNA/protein generation.
+The implementation and reproducible benchmark entrypoints are in
+[the SL application module](modules/slp-1-1-cell-world-sl-v1/CONTRACT.md).
+The complete build is one bounded command using the indexed local molecular data
+and official benchmark snapshots:
+
+```powershell
+python modules/slp-1-1-cell-world-sl-v1/run.py --root . --bundle results/slp11-transition/cell-world-v1-generative-research-export-v1 --output results/my-world-sl
+```
+
+It simulates the world and controls, trains fold-local decoders, scores both
+benchmark suites, verifies saved predictions, and exports a named-gene predictor.
+
+
+
 SLp builds molecular world models for genetic intervention research. The current
 [cellular world model](modules/slp-1-1-cell-world-v1/CONTRACT.md) learns molecular
 state, intervention dynamics, and RNA/protein observation distributions in one
