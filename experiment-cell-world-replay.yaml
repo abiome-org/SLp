@@ -1,0 +1,39 @@
+name: slp-1-1-generative-cell-world-replay
+objective: Verify and export the already-trained molecular world model through OMF 2. This workflow performs no model optimization.
+modelCard: MODEL_CARD.md
+data:
+  candidate:
+    source: results/slp11-transition/cell-world-v1-generative-research-export-v1
+    rights: {license: project-trained research model; source-specific rights recorded in training index, trainingAllowed: true}
+  request:
+    source: results/slp11-transition/cell-world-v1-example.npz
+    rights: {license: derived CC-BY-4.0 paired molecular control example and public static descriptors, trainingAllowed: false}
+  reference:
+    source: results/slp11-transition/cell-world-v1-generative-native-replay
+    rights: {license: project-derived numerical replay reference, trainingAllowed: false}
+train:
+  source: modules/slp-1-1-cell-world-v1
+  inputs: [candidate]
+  dependencies: requirements-linux.lock
+  command: [python3, materialize.py, --bundle, '{inputs[candidate]}', --output, '{output}/model']
+  artifacts: {model: model}
+evaluate:
+  source: modules/slp-1-1-cell-world-v1
+  inputs: [model, request, reference]
+  dependencies: requirements-linux.lock
+  command: [python3, omf_replay.py, --bundle, '{inputs[model]}', --request, '{inputs[request]}', --reference, '{inputs[reference]}/outputs.npz', --output, '{output}/replay']
+  metrics: replay/metrics.json
+  artifacts: {report: replay/report.json, outputs: replay/outputs.npz}
+metrics:
+  empty_action_max_error: {direction: minimize, maximum: 0.0}
+  action_permutation_max_error: {direction: minimize, maximum: 0.00001}
+  portability_max_error: {direction: minimize, maximum: 0.00001}
+  sample_difference: {direction: maximize, minimum: 0.00001}
+primaryMetric: portability_max_error
+baseline: generative-world
+candidates:
+  generative-world:
+    rationale: Replay actual trained weights, molecular transitions, and sparse RNA/protein generation in isolated Linux CPU Python.
+    parameters: {}
+limits: {timeoutSeconds: 600, cpuSeconds: 600}
+executor: local

@@ -7028,3 +7028,185 @@ and latent replay report SHA-256 values are respectively
 No inference override was used. No SL model, feature, threshold or selection was
 updated from v5 results. This completed local research export is separate from
 external publication and OMF service promotion.
+
+
+## 2026-09-05: a generative cellular molecular world model
+
+Implemented `modules/slp-1-1-cell-world-v1/`: molecular observation encoding,
+persistent intervention-conditioned dynamics, conditional latent flow, and
+RNA/protein observation distributions. This corrects the prior substitution of
+a supervised SL readout for the requested world model. No AGENTS instruction
+required a classifier. No subagents were used for this build. Earlier readout
+AUROCs remain historical and do not describe this model.
+
+The final model has 14,118,917 trainable parameters, width 256, 32 latent slots,
+three encoder blocks, four dynamics blocks and four flow blocks. Sparse RNA
+uses Bernoulli detection plus positive lognormal processed expression; protein
+uses a continuous Gaussian observation decoder. It has no fitted molecular
+response prior, SL labels or learned gene-ID vocabulary. Frozen protein/GO/STRING
+descriptors are biological inputs. Human/yeast retain taxonomy 9606/4932.
+`generate` draws fresh observations; latent sampling, anchored molecular
+forecasting and direct reconstruction are separate operations.
+
+The molecular question was whether a shared state could reconstruct withheld
+measurements and support action-conditioned generation without fitted response
+priors. The retention rule was to retain and report the trained artifact against
+matched molecular controls, without inferring emergence or SOTA from training
+loss. Development sets are adaptive; no SL benchmark or protected final holdout
+was opened for this model's training or evaluation.
+
+### Data, training and corrections
+
+The fitting index is `data/derived/slp11-cell-world-training-v5/`, manifest SHA-256
+`3666dd2490622eecf10894762067dfd9b5d0cd7355a88af9c80a0906f42a811f`.
+It references 12,490 human population views, 197,804 K562 and 152,951 RPE1 cells
+including controls, Frangieh paired-cell fitting access, and 38,978 yeast views
+in Control/NaCl. Frangieh contains 103,862 source cells and 20 measured protein
+channels; 93,397 cells have the reconstruction-fitting role before the global
+gene filter. Its filtered population roster contains 1,388 fitting views. Eight
+source-rights receipts and source payloads are hash-pinned. Biological payloads
+are local artifacts, not Git contents.
+
+Update probabilities are 15% each K562 cells, RPE1 cells and paired cells; 20%
+yeast; 4% each K562-essential, RPE1-essential and HepG2 populations; 10% K562
+genome-wide; 7% Norman; and 2% each of the three MCF10A fitting environments.
+These are update probabilities, not unique-cell consumption counts. The global
+human intervention exclusion has 1,506 genes. Held yeast actions use the native
+full static pack, SHA-256
+`81cda9469380c9efa000a40b2cd5e816a1d397ce777288fa53b0bcf26a55dc25`.
+Static descriptor access does not admit held outcomes to fitting.
+
+An early run applied another log transform to yeast means. Inspection of the
+source moments showed they already average per-cell log1p(CP10K). That run was
+stopped and excluded. The corrected state/dynamics phase is
+`cell-world-v1-seed731-r2`: seed 731, batch 16, 192 encoder and 256 decoder RNA
+queries. Its 16,000-update cosine horizon is retained; the used checkpoint is
+update 12,000, reached after 1,704.86 seconds. It has 13,985,282 parameters and
+checkpoint SHA-256
+`0227535e38b9e4f95a4f982fd5a4799e11c3b3195e65ba7e33696a2a58dce317`.
+
+The initialized generative phase is `cell-world-v1-generative-seed731`: 10,000
+updates, 500-update warmup, base learning rate 1e-4 and a 3x multiplier for new
+query-control/observation parameters. It adds 133,635 parameters, trains sparse
+RNA distributions jointly, and alternates both combination orders. It took
+1,541.59 seconds. Peak allocated CUDA memory was 682.66/710.14 MiB for the two
+phases. The used phases total 54.11 minutes and 22,000 updates on the native
+Windows RTX 4070, Torch 2.11.0+cu128 and NumPy 2.4.4.
+
+Final checkpoint SHA-256:
+`9ecffff8d83e41878da638847d77a950077d2270e2cf6dc951d3e9e0309c4a15`.
+Captured source, optimizer/RNG state and all source draw counts accompany the
+runs. Continuation reconstructs the paired shard cache and is not promised to
+be bitwise identical to uninterrupted execution. The explicit `--stage state`
+and `--schedule-steps 16000` reproduction path preserves the captured initial
+objective: a focused comparison produced zero loss and gradient differences.
+Final model/data code hashes match their training capture. Historical model
+source was not modified.
+
+### Final molecular development
+
+The complete report is `cell-world-v1-generative-development-final/report.json`,
+SHA-256 `71a62bd15f3de634319ce2785f0ddce89c9ca6573eb7e18b02bb0cf3b026e8a4`.
+Evaluation took 97.52 seconds and captures source and prediction arrays. Queries
+are matched within comparisons; K562/RPE1 support 8,348/8,654 native queries.
+These scores are not silently equated to older full-panel results. Landscape
+correlation removes the average perturbation effect for each query, for scoring
+only. Source-view and unique-gene results are both retained in the report.
+
+| Held-gene endpoint | Genes | Model MSE | Unchanged | Training mean | Centered r |
+|---|---:|---:|---:|---:|---:|
+| K562 | 305 | .003952025 | .004373069 | .004021072 | .2303 |
+| RPE1 | 360 | .009851296 | .012422475 | .009368458 | .2122 |
+| K562 genome-wide, pooled views | 1491 | .012031507 | .012575396 | .012352154 | .1763 |
+| HepG2, pooled views | 361 | .064355915 | .069987767 | .064567064 | .1842 |
+| Yeast Control | 346 | .024071890 | .023267791 | .022320584 | .1440 |
+| Yeast NaCl | 346 | .022721470 | .022068466 | .020980514 | .1562 |
+
+Yeast views are cell-weighted within held genes across batches and equally
+weighted across genes. Human prediction improves over unchanged state in all
+four contexts; the training mean still wins for RPE1 and yeast. Superiority
+over the strongest historical fitted response models is not established.
+
+| Held combination context | Pairs | Direct MSE | Latent two-order MSE | Predicted additive | Unchanged |
+|---|---:|---:|---:|---:|---:|
+| Norman | 23 | .020784142 | .021307351 | .021024983 | .040450639 |
+| MCF10A full day 0 | 10 | .003667303 | .003640312 | .004123607 | .004129840 |
+| MCF10A full day 6 | 10 | .004655914 | .004825341 | .005982419 | .004659497 |
+| MCF10A TGF-beta1 day 6 | 7 | .006122731 | .006131164 | .006658165 | .007119033 |
+
+These are seed-731, fold-0 known-gene combinations, not temporal trajectories.
+The preferred composition route varies by environment. No metric demonstrates
+emergent mechanistic reasoning.
+
+Globally held Frangieh interventions were evaluated using a context-control-mean
+input. The shared static pack lacks descriptors for 27 of 403 validation views;
+all 376 supported views are reported. This nonlinear cell-model route is not a
+Monte Carlo population estimate over actual control cells.
+
+| Context | RNA model/control MSE | Protein model/control MSE | Views |
+|---|---:|---:|---:|
+| Co-culture | .00721619/.00717239 | .09225107/.06465665 | 126 |
+| Control | .00784658/.00774889 | .08942302/.06371557 | 123 |
+| IFN-gamma | .00779550/.00771813 | .07969478/.05697985 | 127 |
+
+Held-gene protein transfer is not established. Training-mean comparators and
+centered correlations for each modality/context are preserved in the report.
+A separate RNA-only held-cell check uses six intervention/context groups
+selected by cell availability from twelve fixed shards, 56 held cells total.
+Generated measurements come from the learned sparse/continuous distributions.
+
+| Context/action | Cells | RNA energy, generated/control | Protein energy, generated/control | RNA zero fraction, generated/observed |
+|---|---:|---:|---:|---:|
+| Co-culture / ENSG00000070404 | 11 | 1.2987/1.3228 | .6760/.6074 | .7878/.7898 |
+| Co-culture / ENSG00000139192 | 11 | 1.2771/1.4939 | .6331/.8383 | .7912/.7832 |
+| Control / ENSG00000071991 | 6 | 2.3133/2.1765 | 1.3575/2.2422 | .7594/.7427 |
+| Control / ENSG00000101132 | 6 | 2.7578/2.6454 | 1.3107/1.3943 | .7615/.7984 |
+| IFN-gamma / ENSG00000276130 | 12 | 1.3020/1.2538 | .5015/.6844 | .7768/.8161 |
+| IFN-gamma / ENSG00000102265 | 10 | 1.5727/1.8040 | 1.0432/1.1768 | .8091/.8100 |
+
+Protein energy distance improves in five of six groups and RNA in three.
+Reconstruction improvements are mixed; per-group reconstruction, Brier scores
+and observation variances remain in the report. Small group sizes and one fixed
+sampling seed per group do not establish calibrated generative uncertainty.
+
+### Artifact and verification
+
+The standalone bundle is `cell-world-v1-generative-research-export-v1`, manifest
+SHA-256 `8ff90ecaed522531d05d301a8e4d4784a45d6e8464eb147dc237bfeabd5631ab`.
+It includes actual weights, normalizer, source-rights receipts and a real paired
+molecular control request. Its payload is about 57 MB. `replay.py` executes from
+the bundle without the training corpus.
+
+Eight focused checks passed: query/action permutation, masks, exact empty-action
+identity, gradients through both actions/state, seeded generation, new query
+panels, sparse RNA support and standalone serialization/replay. Native action
+permutation differs by at most 1.1920928955078125e-7. Windows/Linux prediction,
+reconstruction and both generated samples agree within 4.76837158203125e-7;
+empty actions are exact within each runtime. Different seeds produce different
+sampled measurements.
+
+The first OMF replay ran successfully numerically but lacked evaluator protocol
+Boolean pass fields. `omf_replay.py` derives those fields from the actual native
+reference comparisons; they are not biological performance, signatures or
+independent deployment approval. The materializer copies only manifest-listed
+payloads and excludes incidental Python caches. OMF runtime records were not
+manually edited. OMF artifact replay performs zero optimization steps, separately
+from the native CUDA training recorded above.
+
+The outcome is a trained, portable molecular research world model with
+intervention-conditioned generation. It does not establish SOTA, emergence or
+launch qualification. Historical fitted response and supervised SL baselines
+remain separately available.
+
+Final OMF 2 artifact replay run `01a074cc-b93d-78be-8ae9-be8db3cf6096`
+completed with `passed: true`, `compatibilityPassed: true`, and no failures.
+Its immutable EvaluationResult revision is
+`sha256:c3578f3480c513fd3f4195c14660a36acdf1d040ca864268a22a992c769bf6fe`.
+The exported model artifact digest is
+`sha256:0890d33c1bb1db7ce6b72b0e385fce1b6df4614f4abef9f9a8d6e4720a79d0c8`.
+Export directory:
+`results/slp11-transition/cell-world-v1-generative-omf2-export-v3/`.
+Every manifest payload was rehashed after export; the directory contains exactly
+the manifest and its listed files, including the unchanged trained checkpoint.
+These checks establish standalone numerical compatibility, not biological
+performance or an approved ModelPackage service deployment.
