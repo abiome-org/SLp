@@ -6787,3 +6787,14 @@ evaluation. The primary five-endpoint rule remains mean MSE ratio at most .98
 versus the retained v2 baseline, with K562/RPE1 individually at most 1.02; Norman
 uses the new latent route, while RNA-reencoded and observed-parent routes remain
 separately reported. MCF10A environments remain descriptive development evidence.
+
+Before opening v2 SL scores, the application selector was fixed to choose each
+fold's v1 or v2 blend solely by lower inner validation log loss (exact ties use
+v1). It verifies both fit manifests, identical split counts and exact canonical
+test indices/source rows/pair IDs. Eight folds select v2; seed-432 folds 2/4
+select v1. No test predictions or labels determine this rule or these choices.
+Both feature-family reports remain retained separately. The selector's immutable
+prediction lock is `0840c60533c2ec3c37470abcde3e36bd65cd9257ee33a0951af4f3abaf096392`.
+The receipt explicitly records retrospective scope and prior inspection of v1
+scores. V2's 20 serialized boosters independently reproduce all predictions
+exactly, without label access.
