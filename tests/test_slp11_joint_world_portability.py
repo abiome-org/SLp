@@ -36,6 +36,22 @@ def test_wsl_path_conversion():
     assert value == "/mnt/c/Users/Jack/example.npz"
 
 
+def test_prediction_method_defaults_and_routes_explicitly():
+    class Bundle:
+        def __init__(self): self.calls = []
+        def predict(self, *args, **kwargs):
+            self.calls.append("predict"); return np.array([1.])
+        def predict_latent_rollout(self, *args, **kwargs):
+            self.calls.append("predict_latent_rollout"); return np.array([2.])
+    bundle = Bundle()
+    arguments = ("ctx", np.zeros((1, 1, 1)), np.zeros((1, 1), bool),
+                 np.zeros((1, 1)), np.zeros((1, 1)), {})
+    assert MODULE.METHODS[0] == "predict"
+    assert MODULE._invoke(bundle, "predict", *arguments).item() == 1
+    assert MODULE._invoke(bundle, "predict_latent_rollout", *arguments).item() == 2
+    assert bundle.calls == ["predict", "predict_latent_rollout"]
+
+
 def test_export_manifest_verifies_every_regular_file(tmp_path):
     payload = tmp_path / "weights.bin"
     payload.write_bytes(b"weights")

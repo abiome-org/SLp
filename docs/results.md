@@ -6749,3 +6749,41 @@ the same training-only selection rule. This completes the missing direct feature
 baseline; it introduces no new biological input. Since the same test roster has
 now been inspected, subsequent scores remain retrospective, and no choice may
 be selected from those test outcomes. The world checkpoint remains unchanged.
+
+The legacy `observed_relations` helper now requires exact oriented keys and
+rejects malformed, duplicate, out-of-range or missing keys before indexing.
+Valid exact matches retain the same float32 values and order. Six synthetic
+regression cases cover exact matches, missing successor keys, reversed keys,
+searches beyond the table and invalid indices. No historical artifact or
+`model/v1/` source was changed. The current benchmark continues to omit the
+withdrawn six-coordinate feature block entirely.
+
+### 2026-09-05 — Persistent latent intervention composition
+
+Source inspection identifies a limitation of the v3 autonomous path: it decodes
+an intermediate RNA population and re-encodes it before the second action,
+discarding latent information that is not represented in that RNA endpoint.
+V4 adds a parameter-free `transition_chain` and `predict_latent_rollout` API.
+It encodes the starting observation once, applies action slots in explicit order,
+and returns the starting observation plus the total action prior and the decoded
+final-minus-initial latent residual. Both orders of a double intervention are
+reported. This is endpoint composition, not an inferred biological time course.
+
+Scheduled chain training replaces the predicted-RNA-parent branch with two
+differentiable latent transitions from basal. Measured-parent and direct routes
+remain available, as do the same response priors, saturation calibration,
+normalizers and loss weights. The network still has 961,669 parameters. No SL
+labels influence this change or its fitting. It follows from the model's state
+representation and does not alter either frozen SL comparison.
+
+Four focused checks pass with nonzero transition weights: single-action parity,
+exact empty identity, gradients to both actions, valid action-order permutations,
+and inference query/support alignment. A real 20-update CUDA smoke run completes.
+`experiment-latent-world.yaml` validates in pinned OMF 2. The full native CUDA
+run targets 30,000 updates, seed 731/fold 0, on the same eight-context training
+snapshot (manifest `8d9beb1e77bbb4ef9ada2c48f8fd5396d1a1ab3425ca28e39073f67e11a27cab`).
+The final step-30,000 checkpoint and latent two-order average are fixed before
+evaluation. The primary five-endpoint rule remains mean MSE ratio at most .98
+versus the retained v2 baseline, with K562/RPE1 individually at most 1.02; Norman
+uses the new latent route, while RNA-reencoded and observed-parent routes remain
+separately reported. MCF10A environments remain descriptive development evidence.

@@ -1058,9 +1058,31 @@ def fit_symmetric(genes,tr,ytr,te,device,epochs=40):
 
 
 def observed_relations(pack, pairs, n_genes):
-    keys=pack["pairs"][:,0].astype("int64")*n_genes+pack["pairs"][:,1]; order=np.argsort(keys)
-    query=pairs[:,0].astype("int64")*n_genes+pairs[:,1]; at=np.searchsorted(keys[order],query)
-    return pack["relations"].astype("float32")[order[at]]
+    source=np.asarray(pack["pairs"]); relations=np.asarray(pack["relations"])
+    query_pairs=np.asarray(pairs)
+    if not isinstance(n_genes,(int,np.integer)) or n_genes<=0:
+        raise ValueError("n_genes must be a positive integer")
+    if source.ndim!=2 or source.shape[1]!=2 or query_pairs.ndim!=2 or query_pairs.shape[1]!=2:
+        raise ValueError("relation and query pairs must be [N,2]")
+    if len(source)!=len(relations):
+        raise ValueError("relation pairs and values must align")
+    if not np.issubdtype(source.dtype,np.integer) or not np.issubdtype(query_pairs.dtype,np.integer):
+        raise ValueError("relation and query pair indices must be integers")
+    if np.any(source<0) or np.any(source>=n_genes) or np.any(query_pairs<0) or np.any(query_pairs>=n_genes):
+        raise ValueError("relation or query pair index is out of bounds")
+    keys=source[:,0].astype("int64")*n_genes+source[:,1]; order=np.argsort(keys)
+    sorted_keys=keys[order]
+    if len(np.unique(sorted_keys))!=len(sorted_keys):
+        raise ValueError("relation pair keys must be unique")
+    query=query_pairs[:,0].astype("int64")*n_genes+query_pairs[:,1]
+    at=np.searchsorted(sorted_keys,query)
+    matched=(at<len(sorted_keys))
+    matched[matched] &= sorted_keys[at[matched]]==query[matched]
+    if not matched.all():
+        raise ValueError("observed relation pair lookup requires exact oriented keys; "
+                         "use scripts/prepare_slp11_musl_retained_baseline_features.py "
+                         "for the corrected benchmark feature path")
+    return relations.astype("float32")[order[at]]
 
 
 def pair_summary(state,pairs):

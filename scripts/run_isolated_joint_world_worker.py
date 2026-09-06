@@ -17,6 +17,7 @@ def main():
     parser.add_argument("--verifier", required=True)
     parser.add_argument("--model", required=True)
     parser.add_argument("--checkpoint", required=True)
+    parser.add_argument("--method", choices=("predict", "predict_latent_rollout"), default="predict")
     parser.add_argument("--python-runtime", required=True)
     parser.add_argument("--worker-output", required=True)
     parser.add_argument("--isolation-output", required=True)
@@ -35,10 +36,11 @@ def main():
     isolation = {"pythonNoSite": bool(sys.flags.no_site), "omfImportable": False,
                  "admittedPaths": admitted, "runtimePaths": runtime_paths,
                  "executable": sys.executable,
-                 "threadLimit": 4}
+                 "threadLimit": 4, "method": args.method}
     Path(args.isolation_output).write_text(json.dumps(isolation, indent=2, sort_keys=True) + "\n")
     sys.argv = [str(verifier), "--model", str(model), "--checkpoint", args.checkpoint,
-                "--python-runtime", args.python_runtime, "--worker", "--worker-output",
+                "--method", args.method, "--python-runtime", args.python_runtime,
+                "--worker", "--worker-output",
                 args.worker_output, "--output", str(Path(args.worker_output).parent / "unused")]
     runpy.run_path(str(verifier), run_name="__main__")
 

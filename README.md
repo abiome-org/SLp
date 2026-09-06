@@ -131,6 +131,14 @@ import available. The bundle's Python API is `JointWorldBundle(model_directory)`
 its manifest selects the completed checkpoint automatically. This is a local
 research model, not an externally published release.
 
+The [v4 latent-chain module](modules/slp-1-1-joint-world-v4/CONTRACT.md) adds
+`JointWorldBundle.predict_latent_rollout(...)`: encode the initial population
+once and retain latent state through an ordered action sequence. Its inference
+CLI selects this path with `--rollout latent`; the default remains direct
+prediction. [experiment-latent-world.yaml](experiment-latent-world.yaml) captures
+the corresponding training workflow. Molecular evaluation reports both orders,
+direct prediction, RNA-reencoded rollout and observed-parent prediction separately.
+
 ## Project layout and compatibility
 
 The newer [v3 compositional module](modules/slp-1-1-joint-world-v3/CONTRACT.md)

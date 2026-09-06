@@ -11,6 +11,8 @@ from pathlib import Path
 
 import numpy as np
 
+METHODS = ("predict", "predict_latent_rollout")
+
 def _sha256(path: Path) -> str:
     with path.open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
@@ -68,7 +70,15 @@ def _requests(bundle, context: str):
     return actions, mask, basal, observed, kwargs
 
 
-def _run(model: Path, checkpoint: str, output: Path):
+def _invoke(bundle, method, context, actions, mask, basal, observed, kwargs):
+    if method not in METHODS:
+        raise ValueError(f"unsupported prediction method: {method}")
+    predictor = getattr(bundle, method)
+    return predictor(context, actions, mask, basal, observed=observed,
+                     batch_size=4, query_chunk=512, **kwargs)
+
+
+def _run(model: Path, checkpoint: str, output: Path, method: str = "predict"):
     inference = _load_inference(model)
     import torch
     torch.set_num_threads(4)
@@ -77,8 +87,7 @@ def _run(model: Path, checkpoint: str, output: Path):
     arrays = {}
     for context in sorted(bundle.settings["contexts"]):
         actions, mask, basal, observed, kwargs = _requests(bundle, context)
-        prediction = bundle.predict(context, actions, mask, basal, observed=observed,
-                                    batch_size=4, query_chunk=512, **kwargs)
+        prediction = _invoke(bundle, method, context, actions, mask, basal, observed, kwargs)
         if not np.array_equal(prediction[:2], observed[:2]):
             raise AssertionError(f"{context}: empty actions did not preserve observed state exactly")
         arrays[f"{context}_query_ids"] = bundle.query_ids(context)
@@ -131,6 +140,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--model", type=Path, required=True)
     p.add_argument("--checkpoint", default="step-020000.safetensors")
+    p.add_argument("--method", choices=METHODS, default="predict")
     p.add_argument("--python-runtime", required=True,
                    help="Candidate Python executable, or wsl.exe with --runtime-arg /path/to/python")
     p.add_argument("--runtime-arg", action="append", default=[])
@@ -143,13 +153,13 @@ def main():
     a = p.parse_args()
     sys.dont_write_bytecode = True
     if a.worker:
-        _run(a.model, a.checkpoint, a.worker_output)
+        _run(a.model, a.checkpoint, a.worker_output, a.method)
         return
     a.output.mkdir(parents=True, exist_ok=False)
     manifest = _verify_manifest(a.model)
     reference = a.output / "windows-reference.npz"
     replay = a.output / "runtime-replay.npz"
-    _run(a.model, a.checkpoint, reference)
+    _run(a.model, a.checkpoint, reference, a.method)
     cv = (lambda x: _wsl_path(x)) if a.runtime_path_style == "wsl" else (lambda x: str(x.resolve()))
     if not a.runtime_site_packages:
         raise ValueError("--runtime-site-packages is required for isolated replay")
@@ -159,6 +169,7 @@ def main():
                "--site-packages", a.runtime_site_packages,
                "--verifier", cv(Path(__file__)), "--model", cv(a.model),
                "--checkpoint", a.checkpoint, "--python-runtime", a.python_runtime,
+               "--method", a.method,
                "--worker-output", cv(replay), "--isolation-output", cv(isolation)]
     subprocess.run(command, check=True)
     metrics = _compare(reference, replay)
@@ -166,6 +177,7 @@ def main():
     if maximum_drift > 1e-5:
         raise ValueError(f"forecast runtime drift exceeds 1e-5: {maximum_drift}")
     report = {"schema": "slp.joint-world-portability/v1", "cpuOnly": True,
+              "method": a.method,
               "contexts": metrics, "maxAbsDrift": maximum_drift,
               "maxAbsDriftTolerance": 1e-5,
               "torchThreads": 4, "runtimeIsolation": json.loads(isolation.read_text()),
