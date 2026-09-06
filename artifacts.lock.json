@@ -1,0 +1,24 @@
+{
+  "schema": "slp.artifacts/v1",
+  "release": "SLp-1.1-r1",
+  "training_source_commit": "214ab389a9bde43b1fe36d5bc3d4d308288700b0",
+  "model": {
+    "repo_id": "potteryrage/SLp",
+    "repo_type": "model",
+    "revision": "50a66e61e2829a9f2a78d8516ec97e73dab7fa47",
+    "subfolder": "checkpoints/v1.1/SLp-1.1-r1",
+    "local_path": "results/slp11-transition/cellular-genomic-world-predictor-v2",
+    "manifest_sha256": "eef726727b511544811d7721963bb6d8d36cc5b4bc07ed7b94435547d08f76be",
+    "notices": {
+      "LICENSE": "d46bb0a62399c270e86f6f16095d5a3f3a90d32dead01d73eb160e0a336347b7",
+      "THIRD_PARTY_NOTICES.md": "c3a53d30656c81668cde9a7ab4247263d65f37bc0ad2266e8fdb7c879cadcb90"
+    }
+  },
+  "data": {
+    "repo_id": "potteryrage/SLp-1.1-data",
+    "repo_type": "dataset",
+    "revision": null,
+    "inventory_sha256": "2d444656ec3e12c0a7c670dbcbcf3213308d2585cb5e84e074aeb47e0c84a380",
+    "notices_sha256": "c3a53d30656c81668cde9a7ab4247263d65f37bc0ad2266e8fdb7c879cadcb90"
+  }
+}

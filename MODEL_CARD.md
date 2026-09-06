@@ -14,7 +14,7 @@ The earlier population models and supervised SL readouts remain historical
 baselines. The following SL scores are measured on the world components.
 
 
-## Current world and SL decoding
+## Functional world and SL decoding
 
 The [functional world](modules/slp-1-1-genomic-fitness-world-v1/CONTRACT.md)
 represents observed basal context, applies interventions in a common functional
@@ -79,56 +79,7 @@ immutable research export is
 `results/slp11-transition/cellular-genomic-world-omf2-export-v1/artifacts/model`.
 This verifies standalone inference; it is separate from a production service release.
 
-## Earlier molecular-only SL decoder
-
-The complete pipeline is **molecular state -> genetic interventions -> predicted
-molecular consequences -> SL decoder**. The 14.12M-parameter core stays frozen.
-The SL decoder receives 1,080 coordinates derived from molecular simulations in
-K562, RPE1 and HepG2; it receives no direct raw gene descriptors or legacy SL
-classifier outputs. An additional fixed response-cosine decoder needs no SL labels.
-
-| Official MuSL CV3, ten cold-gene folds | AUROC | Average precision |
-|---|---:|---:|
-| Cellular world + trained SL decoder | **.668168** | **.668591** |
-| Untrained world + same SL decoder protocol | .634180 | .623050 |
-| Direct descriptors + same SL decoder protocol | .798579 | .802964 |
-| Cellular world, fixed label-free response score | .540000 | .532153 |
-| Untrained world, fixed label-free response score | .517388 | .518348 |
-
-The pretrained world improves the world-only SL decoder mean by .033989 AUROC and
-.045541 AP over the untrained control. It improves AUROC in eight of ten folds.
-The descriptor-only classifier is stronger than the current world-only decoder.
-The gene-cluster interval for the world-minus-random AUROC difference is
-[-.001690,.069390], including zero; the mean gain alone is not conclusive attribution.
-The SL decoder is fitted to training-fold SL labels; the label-free row is not.
-
-The fixed label-free decoder also scores MuSL CV1/CV2 at .531706/.533703 AUROC.
-In SLAMR scenario 3, its mean reciprocal rank is .208321 in Jurkat and .126011
-in K562, versus .086240/.069912 for the untrained-world control. Exact coverage,
-all folds and direct descriptor controls are in the result ledger.
-
-The measured capability is SL prediction from the molecular world,
-with both a trained downstream decoder and an executable no-SL-training readout.
-The pooled label-free CV3 AUROC is .54014 with a descriptive gene-bootstrap 95%
-interval [.51874,.56141]. Its world-minus-random interval includes zero; the
-mean gain alone is not conclusive pretraining attribution for that label-free
-score. These retrospective benchmarks support the stated predictive capability,
-not an unrestricted claim about causal reasoning or leading every SL benchmark.
-
-The complete research predictor is
-`results/slp11-transition/cell-world-sl-predictor-v2/`, including the actual world
-weights, ten SL decoders, three molecular contexts and descriptors for 7,683 human
-genes. `SLPredictor.predict_pairs` accepts exact gene symbols or stable IDs;
-`predict` accepts biological descriptors for additional supported genes. The
-ensemble is for subsequent inference; benchmark scoring uses each test fold's
-own decoder. The molecular generation API remains available as `predictor.world`.
-
-All 30 saved world/control decoders reproduce 22,175 test occurrences exactly.
-On 32 descriptor-to-score requests, Linux CPU and Windows CUDA produce identical
-ensemble SL scores; maximum molecular-feature drift is 1.72e-5. This verifies
-standalone research inference, separately from a service deployment.
-
-## Training status
+## Molecular training
 
 Training is complete: 12,000 state/dynamics updates followed by 10,000 joint
 generative updates, seed 731, batch size 16, on one RTX 4070. The final stage
@@ -283,9 +234,17 @@ replay are reported separately. Standalone export is distinct from an OMF
 ModelPackage service deployment.
 
 Prior molecular and supervised SL results remain in [docs/results.md](docs/results.md).
-Frozen SLp-1 evidence remains in [docs/model-card.md](docs/model-card.md).
+Frozen SLp-1 evidence remains in [model/v1/MODEL_CARD.md](model/v1/MODEL_CARD.md).
 
 The OMF 2 artifact replay completed successfully as run
 `01a074cc-b93d-78be-8ae9-be8db3cf6096` with no evaluation failures.
 Its verified export, including weights and immutable evidence, is
 `results/slp11-transition/cell-world-v1-generative-omf2-export-v3/`.
+
+## Distribution
+
+The published research release is [SLp-1.1 r1 on Hugging Face](https://huggingface.co/potteryrage/SLp/tree/main/checkpoints/v1.1/SLp-1.1-r1).
+[artifacts.lock.json](artifacts.lock.json) pins the exact remote revision and
+checksums. Original SLp code and weights use [MIT](LICENSE); source data and
+bundled descriptors retain the [third-party terms](release/THIRD_PARTY_NOTICES.md).
+The [development guide](docs/development.md) covers downloads, training and contribution.

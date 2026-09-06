@@ -7505,3 +7505,43 @@ Windows/CUDA versus Linux/CPU SL score error is zero; world-feature error is
 `cellular-genomic-world-omf2-export-v1/artifacts/model`.
 This successful artifact replay retains completed native quantitative training;
 it performs zero optimization and does not assert ModelPackage service promotion.
+
+## 2026-09-06 — Research publication and collaborative repository
+
+Original SLp code and weights are licensed MIT at the user's direction.
+The complete 15,123,593-parameter world and ten downstream decoders are published
+at `potteryrage/SLp`, path `checkpoints/v1.1/SLp-1.1-r1`, immutable HF revision
+`50a66e61e2829a9f2a78d8516ec97e73dab7fa47`. All 58 planned files (121,080,406
+bytes, including overview and notices) match remote sizes and either LFS SHA-256
+or Git blob hashes. All 55 pre-existing repository files remain present.
+The 54 manifest-listed model payloads are unchanged from the completed model
+above; this publication performs no training or benchmark selection.
+
+CPU named-gene inference reproduces BRCA1/PARP1 and BRCA2/PARP1 ensemble scores
+.9044339061871405 and .9002031451711601, with exact pair-order symmetry and
+finite 783-coordinate decoder features. These are research predictions, not
+biological confirmation. The revision-pinned downloader verifies the remote
+manifest and notices. Six focused publication tests pass, including path escape,
+checksum failure, changed-file protection and successful installation; two
+retained module-contract checks also pass. OMF doctor reports zero failures;
+the latest completed artifact replay remains succeeded.
+
+The prepared-data publication plan contains 199 explicitly hashed files,
+11,165,742,254 bytes: all molecular fitting-index dependencies, functional
+fitting/development arrays, separately identified MuSL application inputs,
+evaluation evidence and source notices. It targets `potteryrage/SLp-1.1-data`.
+Automatic approval review rejected the upload pending explicit approval of the
+exact public destination and payload, noting conditional GEO submitter rights.
+The dataset has therefore not been uploaded in this entry; its artifact-lock
+revision remains null. The concrete approval request is pending. Original
+source receipts remain unchanged, with an additional notice identifying the
+correct Zenodo Seurat-source scope for yeast count-derived arrays.
+
+The README now describes installation and use, with one maintained root model
+card and a development guide. Fifty module documents and the obsolete secondary
+model card are consolidated into `docs/module-reference.md`; packaging-consumed
+contracts remain local. Frozen `model/v1/` is unchanged. Repository checks find
+no tracked real datasets, checkpoints or run outputs; synthetic fixtures and
+`results/.gitkeep` are the explicit exceptions. Git tracks source, configuration,
+documentation, licenses and immutable artifact pointers. Large payloads and
+runtime state remain outside Git.

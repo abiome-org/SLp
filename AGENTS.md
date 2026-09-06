@@ -110,5 +110,8 @@ Verify changed numerical behavior, data routing, serialization and interfaces
 with focused tests and real artifact replay. Avoid redundant tests or full-suite
 reruns after narrow changes already verified. Record what was trained, inputs,
 versions, compute, results and limitations in `docs/results.md`; update the model
-card when intent or supported capability changes. Keep `docs/` limited to
-`litreview.md`, `model-card.md` and `results.md`.
+card when intent or supported capability changes. Keep one root `MODEL_CARD.md`. Use `docs/development.md` for engineering,
+`docs/module-reference.md` for retained module details, `docs/litreview.md` for
+references and `docs/results.md` for evidence. Avoid duplicating project status
+in per-module prose. Preserve local contract files that artifact exporters or
+focused tests consume. Original code and weights are MIT; data keep source terms.

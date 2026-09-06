@@ -23,3 +23,25 @@ __pycache__/
 **/*.tar.gz
 **/*.tar.gz.part*
 .DS_Store
+
+# Local credentials, environments and generated artifacts.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.cache/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.safetensors
+*.ckpt
+*.pth
+*.h5ad
+*.h5
+*.bin
+*.uint16
+*.log
+*.egg-info/
+build/
+dist/

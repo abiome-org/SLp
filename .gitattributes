@@ -1,0 +1,3 @@
+# These receipts are SHA-pinned by prepared data manifests on every platform.
+/rights/*.yaml text eol=lf
+/scripts/*.sh text eol=lf
