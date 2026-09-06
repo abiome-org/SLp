@@ -6858,3 +6858,61 @@ is `78c0416077f465e1d4051b8ed183643df0ec708b1f36fe000c27e2dd9218e412`.
 Outputs are `joint-world-compositional-musl-static-readout-v2`,
 `joint-world-training-selected-musl-readout-v1` and `joint-world-musl-comparison-v1`.
 V4 molecular training is separate and has not contributed to these SL features.
+
+### 2026-09-05 — Persistent latent v4 completion and prior-anchored v5
+
+V4 completed 30,000 updates in 1,455.49 seconds on the RTX 4070, with
+2,493.16 MiB peak allocated memory and 961,669 parameters. Its checkpoint
+SHA-256 is `6024e9c1bf2e151baa5b02280dee0129ae48196129ee7ec076efe58c5d0bb9b2`.
+The final evaluation report is
+`3baa059639e99c5bcf0a9389fd3b3de606556c4ea91bd9393273b35cbefdce21`.
+
+| Molecular endpoint | V4 MSE |
+|---|---:|
+| K562 essential held genes | .00331400 |
+| RPE1 essential held genes | .00812851 |
+| Genome-wide K562 unique held genes | .01176349 |
+| HepG2 unique held genes | .05642703 |
+| Norman observed-parent continuation | .01460544 |
+| Norman RNA-reencoded two-order average | .01483040 |
+| Norman persistent-latent two-order average | .01612088 |
+
+The fixed five-endpoint mean ratio is 1.01666 against retained v2, using the
+preselected latent Norman route. It does not meet the .98 advancement rule.
+The RNA-reencoded route improves on v3, but is not substituted into that rule.
+MCF10A persistent-latent pair MSE is .002867/.003459/.004363 in full-medium
+day 0/day 6 and TGF-beta1 day 6, and .005888 in previously inspected minimal
+medium. Corresponding frozen prior values are .002789/.003611/.004046/.005608.
+The latent route does not establish improvement over its molecular prior.
+
+Both direct and latent inference replay independently in isolated Linux CPU
+Python against native Windows CPU outputs across all eight contexts. Each
+verifies 26 export files, with no importable OMF package and maximum absolute
+drift `1.7881393432617188e-7` (tolerance `1e-5`). Empty-action observations are
+preserved exactly within each runtime. Export manifest SHA-256 is
+`3feae78350dfac75c2654e799343b7478c9182b8348d0fb79ab25142aa6338f0`.
+Direct/latent portability reports are respectively
+`21072d74d927291f59b99303b0f56a0724def7f631ba1250245234f7fe19dc6a` and
+`727f68f0eb72d9925415629989046288d18a89c2c44b7b3897d4ef5bf0c3f2bd`.
+
+V5 addresses a specific representation mismatch: v4 adds the linear molecular
+prior after latent decoding, so persistent latent state does not explicitly
+contain that RNA response. V5 encodes accumulated prior RNA as a reference
+anchor and carries the learned residual between anchors. Its parameter-free
+transport is `next_anchor + (state-anchor) + (transition(state,action)-state)`.
+The final decoder measures residual relative to the final prior anchor.
+Training and inference use the same operation; both action orders receive full
+gradient flow. Priors, normalization, source weights and loss coefficients are
+unchanged. This remains simultaneous population-endpoint modeling, not measured
+temporal dynamics or evidence of emergence.
+
+The v5 hypothesis is that including the missing prior response in carried state
+improves held-combination forecasts. The exact eight-context snapshot remains
+`8d9beb1e77bbb4ef9ada2c48f8fd5396d1a1ab3425ca28e39073f67e11a27cab`,
+with population RNA, static sequence/protein/GO descriptors, STRING64 and
+control expression accessible. Seed 731/fold 0, 16 slots, final update 30,000,
+and the five-endpoint .98 mean-ratio / 1.02 K562-and-RPE1 rule are fixed before
+training. Norman uses the latent two-order average; all other routes remain
+reported. `experiment-prior-latent-world.yaml` validates with pinned OMF 2.
+Native CUDA execution is explicit, with a 2,700-second cap; it is not represented
+as an OMF execution. The frozen SL readout and its v3 features remain separate.
