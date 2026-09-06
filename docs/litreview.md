@@ -858,6 +858,25 @@ released `CV3_bins_32` pairs, seeds or entirely unseen-both-gene split.
 SynLeaF is therefore architectural context for multimodal fusion, not a matched
 numerical comparator for this MuSL CV3 readout.
 
+The [official SynLeaF repository](https://github.com/Jmpax404/SynLeaF), checked
+5 September 2026 at commit `2570240944d6db209fcbe73fcada3b16ce56eadb`, now
+provides preprocessing, training and analysis scripts plus packaged-data links.
+The paper specifies 7:1:2 train/validation/test partitions. Pan-cancer includes
+CV3 with entirely training-unseen genes; the eight single-cancer analyses report
+CV1/CV2 because CV3 populations become too small. Its filtering requires reviewed
+UniProt sequence, omics coverage and a knowledge-graph neighbor, and its negative
+construction differs from MuSL. Thus pan-cancer CV3 is a relevant protocol for a
+future matched comparison, but is not the existing MuSL roster.
+
+No trained checkpoints, release, immutable split hashes or split RNG seeds were
+provided by the inspected repository. It recommends two GPUs. It has no LICENSE
+file; the [project site](https://synleaf.bioinformatics-lilab.cn/) distinguishes
+its page-content license from code/model/data terms. No data were imported under
+an inferred license. A matched result would require the exact processed archive,
+recorded partitions and authorized training, followed by both methods scored on
+the identical pan-cancer CV3 test population. Current SLp scores are not a claim
+of that comparison.
+
 ### 2026 world-model evidence behind the v3 design
 
 GeneGeoFlow, *Control-Anchored Residual Flow Matching Conditioned on Gene Geometry*

@@ -6916,3 +6916,45 @@ training. Norman uses the latent two-order average; all other routes remain
 reported. `experiment-prior-latent-world.yaml` validates with pinned OMF 2.
 Native CUDA execution is explicit, with a 2,700-second cap; it is not represented
 as an OMF execution. The frozen SL readout and its v3 features remain separate.
+
+### 2026-09-05 — Standalone selected SL predictor
+
+`modules/slp-1-1-sl-predictor-v1/` packages inference separately from fitting.
+It accepts prepared retained-baseline, paired raw-descriptor and frozen-world
+feature arrays with dimensions 1,081, 2 by 642 and 1,054. V1/v2 feature order,
+the eight-v2/two-v1 family selections, all blend coefficients and all 20 selected
+boosters are unchanged. Stable pair IDs are optional; repeated or reversed
+requests remain separate aligned rows. The first candidate export rejected
+duplicate request IDs and was superseded before deployment; no predictions,
+selection or features were changed to address that API restriction.
+
+The successful immutable export is
+`results/slp11-transition/joint-world-selected-sl-predictor-export-v2/`.
+Its manifest SHA-256 is
+`98ee94f73d17e18c07d689c1d875a446dd3eec9b61487afbda65007dbf8ca0d3`.
+The inference loader verifies all 23 contained payload files, model dimensions
+and finite feature values. The exporter verifies source fitting receipts and
+the frozen training-validation family rule. No raw labels are read by export,
+inference or replay. Native replay reproduces every one of 22,175 locked fold
+prediction occurrences exactly; the command-line path also reproduces its
+eight-row example exactly. Native replay report SHA-256 is
+`2af7f3b8d16a950a6dfaa362da270f5304e3b5e06a34fe493fce1d627992d0cf`.
+
+All ten folds also replay in a separate Linux Python 3.12.3 environment with
+isolated mode enabled and OMF unavailable. Maximum absolute drift is
+`1.1102230246251565e-16`, below the fixed `1e-12` replay tolerance. The Linux
+report SHA-256 is
+`e110ec5ee7690a22fb248c394d3bd5fbdbed6edd8037b6944ba57f4e03f8d676`.
+The recorded runtime uses LightGBM 4.6.0, NumPy 2.4.4, SciPy 1.17.1,
+scikit-learn 1.9.0, joblib 1.6.0, narwhals 2.25.0, threadpoolctl 3.6.0 and
+cloudpickle 3.1.2. Prediction is limited to four CPU threads.
+
+Two focused contract tests cover both feature families, exact blend parity,
+row ordering, empty inputs, dimensional mismatch, overflow and file tampering.
+Independent source review confirms preserved selection and feature semantics.
+The optional unweighted inference ensemble is not assigned the .8167 CV score:
+that score belongs to the original per-fold selected predictions. Scores remain
+research rankings from prepared features, without probability calibration.
+This local usable artifact is not an external model release or an OMF service
+deployment. The reusable plot script renders all ten fold values and macro
+means from saved score JSONs, without additional label access.

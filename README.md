@@ -166,6 +166,29 @@ AUROC/.8163 AP; this is the primary locked selection, above the reported MuSL
 modalities, coverage and selection protocol. The model card reports all controls,
 including the additional gain from world features beyond the same raw descriptors.
 
+The selected readout also has an [inference-only predictor](modules/slp-1-1-sl-predictor-v1/CONTRACT.md).
+Its local bundle is `results/slp11-transition/joint-world-selected-sl-predictor-export-v2/`.
+All ten selected fold models reproduce all 22,175 locked prediction occurrences
+exactly in native Python and within 1.11e-16 in isolated Linux Python, without
+reading labels. Install the bundle's
+`requirements.lock`, then run:
+
+```sh
+python predictor.py --model . --input pair-features.npz --output scores.npz --seed 42 --fold 0
+```
+
+The request contains `retained_baseline` (B by 1,081),
+`raw_gene_descriptor_pairs` (B by 2 by 642), `world_features` (B by 1,054), and
+optional stable `pair_ids` (B by 2). These must be the frozen feature definitions
+recorded in the bundle, not arbitrary vectors of matching size. Existing
+preparation scripts construct the retained baseline and v3 world features.
+Repeated pair requests preserve their row order. The Python API is
+`SLPredictor(bundle).predict_fold(seed, fold, baseline, descriptors, world)`.
+An optional `--ensemble` averages the selected fold models for research use;
+the cross-validation metrics do not describe that ensemble. Scores are rankings,
+not calibrated probabilities. The bundle verifies all 23 payload hashes and
+contains no label loader, fitting code, or OMF dependency.
+
 - `experiment.yaml` and `modules/slp-1-1-response-omf2/`: active captured-script
   training, evaluation and portable baseline inference.
 - `experiment-joint-world.yaml` and `modules/slp-1-1-joint-world-v1/`: verified

@@ -220,6 +220,25 @@ maximum Windows/Linux drift was 1.79e-7. Training took 1,451 seconds on the RTX
 `experiment-compositional-world.yaml` validates under pinned OMF 2; this training
 run used native Windows CUDA.
 
+The v4 persistent-latent candidate also completed 30,000 updates. Its Norman
+latent two-order MSE is .01612088 versus .01483040 for its RNA-reencoded route.
+Its preselected five-endpoint mean ratio is 1.01666 relative to v2, so it does
+not replace the retained model. Both direct and persistent-latent exported
+routes pass isolated Windows/Linux replay across eight contexts at maximum
+absolute drift 1.79e-7. V5 transports learned latent residuals through encoded
+accumulated molecular-prior anchors, correcting the omission of that prior from
+carried state; its fixed protocol is recorded in the ledger before training.
+The SL application remains on the frozen v3 checkpoint.
+
+The selected SL readout is exported separately as an inference-only bundle at
+`results/slp11-transition/joint-world-selected-sl-predictor-export-v2/`.
+Its explicit seed/fold API reproduces every one of the 22,175 locked prediction
+occurrences exactly in native Python and within 1.11e-16 in isolated Linux
+Python without labels or OMF. It requires prepared
+retained-baseline, gene-descriptor and frozen-world feature blocks. Its optional
+unweighted model ensemble has no claimed cross-validation score or calibration.
+This is a usable local research artifact, not an externally published release.
+
 ## Data scope
 
 Training uses Replogle K562/RPE1 essential CRISPRi, author K562 genome-wide
