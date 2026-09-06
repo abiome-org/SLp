@@ -1,7 +1,7 @@
 ---
 license: other
 license_name: source-specific-terms
-license_link: THIRD_PARTY_NOTICES.md
+license_link: https://huggingface.co/datasets/potteryrage/SLp-1.1-data/blob/main/THIRD_PARTY_NOTICES.md
 task_categories:
 - other
 language:

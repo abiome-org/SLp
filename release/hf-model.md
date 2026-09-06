@@ -8,6 +8,8 @@ tags:
 - world-model
 - synthetic-lethality
 - pytorch
+datasets:
+- potteryrage/SLp-1.1-data
 ---
 
 # SLp
@@ -22,7 +24,7 @@ Synthetic-lethality prediction is a downstream application of the learned world.
 
 [Source and usage](https://github.com/abiome-org/SLp) ·
 [Model card](https://github.com/abiome-org/SLp/blob/main/MODEL_CARD.md) ·
-[Data and source terms](https://github.com/abiome-org/SLp/blob/main/release/THIRD_PARTY_NOTICES.md)
+[Prepared data](https://huggingface.co/datasets/potteryrage/SLp-1.1-data)
 
 SLp-1.1 r1 includes actual weights, inference source, normalizers, biological
 contexts, a descriptor registry and downstream decoder weights. Use the

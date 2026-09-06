@@ -7545,3 +7545,35 @@ no tracked real datasets, checkpoints or run outputs; synthetic fixtures and
 `results/.gitkeep` are the explicit exceptions. Git tracks source, configuration,
 documentation, licenses and immutable artifact pointers. Large payloads and
 runtime state remain outside Git.
+
+## 2026-09-06 — Prepared dataset published
+
+After explicit approval of the public destination and complete payload, the
+prepared r1 dataset is published at `potteryrage/SLp-1.1-data`, immutable
+revision `3766b6cf98a9100e4e04cdfc3da4b338020b5a81`. All 199 release files
+(11,165,742,321 bytes) match remote LFS SHA-256 or Git blob hashes and
+byte sizes. The final size differs from the original plan by 67 bytes because
+Hugging Face requires an absolute HTTPS license link in the dataset card.
+The initial 175 committed files were reused unchanged when completing that
+metadata correction. This completes the pending publication described above.
+
+`artifacts.lock.json` now pins both model and dataset revisions. The README,
+model card and development guide link the public data and provide download
+commands. Original code and weights remain MIT; source data retain the terms
+in the published notices. The release contains prepared world-training inputs,
+separate MuSL application inputs and evaluation evidence; it does not expand
+the raw-data or model-promotion scope.
+
+A fresh empty-directory download verified all 57 model-bundle files and
+reproduced CPU inference scores 0.9044339061871405 and
+0.9002031451711601 using downloaded code and weights. A separate dataset
+download verified the molecular input manifest and its 1,506-gene intervention
+exclusion roster. A transient model-download timeout motivated bounded retry
+and byte-range resumption in the downloader; eight focused publication tests
+pass, including interrupted transfers and servers that ignore Range requests.
+The publisher now places its overview card in the first batch so HF validates
+card metadata before large transfers. No training, model weights, numerical
+model behavior or benchmark decisions changed during publication.
+The dataset download command also completed successfully: 198 payload and
+metadata files verified against the pinned inventory, reusing matching local
+files and keeping the dataset overview separate from the repository README.

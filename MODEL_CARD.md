@@ -247,4 +247,7 @@ The published research release is [SLp-1.1 r1 on Hugging Face](https://huggingfa
 [artifacts.lock.json](artifacts.lock.json) pins the exact remote revision and
 checksums. Original SLp code and weights use [MIT](LICENSE); source data and
 bundled descriptors retain the [third-party terms](release/THIRD_PARTY_NOTICES.md).
+Prepared training inputs, separate MuSL decoder inputs and evaluation evidence
+are distributed in [SLp-1.1-data](https://huggingface.co/datasets/potteryrage/SLp-1.1-data),
+with an explicit per-file inventory and source-specific terms.
 The [development guide](docs/development.md) covers downloads, training and contribution.

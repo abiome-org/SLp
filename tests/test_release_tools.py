@@ -72,6 +72,33 @@ class ReleaseTools(unittest.TestCase):
             self.assertEqual(path.read_bytes(), b'synthetic')
             self.assertEqual(list(Path(directory).iterdir()), [path])
 
+    def test_interrupted_download_resumes_at_received_offset(self):
+        import io
+        class Interrupted(io.BytesIO):
+            def read(self, size=-1):
+                if self.tell():
+                    raise TimeoutError('synthetic interruption')
+                return super().read(size)
+        class Partial(io.BytesIO):
+            status = 206
+            headers = {'Content-Range': 'bytes 3-8/9'}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'part'
+            path.touch()
+            with patch('urllib.request.urlopen', side_effect=[Interrupted(b'syn'), Partial(b'thetic')]) as network, patch('time.sleep'):
+                fetch_artifacts.transfer('https://example.org/file', path)
+            self.assertEqual(path.read_bytes(), b'synthetic')
+            self.assertEqual(network.call_args_list[1].args[0].get_header('Range'), 'bytes=3-')
+
+    def test_server_ignoring_range_restarts_without_duplicating_bytes(self):
+        import io
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'part'
+            path.write_bytes(b'syn')
+            with patch('urllib.request.urlopen', return_value=io.BytesIO(b'synthetic')):
+                fetch_artifacts.transfer('https://example.org/file', path)
+            self.assertEqual(path.read_bytes(), b'synthetic')
+
 
 if __name__ == '__main__':
     unittest.main()

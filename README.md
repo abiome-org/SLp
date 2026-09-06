@@ -6,7 +6,7 @@ and fitness consequences. Synthetic-lethality prediction is a downstream
 application of the learned state.
 
 [Model on Hugging Face](https://huggingface.co/potteryrage/SLp) ·
-[Data and source terms](release/THIRD_PARTY_NOTICES.md) ·
+[Prepared data](https://huggingface.co/datasets/potteryrage/SLp-1.1-data) ·
 [Model card](MODEL_CARD.md) · [Development guide](docs/development.md)
 
 ## SLp-1.1
@@ -70,9 +70,8 @@ exposes continuous viability and conditional fitness. Joint `encode`,
 ## Work on the model
 
 Published artifact revisions are listed in [artifacts.lock.json](artifacts.lock.json).
-The model is available; the prepared-data upload awaits publication approval.
-Once the data revision is populated, `python scripts/fetch_artifacts.py data`
-downloads the inputs for the [training and evaluation commands](docs/development.md).
+Run `python scripts/fetch_artifacts.py data` to download the prepared inputs for
+the [training and evaluation commands](docs/development.md).
 Open Model Factory 2 records experiments and artifact replay; its exact runtime
 is pinned in [omf-version.json](omf-version.json).
 

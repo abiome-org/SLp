@@ -17,7 +17,7 @@
   "data": {
     "repo_id": "potteryrage/SLp-1.1-data",
     "repo_type": "dataset",
-    "revision": null,
+    "revision": "3766b6cf98a9100e4e04cdfc3da4b338020b5a81",
     "inventory_sha256": "2d444656ec3e12c0a7c670dbcbcf3213308d2585cb5e84e074aeb47e0c84a380",
     "notices_sha256": "c3a53d30656c81668cde9a7ab4247263d65f37bc0ad2266e8fdb7c879cadcb90"
   }

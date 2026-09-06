@@ -1,10 +1,12 @@
 """Fetch checksum-pinned public SLp artifacts without replacing local changes."""
 import argparse
 import hashlib
+import http.client
 import json
 import os
-import shutil
 import tempfile
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -25,6 +27,37 @@ def remote_json(spec, name, expected):
     return json.loads(payload), payload
 
 
+def transfer(source, destination, attempts=5):
+    """Resume transient network failures; restart if the server ignores Range."""
+    for attempt in range(attempts):
+        offset = destination.stat().st_size
+        headers = {'Range': f'bytes={offset}-'} if offset else {}
+        try:
+            with urllib.request.urlopen(urllib.request.Request(source, headers=headers), timeout=60) as stream:
+                status = getattr(stream, 'status', 200)
+                if status == 206:
+                    content_range = stream.headers.get('Content-Range', '')
+                    if not content_range.startswith(f'bytes {offset}-'):
+                        raise ValueError('Server returned an unexpected byte range')
+                elif status == 200:
+                    offset = 0
+                else:
+                    raise ValueError(f'Unexpected download status: {status}')
+                with destination.open('r+b') as out:
+                    out.seek(offset)
+                    out.truncate()
+                    while chunk := stream.read(1024 * 1024):
+                        out.write(chunk)
+            return
+        except (TimeoutError, ConnectionError, urllib.error.URLError, http.client.IncompleteRead) as error:
+            if isinstance(error, urllib.error.HTTPError) and error.code not in {408, 429, 500, 502, 503, 504}:
+                raise
+            if attempt + 1 == attempts:
+                raise
+            print(f'Interrupted download; retry {attempt + 1}/{attempts - 1} at {destination.stat().st_size} bytes', flush=True)
+            time.sleep(min(2 ** attempt, 8))
+
+
 def fetch_file(spec, remote, target, expected):
     if target.exists():
         if not target.is_file() or digest(target) != expected:
@@ -35,8 +68,7 @@ def fetch_file(spec, remote, target, expected):
     try:
         with tempfile.NamedTemporaryFile(dir=target.parent, prefix='.slp-download-', delete=False) as out:
             temporary = Path(out.name)
-            with urllib.request.urlopen(url(spec, remote), timeout=60) as stream:
-                shutil.copyfileobj(stream, out, length=1024 * 1024)
+        transfer(url(spec, remote), temporary)
         if digest(temporary) != expected:
             raise ValueError(f'Download checksum mismatch: {remote}')
         # Recheck because another process may have produced a file during download.

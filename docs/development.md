@@ -13,9 +13,8 @@ Run commands from the repository root with Python 3.11/3.12. Install
 PyTorch wheel appropriate to the host. Linux also needs a working OpenMP runtime
 for LightGBM (for example `libgomp1` on Ubuntu).
 
-The model revision is published. The prepared-data plan is complete and awaits
-publication approval; its lock revision remains null until upload and remote
-verification finish. The data command requires that published revision.
+The model and prepared-data releases are pinned to immutable Hugging Face
+revisions in `artifacts.lock.json`. Downloads verify those exact snapshots.
 
 ```sh
 python scripts/fetch_artifacts.py model
@@ -26,6 +25,8 @@ The model needs approximately 121 MB and the prepared data release approximately
 11.17 GB. The helper verifies the revision-pinned inventory and each file's
 SHA-256. Existing matching files are reused; changed files cause an error before
 downloads begin. It never silently overwrites an experiment or edited receipt.
+Transient transfer failures are retried with byte-range resumption where the
+server supports it. Every completed file still must match its pinned checksum.
 Use a separate checkout if existing local artifacts conflict. To check an
 already populated checkout, add `--verify-only`.
 

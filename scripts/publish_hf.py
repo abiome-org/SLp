@@ -60,6 +60,9 @@ def publish(plan_path, root, receipt, execute=False):
             if row['remote'] not in plan.get('mutable', []):
                 raise ValueError(f'Refusing to overwrite release payload: {row["remote"]}')
         pending.append(row)
+    # HF validates card metadata before uploading a commit's payloads. Put the
+    # overview in the first batch so a card error fails before large transfers.
+    pending.sort(key=lambda row: row['remote'] != 'README.md')
     head = info.sha
     for start in range(0, len(pending), 25):
         batch = pending[start:start + 25]
