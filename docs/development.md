@@ -6,6 +6,89 @@ The [README](../README.md) covers installation and inference. The
 are consolidated in [module-reference.md](module-reference.md). Frozen SLp-1
 source and its card remain in `model/v1/`.
 
+## SLp-1.2 joint training
+
+`modules/slp-1-2` is a self-contained PyTorch implementation of a shared set
+transformer. Molecular observations, individual genetic interventions and
+RNA/protein/fitness queries enter the same learned backbone. A mean and
+observation-variance objective trains measured endpoints; computational flow
+matching additionally trains the single-cell distributional path. There is no
+frozen simulation bridge, additive latent action constraint or SL classifier.
+Static descriptors remain available alongside optional learned entity indices.
+The main continuation mixes 10% no-intervention examples: real control cells
+with held-out query coordinates, molecular population controls, and zero-effect
+fitness references. Cell query anchors use population controls, never the held
+cell coordinates being reconstructed. The opening segment lacked this mixture;
+its replacement is recorded as a new continuation segment, preserving weights
+and optimizer state.
+
+The first campaign uses the checksum-pinned 1.1 data release. It does not yet
+upgrade the sequence-descriptor backbone or add new human combination screens.
+Held intervention genes are excluded jointly across molecular and fitness
+sources. Population scales are recomputed from the resulting training split.
+Development panels are retrospective; no independent benchmark claim follows.
+
+Install the hash-pinned Linux CUDA dependencies in
+`modules/slp-1-2/requirements-linux-cu128.lock`, then run:
+
+```sh
+python modules/slp-1-2/prepare.py --root . --output data/derived/slp12-corpus
+python modules/slp-1-2/train.py --root . --output results/slp12/run-1 \
+  --config modules/slp-1-2/config.json --max-hours 24
+python modules/slp-1-2/train.py --root . --output results/slp12/run-1 \
+  --config modules/slp-1-2/config.json --resume results/slp12/run-1/checkpoint-0001000
+python modules/slp-1-2/export.py --run results/slp12/run-1 --output results/slp12/bundle-1
+```
+
+Checkpoints include optimizer state and per-rank Python/NumPy/Torch/CUDA and
+sampler state. Two resumable checkpoints are retained; best inference weights
+are separate. `--stop-after-steps` saves after a bounded number of additional
+steps without changing the planned learning-rate schedule. Resumption requires
+the same model, corpus receipts and rank count. Changed segment configurations
+and source are captured explicitly rather than overwriting original run receipts.
+`torchrun` supports DDP, while the initial campaign uses one GPU.
+
+Fitness has a separate batch size because its short sequences permit many more
+experiments per device pass. Paired-cell shard index and reuse count are saved
+with sampler state. `benchmark.py` measures the full architecture on synthetic
+maximum-sized token arrays; its weights are discarded and its timings carry no
+biological meaning. `tests/test_slp12.py` checks numerical contracts.
+
+The authorized RunPod campaign has a $50 total ceiling and a $5 reserve. The
+initial allocation is one secure RTX 4090 for at most 26 hours, including setup
+and export, with a 50 GB network volume. `scripts/slp12_runpod.py` records its
+exact resource IDs under ignored `data/slp12-campaign/` and starts a local
+termination guard. `pod_guard.py` independently uses the provider-injected
+pod-scoped GraphQL credential. The account key is read locally from `.env` and
+is never sent to the training pod. The trainer has its own checkpointing time
+limit. Copy and verify model artifacts locally before removing the volume.
+Record native RunPod execution honestly; OMF replay/export is a separate step.
+
+Final evaluation records source-specific errors, intervention ablation, yeast
+interaction residuals against measured-single additivity, and empirical flow
+endpoint energy distance and moments on single-cell panels. These distribution
+panels contain unpaired cells and carry finite-sample uncertainty.
+
+The pinned OMF local executor requires real network namespaces, which the
+RunPod container does not expose. After collecting the bundle, run the separate
+CPU workflow on a compatible Linux host:
+
+```sh
+python3 scripts/slp12_omf_replay.py \
+  --bundle results/slp12-joint-142m-r1-bundle \
+  --output results/slp12-joint-142m-r1-omf
+```
+
+The helper selects the x86 or ARM Linux CPU lock, captures the exact experiment
+definition, preserves real OMF run/export receipts and performs zero optimization.
+This campaign uses the existing local `omf-tests` Colima VM. OMF replay on that
+host is distinct from both native CUDA training and macOS CPU replay. It does
+not establish OMF ModelPackage service deployment support.
+
+The standalone API and measurement units are documented in the
+[bundle contract](../modules/slp-1-2/CONTRACT.md). Human combination-fitness
+predictions remain extrapolations until supervised by appropriate human data.
+
 ## Downloads and local layout
 
 Run commands from the repository root with Python 3.11/3.12. Install

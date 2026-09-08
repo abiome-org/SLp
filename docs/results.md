@@ -7577,3 +7577,77 @@ model behavior or benchmark decisions changed during publication.
 The dataset download command also completed successfully: 198 payload and
 metadata files verified against the pinned inventory, reusing matching local
 files and keeping the dataset overview separate from the repository README.
+
+## 2026-09-07 — SLp-1.2 joint world implementation and training launch
+
+The 1.2 candidate replaces the staged molecular/fitness bridge with one shared
+set transformer: 16 layers, width 768, 12 attention heads and 142,311,171 learned
+parameters. Each intervention is an individual token. RNA, protein and fitness
+queries use the same backbone and trainable descriptor encoder. Entity indices
+are optional, with 25% ID dropout and a descriptor fallback. No 1.1 weights,
+frozen molecular simulation signatures or SL benchmark labels enter fitting.
+Conditional means and observation variances train jointly; computational flow
+matching additionally trains the single-cell endpoint distribution.
+
+The bootstrap corpus is the existing data release pinned at
+`3766b6cf98a9100e4e04cdfc3da4b338020b5a81`; all 198 files were verified on both
+the local host and the training pod. The shared exclusion roster contains
+2,806 human intervention genes and 1,070 yeast genes. Human quantitative fitting
+retains 5,034 genes in 843 contexts; yeast fitting contains 1,818,947 measured
+double-deletion rows and their single-mutant fitness. Twelve molecular sources
+participate in fitting. Nine have eligible intervention-held development rows;
+the three MCF10A sources have no eligible rows in this bootstrap development
+partition. Population normalization is refitted after the shared exclusions.
+The source readers retain native species, assays and measurement transforms.
+
+The main schedule is 40,000 AdamW updates, molecular micro-batches of 16,
+fitness micro-batches of 256, eight accumulation steps, bf16, peak learning rate
+2e-4 and 500 warmup updates. Checkpoints retain optimizer and per-rank RNG and
+sampler state. After update 1,573, a captured continuation adds 10% explicit
+control examples: measured molecular controls and the neutral fitness reference.
+For single-cell controls, observation and target coordinates come from the same
+real control cell, with overlapping observations masked and population controls
+used as query anchors. This does not fabricate a paired perturbation trajectory.
+The opening weights and optimizer are retained; the recipe change is recorded
+in the continuation source/configuration receipts.
+
+Native training runs on one secure RunPod RTX 4090 under a $50 total campaign
+ceiling. The initial 26-hour allocation has a conservative $19.60 estimate,
+including storage; observed steady throughput is approximately one optimizer
+update per second, so the requested schedule is expected to use substantially
+less. The pod's fixed deadline is 2026-09-09 01:30:23 UTC. A separate trainer
+time limit, local termination guard, pod-scoped termination guard and local
+artifact collector bound the run. Checkpoints reside on a 50 GB network volume.
+The collector verifies local artifacts and CPU replay before deleting that
+volume. Account credentials remain local and outside Git.
+
+Full-architecture CUDA checks measured 6.21 GiB peak memory and 83.9 ms per
+eight-example, 1,067-token update without activation recomputation. A padded
+16-example batch used 10.56 GiB and 186.9 ms. Actual mixed-source training peaks
+near 11.1 GiB. These synthetic-shape checks measure execution cost, not biology.
+Twelve focused numerical/routing tests pass. Real-data checks cover all source
+types, global split routing, source-specific evaluation, exact checkpoint
+resumption, paired-shard sampler resumption, and control-target isolation.
+
+An actual full-size opening checkpoint was exported and replayed from CUDA on
+macOS CPU. Maximum absolute differences were 4.77e-7 for means, 3.28e-7 for log
+variances and 9.54e-7 for eight-step generated samples. This verifies the
+standalone inference path; the final selected weights still require their own
+replay. `experiment-slp12-replay.yaml` prepares the separate OMF 2 CPU artifact
+workflow. The opening bundle also passed actual isolated OMF 2 replay and export
+on the existing local ARM Linux VM, run
+`01a07e8b-da02-77e7-a35f-72df796a85ed`, with maximum error 9.54e-7 and zero
+optimization steps. The helper selected the hash-pinned ARM CPU dependencies.
+The RunPod container lacks OMF's required network-namespace capability; no
+successful OMF execution is claimed on that container. Native CUDA training,
+macOS CPU replay and local Linux OMF replay are recorded separately.
+
+At update 1,000, the fixed retrospective development panel improved over its
+unchanged-control comparator on all eleven measured molecular/fitness sources.
+Human fitness MSE was .130698 versus .259126; paired RNA/protein MSE was .936331
+versus 1.433405. Yeast interaction-residual MSE remained worse than the measured
+single additive comparator (.007131 versus .004654; correlation -.0170).
+These are early development observations, not final results, an independent
+benchmark, or a matched comparison with SLp-1.1. Training is ongoing. The first
+campaign retains the existing sequence descriptors and corpus; it does not yet
+add human double-knockout fitness supervision or a new supervised SL readout.

@@ -1,5 +1,15 @@
 # SLp-1.1 cellular and genomic world model
 
+SLp-1.2 is under development in
+[`modules/slp-1-2`](modules/slp-1-2/CONTRACT.md). Its 142,311,171-parameter
+candidate replaces staged molecular/fitness training with a shared set
+transformer, individual intervention tokens, and jointly trained molecular and
+fitness outputs. It retains descriptor fallback for unknown genes and adds
+optional learned entity embeddings. The first campaign uses the existing
+admitted corpus with enlarged shared intervention exclusions. No completed 1.2
+training result or superiority claim is available yet. The released 1.1 model
+and its evidence below remain unchanged.
+
 SLp-1.1 learns molecular state, genetic-intervention dynamics, RNA/protein
 observation distributions, and a nonlinear functional viability landscape.
 Its two components contain **15,123,593 learned parameters**: 14,118,917 in the
