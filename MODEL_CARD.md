@@ -1,6 +1,6 @@
 # SLp molecular world models
 
-## SLp-1.2 research candidate
+## SLp-1.2 pretrained base
 
 SLp-1.2 is a trained **142,311,171-parameter** shared set transformer for
 molecular endpoint and quantitative fitness prediction. Individual intervention
@@ -9,6 +9,12 @@ Static descriptors support unknown genes; optional learned entity indices use
 25% dropout during training. There is no frozen 1.1 simulation bridge or fitted
 SL classifier. The implementation and inference contract are in
 [`modules/slp-1-2`](modules/slp-1-2/CONTRACT.md).
+
+This artifact is a **mixed-species pretrained base**. The completed schedule
+mixed human and yeast quantitative data throughout; it did not contain a
+separate post-training stage. Yeast supplies pretraining data and diagnostic
+evaluations. The intended post-training stage and final application selection
+use human data only. That stage has not been run.
 
 The first campaign completed 40,000 AdamW updates on one RTX 4090; repeated
 development evaluation selected update 27,000. It used the pinned 1.1 data
@@ -21,8 +27,28 @@ The final evaluation used 128 batches per source on retrospective development
 data. Mean predictions improved over the unchanged-control comparator and
 the same model with masked intervention tokens in all eleven measured sources.
 Human fitness MSE was **0.136761 versus 0.261167** for the neutral comparator;
-yeast fitness MSE was **0.059122 versus 0.066956**. These comparisons establish
-neither a matched improvement over 1.1 nor independent benchmark performance.
+yeast fitness MSE was **0.059122 versus 0.066956**. We did not compare 1.2 with
+1.1 on matched panels or evaluate an independent benchmark.
+
+A subsequent frozen-base evaluation adds fitting-only means and wrong-gene
+swaps on fixed development panels. Human fitness MSE is **0.124835 versus
+0.219549** for the fitting-context mean and **0.334593** with wrong genes.
+Human K562, RPE1 and HepG2 population predictions also beat their fitting means.
+K562 single-cell RNA ties its fitting mean, Norman is worse, and yeast molecular
+accuracy barely changes after swapping interventions. Beating an unchanged or
+masked-action comparator alone therefore does not establish intervention-specific
+accuracy across sources.
+
+The human-only frozen-representation probe provides stronger evidence for the
+base's usefulness. With **128 human adaptation labels**, its ridge readout
+scores **0.115334 MSE**, beating a descriptor/context readout given **8,192
+labels** (0.164430). At 8,192 labels, pretrained features score **0.111505**
+versus **0.178959** for a matched random frozen backbone. Adaptation and
+evaluation interventions are disjoint and excluded from base fitting. This is
+one retrospective development partition within human quantitative fitness;
+it does not measure human SL transfer or isolate the contribution of yeast.
+The base weights stayed frozen. The [evaluation workflow](docs/development.md)
+preserves fixed panels, baselines and readout budgets for future comparisons.
 
 The limitations matter for use. On 32,768 held-gene yeast double-deletion draws,
 predicted interaction residuals had correlation **-0.0014** with observations

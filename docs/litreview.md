@@ -911,3 +911,17 @@ Neither validates simultaneous genetic doubles as temporal trajectories. V3's
 detached predicted-parent schedule addresses inference exposure bias and tests order
 consistency; it is not a measured biological rollout. Evidence for unseen-combination
 emergence must rest on held-pair nonadditive response, not endpoint reconstruction.
+
+### Base-model evaluation and simple controls
+
+Ahlmann-Eltze, Huber and Anders, *Deep-learning-based gene perturbation effect
+prediction does not yet outperform simple linear baselines*, Nature Methods
+(2025), [article](https://www.nature.com/articles/s41592-025-02772-6), compares
+perturbation models with training means, additive predictions and linear
+readouts. Its representation-decoder comparisons motivate evaluating a frozen
+base separately from its shipped prediction head. SLp-1.2 consequently records
+fitting-only mean baselines, wrong-intervention controls and a matched human
+ridge probe against random-backbone and descriptor/context features. This is
+our evaluation design informed by that work; its findings do not determine
+SLp's results. Source-specific metrics remain necessary because shared response
+patterns can dominate aggregate endpoint accuracy.

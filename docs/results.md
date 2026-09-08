@@ -7752,3 +7752,146 @@ The exact cleanup, billing and CPU replay receipts are retained in
 `data/slp12-campaign/`. Final inference weights and the step-40,000 resumable
 checkpoint remain local; no dataset, checkpoint, credential or generated OMF
 state was committed to Git.
+
+## 2026-09-08 — Frozen-base evaluation and human transfer probe
+
+The first 1.2 run is a mixed-species pretrained base. There was no separate
+post-training stage: the completed schedule mixed human and yeast outcomes
+from start to finish. The intended next stage uses human data only, and its
+final selection uses human performance. The evaluation below measures the
+frozen base and temporary human readouts; no production post-training ran.
+
+Added `modules/slp-1-2/base_evaluation.py`, `base-evaluation.json` and
+`transfer_probe.py`. Preparation fixes observations, outcomes, fitting-only
+baselines and genuinely different intervention swaps in a checksummed panel.
+Scoring reuses those exact arrays across compatible base checkpoints. RNA,
+protein and fitness remain separate; there is no pooled human/yeast score or
+automatic promotion threshold. The model card and development guide now
+explicitly distinguish mixed-species pretraining from human-only post-training.
+
+This is retrospective development data, previously used to select checkpoints.
+A new sampling seed does not turn it into an independent test. Both human
+probe groups were excluded as interventions during base fitting; descriptors
+and appearances as query/observed genes can be known. Contexts are known.
+
+### Fixed-panel frozen-head results
+
+The configured panel contains twelve batches per molecular source, eight
+examples per batch, and requests 128 observation and 128 output coordinates.
+The paired assay reader also includes its protein channels. Each molecular
+baseline uses 128 fitting-only draws of sixteen examples and up to 512 output
+coordinates. Human and yeast fitness have 4,096 scored rows each. These are
+new panels with different dimensions from the historical 128-batch final
+report; absolute values across those two reports are not matched comparisons.
+
+Molecular training-mean baselines pool by source and query coordinate; they
+are not context-matched baselines. Empirical control means use transformed
+individual observations rather than transforming their mean. Uncovered query
+coordinates fall back to the provided source control reference. Coverage is
+98.31% for Frangieh RNA, 99.80% for K562 cells, 99.93% for K562 populations and
+RPE1 cells, and 100% elsewhere. Human fitness uses the exact fitting-context
+mean. Yeast fitness uses the fitting mixture mean with the same 20/20/60
+single-A/single-B/double proportions as its sampler.
+
+Wrong-intervention controls preserve source, mechanism, cardinality, context
+and query inputs, changing only active action identities/descriptors. All
+scored rows had a genuinely different donor. Lower MSE is better:
+
+| Source / modality | Base MSE | Training mean MSE | Wrong-intervention MSE |
+| --- | ---: | ---: | ---: |
+| frangieh_cells:protein | 1.546029 | 1.944528 | 1.557593 |
+| frangieh_cells:rna | 0.068827 | 0.072526 | 0.068904 |
+| gwps:rna | 0.840586 | 0.861600 | 0.872014 |
+| hepg2:rna | 1.035093 | 1.189540 | 1.497870 |
+| human_fitness:fitness | 0.124835 | 0.219549 | 0.334593 |
+| k562:rna | 0.908667 | 1.092016 | 1.336482 |
+| k562_cells:rna | 0.130753 | 0.130679 | 0.131849 |
+| norman:rna | 0.674013 | 0.563122 | 0.678511 |
+| rpe1:rna | 0.654243 | 0.763077 | 0.894085 |
+| rpe1_cells:rna | 0.149687 | 0.151276 | 0.151943 |
+| yeast:rna | 0.341049 | 0.410667 | 0.340447 |
+| yeast_fitness:fitness | 0.069174 | 0.062874 | 0.079268 |
+
+Human fitness beats the context mean by 43.1%, with a large wrong-intervention
+penalty. Human population K562, RPE1 and HepG2 also improve over the fitting
+mean and depend strongly on the correct intervention. GWPS gains are smaller.
+K562 single-cell RNA is essentially tied with the training mean; RPE1 cells
+improve by only 1.1%. Norman is 19.7% worse than its fitting mean. Frangieh
+beats its pooled mean, but RNA wrong-intervention error barely changes; pooled
+context differences can contribute to its baseline gap. Yeast molecular error
+also barely changes after swapping interventions, while yeast fitness is 10.0%
+worse than the fitting-mixture mean. The older improvement over masked actions
+did not by itself establish discrimination between different interventions.
+
+Within-panel pseudobulks average eight cells sharing intervention and source
+context; they do not average unrelated interventions or create paired cellular
+counterfactuals. Mean MSEs are:
+
+| Source / modality | Base pseudobulk MSE | Training mean MSE | Wrong-intervention MSE |
+| --- | ---: | ---: | ---: |
+| frangieh_cells:protein_pseudobulk | 0.389875 | 0.821308 | 0.400385 |
+| frangieh_cells:rna_pseudobulk | 0.014517 | 0.021126 | 0.014444 |
+| k562_cells:rna_pseudobulk | 0.020240 | 0.020407 | 0.020726 |
+| rpe1_cells:rna_pseudobulk | 0.029723 | 0.031483 | 0.029449 |
+
+Each cell source has only twelve sampled panels (nine distinct Frangieh
+interventions; twelve each for K562 and RPE1 cells). Norman has six distinct
+action sets in this panel. These are point estimates; cells, contexts and
+intervention sets can share genes. No independent row-wise uncertainty or
+broad distributional gain is claimed. Generation and yeast interaction failures
+from the earlier report remain relevant; this evaluation did not rerun them.
+
+### Human-only frozen-representation probe
+
+A deterministic split assigns the 1,300 eligible development fitness genes to
+650 adaptation and 650 evaluation genes. The 4,096 evaluation rows cover 644
+of those evaluation genes. Nested adaptation budgets contain unique gene/context
+labels. The temporary ridge readout uses the frozen query representation,
+compared with a randomly initialized frozen 142M backbone and static action
+descriptors plus context. All three use the same rows, adaptation-only feature
+standardization, intercept and fixed normalized ridge penalty (0.01). The
+baseline model weights and their parameter digest remain unchanged.
+
+| Human adaptation labels | Pretrained features MSE | Random features MSE | Descriptors + context MSE |
+| ---: | ---: | ---: | ---: |
+| 128 | 0.115334 | 0.203092 | 0.196180 |
+| 512 | 0.112279 | 0.188159 | 0.175488 |
+| 2,048 | 0.112494 | 0.183593 | 0.168700 |
+| 8,192 | 0.111505 | 0.178959 | 0.164430 |
+
+The pretrained readout with 128 labels beats the descriptor/context readout
+with 8,192 labels. At 8,192 labels, pretrained features reduce error by 37.7%
+versus the matched random backbone and 32.2% versus descriptors/context. The
+original frozen head scores 0.124835 on these same evaluation rows; the
+8,192-label readout improves it by 10.7%. This shows useful human representation
+learning in this development protocol. It measures new-intervention adaptation
+within the quantitative pretraining task, not human SL transfer. One partition
+and one random initialization do not establish a scaling law. No experiment
+here isolates whether yeast pretraining caused the human improvement.
+
+### Artifacts, runtime and validation
+
+- Fixed panels: `results/slp12-base-panels-v1`, manifest SHA-256
+  `4fb25cb67e077bdce06ec729d74e40ba10501af15748e639b7e201db01bdbef2`.
+- Base predictions/report: `results/slp12-base-evaluation-v1`, report SHA-256
+  `f43db9c49fc35c055bfaa32b4ef8319cc67809b58a03b1dae735383dc157385c`.
+- Probe features/predictions/report: `results/slp12-human-transfer-probe-v1`,
+  report SHA-256 `714a4fd7ad361b933c80a5540e67ee3bfdadfa923aae56c0e1252a43cc862e87`.
+
+The model is the existing selected 142,311,171-parameter base, weights SHA-256
+`78becf7fb4b6d1b60d0fdd5ed80c39e5739ab11bb2c9ddf0a146880344bdaca0`.
+Preparation took 37.5 seconds, scoring 92.2 seconds, and the probe 19.9 seconds
+on local macOS CPU with four Torch threads, Python 3.12.11, Torch 2.11.0 and
+NumPy 2.4.4. No GPU resources were allocated or cloud spend incurred. These
+are native evaluation runs, not new OMF training/export operations. Exact
+evaluation source snapshots travel with the reports; the source-capture helper
+was subsequently extended to include the three existing Linux dependency locks.
+This packaging-only extension does not change numerical evaluation.
+
+Five focused tests pass for fitting-only baselines, real identity swaps with
+preserved conditions, disjoint held-intervention probe genes, inductive ridge
+and frozen parameters, and incompatible input contracts/pseudobulk rejection.
+The real run additionally verifies panel and bundle hashes, baseline coverage,
+unique probe rows, finite predictions, all valid swaps, identical before/after
+full-model parameter digests and unchanged shipped weights. Repository audit
+passes. Historical training reports and the pretrained bundle are unchanged.

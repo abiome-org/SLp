@@ -6,7 +6,7 @@ The [README](../README.md) covers installation and inference. The
 are consolidated in [module-reference.md](module-reference.md). Frozen SLp-1
 source and its card remain in `model/v1/`.
 
-## SLp-1.2 joint training
+## SLp-1.2 joint pretraining
 
 `modules/slp-1-2` is a self-contained PyTorch implementation of a shared set
 transformer. Molecular observations, individual genetic interventions and
@@ -108,6 +108,79 @@ contract. Consult the final results before choosing an output: mean prediction
 uses intervention information, but this candidate has weak yeast interaction
 prediction and mixed endpoint-distribution results. Public download pointers
 still refer to the 1.1 release.
+
+## Evaluate a base before human post-training
+
+The 40,000-update campaign produced a mixed human/yeast pretrained base. It did
+not implement a distinct post-training phase. Human-only post-training is the
+next phase; yeast remains pretraining material and a diagnostic. Keep the base
+artifact immutable and write adapted models to new destinations.
+
+`base_evaluation.py` separates panel preparation from checkpoint scoring. The
+versioned `base-evaluation.json` specifies sampling and readout budgets. Prepare
+once, then reuse the exact checksummed panels across compatible checkpoints:
+
+```sh
+python modules/slp-1-2/base_evaluation.py prepare --root . \
+  --output results/my-base-panels
+python modules/slp-1-2/base_evaluation.py score \
+  --bundle results/slp12-joint-142m-r1-bundle --panels results/my-base-panels \
+  --output results/my-base-scores
+python modules/slp-1-2/transfer_probe.py \
+  --bundle results/slp12-joint-142m-r1-bundle --panels results/my-base-panels \
+  --output results/my-human-probe
+```
+
+These commands default to CPU with four Torch threads. They never optimize the
+base or allocate cloud resources. Outputs must be new directories. Reports
+include source snapshots, input/weight hashes, predictions and individual case
+errors. Panel scoring rejects vocabulary, corpus, exclusion-roster and
+normalization mismatches. Different model widths/depths can share panels when
+those input contracts match. A changed data contract needs a deliberate matched
+evaluation adapter; do not silently compare separate panel draws.
+
+The report asks three questions:
+
+1. **Does the frozen mean head predict held interventions?** Compare it with
+   fitting-perturbation means, empirical control means and source references.
+   Human fitness uses the exact fitting-gene mean for each context. Molecular
+   baselines are source-pooled sampled means, not context-matched estimates;
+   their coordinate counts and fallback coverage are explicit. Cell means use
+   mean transformed observations, distinct from transforming a population mean.
+2. **Does intervention identity matter?** Replace the intervention with a
+   different gene set from the same source, preserving cardinality, mechanism,
+   context, measurements and queries. Donors span panels because many cell
+   batches contain only one intervention. Unavailable swaps are excluded and
+   counted. Positive wrong-minus-correct MSE means the correct identity helps.
+   The masked-action comparator separately measures action presence. Report
+   RNA/protein/fitness separately, with within-panel cell pseudobulk errors.
+3. **Are human outcomes easier to learn from the frozen representation?** A
+   temporary ridge readout sees 128, 512, 2,048 or 8,192 unique human gene/context
+   labels. Compare pretrained query features, a matched random frozen backbone,
+   and static action descriptors plus context with the same nested labels and
+   ridge rule. Standardization and the intercept use adaptation rows only. Both
+   adaptation and evaluation genes were excluded as interventions during base
+   fitting, and these two gene groups are disjoint. Their static descriptors and
+   appearances as measured/query genes can be known. Parameter digests verify
+   the base stays frozen.
+
+Human source results and human label efficiency guide post-training choices.
+Yeast results diagnose pretraining behavior; they do not contribute to a pooled
+human promotion score. There is no automatic pass threshold. Compare actual
+benefits, regressions, compute and eventual human post-training results.
+
+This first panel uses the existing development pool, already reused for
+checkpoint selection. Its transfer probe measures new-gene adaptation within
+the human quantitative task, not a new SL task or an independent test. One
+partition and one random initialization give a development comparison; they
+do not establish a scaling law or isolate the contribution of yeast pretraining.
+The report retains individual errors for matched follow-up analysis; rows and
+gene pairs can share interventions, so ordinary row-wise confidence intervals
+would overstate independent evidence. The first report supplies point estimates.
+Generation and nonadditivity remain separate required capabilities to assess:
+the existing `evaluate.py` implements their endpoint-distribution and yeast
+interaction diagnostics. Neither endpoint MSE nor a successful linear probe
+establishes those capabilities. Human combination fitness needs human evidence.
 
 ## Downloads and local layout
 
