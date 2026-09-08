@@ -1,14 +1,53 @@
-# SLp-1.1 cellular and genomic world model
+# SLp molecular world models
 
-SLp-1.2 is under development in
-[`modules/slp-1-2`](modules/slp-1-2/CONTRACT.md). Its 142,311,171-parameter
-candidate replaces staged molecular/fitness training with a shared set
-transformer, individual intervention tokens, and jointly trained molecular and
-fitness outputs. It retains descriptor fallback for unknown genes and adds
-optional learned entity embeddings. The first campaign uses the existing
-admitted corpus with enlarged shared intervention exclusions. No completed 1.2
-training result or superiority claim is available yet. The released 1.1 model
-and its evidence below remain unchanged.
+## SLp-1.2 research candidate
+
+SLp-1.2 is a trained **142,311,171-parameter** shared set transformer for
+molecular endpoint and quantitative fitness prediction. Individual intervention
+tokens, molecular observations and RNA/protein/fitness queries use one backbone.
+Static descriptors support unknown genes; optional learned entity indices use
+25% dropout during training. There is no frozen 1.1 simulation bridge or fitted
+SL classifier. The implementation and inference contract are in
+[`modules/slp-1-2`](modules/slp-1-2/CONTRACT.md).
+
+The first campaign completed 40,000 AdamW updates on one RTX 4090; repeated
+development evaluation selected update 27,000. It used the pinned 1.1 data
+release, with 2,806 human and 1,070 yeast intervention genes excluded jointly
+from fitting across sources. The existing sequence descriptors were retained.
+After update 1,573, training added 10% measured-control/reference examples in
+a captured continuation. No human SL benchmark labels entered fitting.
+
+The final evaluation used 128 batches per source on retrospective development
+data. Mean predictions improved over the unchanged-control comparator and
+the same model with masked intervention tokens in all eleven measured sources.
+Human fitness MSE was **0.136761 versus 0.261167** for the neutral comparator;
+yeast fitness MSE was **0.059122 versus 0.066956**. These comparisons establish
+neither a matched improvement over 1.1 nor independent benchmark performance.
+
+The limitations matter for use. On 32,768 held-gene yeast double-deletion draws,
+predicted interaction residuals had correlation **-0.0014** with observations
+and MSE **0.006056**, worse than the measured-single additive comparator's
+**0.003710**. The latter uses observed single-mutant fitness. In finite sampled
+single-cell panels, generated endpoint energy distance improved over sampled
+controls only for RPE1 RNA; K562 RNA and Frangieh RNA/protein were worse. The
+model supports endpoint-prediction research; this campaign did not demonstrate
+useful yeast nonadditivity or broad gains in generated cell distributions.
+Human combination-fitness outputs remain extrapolations because this corpus
+contains no human double-knockout fitness supervision.
+
+The local candidate bundle is `results/slp12-joint-142m-r1-bundle`; selected
+weights have SHA-256
+`78becf7fb4b6d1b60d0fdd5ed80c39e5739ab11bb2c9ddf0a146880344bdaca0`.
+Training/evaluation source and configuration receipts travel with the artifact.
+The final weights passed native CUDA replay, macOS CPU replay and isolated
+Linux CPU OMF replay/export. Maximum CUDA-to-CPU error was below 7e-6 in the
+shipped real molecular example, including an eight-step generated sample.
+Full source metrics, distribution checks, runtime evidence and costs are in
+[the results ledger](docs/results.md). Public artifact pointers continue to name
+the released 1.1 model. Original code/weights use MIT; data and descriptors retain
+their source terms.
+
+## SLp-1.1 published release
 
 SLp-1.1 learns molecular state, genetic-intervention dynamics, RNA/protein
 observation distributions, and a nonlinear functional viability landscape.

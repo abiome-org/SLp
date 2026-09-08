@@ -89,6 +89,26 @@ The standalone API and measurement units are documented in the
 [bundle contract](../modules/slp-1-2/CONTRACT.md). Human combination-fitness
 predictions remain extrapolations until supervised by appropriate human data.
 
+The completed first campaign's local inference bundle is
+`results/slp12-joint-142m-r1-bundle`. It contains the selected update-27,000
+weights, while `results/slp12-joint-142m-r1/checkpoint-0040000` retains the final
+optimizer and sampler state for continuation. Validate standalone CPU inference
+with:
+
+```sh
+python results/slp12-joint-142m-r1-bundle/replay.py \
+  --bundle results/slp12-joint-142m-r1-bundle
+```
+
+The bundle's `inference.py` also accepts `--bundle`, `--input` (a normalized
+batch NPZ), `--output` (a new NPZ path), and optional `--sample`. Its shipped
+`example-input.npz` is a real molecular example. The `World.fitness` API accepts
+native stable gene IDs and explicit species/context, as specified in the
+contract. Consult the final results before choosing an output: mean prediction
+uses intervention information, but this candidate has weak yeast interaction
+prediction and mixed endpoint-distribution results. Public download pointers
+still refer to the 1.1 release.
+
 ## Downloads and local layout
 
 Run commands from the repository root with Python 3.11/3.12. Install

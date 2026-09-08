@@ -7651,3 +7651,104 @@ These are early development observations, not final results, an independent
 benchmark, or a matched comparison with SLp-1.1. Training is ongoing. The first
 campaign retains the existing sequence descriptors and corpus; it does not yet
 add human double-knockout fitness supervision or a new supervised SL readout.
+
+
+## 2026-09-08 — SLp-1.2 first campaign completed
+
+The 142,311,171-parameter joint model completed all 40,000 updates. The native
+training clock across captured segments is 40,626 seconds (11.29 hours), including
+in-loop development evaluation and checkpointing. The fixed 32-batch-per-source
+selection panel chose update 27,000 at selection MSE 0.256451. The expanded final
+128-batch-per-source panel scores those same selected weights at 0.272018; its
+sampled rows differ, so the two aggregate values are not directly comparable.
+Both panels are retrospective development evidence, reused for training choices.
+No independent test set or human SL benchmark was evaluated in this campaign.
+The selected weights have SHA-256
+`78becf7fb4b6d1b60d0fdd5ed80c39e5739ab11bb2c9ddf0a146880344bdaca0`.
+
+The final source metrics below use normalized source-native assay units. RNA
+and protein receive equal modality weight within the paired assay. The neutral
+fitness/control-reference prediction is the unchanged comparator; action ablation
+masks all intervention tokens in the same trained model. Lower MSE is better.
+All eleven source point estimates improve over both comparators, which supports
+use of intervention information in the mean predictions. This is not a matched
+comparison with the published 1.1 model.
+
+| Source | Model MSE | Unchanged MSE | Action-ablated MSE | Reduction vs unchanged |
+| --- | ---: | ---: | ---: | ---: |
+| frangieh_cells | 1.082212 | 2.003325 | 1.346635 | 46.0% |
+| gwps | 0.909474 | 0.956370 | 0.956533 | 4.9% |
+| hepg2 | 0.829019 | 1.081953 | 1.081891 | 23.4% |
+| human_fitness | 0.136761 | 0.261167 | 0.263250 | 47.6% |
+| k562 | 0.842007 | 1.115728 | 1.114762 | 24.5% |
+| k562_cells | 0.131922 | 0.250081 | 0.190290 | 47.2% |
+| norman | 0.637431 | 0.685808 | 0.682974 | 7.1% |
+| rpe1 | 0.641624 | 0.968541 | 0.968328 | 33.8% |
+| rpe1_cells | 0.135580 | 0.269758 | 0.203266 | 49.7% |
+| yeast | 0.372258 | 0.447879 | 0.447211 | 16.9% |
+| yeast_fitness | 0.059122 | 0.066956 | 0.067635 | 11.7% |
+
+Combination interaction prediction remains weak. On 32,768 held-gene yeast
+double-deletion draws, the predicted residual f(AB)-f(A)-f(B) has correlation
+-0.001404 with the measured log-fitness interaction. Residual MSE is 0.006056
+versus 0.003710 for the zero-interaction comparator, a 63.2% increase in error.
+That comparator uses measured single-mutant fitness, so it isolates nonadditivity
+and is not a deployable intervention-cold predictor of total double fitness.
+These results do not establish useful yeast nonadditive prediction. There is no
+human double-knockout fitness supervision or fitted human SL readout in 1.2.
+
+Flow sampling was evaluated on 32 unpaired endpoint panels per single-cell
+source, 16 cells per panel, using 32 Euler steps. Energy distances are divided
+by the square root of the number of coordinates. These are finite-sample
+retrospective estimates, without confidence intervals or paired cellular
+counterfactual claims. Lower energy distance is better.
+
+| Assay | Generated energy distance | Control energy distance | Generated variance MSE | Control variance MSE |
+| --- | ---: | ---: | ---: | ---: |
+| frangieh_cells:protein | 0.753918 | 0.641175 | 1.719883 | 3.935911 |
+| frangieh_cells:rna | 0.133479 | 0.129529 | 0.010477 | 0.015861 |
+| k562_cells:rna | 0.069699 | 0.068329 | 0.005577 | 0.005290 |
+| rpe1_cells:rna | 0.083522 | 0.091571 | 0.007256 | 0.007881 |
+
+Only RPE1 RNA improves energy distance over the sampled-control comparator.
+Frangieh RNA/protein variance estimates improve, but their energy distances do
+not. Mean-prediction improvements therefore do not establish broad distributional
+improvements. The first 1.2 artifact is retained as an endpoint-prediction
+research candidate. A new sequence representation, human combination screens,
+stronger interaction learning and matched 1.1 comparisons remain future work;
+no public release pointer or historical result was replaced.
+
+The standalone bundle contains 35 hashed payload files (635,749,876 bytes),
+including actual weights, context/entity metadata, captured training and
+evaluation source, normalization receipts, dependency locks and a real molecular
+inference example. Manifest SHA-256 is
+`7c6e7078f9644ac72b80ce2267462b2ed3147e83b2c576f9388c773009e16bb4`.
+The collector verified every retained local checkpoint and the completed bundle
+before resource deletion. Final macOS CPU replay differed from CUDA by at most
+2.15e-6 in means, 4.77e-6 in log variances and 2.86e-6 in generated samples.
+
+The pinned OMF 2 runtime then completed genuine isolated Linux ARM CPU replay
+and export, run `01a080d1-8046-73d7-89eb-88042e2d1614`, with maximum absolute
+error 6.68e-6. It performed zero optimization. Its exported model artifact
+`sha256:8bf65fc56cf19116bc413074e8f37792a82d9bc104466fc84198bc025a9b45f9`
+has the identical standalone manifest; all 35 exported payload hashes were
+independently checked against it. Evidence is retained under
+`results/slp12-joint-142m-r1-omf/export`. This exercises ordinary-script artifact
+replay/export, not the OMF ModelPackage service adapter. The local verification
+VM was restored to its prior stopped state and the Docker context stayed
+`default`. The twelve focused numerical/routing tests and exact control-mixture
+checkpoint-resume check passed during implementation; no numerical source
+changed after those checks.
+
+Paid-resource cleanup completed at 2026-09-08 11:40 UTC. Follow-up API reads
+confirmed both campaign pod `fsve4k4zth1yeo` and volume `3f81ooxbnu` absent.
+Total allocation, including setup, evaluation and collection, was 12.160 hours.
+GPU time is estimated at $8.999; the original conservative storage allowance
+adds $0.169, for approximately **$9.17 total**, within the authorized $50 ceiling.
+The provider had posted $8.309 in pod charges when checked, with later billing
+still pending; volume billing omits resource IDs, so it cannot be attributed
+directly. The $9.17 figure is an allocation-based estimate, not a settled invoice.
+The exact cleanup, billing and CPU replay receipts are retained in
+`data/slp12-campaign/`. Final inference weights and the step-40,000 resumable
+checkpoint remain local; no dataset, checkpoint, credential or generated OMF
+state was committed to Git.
