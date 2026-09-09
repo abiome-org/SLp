@@ -8073,3 +8073,88 @@ segment exactly except for the runtime limit. The collector was restarted
 against the approved campaign receipt; both revised guards were verified and
 the superseded guards were stopped. This verifies the continuation is active,
 not that the 60,000-update target has finished.
+
+## 2026-09-09 — XL stopped at its allowance; exact local artifact recovery
+
+The 344,953,859-parameter run stopped at **54,971 of 60,000 updates** with
+`checkpointed_at_time_limit`. It did not complete the planned schedule.
+Repeated development evaluation selected **update 26,000** for the exported
+inference weights. The final checkpoint remains independently resumable.
+No human post-training or external SL benchmark fitting was performed.
+
+The B200 allocation lasted 9.4909 hours. Its GPU cost estimated from elapsed
+time and the recorded $6.79/hour rate is **$64.4431**; adding conservative
+allocation storage gives **$64.5749**, and the recorded prior allocations bring
+the campaign estimate to **$74.5497**. These are elapsed-time estimates, not a
+provider invoice; retained-volume storage after termination is additional.
+The credit guard reported **$4.5515** remaining before deleting the B200 at
+10:11:53 UTC. Its five-minute polling interval did not preserve an exact $5
+balance. The GPU was terminated and no replacement was allocated.
+
+Native CUDA evaluation and export completed before termination. The collector
+verified and backed up checkpoint 54,971 and copied the run directory, but the
+GPU shut down during the inference-bundle transfer. The selected weights file
+was truncated locally and later bundle files were missing. The complete
+selected weights, source and metadata were already present in the copied run;
+the exported example inputs, CUDA outputs and manifest had also arrived.
+
+All **37** files in the original export manifest were recovered from existing
+local files into a new directory, `results/slp12-xl-345m-r1-bundle-recovered`.
+Every file passed its original SHA-256 hash, and the manifest matches the
+remote export receipt exactly:
+`b21604151a006fa64f672ba99a37cb020bfc3988bfa69c73387af5a8c5f30b5b`.
+Selected inference weights hash:
+`523c287c6271f7ab0fd4bb2d7097158b9a5f400a44cc209352d0e59525dec659`.
+The final checkpoint's weights hash is
+`2bae2c7e7742230a9e83a5061f44941ce2fe3cba9f8908903bcb1a11979a5d88`;
+its optimizer/RNG payload hash is
+`343cebd4a647369421c122669eae61941968e2cf61e8f79f6c86d26a3897957d`.
+Both the selected bundle and final checkpoint were verified locally. macOS CPU
+replay passed the real CUDA-generated molecular example, including eight-step
+sampling; maximum absolute errors were 9.54e-7 for the mean, 3.34e-6 for log
+variance and 1.91e-6 for the sample. Recovery required no cloud compute.
+
+The selected model's final retrospective evaluation used 128 batches per
+source. These are development metrics; selection reused development outcomes.
+
+| Source | XL MSE | Unchanged comparator | Masked-action MSE |
+| --- | ---: | ---: | ---: |
+| K562 population | 0.854197 | 1.115728 | 1.114660 |
+| RPE1 population | 0.629091 | 0.968541 | 0.972755 |
+| Norman | 0.550644 | 0.685808 | 0.689294 |
+| GWPS | 0.905605 | 0.956370 | 0.955026 |
+| HepG2 | 0.829324 | 1.081953 | 1.081773 |
+| K562 cells | 0.132898 | 0.250081 | 0.135058 |
+| RPE1 cells | 0.136225 | 0.269758 | 0.140768 |
+| Frangieh cells | 1.147500 | 2.003325 | 1.146653 |
+| Yeast molecular | 0.374629 | 0.447879 | 0.447432 |
+| Human fitness | 0.141466 | 0.261167 | 0.264700 |
+| Yeast fitness | 0.063008 | 0.066956 | 0.068002 |
+
+Yeast interaction-residual correlation was **-0.00301** on 32,768 draws.
+Residual MSE was **0.005570**, worse than **0.003710** for measured-single
+additivity. Generated-cell energy distance beat sampled controls only for
+RPE1 RNA; K562 RNA and Frangieh RNA/protein were worse. These results do not
+show useful yeast nonadditivity or broad distributional gains. The separate
+frozen-panel base comparison with the 142M model remains unrun.
+
+The retained 50 GB network volume is `0u8e5qtjgb`. Automatic approval review
+blocked its deletion because explicit authorization to discard the volume was
+required. It remains available while cleanup awaits confirmation. Artifact
+recovery and local CPU validation are complete; the collection receipt records
+cleanup separately as pending. The recovery plan, original interrupted
+collection receipt, verified manifest and CPU replay are preserved under
+`data/slp12-xl-b200-campaign/`.
+
+Isolated Linux ARM64 CPU replay and export subsequently passed through pinned
+OMF 2.0.0 in the existing local `omf-tests` VM, with **zero optimization**.
+Run `01a08699-b9d2-70fd-a796-780237334521` succeeded; maximum portability error
+was **4.2915e-6**. The exported model artifact digest is
+`sha256:8e457ecc29a63af527770d6b8aecc615fe980d050415fc1535ca57e069fef28e`,
+with receipts and export under `results/slp12-xl-345m-r1-omf-linux/`.
+An initial unprivileged preflight correctly rejected the missing network-deny
+capability before execution. The successful run used the VM's administrator
+capability to provide real network namespaces, retaining the project's existing
+identity and policies. This verifies standalone artifact portability; it does
+not claim OMF ModelPackage service deployment. The local VM was returned to
+its stopped state after verification.

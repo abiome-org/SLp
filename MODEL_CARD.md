@@ -2,12 +2,18 @@
 
 ## SLp-1.2 pretrained base
 
-A **344,953,859-parameter SLp-1.2-XL** pretraining run is now in progress on
-a B200, resumed from its verified RTX 5090 checkpoint. It targets 60,000 updates
-on the same admitted mixed-species corpus. It has not
-completed or replaced the 142M artifact described below. Human post-training
-and external SL benchmarking remain deferred; the [results ledger](docs/results.md)
-records the measured execution profile and bounded campaign.
+A **344,953,859-parameter SLp-1.2-XL** base trained for **54,971 of the planned
+60,000 updates**, stopping at its allocated time limit. Repeated development
+evaluation selected update **26,000** for inference; the final optimizer
+checkpoint is retained for continuation. It uses the same admitted mixed-species
+corpus as the 142M artifact described below. The recovered local bundle is
+`results/slp12-xl-345m-r1-bundle-recovered`, and its complete manifest matches
+the native B200 export. macOS CPU replay and isolated Linux OMF replay/export
+passed against the exported CUDA example.
+Human post-training and external SL benchmarking remain deferred. A matched
+evaluation on the frozen base panels has not yet compared XL with the 142M
+model; the [results ledger](docs/results.md) records XL's development metrics,
+execution, recovery and costs.
 
 SLp-1.2 is a trained **142,311,171-parameter** shared set transformer for
 molecular endpoint and quantitative fitness prediction. Individual intervention
