@@ -103,6 +103,16 @@ double knockout. A simpler architecture does not remove that information gap.
 Prioritize admissible human combination measurements and broad nonhuman
 single/double experiments alongside the existing single-gene corpus.
 
+The September 9 [source inventory](litreview.md#september-9-2026-perturbation-coverage-and-downloadable-sources)
+identifies concrete downloads and audits the existing corpus. Its first batch
+is complete Costanzo fitness coverage, SLKB/SPIDR/Harle/In4mer human combination
+measurements, then Orion, primary CD4 T-cell and mouse perturbation responses.
+The old 7,683-gene roster must not remain an import filter: inspected Orion and
+CD4 target rosters extend far beyond it. Build source-level coverage counts
+before and after each fold's exposure mask, keeping library designs, measured
+interventions, cells and replicates separate. Pisces and the newer functional
+module In4mer study are retrieval candidates, not verified complete payloads.
+
 Train conditional prediction by masking measured outputs and predicting only
 values actually observed. Inputs for a prospective perturbation query contain
 only measurements available before that intervention; arbitrary masking must
