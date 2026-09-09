@@ -7996,8 +7996,16 @@ during backward at update 1,002, before an optimizer update; update 1,001
 remained intact. The failed attempt's source, runtime and error receipts are
 preserved under `failed-attempts/cudagraph-1001` within the run. The continuation
 was restarted with ordinary compiler fusion (`compile_mode: default`) and
-CUDA graph replay disabled. Its performance is not yet recorded. Three focused
-training-contract tests pass.
+CUDA graph replay disabled. The first resumed optimizer update completed
+successfully. Updates 1,100–1,480 then took **0.49219 seconds per update**,
+excluding initial compilation, with finite losses and gradients. That is about
+3.3x the 5090 rate and 1.29x the eager B200 rate. The remaining updates alone
+project to eight hours; periodic evaluation, checkpoints and final artifact
+collection add time. This reduces the projected total campaign cost to roughly
+$70–80, still above the current $50 cap. These are early measured throughput
+projections, not a completed-run cost or a guarantee of model quality. The
+measurement receipt is `compiled-continuation-verified.json` in the B200 state
+directory. Three focused training-contract tests pass.
 
 The B200 allocation remains bounded to five hours at $6.79/hour, terminating
 at 2026-09-09 05:42:26 UTC. Its reserved total, including previous allocations
