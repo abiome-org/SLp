@@ -8017,3 +8017,26 @@ backs up verified checkpoints with two-snapshot retention. Automatic approval
 review rejected the broader recurring follow-up; the accepted app monitor is
 read-only and reports progress or failures. Existing detached training,
 collection and deadline guards retain their recorded scope.
+
+At 2026-09-09 01:47 UTC, the live account held **$62.5690** with only this
+B200 pod and its 50 GB volume present. The measured continuation through
+update 5,740 averaged 0.51885 seconds per update over updates 1,100–5,740,
+including intervening development evaluation and checkpoints. Remaining
+training projected to 7.82 hours, or approximately $53.21; allowing final
+evaluation and collection gave a roughly $55–57 remaining-cost estimate.
+These are estimates against the current account balance, not new credit.
+
+The user stated that the existing RunPod funds were all that was available.
+A proposed allowance of 8.45 hours from that balance check reserved $5 and
+set a prospective deadline of 10:14:24 UTC. Automatic approval review blocked
+the extension because the funding statement was not explicit approval to
+exceed the original $50 cap; it also flagged the proposed guard replacement
+sequence. The proposal was **not applied**. Preparation had gracefully saved
+update 6,042, whose full checkpoint manifest passed verification. Training was
+resumed from that checkpoint using the original deadline and $50 cap, with
+24 minutes reserved before the allocation deadline for finalization. The
+source, optimizer schedule, batches and 60,000-update target were retained.
+Receipts are `live-credit-check.json`, `credit-revision-blocked.json` and
+`limit-resume-launch.json` in the B200 campaign directory. Explicit approval
+to replace the $50 cap with the existing account balance is pending; the
+earlier $90 proposal has not been approved either.
