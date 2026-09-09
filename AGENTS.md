@@ -2,10 +2,19 @@
 
 ## Objective and working style
 
-Build a useful, species-aware molecular world model for intervention research.
-The intended capability is to represent observed molecular state, apply genetic
-interventions, and predict their consequences across genes, contexts and
-combinations. Synthetic lethality is an application of that model.
+Build an SL predictor targeting above-SOTA scores across the combined benchmark
+suite, with CV3 (both genes withheld) as the primary objective. Achieve this by
+learning perturbation consequences in human and nonhuman cells. World-model
+quality must contribute to human SL generalization; generic molecular loss is
+not the final selection target.
+
+The user explicitly requires both outer-test genes to be absent from all SL
+label fitting and all human perturbation fitting, across sources, in that fold.
+Human observational/static features remain available subject to provenance;
+nonhuman perturbations remain species-native pretraining data. Post-training
+and application selection use human data only. Use fold-specific exposure
+masks; withholding SL edges alone is insufficient. Architecture and selection
+for the next model are derived in `docs/development.md`.
 
 User intent and host instructions take precedence over this guide. Carry
 already authorized work through implementation, training and verification.
