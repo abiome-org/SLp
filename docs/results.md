@@ -7895,3 +7895,51 @@ The real run additionally verifies panel and bundle hashes, baseline coverage,
 unique probe rows, finite predictions, all valid swaps, identical before/after
 full-model parameter digests and unchanged shipped weights. Repository audit
 passes. Historical training reports and the pretrained bundle are unchanged.
+
+## 2026-09-08 — SLp-1.2-XL capacity and execution profile
+
+The next pretraining configuration increases the shared model from 142,311,171
+to **344,953,859 parameters**, using 24 layers, width 1,024 and 16 attention
+heads. The target is 60,000 updates, compared with the first run's 40,000.
+The admitted corpus, descriptors, global held-intervention exclusions and
+60/20/20 molecular/human-fitness/yeast-fitness mixture stay the same. This scales
+capacity and training compute; it does not add new biological observations.
+Human post-training and external SL benchmarking are deferred.
+
+A full-model synthetic profile on one 32 GB RTX 5090 used Python 3.12,
+Torch 2.11.0+cu128, BF16 autocast and the captured Linux dependency lock.
+Each timing covers forward, backward and an AdamW update. Molecular inputs
+contain 1,067 tokens with mixed action padding; fitness inputs contain five.
+
+| Task | Microbatch | Seconds | Peak allocated GiB |
+| --- | ---: | ---: | ---: |
+| Molecular | 8 | 0.16494 | 13.090 |
+| Molecular | 16 | 0.31853 | 21.613 |
+| Fitness | 256 | 0.03445 | 5.882 |
+| Fitness | 512 | 0.05237 | 7.193 |
+
+Molecular microbatch 24 ran out of memory. Microbatch 16 and fitness batch
+256 fit without activation checkpointing. At eight accumulation microsteps
+and the configured task mixture, these measurements estimate 1.64 seconds
+per optimizer update, or 27.3 hours for 60,000 updates before data handling,
+evaluation and artifact work. This is a runtime estimate, not a measured
+training duration or evidence of better biological prediction. No synthetic
+profile weights are retained as a biological model.
+
+Profile logs, dependency inventory and exact source hashes are recorded under
+`data/slp12-xl-profile/`. The planned training output is
+`results/slp12-xl-345m-r1`, with a separate campaign receipt under
+`data/slp12-xl-campaign/`. The planned 32-hour allocation at $0.99/hour has a
+conservative GPU/storage ceiling of $32.124. Including the first campaign's
+$9.1674 estimate, the entire one-hour profiling allowance and a $5 reserve
+gives $47.30 under the original $50 authorization. The trainer limit is
+30.5 hours, leaving allocation time for setup, final evaluation and export.
+
+The account was topped up during preparation. Because the user expects the
+separate $1.59/hour job to finish soon, the credit calculation reserves twelve
+additional hours for that job. A five-minute local credit check stops only the
+SLp pod if account credit falls below $5. Independent local and scoped remote
+deadline guards retain the hard allocation limit; the persistent volume keeps
+resumable checkpoints. Local backups retain two verified snapshots to fit the
+host disk. Ten focused tests pass for campaign accounting, the shared-credit
+stop, invalid runtime rejection and verified checkpoint retention.

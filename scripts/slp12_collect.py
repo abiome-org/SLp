@@ -6,10 +6,13 @@ after complete local artifact verification and successful CPU inference replay.
 """
 from __future__ import annotations
 import hashlib
+import argparse
 import json
 import os
 from pathlib import Path
+import re
 import shlex
+import shutil
 import signal
 import subprocess
 import time
@@ -38,7 +41,29 @@ def verify(folder):
             raise ValueError('Incomplete local artifact: ' + str(path))
 
 
-def main():
+def prune_checkpoints(folder, keep):
+    """Bound backups for an explicitly configured run after a verified copy.
+
+    Zero preserves the historical collector's retention. Never follow a symlink
+    or prune a partial/unverified checkpoint. Training retains best weights
+    separately from these resumable optimizer snapshots.
+    """
+    if keep == 0:
+        return
+    if keep < 2:
+        raise ValueError('Retain at least two verified checkpoints')
+    checkpoints = sorted(p for p in folder.iterdir() if re.fullmatch(r'checkpoint-\d{7}', p.name))
+    if len(checkpoints) <= keep:
+        return
+    for path in checkpoints:
+        if path.is_symlink() or not path.is_dir():
+            raise ValueError('Unexpected checkpoint path')
+        verify(path)
+    for path in checkpoints[:-keep]:
+        shutil.rmtree(path)
+
+
+def main(ops='/workspace/slp12-ops', backup_seconds=3600, keep_checkpoints=0):
     record = json.loads(RECORD.read_text())
     connection = json.loads(run('ssh', 'info', record['pod_id']))
     ssh = ['ssh', '-i', connection['ssh_key']['path'], '-p', str(connection['port']),
@@ -66,7 +91,7 @@ result={}
 for name in ['latest.json','completion.json','failure.json','export-complete.json']:
     f=p/name
     if f.exists(): result[name]=json.loads(f.read_text())
-cleanup=pathlib.Path('/workspace/slp12-ops/cleanup-request.json')
+cleanup=pathlib.Path(OPS)/'cleanup-request.json'
 if cleanup.exists(): result['cleanup']=json.loads(cleanup.read_text())
 log=p/'training.jsonl'
 if log.exists():
@@ -76,7 +101,7 @@ if log.exists():
             try: result['last_record']=json.loads(line); break
             except ValueError: pass
 print(json.dumps(result))
-'''.replace('REMOTE', repr(REMOTE))
+'''.replace('REMOTE', repr(REMOTE)).replace('OPS', repr(ops))
             response = subprocess.run(ssh + [host, 'python3 -'], input=code, text=True,
                                       capture_output=True, check=True, timeout=50)
             status = json.loads(response.stdout)
@@ -84,12 +109,13 @@ print(json.dumps(result))
             write(STATE / 'latest-status.json', status)
             latest = status.get('latest.json')
             final = 'export-complete.json' in status
-            if latest and (time.time() - last_backup > 3600 or final or 'cleanup' in status):
+            if latest and (time.time() - last_backup > backup_seconds or final or 'cleanup' in status):
                 folder = latest['path']
                 if '/' in folder or not folder.startswith('checkpoint-'):
                     raise ValueError('Unexpected checkpoint path')
                 sync(REMOTE + '/' + folder, LOCAL / folder)
                 verify(LOCAL / folder)
+                prune_checkpoints(LOCAL, keep_checkpoints)
                 last_backup = time.time()
                 print(json.dumps({'event': 'checkpoint_backed_up', 'path': folder}), flush=True)
             if final:
@@ -102,7 +128,8 @@ print(json.dumps(result))
                 verify(bundle)
                 for checkpoint in LOCAL.glob('checkpoint-*'):
                     verify(checkpoint)
-                sync('/workspace/slp12-ops', STATE / 'remote-ops')
+                prune_checkpoints(LOCAL, keep_checkpoints)
+                sync(ops, STATE / 'remote-ops')
                 with (STATE / 'cpu-replay.log').open('w') as log:
                     subprocess.run([str(ROOT / '.venv/bin/python'), str(bundle / 'replay.py'),
                                     '--bundle', str(bundle)], stdout=log, stderr=subprocess.STDOUT,
@@ -126,7 +153,7 @@ print(json.dumps(result))
                 return
             if 'cleanup' in status and not final:
                 sync(REMOTE, LOCAL)
-                sync('/workspace/slp12-ops', STATE / 'remote-ops')
+                sync(ops, STATE / 'remote-ops')
                 delete('pod', record['pod_id'])
                 write(STATE / 'collection.json', {'status': 'needs_attention', 'reason': status['cleanup'],
                       'pod_deleted': record['pod_id'], 'volume_preserved': record['volume_id']})
@@ -141,4 +168,25 @@ print(json.dumps(result))
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--state', type=Path, default=STATE)
+    parser.add_argument('--run-name', default=NAME)
+    parser.add_argument('--ops', default='/workspace/slp12-ops')
+    parser.add_argument('--backup-seconds', type=int, default=3600)
+    parser.add_argument('--keep-checkpoints', type=int, default=0,
+                        help='0 keeps all historical backups; 2 bounds a new run to two verified snapshots')
+    args = parser.parse_args()
+    if not args.run_name or Path(args.run_name).name != args.run_name or args.run_name in ('.', '..'):
+        raise ValueError('Invalid run directory name')
+    if args.backup_seconds < 60:
+        raise ValueError('Backup interval must be at least one minute')
+    if args.keep_checkpoints != 0 and args.keep_checkpoints < 2:
+        raise ValueError('Retain at least two checkpoints, or zero for unlimited retention')
+    STATE = args.state.resolve()
+    if not STATE.is_relative_to((ROOT / 'data').resolve()):
+        raise ValueError('Campaign state must stay under this repository data directory')
+    RECORD = STATE / 'campaign.json'
+    NAME = args.run_name
+    REMOTE = '/workspace/SLp/results/' + NAME
+    LOCAL = ROOT / 'results' / NAME
+    main(args.ops, args.backup_seconds, args.keep_checkpoints)

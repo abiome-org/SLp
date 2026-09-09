@@ -361,3 +361,40 @@ plan using an already authenticated Hugging Face account. Review exact source
 and destination paths and component licenses first. Tokens belong in the
 credential store, never in a command, plan, repository or report. Upload receipts
 stay under ignored `results/`; immutable remote revisions go in the Git lock.
+
+## SLp-1.2-XL pretraining scale-up
+
+`modules/slp-1-2/config-xl.json` prepares a 24-layer, width-1024, 16-head model
+with 344,953,859 parameters under the current vocabulary. It retains the shared
+molecular/fitness architecture, descriptor contract, admitted corpus and global
+intervention exclusions. The schedule is 60,000 updates, with runtime bounded
+by the full-model hardware profile and the remaining funded budget.
+The 142M run took 40,000 updates. Human adaptation and external SL benchmarking
+are deferred while the shared predictor is scaled. Internal development checks
+remain part of training.
+
+`benchmark.py --config modules/slp-1-2/config-xl.json --gene-count 30779`
+measures molecular and fitness training shapes with the actual larger model.
+`--batch-sizes`, `--fitness-batch-sizes` and `--activation-checkpointing` expose
+memory/throughput choices. Synthetic profile weights are discarded. These
+measurements estimate execution cost, not biological performance.
+
+The local RunPod helper accepts `--state` and `--plan`; the collector accepts
+`--state`, `--run-name`, `--ops`, `--backup-seconds` and `--keep-checkpoints`.
+Use `--keep-checkpoints 2` for XL to retain two verified resumable backups within
+local disk capacity; the default zero preserves historical unlimited retention.
+Use a fresh state directory
+and run name for XL so that the completed first campaign stays intact. The
+allocation check includes earlier SLp spending and conservative storage charges
+under the original $50 total cap, plus a $5 reserve. It separately checks shared
+account credit against other running pods without changing those resources.
+When another job is expected to finish soon, an explicit
+`other_pods_reserve_hours` can budget its remaining runtime separately; the
+default reserves the entire allocation. A local five-minute credit check
+terminates only this campaign's pod below $5, preserving its persistent volume
+and most recent checkpoint for recovery. This does not increase the $50 cap.
+A `run_job.py --config ...` launch can start fresh or use `--resume` for an exact
+checkpoint continuation. Every allocation still needs a verified local guard,
+scoped pod guard and collection plan. Current CLI 2.12.0 does not expose the
+`--terminate-after` flag described in some RunPod examples; use the exercised
+guards, not an invented CLI flag.

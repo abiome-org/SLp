@@ -1,0 +1,54 @@
+{
+  "model": {
+    "width": 1024,
+    "layers": 24,
+    "heads": 16,
+    "ff_multiplier": 2.75,
+    "descriptor_dim": 702,
+    "context_dim": 128,
+    "gene_count": 0,
+    "assay_count": 16,
+    "taxon_count": 2,
+    "mechanism_count": 8,
+    "id_dropout": 0.25,
+    "dropout": 0.0,
+    "activation_checkpointing": false
+  },
+  "training": {
+    "seed": 120731,
+    "steps": 60000,
+    "micro_batch": 16,
+    "fitness_batch": 256,
+    "accumulation_steps": 8,
+    "observation_queries": 512,
+    "output_queries": 512,
+    "learning_rate": 0.0002,
+    "min_learning_rate_ratio": 0.1,
+    "warmup_steps": 500,
+    "weight_decay": 0.05,
+    "gradient_clip": 1.0,
+    "flow_probability": 0.3,
+    "flow_noise_scale": 1.0,
+    "control_probability": 0.1,
+    "checkpoint_every": 1000,
+    "evaluate_every": 2000,
+    "evaluation_batches": 32,
+    "log_every": 10,
+    "max_hours": 30.5,
+    "precision": "bf16",
+    "compile": false,
+    "source_weights": {
+      "molecular": 0.6,
+      "human_fitness": 0.2,
+      "yeast_fitness": 0.2
+    }
+  },
+  "campaign": {
+    "max_spend_usd": 50.0,
+    "reserve_usd": 5.0,
+    "target": "SLp-1.2-XL mixed-species pretraining: 344,953,859 parameters on the existing admitted corpus. Human post-training and external application benchmarks deferred.",
+    "prior_campaign_estimate_usd": 10.171310299755504,
+    "remaining_authorization_usd": 39.8286897002445,
+    "allocation_rule": "Bound runtime by live GPU/storage quote, current balance and original total campaign ceiling; measure full-shape throughput before starting the training schedule."
+  }
+}

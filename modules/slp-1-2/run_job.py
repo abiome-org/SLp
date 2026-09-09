@@ -11,15 +11,19 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--root', type=Path, required=True)
     p.add_argument('--run', type=Path, required=True)
-    p.add_argument('--resume', type=Path, required=True)
+    p.add_argument('--resume', type=Path)
+    p.add_argument('--config', type=Path, default=Path(__file__).with_name('config.json'))
     p.add_argument('--bundle', type=Path, required=True)
     p.add_argument('--max-hours', type=float, required=True)
     p.add_argument('--cleanup-request', type=Path, required=True)
     args = p.parse_args()
     module = Path(__file__).parent
     try:
-        subprocess.run([sys.executable, '-u', str(module / 'train.py'), '--root', str(args.root),
-                        '--output', str(args.run), '--resume', str(args.resume), '--max-hours', str(args.max_hours)], check=True)
+        command = [sys.executable, '-u', str(module / 'train.py'), '--root', str(args.root),
+                   '--output', str(args.run), '--config', str(args.config), '--max-hours', str(args.max_hours)]
+        if args.resume:
+            command += ['--resume', str(args.resume)]
+        subprocess.run(command, check=True)
         subprocess.run([sys.executable, '-u', str(module / 'finish.py'), '--root', str(args.root),
                         '--run', str(args.run), '--bundle', str(args.bundle),
                         '--cleanup-request', str(args.cleanup_request)], check=True)
