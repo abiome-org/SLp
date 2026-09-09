@@ -7943,3 +7943,18 @@ deadline guards retain the hard allocation limit; the persistent volume keeps
 resumable checkpoints. Local backups retain two verified snapshots to fit the
 host disk. Ten focused tests pass for campaign accounting, the shared-credit
 stop, invalid runtime rejection and verified checkpoint retention.
+
+The XL job launched at 2026-09-09 00:29:51 UTC (September 8 locally) on pod
+`imjr2m8ek6rrhs`, reusing verified volume `0u8e5qtjgb`. Both deadline guards
+were armed before launch; the hard deadline is 2026-09-10 08:26:29 UTC. The
+first optimizer update completed with finite loss and gradients. Its run
+receipt confirms 344,953,859 parameters, a fresh initialization and native
+PyTorch execution on the RTX 5090. Training is in progress; there are no XL
+biological comparison results yet. The local collector and hourly follow-up
+are active for checkpoint recovery, artifact verification and resource cleanup.
+
+The profiling pod was deleted after staging at 2026-09-09 00:26:16 UTC.
+Its measured allocation lasted 0.384 hours, with a conservative GPU/storage
+estimate of $0.3855. The XL budget retains the full $1.0039 profiling allowance
+as additional margin. Source and campaign tooling were committed locally as
+`0c56319`; no artifacts or source were published.

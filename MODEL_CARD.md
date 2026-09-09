@@ -2,6 +2,12 @@
 
 ## SLp-1.2 pretrained base
 
+A **344,953,859-parameter SLp-1.2-XL** pretraining run is now in progress,
+targeting 60,000 updates on the same admitted mixed-species corpus. It has not
+completed or replaced the 142M artifact described below. Human post-training
+and external SL benchmarking remain deferred; the [results ledger](docs/results.md)
+records the measured execution profile and bounded campaign.
+
 SLp-1.2 is a trained **142,311,171-parameter** shared set transformer for
 molecular endpoint and quantitative fitness prediction. Individual intervention
 tokens, molecular observations and RNA/protein/fitness queries use one backbone.
