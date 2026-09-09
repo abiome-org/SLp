@@ -7958,3 +7958,54 @@ Its measured allocation lasted 0.384 hours, with a conservative GPU/storage
 estimate of $0.3855. The XL budget retains the full $1.0039 profiling allowance
 as additional margin. Source and campaign tooling were committed locally as
 `0c56319`; no artifacts or source were published.
+
+## 2026-09-08 — XL continuation migrated to B200
+
+At the user's request, the active XL run moved from RTX 5090 to one B200.
+The trainer received a graceful stop request and saved update 377, including
+model weights, AdamW state, sampler state and random-generator states. The
+checkpoint passed its full SHA-256 manifest verification remotely and after
+local backup. Its model hash is
+`1ec7f96e08741d3d9a0604703692d6093c6dfb6ee448a868b9abe4cdd39dfad5`;
+optimizer/RNG payload hash is
+`b73ad50cd80b8416660fb42d358689fbfa18557173f4b764dd32b0954426639a`.
+
+B200 pod `6dvegx3gouhfnc` mounted the same volume, `0u8e5qtjgb`, in EU-RO-1.
+The native PyTorch continuation confirms 344,953,859 parameters and the exact
+update-377 checkpoint. All 26 captured source files matched the prior run.
+The data, model, task mixture, batches and optimization schedule were retained.
+The old 5090 pod was deleted at 2026-09-09 00:51:42 UTC after the B200 was
+successfully optimizing and the local checkpoint backup was verified. Its
+allocation lasted 0.4203 hours, costing a conservative $0.4219 including storage.
+
+The real B200 updates 400–730 took **0.63262 seconds per update**, about 2.6x
+faster than the 5090's early training speed. This projects roughly 10.4 hours
+for the remaining updates before evaluation and collection. The earlier
+compute-only hardware comparison was an optimistic scaling scenario; its
+10.74x peak BF16 ratio did not translate into the same training speedup.
+The observed B200 rate would exceed the current $50 campaign budget for the
+complete 60,000-update target. A $90 total-cap request is pending; no increase
+has been applied.
+
+The existing compiled-execution path was then enabled using
+`config-xl-b200.json` and `compile_mode: reduce-overhead`, resuming the verified
+update-1,001 checkpoint. Its launch at 2026-09-09 00:56:26 UTC retained the
+same model, objectives and batch settings. This is a continuation of real
+pretraining, not a separate synthetic benchmark. CUDA graph replay failed
+during backward at update 1,002, before an optimizer update; update 1,001
+remained intact. The failed attempt's source, runtime and error receipts are
+preserved under `failed-attempts/cudagraph-1001` within the run. The continuation
+was restarted with ordinary compiler fusion (`compile_mode: default`) and
+CUDA graph replay disabled. Its performance is not yet recorded. Three focused
+training-contract tests pass.
+
+The B200 allocation remains bounded to five hours at $6.79/hour, terminating
+at 2026-09-09 05:42:26 UTC. Its reserved total, including previous allocations
+and a $5 buffer, is $49.58. The compiled segment's time limit leaves 21 minutes
+inside that deadline for final evaluation and artifact transfer. State and
+receipts are in `data/slp12-xl-b200-campaign`; the resumed run remains
+`results/slp12-xl-345m-r1`. The old collector is stopped, and a B200 collector
+backs up verified checkpoints with two-snapshot retention. Automatic approval
+review rejected the broader recurring follow-up; the accepted app monitor is
+read-only and reports progress or failures. Existing detached training,
+collection and deadline guards retain their recorded scope.

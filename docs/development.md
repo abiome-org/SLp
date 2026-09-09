@@ -398,3 +398,19 @@ checkpoint continuation. Every allocation still needs a verified local guard,
 scoped pod guard and collection plan. Current CLI 2.12.0 does not expose the
 `--terminate-after` flag described in some RunPod examples; use the exercised
 guards, not an invented CLI flag.
+
+`config-xl-b200.json` retains the XL model, data mixture, batch sizes and
+optimizer schedule while enabling `torch.compile` with ordinary fusion and
+CUDA graph replay disabled. The initial `reduce-overhead` attempt failed on
+graph-output lifetime during backward and was recovered from its checkpoint.
+The trainer accepts an optional `compile_mode`; its default preserves the
+previous compiler behavior. GPU migrations and changes to execution mode
+resume a verified optimizer checkpoint and capture a new source/configuration
+receipt. Backend changes preserve the saved training state but do not promise
+bitwise-identical floating-point arithmetic or random draws across kernels.
+The B200 allocation uses `data/slp12-xl-b200-campaign` and
+`/workspace/slp12-b200-ops`, with a fixed deadline independent of any resumed
+trainer clock. The previous 5090 collector must remain stopped because both
+allocations share the same volume. The app heartbeat is limited to read-only
+status alerts; the detached job, collector and guards handle their recorded
+training and cleanup scope.

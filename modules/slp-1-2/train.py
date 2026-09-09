@@ -256,7 +256,7 @@ def main(args):
                    'corpus_receipts': corpus.receipts, 'resumed_from': str(args.resume) if args.resume else None,
                    'training_targets': ['molecular endpoints', 'human single fitness', 'yeast single/double fitness']})
     if t.get('compile'):
-        model_forward = torch.compile(model)
+        model_forward = torch.compile(model, mode=t.get('compile_mode', 'default'))
     else:
         model_forward = model
     if world_size > 1:
