@@ -8040,3 +8040,36 @@ Receipts are `live-credit-check.json`, `credit-revision-blocked.json` and
 `limit-resume-launch.json` in the B200 campaign directory. Explicit approval
 to replace the $50 cap with the existing account balance is pending; the
 earlier $90 proposal has not been approved either.
+
+The user subsequently explicitly approved replacing the original cap with
+the existing RunPod balance while preserving $5. A fresh check at
+2026-09-09 02:12 UTC found **$59.7342** remaining and only the SLp B200 and
+its volume active. The approved continuation allows eight allocation hours
+from that check, costing at most **$54.4311** including conservatively priced
+storage. The fixed deadline is **2026-09-09 10:12:47 UTC** (04:12:47 Denver),
+and the local five-minute credit check still stops the pod below $5. No
+additional top-up, GPU or volume was assumed or created.
+
+The trainer saved update **8,468**, whose full checkpoint manifest passed
+verification. Its weights hash is
+`ba8e151864f22be4f6d811bb7867dc9bde8664598cf576df2be3a2e5e5decf8e`.
+The remote guard was stopped before its replacement was launched, with the
+original local guard protecting the handoff. After verifying the new scoped
+guard, the old local guard was stopped and replaced. Both use the same new
+deadline. The existing-credit continuation launched at 02:17:07 UTC from
+update 8,468 with the same compiled configuration and 60,000-update target.
+Its 7.5777-hour segment limit leaves 21 minutes before the allocation deadline
+for finalization, in addition to the trainer's three-minute stopping margin.
+Completion remains a target, not a guarantee within this narrow credit margin.
+The read-only app monitor now reads the approved allowance from the campaign
+receipt. Detailed records are `approved-credit-check.json`,
+`approved-checkpoint-and-guard.json`, `approved-remote-guard-verified.json`,
+`approved-local-guard-launch.json` and `approved-credit-launch.json` in the
+B200 campaign directory.
+
+The resumed job completed update 8,490 with finite loss and gradients. Its
+captured source hashes, corpus receipts and configuration match the previous
+segment exactly except for the runtime limit. The collector was restarted
+against the approved campaign receipt; both revised guards were verified and
+the superseded guards were stopped. This verifies the continuation is active,
+not that the 60,000-update target has finished.

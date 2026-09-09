@@ -414,3 +414,15 @@ trainer clock. The previous 5090 collector must remain stopped because both
 allocations share the same volume. The app heartbeat is limited to read-only
 status alerts; the detached job, collector and guards handle their recorded
 training and cleanup scope.
+
+An explicitly approved revision to an active allocation is recorded separately
+from the default $50 provisioning rule. The B200's approved revision uses a
+fresh account balance, subtracts $5, includes conservative storage charges and
+sets one fixed deadline without assuming future credit. Replacing guards
+requires a protected handoff: keep the original local guard active while
+stopping and replacing the remote guard, verify the replacement's scoped
+identity and deadline, then replace the local guard. The local replacement
+waits on a one-byte start gate until its process group is recorded, so its
+eventual termination receipt retains the correct guard identity. Resume the
+trainer from a verified checkpoint with time reserved for finalization; restart
+the collector so it reads the updated allocation receipt.
