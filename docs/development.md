@@ -15,116 +15,133 @@ CV3 test pair must be absent from SL-label fitting and from all human
 perturbation fitting. This is a design, not a trained artifact or a forecast of
 scores. The existing 142M and XL artifacts remain historical candidates.
 
-### Work backward from the prediction
+### General experimental prediction
 
-For genes A and B in human context c, the relevant predictions are the
-distributions of fitness and molecular outcomes under four conditions:
-unperturbed, A, B, and A+B. Let f be log relative fitness in an assay where that
-quantity is measured. The interaction contrast is
-
-```text
-I(A,B,c) = f(A+B,c) - f(A,c) - f(B,c) + f(0,c)
-```
-
-Negative I indicates a deleterious departure from multiplicative fitness.
-Actual SL additionally depends on tolerated single perturbations and sufficiently
-low double-perturbation viability. Other sources use different fitness units
-and interaction definitions, so their observation models retain those semantics.
-A learned human readout maps the four outcomes, response states and uncertainty
-to the benchmark's SL labels. It must not equate every negative interaction or
-large RNA change with lethality.
-
-Single-intervention accuracy alone cannot identify this interaction: two models
-can agree on every control and single-knockout outcome while assigning different
-fitness to A+B. Combination measurements and transferable constraints are
-therefore central evidence, not optional additions after scaling singles.
-Allowed human SL labels also constrain pair behavior during adaptation.
-
-This task requires nonlinear combination prediction and a functional consequence
-of the predicted state. It does not require unconstrained temporal rollout or
-high-fidelity synthesis of every transcript. Molecular observations constrain
-the state and provide transferable supervision. The goal alone does not specify
-an optimal parameter count or prove any particular architecture will win.
-
-### One shared conditional world, followed by a human SL readout
-
-Use an inductive gene encoder over protein sequence representations and admitted
-non-SL biological features, a control-state encoder, and one nonlinear set
-transformer for interventions. Do not require a learned gene-ID lookup to act on
-a new gene. Keep species, assay, intervention mechanism and available context
-explicit. Static/observational features must not encode excluded intervention
-outcomes through a graph or pretrained checkpoint.
+The user's subsequent Bitter Lesson instruction simplifies the initial proposal.
+Replace the mandatory four-condition simulator and its SL readout with one
+conditional transformer over experimental records. Learn what measurements
+follow an intervention, then adapt the same model to predict human SL labels.
+The core statistical task is
 
 ```text
-Basal human/nonhuman measurements + context -> initial latent state z0
-Gene features + intervention mechanism       -> action tokens a, b
-
-Shared learned world:
-  z0, {}       -> unperturbed outcome distribution
-  z0, {a}      -> A outcome distribution
-  z0, {b}      -> B outcome distribution
-  z0, {a, b}   -> A+B outcome distribution
-
-Shared state -> assay-appropriate RNA/protein/fitness decoders
-Four response states + predicted outcomes + uncertainty -> human SL readout
+p_theta(requested measurements | available observations,
+        intervention set, gene representations, species, assay, context)
 ```
 
-Encode the basal observations once and reuse them across the four conditions.
-The pair state is learned jointly from both action tokens; do not force it to
-equal the sum of single-action states. Simultaneous pairs must be invariant to
-the order of A and B. All components train together; no frozen simulation bridge
-separates molecular and functional learning. A functional query can be learned
-when a dataset has fitness but no paired RNA measurement. Missing context is
-explicit, not a fabricated measured state.
+A query specifies what is to be predicted. An RNA measurement, a protein
+measurement, quantitative fitness, an assay-native interaction score and a
+human SL label are different query types on the same learned backbone. Use
+small generic input/output adapters for numerical and categorical values;
+sharing a backbone does not imply forcing unlike measurements into identical
+units or distributions. Do not serialize every floating-point number as prose
+merely to imitate a language model.
 
-For a named cell line, condition on that line's allowed basal state. For a
-pan-cancer benchmark lacking a context label, aggregate predictions over a
-fixed, allowed human context panel with aggregation learned on training labels.
-Do not select a favorable context using test labels or substitute K562 for all
-pan-cancer pairs. The initial readout uses predicted world outcomes and response
-states rather than a parallel raw-gene classifier; matched direct-feature
-predictors remain essential competitors. A hidden-state path alone does not
-prove successful world modeling, so quantitative prediction and pretraining
-contribution are measured separately.
+```text
+Experimental record
+  species, assay, context and observed basal measurements
+  gene sequence representations and intervention descriptions
+  requested measurement type and target coordinates
+        -> shared conditional transformer -> predicted measurement distribution
+```
 
-### Training data and objectives follow the interaction
+Use a general pretrained protein-sequence encoder to provide meaningful gene
+representations for unseen human interventions. Preserve useful information in
+those representations instead of fixing a small handcrafted feature bottleneck.
+Gene identifiers support joining records; predictions cannot depend on a learned
+lookup entry being trained as an intervention. Shared trainable representation
+layers can adapt sequence information to experimental prediction. Additional
+admissible annotations can enter as data, not a collection of mandatory
+pathway-specific neural modules. Encoder provenance must satisfy the same
+exposure rules as the rest of the model.
 
-Retain both single and double interventions as first-class experimental records.
-Human single-gene dependency data teach context-specific individual effects.
-Human combination measurements provide the species-relevant pair evidence
-missing from the 1.2 corpus. Nonhuman single/double fitness and molecular
-perturbations teach shared response structure at broader intervention coverage.
-Homology can connect representations across species, but a yeast observation
-never becomes a human outcome. Cross-species usefulness must be measured.
+Keep intervention mechanism, source units, species, measurement availability
+and actual time metadata explicit. Simultaneous interventions are unordered
+sets, whereas real timed experiments retain their order and timing. The model
+learns cross-gene and cross-species dependencies through shared computation.
+Do not impose additive latent actions, hand-designed orthology transfer,
+pathway hierarchies, or a fixed functional-redundancy equation.
 
-On a measured single/single/double triplet, predict all three conditions together.
-Train their native endpoints and the measured interaction contrast, with
-normalization fitted only on training data. Account for shared measurement
-noise rather than treating a derived residual as an independent experiment.
-The singles are predicted outputs unless the deployment protocol explicitly
-provides measured singles; the strict CV3 test does not provide them.
+### Learn the task instead of prescribing a biological derivation
 
-For RNA/protein, emphasize reproducible differences between intervention
-populations using measured controls and replicates. Population means and
-distributional summaries provide lower-noise supervision; retain within-group
-variation where it is supported by observations. Never manufacture paired
-before/after trajectories from independently sampled cells. Distributional
-decoders remain available, but increasing their complexity must improve useful
-prediction rather than become a separate goal.
+The earlier proposal required control, A, B and A+B predictions before SL
+scoring. Those remain meaningful queries and diagnostics, but they are not a
+mandatory execution graph or an information bottleneck for the SL output.
+At inference, a human SL query may be answered directly from the shared model's
+learned representation, without four preliminary model calls.
 
-Use two operational phases with the same trainable world:
+For compatible log-fitness assays, the measured contrast
+`f(A+B)-f(A)-f(B)+f(0)` remains a useful interaction evaluation. Keep its native
+meaning: negative interaction is not automatically SL, and tolerated singles
+and double-perturbation viability matter. Do not hard-wire that contrast as the
+only allowed route to a benchmark prediction or require a dedicated loss for
+it in every source. Assay-provided quantitative interaction measurements may
+be learned as ordinary targets with their provenance and uncertainty retained.
+Derived scores and raw measurements from the same experiment are correlated
+observations, not additional independent experiments.
 
-1. Mixed-species quantitative pretraining on allowed human and nonhuman
-   molecular, fitness and interaction observations.
-2. Human-only task adaptation using training-fold SL labels together with
-   allowed human quantitative replay. SL gradients may update the shared world;
-   continued quantitative supervision preserves its measured capabilities.
+A hidden representation does not establish world-model capability. That claim
+requires successful prediction of held-out perturbation measurements and an SL
+gain attributable to quantitative perturbation learning. Conversely, adding a
+box called cellular state or requiring four simulations does not establish it
+either. Under this proposal, observable prediction and controlled transfer
+supply the evidence; internal biological concepts may emerge without being
+assigned architectural modules in advance.
 
-The second phase is intentional. The user's goal does not require label-free
-SL emergence. Train a supervised readout appropriate to each label/assay
-definition, with the shared biology beneath it. Source-specific losses are
-normalized and their balance selected inside the training partition; do not
-select by an unqualified average of yeast and human endpoint MSE.
+### Put engineering effort into experimental coverage and training
+
+Build a common, losslessly traceable experimental-record format over human and
+nonhuman data: controls, single and multiple interventions, RNA/protein, fitness
+and measured interaction effects. Preserve source context, replicates, known
+versus missing observations, and outcome definitions. Adding another species,
+assay or intervention screen should mainly add data and metadata, not require
+redesigning the model. Nonhuman homologs remain native observations; their
+usefulness for human transfer is learned and tested.
+
+Combination data are still indispensable evidence for combinations. Models can
+agree on every control and single-knockout measurement while disagreeing on a
+double knockout. A simpler architecture does not remove that information gap.
+Prioritize admissible human combination measurements and broad nonhuman
+single/double experiments alongside the existing single-gene corpus.
+
+Train conditional prediction by masking measured outputs and predicting only
+values actually observed. Inputs for a prospective perturbation query contain
+only measurements available before that intervention; arbitrary masking must
+not reveal part of the held intervention's response. Within-assay imputation
+can be a separately identified training task, not a disguised prospective
+prediction result. Controls and replicates anchor experimental comparisons.
+Unpaired cells remain population samples, never fabricated before/after pairs.
+
+Use conditional likelihood with the appropriate generic numerical/categorical
+output adapter. Normalize training scales and aggregate by experimental units
+so a dense transcript panel does not automatically overwhelm a smaller fitness
+screen. Source mixture, masking rate, output resolution and regularization are
+training choices to select on inner human CV3 transfer. Do not accumulate a new
+handcrafted loss for every failure. In particular, forcing all different genes
+to have different outcomes would also penalize biologically similar responses;
+wrong-gene controls are diagnostic rather than a universal repulsion objective.
+
+The two training phases preserve the user's species constraint:
+
+1. Quantitative pretraining predicts permitted human and nonhuman experimental
+   outcomes with the shared model; no human benchmark test outcome is available.
+2. Human-only post-training adds SL-label queries and continues permitted human
+   quantitative prediction. Train end to end, including the shared backbone;
+   choose the amount of quantitative replay on inner validation. Do not freeze
+   the base by principle or constrain SL gradients to a tiny calibrator.
+
+For a benchmark with a known cell context, provide that allowed context. For a
+pan-cancer label without a specified context, encode the actual missing-context
+and label scope. Learn the prediction from training examples; do not require a
+hand-selected pool of simulated contexts or select a favorable context using
+outer-test labels. The model is trained to predict the benchmark's observed
+label, not to claim that every source label is a universally causal SL fact.
+
+The 1.2 backbone already uses broadly compatible shared-transformer machinery.
+Its failed XL run is not evidence that a generic architecture must be replaced
+with more biology-specific modules. This proposal changes the experimental
+coverage, inductive input representation, SL adaptation and selection strategy;
+it does not claim that renamed tokens or a likelihood objective will make the
+same corpus scale successfully.
 
 ### Strict exposure rules apply before pretraining
 
@@ -163,6 +180,11 @@ same fixed human SL adaptation budget for each candidate, rather than selecting
 on reconstruction loss and postponing all application feedback. Human molecular
 gene-specificity and fitness/interaction tests explain the learned capability;
 yeast evaluations are pretraining diagnostics, not final application selectors.
+The inner validation genes must also be excluded from that candidate's human
+perturbation fitting and initializer exposure. Holding them out only from the
+inner SL readout would select under an easier task. After settings are chosen,
+the outer-fold refit can use its allowed training genes while preserving the
+outer test exclusions.
 
 Maintain the exact benchmark suite as a manifest of datasets, splits, IDs,
 negative definitions, context access and metric formulas. Existing Feng and
@@ -188,11 +210,24 @@ perturbation modeling. A better classifier with an unused molecular decoder
 does not establish that route. Report fold and gene-level uncertainty rather
 than treating correlated pair rows as independent experiments.
 
-Implementation starts with the fold-aware exposure/data contract and human
-single/double fitness supervision, then the shared four-condition world and
-human adaptation path. Reuse verified data readers and artifact infrastructure;
-preserve historical models. No additional cloud allocation is launched by this
-design, and the completed campaign's allowance does not fund a new one.
+Scale independent experimental coverage, representation learning, model
+capacity and training duration together. The scaling result of interest is
+human inner-CV3 transfer at a fixed adaptation budget, not only lower aggregate
+reconstruction loss. Use general optimization and bounded search over training
+settings rather than treating any hand-picked mixture or width as biologically
+privileged. More self-generated labels are not new experimental evidence;
+self-play in an unvalidated learned simulator cannot supply ground-truth SL.
+
+Implementation starts with the fold-aware experimental-record contract and
+human single/double data, then a shared conditional predictor and human SL-query
+adaptation. Reuse verified data readers and artifact infrastructure and preserve
+historical models. No new cloud allocation follows from this design.
+
+The methodological direction follows [Sutton's Bitter Lesson](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf):
+prefer general learning methods that can use additional computation over a
+system built around our preferred explanation of biology. It is a design
+principle, not a guarantee of improved scores or unlimited benefit from a
+finite corpus.
 
 ## SLp-1.2 joint pretraining
 

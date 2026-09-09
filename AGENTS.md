@@ -16,6 +16,13 @@ and application selection use human data only. Use fold-specific exposure
 masks; withholding SL edges alone is insufficient. Architecture and selection
 for the next model are derived in `docs/development.md`.
 
+The user explicitly requests a Bitter Lesson design: prefer one general
+conditional experimental predictor and end-to-end human SL adaptation. Treat
+biological knowledge as admissible data rather than mandatory biological
+modules. Four-condition simulations and interaction equations are useful
+diagnostics, not a required bottleneck for SL prediction. Scale data coverage,
+representation learning and compute based on human inner-CV3 transfer.
+
 User intent and host instructions take precedence over this guide. Carry
 already authorized work through implementation, training and verification.
 Resolve routine choices autonomously and give regular, concrete status updates.
@@ -66,11 +73,11 @@ reconcile` or `omf operation cancel`; do not edit runtime records by hand.
 
 ## Model and data design
 
-- Consolidate reusable observation encoding, action/state transitions and
-  molecular decoding. Keep application scores and supervised SL readouts
-  separate from the world module.
-- Use static sequence/annotation descriptors without learned gene-ID lookup
-  requirements. Represent intervention mechanism explicitly, including CRISPRi
+- Share observation, intervention and measurement learning in a general
+  backbone. Keep quantitative and SL target semantics and evaluation distinct;
+  permit end-to-end SL gradients during human-only post-training.
+- Use inductive sequence/annotation representations without learned gene-ID
+  lookup requirements. Represent intervention mechanism explicitly, including CRISPRi
   versus CRISPRa. Respect assay-specific measurement and normalization semantics.
 - Treat unpaired single-cell observations as populations; do not fabricate paired
   cellular trajectories. Simultaneous endpoint combinations are not time courses.

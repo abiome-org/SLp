@@ -9,8 +9,11 @@ human SL prediction across the combined benchmark suite as the objective, with
 CV3 both genes withheld from SL-label fitting and all human perturbation
 fitting. Human/nonhuman perturbation world modeling is the proposed means;
 post-training and application selection are human-only. This supersedes the
-September 4 molecular-first selection priority. The next-model derivation is
-in `docs/development.md`. Implemented models and completed failures remain in
+September 4 molecular-first selection priority. The subsequent Bitter Lesson
+instruction favors a general conditional experimental predictor, with human SL
+as an end-to-end post-training query rather than a compulsory four-simulation
+readout. The next-model derivation is in `docs/development.md`; earlier
+architectural proposals below are historical context. Implemented models and completed failures remain in
 `MODEL_CARD.md` and `docs/results.md`; literature ambitions are not results.
   
 Synthetic lethality (SL) is a context-dependent interaction in which each single perturbation is compatible with viability but their combination is lethal. More general negative genetic interactions or synergistic fitness defects should not be called SL unless the single-perturbation tolerance and lethality criteria are met. Most computational SL systems treat SL as supervised link prediction: encode two genes, optionally add a cancer or cell-line context, and learn a binary or ranking score from known SL pairs. The SL-Predict formulation would be different. It would learn an intervention-conditioned cellular transition, then decode the predicted state into molecular measurements and viability. SL would be measured as a non-additive viability consequence of the predicted double perturbation rather than as the direct training target of the transition model.  

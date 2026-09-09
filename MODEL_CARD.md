@@ -3,8 +3,9 @@
 The current development target is above-SOTA human SL prediction across the
 combined benchmark suite under CV3: both test genes are withheld from SL-label
 fitting and all human perturbation fitting in each fold. Human/nonhuman
-perturbation world modeling is the proposed route to that target, followed by
-human-only post-training. The [next-model design](docs/development.md#next-model-design-derived-from-strict-cv3)
+perturbation prediction with one general conditional model is the proposed
+route, followed by human-only end-to-end SL-query post-training. The
+[next-model design](docs/development.md#next-model-design-derived-from-strict-cv3)
 is a proposal; the artifacts and measured capabilities below remain unchanged.
 
 ## SLp-1.2 pretrained base
