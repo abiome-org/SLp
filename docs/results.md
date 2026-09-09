@@ -8158,3 +8158,91 @@ capability to provide real network namespaces, retaining the project's existing
 identity and policies. This verifies standalone artifact portability; it does
 not claim OMF ModelPackage service deployment. The local VM was returned to
 its stopped state after verification.
+
+The user then approved deleting the retained volume. RunPod confirmed deletion
+of `0u8e5qtjgb`, and a subsequent resource listing verified its absence. No SLp
+pods or volumes remain. The cleanup receipt is
+`data/slp12-xl-b200-campaign/volume-cleanup.json`; collection status is now
+complete. This resolves the cleanup block above and does not change the
+training outcome of 54,971 updates.
+
+## 2026-09-09 — Matched frozen-base comparison: 142M versus XL
+
+The recovered XL bundle was scored locally on the existing immutable
+`results/slp12-base-panels-v1` panels. No data were resampled, no parameters
+were fitted, and no cloud compute was used. CPU scoring took **228.65 seconds**.
+The comparison uses the selected 142M update 27,000 and XL update 26,000
+checkpoints, following training runs of 40,000 and 54,971 updates respectively.
+It measures these two artifacts, not a capacity-only scaling law. Development
+outcomes had already been reused for checkpoint selection; these remain
+retrospective development results. Human post-training and external SL
+benchmarking were not run.
+
+The 110 cases contain 12 panels of eight rows per molecular source, plus
+4,096 rows each for human and yeast fitness. Human fitness spans 644 distinct
+interventions. Molecular action coverage is smaller: Norman has six distinct
+action sets, Frangieh nine, and K562/RPE1 single-cell panels twelve each.
+Rows within these panels are not independent intervention replicates.
+
+The panel manifest SHA-256 is
+`4fb25cb67e077bdce06ec729d74e40ba10501af15748e639b7e201db01bdbef2`.
+All prediction/source file hashes in both reports passed verification. Their
+row identities, fitting-only baselines, wrong-action availability, device and
+package versions match. Scoring, model and data code also match; the only
+scorer source change captures all dependency locks in the output. Swaps retain
+source, intervention mechanisms, cardinality and conditions while replacing
+gene identities.
+
+Lower MSE is better. Each row uses source-native normalized units; MSE must
+not be pooled across these modalities. Percentage change is XL relative to
+142M, so a positive value is a regression.
+
+| Source/modality | 142M MSE | XL MSE | Change | Fitting-mean MSE | XL wrong-gene MSE |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Human fitness | 0.124835 | 0.137873 | +10.44% | 0.219549 | 0.331206 |
+| K562 population RNA | 0.908667 | 0.895927 | -1.40% | 1.092016 | 1.245977 |
+| RPE1 population RNA | 0.654243 | 0.691846 | +5.75% | 0.763077 | 0.889017 |
+| HepG2 RNA | 1.035093 | 1.012558 | -2.18% | 1.189540 | 1.428855 |
+| GWPS RNA | 0.840586 | 0.841842 | +0.15% | 0.861600 | 0.863521 |
+| Norman RNA | 0.674013 | 0.585321 | -13.16% | 0.563122 | 0.636245 |
+| K562 single-cell RNA | 0.130753 | 0.131149 | +0.30% | 0.130679 | 0.132110 |
+| RPE1 single-cell RNA | 0.149687 | 0.152882 | +2.13% | 0.151276 | 0.153907 |
+| Frangieh single-cell RNA | 0.068827 | 0.072142 | +4.82% | 0.072526 | 0.072029 |
+| Frangieh single-cell protein | 1.546029 | 1.567289 | +1.38% | 1.944528 | 1.582329 |
+| Yeast molecular RNA | 0.341049 | 0.344195 | +0.92% | 0.410667 | 0.343893 |
+| Yeast fitness | 0.069174 | 0.071652 | +3.58% | 0.062874 | 0.078239 |
+
+XL improves **3 of 12** source/modality scores (3 of 10 human scores). This
+counts observed directions, not statistically significant wins. The 142M
+artifact remains the recommended default base: this XL run did not deliver a
+general improvement. Norman has the largest gain, but XL still loses to its
+fitting-only mean. Both models beat the human fitness fitting mean and incur
+substantially larger error with wrong genes; XL nevertheless regresses by
+10.4% against 142M on that same human panel.
+
+Single-cell intervention specificity remains weak. Replacing XL's genes
+increases cell-level error by less than 1% in K562 RNA, RPE1 RNA and Frangieh
+protein; it slightly improves Frangieh RNA. K562 and RPE1 cell-level predictions
+also lose to their fitting means. With interventions completely masked, XL MSE
+is 0.132644 for K562 RNA, 0.157296 for RPE1 RNA, 0.072575 for Frangieh RNA and
+1.586941 for Frangieh protein, close to its intact predictions. The 142M
+masked-action penalties were much larger, but its wrong-gene penalties were
+already small: a large mask penalty alone was not evidence of strong gene
+specificity.
+
+Within-panel pseudobulk aggregation does not reverse the overall result.
+K562 RNA improves by 1.10%, while RPE1 RNA worsens by 7.98%, Frangieh RNA by
+7.67% and Frangieh protein by 3.27%. These are means of unpaired cell samples,
+not reconstructed paired trajectories. Yeast remains diagnostic pretraining
+evidence: both bases lose to the fitting-mixture mean on the frozen fitness
+panel, and wrong genes slightly improve yeast molecular error. The separate
+larger development evaluation above likewise found no useful nonadditivity.
+
+The complete XL predictions, source capture and report are in
+`results/slp12-xl-base-evaluation-v1/`; report SHA-256 is
+`8411ba0bdac423259b6a29341edbee381d1db3aec7c28446f7933c0217833319`.
+The checked comparison and its reproducible analysis script are in
+`results/slp12-xl-base-comparison-v1/`; comparison report SHA-256 is
+`d29fc7b02c6cb43d1238e37b2ed75fcd4b573f9c25a95b2781cface3a6a8725b`.
+The original 142M report remains unchanged in
+`results/slp12-base-evaluation-v1/report.json`.

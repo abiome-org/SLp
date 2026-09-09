@@ -11,9 +11,18 @@ corpus as the 142M artifact described below. The recovered local bundle is
 the native B200 export. macOS CPU replay and isolated Linux OMF replay/export
 passed against the exported CUDA example.
 Human post-training and external SL benchmarking remain deferred. A matched
-evaluation on the frozen base panels has not yet compared XL with the 142M
-model; the [results ledger](docs/results.md) records XL's development metrics,
-execution, recovery and costs.
+evaluation on frozen development panels found lower XL error in **3 of 12
+source/modality scores**. Human fitness MSE increased from **0.124835 to
+0.137873** (+10.4%); Norman MSE decreased from **0.674013 to 0.585321**
+(-13.2%) but still exceeded the fitting-mean baseline (**0.563122**).
+XL also improved K562 and HepG2 population prediction; the remaining scores
+worsened. Wrong-gene substitutions barely affected single-cell predictions.
+This run did not produce a general scaling gain; the 142M artifact remains the
+recommended default base. These are selected checkpoints on retrospective
+development data, not an independent test or a controlled scaling curve.
+The [results ledger](docs/results.md) records the matched comparison, execution,
+recovery and costs. All SLp RunPod resources have been deleted after local
+artifact verification.
 
 SLp-1.2 is a trained **142,311,171-parameter** shared set transformer for
 molecular endpoint and quantitative fitness prediction. Individual intervention
