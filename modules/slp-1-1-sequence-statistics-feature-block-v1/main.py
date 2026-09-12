@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 ZERO = "0" * 64
 REQUIRED_INPUTS = frozenset(
@@ -74,20 +74,12 @@ def _validate_request_surface(request: ProtocolRequest, operation: str) -> None:
 def _bounds_from_config(request: ProtocolRequest, bounds_type: type) -> object:
     config = request.config
     return bounds_type(
-        max_manifest_bytes=config.get(
-            "maxManifestBytes", BOUND_DEFAULTS["maxManifestBytes"]
-        ),
+        max_manifest_bytes=config.get("maxManifestBytes", BOUND_DEFAULTS["maxManifestBytes"]),
         max_line_bytes=config.get("maxLineBytes", BOUND_DEFAULTS["maxLineBytes"]),
-        max_fasta_bytes=config.get(
-            "maxFastaBytes", BOUND_DEFAULTS["maxFastaBytes"]
-        ),
-        max_sequence_length=config.get(
-            "maxSequenceLength", BOUND_DEFAULTS["maxSequenceLength"]
-        ),
+        max_fasta_bytes=config.get("maxFastaBytes", BOUND_DEFAULTS["maxFastaBytes"]),
+        max_sequence_length=config.get("maxSequenceLength", BOUND_DEFAULTS["maxSequenceLength"]),
         max_records=config.get("maxRecords", BOUND_DEFAULTS["maxRecords"]),
-        max_archive_bytes=config.get(
-            "maxArchiveBytes", BOUND_DEFAULTS["maxArchiveBytes"]
-        ),
+        max_archive_bytes=config.get("maxArchiveBytes", BOUND_DEFAULTS["maxArchiveBytes"]),
     )
 
 
@@ -111,19 +103,13 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     universe = resolve_pinned_dataset(
         request.inputs["staticEntityUniverse"], "staticEntityUniverse"
     )
-    sequences = resolve_pinned_dataset(
-        request.inputs["sgdProteinSequences"], "sgdProteinSequences"
-    )
-    current = resolve_literal_artifact(
-        request.inputs["sgdCurrentOrfs"], "sgdCurrentOrfs"
-    )
-    mapping = resolve_literal_artifact(
-        request.inputs["sgdMappingManifest"], "sgdMappingManifest"
-    )
+    sequences = resolve_pinned_dataset(request.inputs["sgdProteinSequences"], "sgdProteinSequences")
+    current = resolve_literal_artifact(request.inputs["sgdCurrentOrfs"], "sgdCurrentOrfs")
+    mapping = resolve_literal_artifact(request.inputs["sgdMappingManifest"], "sgdMappingManifest")
     bounds = _bounds_from_config(request, Bounds)
-    result_file = os.environ.get("OMF_RESULT_FILE")
+    result_file = os.environ.get("OPENFOUNDRY_RESULT_FILE")
     if not result_file:
-        raise ValueError("OMF_RESULT_FILE is required for artifact placement")
+        raise ValueError("OPENFOUNDRY_RESULT_FILE is required for artifact placement")
     output_root = Path(result_file).parent
     result = build_sequence_feature_block(
         universe,
@@ -134,11 +120,22 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         bounds,
     )
     output_keys = (
-        "archiveSha256", "auditSha256", "manifestSha256", "entityRowsSha256",
-        "valuesNpySha256", "presentNpySha256", "sequenceProvenanceSha256",
-        "excludedNonCurrentSha256", "featureDefinitionSha256", "entityKeySetSha256",
-        "rows", "featureDimension", "presentValues", "excludedNonCurrentSequences",
-        "currentOrfsOutsideUniverse", "multiTargetProteinConsensus",
+        "archiveSha256",
+        "auditSha256",
+        "manifestSha256",
+        "entityRowsSha256",
+        "valuesNpySha256",
+        "presentNpySha256",
+        "sequenceProvenanceSha256",
+        "excludedNonCurrentSha256",
+        "featureDefinitionSha256",
+        "entityKeySetSha256",
+        "rows",
+        "featureDimension",
+        "presentValues",
+        "excludedNonCurrentSequences",
+        "currentOrfsOutsideUniverse",
+        "multiTargetProteinConsensus",
     )
     outputs = {
         "auditSummary": {

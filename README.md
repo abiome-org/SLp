@@ -89,8 +89,9 @@ sources directly from their publishers. Only small JSON responses reach the
 Mac. See the [cloud storage workflow](docs/development.md#cloud-dataset-storage).
 On a cloud training host, `python scripts/fetch_artifacts.py data` still obtains
 the historical prepared inputs for the [training commands](docs/development.md).
-Open Model Factory 2 records experiments and artifact replay; its exact runtime
-is pinned in [omf-version.json](omf-version.json).
+OpenFoundry records experiments and artifact replay; its exact runtime is pinned
+in [openfoundry-version.json](openfoundry-version.json). See the
+[upgrade and setup guide](docs/development.md#openfoundry) for the new format.
 
 | Location | Purpose |
 |---|---|
@@ -98,10 +99,10 @@ is pinned in [omf-version.json](omf-version.json).
 | `experiment*.yaml`, `workloads/`, `evaluations/`, `bindings/`, `policies/` | Versioned experiment and execution configuration |
 | `sources/`, `rights/`, `schemas/` | Source descriptions, rights receipts and data schemas |
 | `storage/` | Private R2 destination, source inventory and cloud ingestion service |
-| `MODEL_CARD.md` | Maintained scientific description of SLp-1.1 |
+| `MODEL_CARD.md` | Maintained scientific description and measured model capabilities |
 | `docs/` | Development guide, module reference, literature and results ledger |
 | `model/v1/` | Frozen SLp-1 source and model card |
-| `data/`, `results/`, `.omf/`, `ontology/` | Ignored local payloads and runtime state; tiny synthetic fixtures are the exception |
+| `data/`, `results/`, `.openfoundry/`, `.omf/`, `ontology/` | Ignored local payloads and runtime state; tiny synthetic fixtures are the exception |
 
 Use branches and pull requests for collaborative changes. Keep datasets,
 checkpoints, caches and credentials out of Git; publish versioned artifacts to

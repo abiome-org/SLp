@@ -88,7 +88,11 @@ class RosterBounds:
             ("maxRecordsPerSource", self.max_records_per_source, 1, 2_000_000),
             ("maxLineBytes", self.max_line_bytes, 128, 65_536),
         ):
-            if not isinstance(value, int) or isinstance(value, bool) or not minimum <= value <= maximum:
+            if (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or not minimum <= value <= maximum
+            ):
                 raise HeldRosterError(f"{name} must be an integer in [{minimum}, {maximum}]")
         expected_counts = (
             self.expected_intersection_size,
@@ -206,9 +210,9 @@ def _pinned_digest(value: object, label: str) -> str:
 
 def _dataset_resource(value: object, label: str) -> tuple[str, str]:
     resource = _nonempty_string(value, label)
-    if not resource.startswith("omf://"):
+    if not resource.startswith(("omf://", "openfoundry://")):
         raise HeldRosterError(f"{label} must be an OMF DatasetSnapshot resource URI")
-    body = resource.removeprefix("omf://")
+    body = resource.split("://", 1)[1]
     identity, separator, revision = body.rpartition("@")
     if not separator:
         raise HeldRosterError(f"{label} must contain an exact resource revision")
@@ -216,7 +220,10 @@ def _dataset_resource(value: object, label: str) -> tuple[str, str]:
     parts = identity.split("/")
     if (
         len(parts) < 3
-        or any(not part or part in {".", ".."} or any(char.isspace() for char in part) for part in parts)
+        or any(
+            not part or part in {".", ".."} or any(char.isspace() for char in part)
+            for part in parts
+        )
         or parts[-2] != "datasetsnapshot"
         or RESOURCE_NAME.fullmatch(parts[-1]) is None
     ):
@@ -238,9 +245,7 @@ def resolve_pinned_dataset_input(value: object, input_name: str) -> PinnedDatase
     resource_name, revision = _dataset_resource(value["resource"], f"{input_name}.resource")
     if value["mode"] != "copy":
         raise HeldRosterError(f"{input_name} must be an immutable copied DatasetSnapshot")
-    manifest_digest = _pinned_digest(
-        value["manifestDigest"], f"{input_name}.manifestDigest"
-    )
+    manifest_digest = _pinned_digest(value["manifestDigest"], f"{input_name}.manifestDigest")
     path_value = _nonempty_string(value["path"], f"{input_name}.path")
     requested = Path(path_value)
     if requested.is_symlink():
@@ -319,7 +324,9 @@ def _relative_regular_file(root: Path, value: object, label: str) -> Path:
         resolved = candidate.resolve(strict=True)
         resolved.relative_to(root)
     except (OSError, ValueError) as error:
-        raise HeldRosterError(f"{label} resolves outside or is missing from the artifact") from error
+        raise HeldRosterError(
+            f"{label} resolves outside or is missing from the artifact"
+        ) from error
     if not resolved.is_file():
         raise HeldRosterError(f"{label} must be a regular file")
     return resolved
@@ -340,9 +347,7 @@ def role_from_digest(digest: str) -> tuple[str, int]:
 def assign_intervention(intervention_id: str) -> Assignment:
     """Pure frozen assignment for one canonical species-native SGD CURIE."""
     if not isinstance(intervention_id, str) or SGD_IDENTIFIER.fullmatch(intervention_id) is None:
-        raise HeldRosterError(
-            "interventionId must be a canonical SGD CURIE, not a display symbol"
-        )
+        raise HeldRosterError("interventionId must be a canonical SGD CURIE, not a display symbol")
     digest = hashlib.sha256(ASSIGNMENT_DOMAIN + intervention_id.encode("ascii")).hexdigest()
     role, bucket = role_from_digest(digest)
     return Assignment(intervention_id, role, digest, bucket)
@@ -402,13 +407,14 @@ def load_inventory(path_value: str | Path, bounds: RosterBounds) -> LoadedInvent
         raise HeldRosterError("inventory must explicitly retain NCBI taxon 4932")
     if manifest["stableIdNamespace"] != SGD_NAMESPACE:
         raise HeldRosterError("inventory stableIdNamespace must be exactly SGD")
-    identity_mapping_id = _nonempty_string(
-        manifest["identityMappingId"], "identityMappingId"
-    )
+    identity_mapping_id = _nonempty_string(manifest["identityMappingId"], "identityMappingId")
     if SOURCE_IDENTIFIER.fullmatch(identity_mapping_id) is None:
         raise HeldRosterError("identityMappingId must identify one pinned SGD mapping snapshot")
     identity_mapping_sha256 = manifest["identityMappingSha256"]
-    if not isinstance(identity_mapping_sha256, str) or SHA256.fullmatch(identity_mapping_sha256) is None:
+    if (
+        not isinstance(identity_mapping_sha256, str)
+        or SHA256.fullmatch(identity_mapping_sha256) is None
+    ):
         raise HeldRosterError("identityMappingSha256 must be a lowercase SHA-256")
 
     files = manifest["files"]
@@ -452,7 +458,10 @@ def load_inventory(path_value: str | Path, bounds: RosterBounds) -> LoadedInvent
             if record["ncbiTaxon"] != YEAST_TAXON:
                 raise HeldRosterError("record must explicitly retain NCBI taxon 4932")
             intervention_id = record["interventionId"]
-            if not isinstance(intervention_id, str) or SGD_IDENTIFIER.fullmatch(intervention_id) is None:
+            if (
+                not isinstance(intervention_id, str)
+                or SGD_IDENTIFIER.fullmatch(intervention_id) is None
+            ):
                 raise HeldRosterError(
                     "interventionId must be a canonical SGD CURIE, not a display symbol"
                 )

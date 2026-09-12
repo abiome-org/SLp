@@ -26,7 +26,7 @@ from mapper import (  # noqa: E402
 class SgdMapTest(unittest.TestCase):
     def test_entrypoint_uses_the_omf_result_directory_contract(self) -> None:
         source = (MODULE / "main.py").read_text(encoding="utf-8")
-        self.assertIn('os.environ["OMF_RESULT_FILE"]', source)
+        self.assertIn('os.environ["OPENFOUNDRY_RESULT_FILE"]', source)
         self.assertNotIn("request.outputs_dir", source)
 
     @staticmethod
@@ -68,9 +68,7 @@ class SgdMapTest(unittest.TestCase):
         primary: str,
         display: str = "",
     ) -> str:
-        return "\t".join(
-            [accession, source, accession_type, feature_name, primary, display]
-        )
+        return "\t".join([accession, source, accession_type, feature_name, primary, display])
 
     @staticmethod
     def _retired(primary: str = "S000000010") -> str:
@@ -108,9 +106,7 @@ class SgdMapTest(unittest.TestCase):
             "",
             self._feature("S000000001", "YAL001C-A", "TFC3", "FUN24|YAL001C"),
             self._feature("S000000003", "YAL043C-A"),
-            self._feature(
-                "S000000004", "tA(AGC)A", feature_type="tRNA gene"
-            ),
+            self._feature("S000000004", "tA(AGC)A", feature_type="tRNA gene"),
         ]
         xrefs = xref_lines or [
             self._xref("P12345", "SIB", "Swiss-Prot ID", "YAL001C-A", "S000000001", "TFC3"),
@@ -147,9 +143,7 @@ class SgdMapTest(unittest.TestCase):
                     options["data_records"] = len(lines)
                     options["irregular_records"] = 0
                 else:
-                    options["data_records"] = sum(
-                        len(line.split(b"\t")) == 13 for line in lines
-                    )
+                    options["data_records"] = sum(len(line.split(b"\t")) == 13 for line in lines)
                     options["irregular_records"] = sum(
                         len(line.split(b"\t")) != 13 for line in lines
                     )
@@ -174,9 +168,7 @@ class SgdMapTest(unittest.TestCase):
             second_raw, second_specs = self._write_snapshot(root / "two")
             first = root / "first-output"
             second = root / "second-output"
-            report_one = normalize_sgd_snapshot(
-                first_raw, first, MapBounds(), file_specs=specs
-            )
+            report_one = normalize_sgd_snapshot(first_raw, first, MapBounds(), file_specs=specs)
             report_two = normalize_sgd_snapshot(
                 second_raw, second, MapBounds(), file_specs=second_specs
             )
@@ -235,14 +227,15 @@ class SgdMapTest(unittest.TestCase):
             )
 
             quarantine = self._jsonl(first / "retired-merged-quarantine.jsonl")
-            self.assertEqual([item["recordKind"] for item in quarantine], [
-                "retired-or-merged",
-                "malformed-source-row",
-            ])
-            self.assertIs(quarantine[0]["automaticRedirectAllowed"], False)
-            self.assertIs(
-                quarantine[0]["reportedReplacement"]["evidenceOnly"], True
+            self.assertEqual(
+                [item["recordKind"] for item in quarantine],
+                [
+                    "retired-or-merged",
+                    "malformed-source-row",
+                ],
             )
+            self.assertIs(quarantine[0]["automaticRedirectAllowed"], False)
+            self.assertIs(quarantine[0]["reportedReplacement"]["evidenceOnly"], True)
             manifest = json.loads((first / "mapping-manifest.json").read_text())
             self.assertEqual(
                 canonical_mapping_digest(manifest["digestBasis"]),
@@ -253,9 +246,7 @@ class SgdMapTest(unittest.TestCase):
     def test_legacy_retired_primary_is_preserved_without_fabricated_curie(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            raw, specs = self._write_snapshot(
-                root, retired_lines=[self._retired("L000003336")]
-            )
+            raw, specs = self._write_snapshot(root, retired_lines=[self._retired("L000003336")])
             output = root / "output"
             normalize_sgd_snapshot(raw, output, MapBounds(), file_specs=specs)
             record = self._jsonl(output / "retired-merged-quarantine.jsonl")[0]
@@ -298,7 +289,9 @@ class SgdMapTest(unittest.TestCase):
             root = Path(temporary)
             raw, specs = self._write_snapshot(
                 root,
-                xref_lines=["\t".join(["P12345", "SIB", "Swiss-Prot ID", "YAL001C-A", "S000000001"])],
+                xref_lines=[
+                    "\t".join(["P12345", "SIB", "Swiss-Prot ID", "YAL001C-A", "S000000001"])
+                ],
             )
             with self.assertRaisesRegex(SgdMapError, "exactly six columns"):
                 normalize_sgd_snapshot(raw, root / "output", MapBounds(), file_specs=specs)
@@ -341,9 +334,7 @@ class SgdMapTest(unittest.TestCase):
             payload = root / "stages" / "map" / "inputs" / "rawSgdMapping" / "sgd-map-raw"
             payload.mkdir(parents=True)
             base = {
-                "resource": (
-                    "omf://abiome/slp/datasetsnapshot/sgd-map-raw@sha256:" + "a" * 64
-                ),
+                "resource": ("omf://abiome/slp/datasetsnapshot/sgd-map-raw@sha256:" + "a" * 64),
                 "mode": "copy",
                 "path": str(payload),
                 "manifestDigest": "sha256:" + "b" * 64,

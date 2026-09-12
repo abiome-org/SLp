@@ -5,7 +5,7 @@ import json
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _validation_outputs() -> dict[str, object]:
@@ -63,17 +63,13 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         request.inputs["corpusAudit"],
         request.inputs["heldRoster"],
         request.inputs["modelCheckpoint"],
-        minimum_reference_perturbations=int(
-            request.config.get("minimumReferencePerturbations", 2)
-        ),
+        minimum_reference_perturbations=int(request.config.get("minimumReferencePerturbations", 2)),
         minimum_profile_readouts=int(request.config.get("minimumProfileReadouts", 2)),
         max_line_bytes=int(request.config.get("maxLineBytes", 16 * 1024 * 1024)),
-        maximum_absolute_log_scale=float(
-            request.config.get("maximumAbsoluteLogScale", 20.0)
-        ),
+        maximum_absolute_log_scale=float(request.config.get("maximumAbsoluteLogScale", 20.0)),
     )
     report["inputs"]["predictions"]["omfArtifactManifestDigest"] = prediction_artifact
-    output_dir = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_dir = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     report_path = output_dir / "molecular-evaluation-report.json"
     report_path.write_text(
         json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n",
@@ -99,9 +95,13 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         "queryDatasetManifestDigest": report["inputs"]["molecularQuery"]["datasetManifestDigest"],
         "queryManifestSha256": report["inputs"]["molecularQuery"]["queryManifestSha256"],
         "predictionArtifactManifestDigest": prediction_artifact,
-        "centeringDatasetManifestDigest": report["inputs"]["centeringReference"]["datasetManifestDigest"],
+        "centeringDatasetManifestDigest": report["inputs"]["centeringReference"][
+            "datasetManifestDigest"
+        ],
         "truthDatasetManifestDigest": report["inputs"]["heldTruth"]["datasetManifestDigest"],
-        "corpusAuditDatasetManifestDigest": report["inputs"]["corpusAudit"]["datasetManifestDigest"],
+        "corpusAuditDatasetManifestDigest": report["inputs"]["corpusAudit"][
+            "datasetManifestDigest"
+        ],
         "heldRosterDatasetManifestDigest": report["inputs"]["heldRoster"]["datasetManifestDigest"],
         "methodClass": report["method"]["class"],
         "diagnosticScope": report["diagnostic"]["scope"],

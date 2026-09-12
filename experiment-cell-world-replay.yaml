@@ -1,5 +1,5 @@
 name: slp-1-1-generative-cell-world-replay
-objective: Verify and export the already-trained molecular world model through OMF 2. This workflow performs no model optimization.
+objective: Verify and export the already-trained molecular world model through OpenFoundry. This workflow performs no model optimization.
 modelCard: MODEL_CARD.md
 data:
   candidate:
@@ -25,10 +25,10 @@ evaluate:
   metrics: replay/metrics.json
   artifacts: {report: replay/report.json, outputs: replay/outputs.npz}
 metrics:
-  empty_action_max_error: {direction: minimize, maximum: 0.0}
-  action_permutation_max_error: {direction: minimize, maximum: 0.00001}
-  portability_max_error: {direction: minimize, maximum: 0.00001}
-  sample_difference: {direction: maximize, minimum: 0.00001}
+  empty_action_max_error: {direction: minimize}
+  action_permutation_max_error: {direction: minimize}
+  portability_max_error: {direction: minimize}
+  sample_difference: {direction: maximize}
 primaryMetric: portability_max_error
 baseline: generative-world
 candidates:

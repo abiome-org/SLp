@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 from audit import AUDIT_SCHEMA, AuditBounds, write_training_audit_artifact
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _validation_outputs() -> dict[str, object]:
@@ -30,15 +30,12 @@ def validate(_request: ProtocolRequest) -> ProtocolResult:
 
 def run(request: ProtocolRequest) -> ProtocolResult:
     if request.config.get("rewardEnabled") is not False:
-        raise ValueError(
-            "training corpus-audit v1.5 requires rewardEnabled=false"
-        )
+        raise ValueError("training corpus-audit v1.5 requires rewardEnabled=false")
     fixed_inputs = {"pretrain", "heldRoster", "custodianBoundaryAttestation"}
     protected_inputs = {
         name: value
         for name, value in request.inputs.items()
-        if name.startswith("protectedInventory")
-        and len(name) > len("protectedInventory")
+        if name.startswith("protectedInventory") and len(name) > len("protectedInventory")
     }
     if (
         set(request.inputs) != fixed_inputs | set(protected_inputs)
@@ -55,33 +52,21 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         max_coverage_bytes=config.get("maxCoverageBytes", 64 * 1024 * 1024),
         max_files_per_corpus=config.get("maxFilesPerCorpus", 256),
         max_file_bytes=config.get("maxFileBytes", 8 * 1024 * 1024 * 1024),
-        max_total_bytes_per_corpus=config.get(
-            "maxTotalBytesPerCorpus", 64 * 1024 * 1024 * 1024
-        ),
+        max_total_bytes_per_corpus=config.get("maxTotalBytesPerCorpus", 64 * 1024 * 1024 * 1024),
         max_records_per_corpus=config.get("maxRecordsPerCorpus", 20_000_000),
-        max_trajectory_interventions=config.get(
-            "maxTrajectoryInterventions", 2_000_000
-        ),
+        max_trajectory_interventions=config.get("maxTrajectoryInterventions", 2_000_000),
         max_line_bytes=config.get("maxLineBytes", 4_096),
         max_sources=config.get("maxSources", 4_096),
         max_species=config.get("maxSpecies", 128),
         max_entities=config.get("maxEntities", 2_000_000),
-        max_identity_array_bytes=config.get(
-            "maxIdentityArrayBytes", 2 * 1024 * 1024 * 1024
-        ),
+        max_identity_array_bytes=config.get("maxIdentityArrayBytes", 2 * 1024 * 1024 * 1024),
         max_roster_records=config.get("maxRosterRecords", 2_000_000),
-        max_coverage_exclusions=config.get(
-            "maxCoverageExclusions", 8_000_000
-        ),
+        max_coverage_exclusions=config.get("maxCoverageExclusions", 8_000_000),
         max_npz_members=config.get("maxNpzMembers", 256),
-        max_inventory_files_per_source=config.get(
-            "maxInventoryFilesPerSource", 32
-        ),
-        max_inventory_records_per_source=config.get(
-            "maxInventoryRecordsPerSource", 2_000_000
-        ),
+        max_inventory_files_per_source=config.get("maxInventoryFilesPerSource", 32),
+        max_inventory_records_per_source=config.get("maxInventoryRecordsPerSource", 2_000_000),
     )
-    output_root = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_root = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     audit, audit_sha256 = write_training_audit_artifact(
         request.inputs["pretrain"],
         request.inputs["heldRoster"],
@@ -103,9 +88,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         "pretrainRecords": audit["datasets"]["pretrain"]["records"],
         "protectedTruthInputsPresent": False,
         "custodianSignatureVerified": True,
-        "protectedInventorySources": len(
-            audit["heldRoster"]["sourceInventories"]
-        ),
+        "protectedInventorySources": len(audit["heldRoster"]["sourceInventories"]),
     }
     return ProtocolResult(
         status="ok",
@@ -114,9 +97,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             "leakage_violations": 0,
             "benchmark_label_records": 0,
             "pretrain_records": outputs["pretrainRecords"],
-            "protected_inventory_sources": outputs[
-                "protectedInventorySources"
-            ],
+            "protected_inventory_sources": outputs["protectedInventorySources"],
         },
         artifacts=[
             {

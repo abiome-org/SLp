@@ -104,7 +104,8 @@ def attested_dataset_identity(corpus: CorpusIndex, dataset_input: object) -> dic
 
 
 def attested_query_identity(
-    query: PredictionQueryIndex, dataset_input: object,
+    query: PredictionQueryIndex,
+    dataset_input: object,
 ) -> dict[str, object]:
     _validate_dataset_input_shape(dataset_input, "molecularPredictionQuery")
     assert isinstance(dataset_input, dict)
@@ -146,10 +147,22 @@ def _audit_dataset_identity(corpus: CorpusIndex, dataset_input: object) -> dict[
 
 def _validate_audit_dataset_identity(value: object, role: str, name: str) -> None:
     expected = {
-        "resource", "revision", "manifestDigest", "datasetId", "version", "role",
-        "corpusManifestSha256", "contentDigest", "trajectoryGenesSha256",
-        "trajectoryGeneSetSha256", "trajectoryGeneCount", "records", "targetValues",
-        "modalities", "sourceIds", "speciesTaxa",
+        "resource",
+        "revision",
+        "manifestDigest",
+        "datasetId",
+        "version",
+        "role",
+        "corpusManifestSha256",
+        "contentDigest",
+        "trajectoryGenesSha256",
+        "trajectoryGeneSetSha256",
+        "trajectoryGeneCount",
+        "records",
+        "targetValues",
+        "modalities",
+        "sourceIds",
+        "speciesTaxa",
     }
     if not isinstance(value, dict) or set(value) != expected or value["role"] != role:
         raise ValueError(f"corpus audit {name} identity fields/role are invalid")
@@ -160,17 +173,28 @@ def _validate_audit_dataset_identity(value: object, role: str, name: str) -> Non
         or any(
             not _is_sha256(value[field])
             for field in (
-                "corpusManifestSha256", "contentDigest", "trajectoryGenesSha256",
+                "corpusManifestSha256",
+                "contentDigest",
+                "trajectoryGenesSha256",
                 "trajectoryGeneSetSha256",
             )
         )
-        or any(type(value[field]) is not int or value[field] < 0 for field in ("trajectoryGeneCount", "targetValues"))
-        or type(value["records"]) is not int or value["records"] <= 0
-        or not isinstance(value["datasetId"], str) or ":" not in value["datasetId"]
-        or not isinstance(value["version"], str) or not value["version"]
-        or not isinstance(value["modalities"], list) or not value["modalities"]
-        or not isinstance(value["sourceIds"], list) or not value["sourceIds"]
-        or not isinstance(value["speciesTaxa"], list) or not value["speciesTaxa"]
+        or any(
+            type(value[field]) is not int or value[field] < 0
+            for field in ("trajectoryGeneCount", "targetValues")
+        )
+        or type(value["records"]) is not int
+        or value["records"] <= 0
+        or not isinstance(value["datasetId"], str)
+        or ":" not in value["datasetId"]
+        or not isinstance(value["version"], str)
+        or not value["version"]
+        or not isinstance(value["modalities"], list)
+        or not value["modalities"]
+        or not isinstance(value["sourceIds"], list)
+        or not value["sourceIds"]
+        or not isinstance(value["speciesTaxa"], list)
+        or not value["speciesTaxa"]
     ):
         raise ValueError(f"corpus audit {name} identity provenance is invalid")
     if name in {"molecularValidation", "molecularFinal"} and value["trajectoryGeneCount"] <= 0:
@@ -201,9 +225,16 @@ def validate_admitted_training_evidence(
     )
     audit = _read_json_bounded(audit_path, "corpus audit")
     required = {
-        "schema", "rewardEnabled", "auditPassed", "strictInterventionIsolation",
-        "leakageViolations", "leakedTrajectoryGenes", "benchmarkLabelRecords",
-        "omfPriorAdmissionRequired", "datasets", "heldRoster",
+        "schema",
+        "rewardEnabled",
+        "auditPassed",
+        "strictInterventionIsolation",
+        "leakageViolations",
+        "leakedTrajectoryGenes",
+        "benchmarkLabelRecords",
+        "omfPriorAdmissionRequired",
+        "datasets",
+        "heldRoster",
     }
     if not isinstance(audit, dict) or set(audit) != required:
         raise ValueError("corpus audit must be an exact admitted sparse-training attestation")
@@ -232,11 +263,24 @@ def validate_admitted_training_evidence(
     held_union = validation | final
     held = audit["heldRoster"]
     held_fields = {
-        "resource", "revision", "manifestDigest", "rosterSha256", "coverageSha256",
-        "assignmentDomainHex", "bucketRule", "identityMappingId",
-        "identityMappingSha256", "sourceInventories", "intersectionSize",
-        "pretrainGeneCount", "validationGeneSetSha256", "validationGeneCount",
-        "finalGeneSetSha256", "finalGeneCount", "unionGeneSetSha256", "unionGeneCount",
+        "resource",
+        "revision",
+        "manifestDigest",
+        "rosterSha256",
+        "coverageSha256",
+        "assignmentDomainHex",
+        "bucketRule",
+        "identityMappingId",
+        "identityMappingSha256",
+        "sourceInventories",
+        "intersectionSize",
+        "pretrainGeneCount",
+        "validationGeneSetSha256",
+        "validationGeneCount",
+        "finalGeneSetSha256",
+        "finalGeneCount",
+        "unionGeneSetSha256",
+        "unionGeneCount",
     }
     if not isinstance(held, dict) or set(held) != held_fields:
         raise ValueError("corpus audit heldRoster fields do not match v1.2")
@@ -264,7 +308,8 @@ def validate_admitted_training_evidence(
         or held["manifestDigest"] != held_roster_snapshot["manifestDigest"]
         or not _is_prefixed_sha256(held["manifestDigest"])
         or not _is_sha256(held["coverageSha256"])
-        or not isinstance(held["identityMappingId"], str) or not held["identityMappingId"]
+        or not isinstance(held["identityMappingId"], str)
+        or not held["identityMappingId"]
         or not _is_sha256(held["identityMappingSha256"])
     ):
         raise ValueError("corpus audit held-roster provenance is invalid")
@@ -272,12 +317,9 @@ def validate_admitted_training_evidence(
     if (
         datasets["molecularValidation"]["trajectoryGeneSetSha256"]
         != held["validationGeneSetSha256"]
-        or datasets["molecularValidation"]["trajectoryGeneCount"]
-        != held["validationGeneCount"]
-        or datasets["molecularFinal"]["trajectoryGeneSetSha256"]
-        != held["finalGeneSetSha256"]
-        or datasets["molecularFinal"]["trajectoryGeneCount"]
-        != held["finalGeneCount"]
+        or datasets["molecularValidation"]["trajectoryGeneCount"] != held["validationGeneCount"]
+        or datasets["molecularFinal"]["trajectoryGeneSetSha256"] != held["finalGeneSetSha256"]
+        or datasets["molecularFinal"]["trajectoryGeneCount"] != held["finalGeneCount"]
     ):
         raise ValueError("validation/final corpora do not match the held-roster populations")
     overlap = sorted(pretrain.trajectory_genes & held_union)
@@ -337,8 +379,11 @@ def write_sparse_checkpoint(
         array = tensor.detach().cpu().contiguous().numpy().astype("<f4", copy=False)
         view = memoryview(array).cast("B")
         entry = {
-            "name": name, "dtype": "float32-le", "shape": list(array.shape),
-            "bytes": view.nbytes, "sha256": hashlib.sha256(view).hexdigest(),
+            "name": name,
+            "dtype": "float32-le",
+            "shape": list(array.shape),
+            "bytes": view.nbytes,
+            "sha256": hashlib.sha256(view).hexdigest(),
         }
         tensors.append((entry, array))
         payload_bytes += view.nbytes
@@ -542,10 +587,14 @@ def write_target_free_predictions(
             "queryManifestSha256": molecular_query.query_manifest_sha256,
             "targetValuesPresent": False,
             "observedMaskPresent": False,
-            "shards": [{
-                "path": "profiles-000.jsonl", "sha256": shard_digest,
-                "bytes": partial_records.stat().st_size, "records": record_count,
-            }],
+            "shards": [
+                {
+                    "path": "profiles-000.jsonl",
+                    "sha256": shard_digest,
+                    "bytes": partial_records.stat().st_size,
+                    "records": record_count,
+                }
+            ],
         }
         manifest_bytes = canonical_json_bytes(manifest, newline=True)
         with tarfile.open(partial_bundle, mode="w", format=tarfile.USTAR_FORMAT) as archive:
@@ -591,10 +640,15 @@ def _add_canonical_tar_member(
 
 
 def build_artifact_report(
-    core_report: dict[str, Any], *, evidence: EvidenceBinding,
-    molecular_query: PredictionQueryIndex, molecular_query_input: object,
-    checkpoint_content_sha256: str, prediction_content_sha256: str,
-    prediction_records: int, prediction_queries: int,
+    core_report: dict[str, Any],
+    *,
+    evidence: EvidenceBinding,
+    molecular_query: PredictionQueryIndex,
+    molecular_query_input: object,
+    checkpoint_content_sha256: str,
+    prediction_content_sha256: str,
+    prediction_records: int,
+    prediction_queries: int,
 ) -> dict[str, Any]:
     _validate_core_training_report(core_report)
     _validate_dataset_input_shape(molecular_query_input, "molecularPredictionQuery")
@@ -648,9 +702,16 @@ def write_canonical_report(output_directory: Path, report: dict[str, Any]) -> tu
 
 def _validate_checkpoint_header(value: object) -> None:
     required = {
-        "format", "modelFormat", "modelConfig", "trainingConfig", "corpora",
-        "admissionEvidence", "coreTrainingReportSha256", "modelParameterSha256",
-        "payloadBytes", "tensors",
+        "format",
+        "modelFormat",
+        "modelConfig",
+        "trainingConfig",
+        "corpora",
+        "admissionEvidence",
+        "coreTrainingReportSha256",
+        "modelParameterSha256",
+        "payloadBytes",
+        "tensors",
     }
     if not isinstance(value, dict) or set(value) != required:
         raise ValueError("checkpoint header fields do not match")
@@ -667,12 +728,18 @@ def _validate_checkpoint_header(value: object) -> None:
         raise ValueError("checkpoint may bind only the pretrain corpus")
     identity = corpora["pretrain"]
     expected_identity = {
-        "datasetId", "version", "role", "contentDigest", "trajectoryGeneCount",
+        "datasetId",
+        "version",
+        "role",
+        "contentDigest",
+        "trajectoryGeneCount",
         "trajectoryGeneSetSha256",
     }
     if (
-        not isinstance(identity, dict) or set(identity) != expected_identity
-        or identity["role"] != "pretrain" or not _is_sha256(identity["contentDigest"])
+        not isinstance(identity, dict)
+        or set(identity) != expected_identity
+        or identity["role"] != "pretrain"
+        or not _is_sha256(identity["contentDigest"])
         or not _is_sha256(identity["trajectoryGeneSetSha256"])
         or type(identity["trajectoryGeneCount"]) is not int
         or identity["trajectoryGeneCount"] < 0
@@ -681,19 +748,30 @@ def _validate_checkpoint_header(value: object) -> None:
     evidence = value["admissionEvidence"]
     expected_evidence = {
         "corpusAuditAdmissionValidated",
-        "heldRosterDatasetManifestDigest", "heldRosterPayloadSha256",
-        "validationGenesSha256", "finalGenesSha256", "heldUnionGenesSha256",
-        "validationGeneCount", "finalGeneCount", "heldUnionGeneCount",
+        "heldRosterDatasetManifestDigest",
+        "heldRosterPayloadSha256",
+        "validationGenesSha256",
+        "finalGenesSha256",
+        "heldUnionGenesSha256",
+        "validationGeneCount",
+        "finalGeneCount",
+        "heldUnionGeneCount",
     }
     if not isinstance(evidence, dict) or set(evidence) != expected_evidence:
         raise ValueError("checkpoint admission evidence fields do not match")
     if evidence["corpusAuditAdmissionValidated"] is not True:
         raise ValueError("checkpoint lacks prior corpus-audit admission")
     for name in ("heldRosterDatasetManifestDigest",):
-        if not isinstance(evidence[name], str) or not evidence[name].startswith("sha256:") or not _is_sha256(evidence[name][7:]):
+        if (
+            not isinstance(evidence[name], str)
+            or not evidence[name].startswith("sha256:")
+            or not _is_sha256(evidence[name][7:])
+        ):
             raise ValueError("checkpoint evidence manifest digest is invalid")
     for name in (
-        "heldRosterPayloadSha256", "validationGenesSha256", "finalGenesSha256",
+        "heldRosterPayloadSha256",
+        "validationGenesSha256",
+        "finalGenesSha256",
         "heldUnionGenesSha256",
     ):
         if not _is_sha256(evidence[name]):
@@ -710,15 +788,24 @@ def _validate_checkpoint_header(value: object) -> None:
     names: list[str] = []
     total = 0
     for entry in entries:
-        if not isinstance(entry, dict) or set(entry) != {"name", "dtype", "shape", "bytes", "sha256"}:
+        if not isinstance(entry, dict) or set(entry) != {
+            "name",
+            "dtype",
+            "shape",
+            "bytes",
+            "sha256",
+        }:
             raise ValueError("checkpoint tensor entry fields do not match")
         shape = entry["shape"]
         if (
-            not isinstance(entry["name"], str) or not entry["name"]
+            not isinstance(entry["name"], str)
+            or not entry["name"]
             or entry["dtype"] != "float32-le"
-            or not isinstance(shape, list) or len(shape) > 8
+            or not isinstance(shape, list)
+            or len(shape) > 8
             or any(type(item) is not int or item < 0 or item > 1_000_000 for item in shape)
-            or type(entry["bytes"]) is not int or entry["bytes"] < 0
+            or type(entry["bytes"]) is not int
+            or entry["bytes"] < 0
             or entry["bytes"] != math.prod(shape) * 4
             or not _is_sha256(entry["sha256"])
         ):
@@ -736,12 +823,21 @@ def _bounded_world_config(value: object) -> WorldConfig:
     if not isinstance(value, dict) or set(value) != expected:
         raise ValueError("checkpoint model config fields do not match")
     integer_limits = {
-        "entity_feature_dim": 8192, "species_feature_dim": 4096,
-        "entity_types": 4096, "context_types": 4096, "action_types": 4096,
-        "readout_types": 4096, "record_covariate_dim": 1024,
-        "context_covariate_dim": 1024, "action_covariate_dim": 1024,
-        "observation_covariate_dim": 1024, "d_model": 2048, "nhead": 256,
-        "encoder_layers": 48, "decoder_layers": 48, "ffn_multiplier": 16,
+        "entity_feature_dim": 8192,
+        "species_feature_dim": 4096,
+        "entity_types": 4096,
+        "context_types": 4096,
+        "action_types": 4096,
+        "readout_types": 4096,
+        "record_covariate_dim": 1024,
+        "context_covariate_dim": 1024,
+        "action_covariate_dim": 1024,
+        "observation_covariate_dim": 1024,
+        "d_model": 2048,
+        "nhead": 256,
+        "encoder_layers": 48,
+        "decoder_layers": 48,
+        "ffn_multiplier": 16,
     }
     for name, limit in integer_limits.items():
         item = value[name]
@@ -750,16 +846,20 @@ def _bounded_world_config(value: object) -> WorldConfig:
             raise ValueError(f"checkpoint model config {name} violates its bound")
     config = WorldConfig(**value)
     d = config.d_model
-    dense_upper = (
-        32 * (config.encoder_layers + config.decoder_layers + 1)
-        * config.ffn_multiplier * d * d
-        + 8 * d * (
-            config.entity_feature_dim + config.species_feature_dim
-            + config.record_covariate_dim + config.context_covariate_dim
-            + config.action_covariate_dim + config.observation_covariate_dim
-            + config.entity_types + config.context_types + config.action_types
-            + config.readout_types + 8
-        )
+    dense_upper = 32 * (
+        config.encoder_layers + config.decoder_layers + 1
+    ) * config.ffn_multiplier * d * d + 8 * d * (
+        config.entity_feature_dim
+        + config.species_feature_dim
+        + config.record_covariate_dim
+        + config.context_covariate_dim
+        + config.action_covariate_dim
+        + config.observation_covariate_dim
+        + config.entity_types
+        + config.context_types
+        + config.action_types
+        + config.readout_types
+        + 8
     )
     if dense_upper > MAX_MODEL_PARAMETERS:
         raise ValueError("checkpoint model parameter upper bound exceeded")
@@ -773,9 +873,11 @@ def _validate_core_training_report(report: object) -> None:
     digest = logical.pop("reportSha256")
     isolation = report.get("isolation")
     if (
-        not _is_sha256(digest) or canonical_sha256(logical) != digest
+        not _is_sha256(digest)
+        or canonical_sha256(logical) != digest
         or report.get("checkpointProduced") is not False
-        or "validation" in report or "molecularValidation" in json.dumps(report)
+        or "validation" in report
+        or "molecularValidation" in json.dumps(report)
         or not isinstance(isolation, dict)
         or isolation.get("benchmarkLabelsPresent") is not False
         or isolation.get("heldTruthAccessible") is not False
@@ -786,7 +888,8 @@ def _validate_core_training_report(report: object) -> None:
 
 
 def _validate_model_contract_compatibility(
-    pretrain: CorpusIndex, query: PredictionQueryIndex,
+    pretrain: CorpusIndex,
+    query: PredictionQueryIndex,
 ) -> None:
     if pretrain.role != "pretrain" or query.feature_corpus is not pretrain:
         raise ValueError("query features must resolve only through the optimizer pretrain corpus")
@@ -794,10 +897,20 @@ def _validate_model_contract_compatibility(
 
 def _validate_source_inventories(held: dict[str, object]) -> None:
     expected = {
-        "resource", "revision", "artifactManifestDigest",
-        "sourceId", "sourceRelease", "identityMappingId", "identityMappingSha256",
-        "manifestSha256", "records", "duplicateRecords", "uniqueInterventions",
-        "qcPassing", "qcFailed", "intersectionCoverage",
+        "resource",
+        "revision",
+        "artifactManifestDigest",
+        "sourceId",
+        "sourceRelease",
+        "identityMappingId",
+        "identityMappingSha256",
+        "manifestSha256",
+        "records",
+        "duplicateRecords",
+        "uniqueInterventions",
+        "qcPassing",
+        "qcFailed",
+        "intersectionCoverage",
     }
     values = held["sourceInventories"]
     if not isinstance(values, list) or not 2 <= len(values) <= 4096:
@@ -816,16 +929,22 @@ def _validate_source_inventories(held: dict[str, object]) -> None:
             not _is_revisioned_dataset_resource(value["resource"])
             or value["revision"] != str(value["resource"]).rpartition("@")[2]
             or not _is_prefixed_sha256(value["artifactManifestDigest"])
-            or not isinstance(source_id, str) or ":" not in source_id
-            or not isinstance(value["sourceRelease"], str) or not value["sourceRelease"]
+            or not isinstance(source_id, str)
+            or ":" not in source_id
+            or not isinstance(value["sourceRelease"], str)
+            or not value["sourceRelease"]
             or value["identityMappingId"] != held["identityMappingId"]
             or value["identityMappingSha256"] != held["identityMappingSha256"]
             or not _is_sha256(value["manifestSha256"])
             or any(
                 type(value[name]) is not int or value[name] < 0
                 for name in (
-                    "records", "duplicateRecords", "uniqueInterventions",
-                    "qcPassing", "qcFailed", "intersectionCoverage",
+                    "records",
+                    "duplicateRecords",
+                    "uniqueInterventions",
+                    "qcPassing",
+                    "qcFailed",
+                    "intersectionCoverage",
                 )
             )
             or value["intersectionCoverage"] != held["intersectionSize"]
@@ -871,8 +990,10 @@ def _read_held_roster(
             ).hexdigest()
             bucket = int(expected_digest[:16], 16) % 100
             expected_role = (
-                "molecular-final" if bucket < 10
-                else "molecular-validation" if bucket < 30
+                "molecular-final"
+                if bucket < 10
+                else "molecular-validation"
+                if bucket < 30
                 else "pretrain"
             )
             if assignment_digest != expected_digest or role != expected_role:
@@ -916,7 +1037,11 @@ def _resolve_literal_artifact(value: object, name: str) -> tuple[Path, str]:
     if not isinstance(artifacts, dict) or set(artifacts) != {"payload"}:
         raise ValueError(f"{name}.artifacts must contain only payload")
     manifest_digest = artifacts["payload"]
-    if not isinstance(manifest_digest, str) or not manifest_digest.startswith("sha256:") or not _is_sha256(manifest_digest[7:]):
+    if (
+        not isinstance(manifest_digest, str)
+        or not manifest_digest.startswith("sha256:")
+        or not _is_sha256(manifest_digest[7:])
+    ):
         raise ValueError(f"{name} payload must be an admitted artifact digest")
     if value["resource"] != f"artifact:{manifest_digest}" or paths != {"payload": path_value}:
         raise ValueError(f"{name} artifact identity/path binding is inconsistent")
@@ -926,16 +1051,16 @@ def _resolve_literal_artifact(value: object, name: str) -> tuple[Path, str]:
     _reject_symlink_components(path)
     path = path.resolve(strict=True)
     if not path.is_file() or path.name != "payload" or path.parent.name != "payload":
-        raise ValueError(
-            f"{name} must use OMF file artifact semantics .../payload/payload"
-        )
+        raise ValueError(f"{name} must use OMF file artifact semantics .../payload/payload")
     if path.stat().st_size <= 0 or path.stat().st_size > MAX_EVIDENCE_BYTES:
         raise ValueError(f"{name} payload byte size is outside bounds")
     return path, manifest_digest
 
 
 def _require_exact_root_file_set(
-    root: Path, expected_names: set[str], name: str,
+    root: Path,
+    expected_names: set[str],
+    name: str,
 ) -> None:
     """Validate a tiny flat artifact without an unbounded recursive accumulation."""
 
@@ -960,9 +1085,18 @@ def _validate_dataset_input_shape(value: object, name: str) -> None:
     required = {"manifestDigest", "mode", "path", "resource"}
     if not isinstance(value, dict) or set(value) != required:
         raise ValueError(f"{name} must be an exact materialized OMF DatasetSnapshot")
-    if value["mode"] != "copy" or not isinstance(value["manifestDigest"], str) or not value["manifestDigest"].startswith("sha256:") or not _is_sha256(value["manifestDigest"][7:]):
+    if (
+        value["mode"] != "copy"
+        or not isinstance(value["manifestDigest"], str)
+        or not value["manifestDigest"].startswith("sha256:")
+        or not _is_sha256(value["manifestDigest"][7:])
+    ):
         raise ValueError(f"{name} must be an immutable admission-pinned copy")
-    if not isinstance(value["resource"], str) or not value["resource"].startswith("omf://") or "/datasetsnapshot/" not in value["resource"]:
+    if (
+        not isinstance(value["resource"], str)
+        or not value["resource"].startswith(("omf://", "openfoundry://"))
+        or "/datasetsnapshot/" not in value["resource"]
+    ):
         raise ValueError(f"{name}.resource must be a revisioned DatasetSnapshot URI")
     _, separator, revision = value["resource"].rpartition("@")
     if not separator or not revision.startswith("sha256:") or not _is_sha256(revision[7:]):
@@ -1013,7 +1147,9 @@ def _sha256_file(path: Path) -> str:
 
 
 def _is_sha256(value: object) -> bool:
-    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+    return (
+        isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+    )
 
 
 def _is_prefixed_sha256(value: object) -> bool:
@@ -1021,7 +1157,11 @@ def _is_prefixed_sha256(value: object) -> bool:
 
 
 def _is_revisioned_dataset_resource(value: object) -> bool:
-    if not isinstance(value, str) or not value.startswith("omf://") or "/datasetsnapshot/" not in value:
+    if (
+        not isinstance(value, str)
+        or not value.startswith(("omf://", "openfoundry://"))
+        or "/datasetsnapshot/" not in value
+    ):
         return False
     identity, separator, revision = value.rpartition("@")
     return bool(separator and identity.rpartition("/")[2] and _is_prefixed_sha256(revision))

@@ -23,12 +23,8 @@ NCBI_TAXON = 4932
 SOURCE_ID = "mendeley:w8jtmnszd9.2"
 SOURCE_RELEASE = "10.17632/w8jtmnszd9.2"
 IDENTITY_MAPPING_ID = "slp-sgd-map:2026-08-28-object-set-v1"
-IDENTITY_MAPPING_SHA256 = (
-    "6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a"
-)
-MAPPING_MANIFEST_SHA256 = (
-    "570557ab1201913a18de9790f8adc5ee2e3cb56c6bb0e8d588fe43660c0214e1"
-)
+IDENTITY_MAPPING_SHA256 = "6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a"
+MAPPING_MANIFEST_SHA256 = "570557ab1201913a18de9790f8adc5ee2e3cb56c6bb0e8d588fe43660c0214e1"
 
 INTERVENTION_INVENTORY_SCHEMA = "slp.intervention-identity-inventory/v1"
 INTERVENTION_RECORD_SCHEMA = "slp.intervention-identity-record/v1"
@@ -148,7 +144,11 @@ class Bounds:
             ("maxLineBytes", self.max_line_bytes, 128, 16_777_216),
             ("maxQuarantineRows", self.max_quarantine_rows, 1, 100_000),
         ):
-            if not isinstance(value, int) or isinstance(value, bool) or not minimum <= value <= maximum:
+            if (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or not minimum <= value <= maximum
+            ):
                 raise ProteomeInventoryError(f"{name} must be an integer in [{minimum}, {maximum}]")
 
 
@@ -208,9 +208,9 @@ def _nonempty(value: object, label: str) -> str:
 
 def _resource_name(value: object, label: str) -> tuple[str, str]:
     resource = _nonempty(value, label)
-    if not resource.startswith("omf://"):
+    if not resource.startswith(("omf://", "openfoundry://")):
         raise ProteomeInventoryError(f"{label} must be an OMF DatasetSnapshot URI")
-    identity, separator, revision = resource.removeprefix("omf://").rpartition("@")
+    identity, separator, revision = resource.split("://", 1)[1].rpartition("@")
     if not separator:
         raise ProteomeInventoryError(f"{label} must carry an exact revision")
     _digest(revision, f"{label} revision", prefixed=True)
@@ -219,7 +219,10 @@ def _resource_name(value: object, label: str) -> tuple[str, str]:
         len(parts) < 3
         or parts[-2] != "datasetsnapshot"
         or RESOURCE_NAME.fullmatch(parts[-1]) is None
-        or any(not item or item in {".", ".."} or any(char.isspace() for char in item) for item in parts)
+        or any(
+            not item or item in {".", ".."} or any(char.isspace() for char in item)
+            for item in parts
+        )
     ):
         raise ProteomeInventoryError(f"{label} must identify a DatasetSnapshot")
     return parts[-1], revision
@@ -255,7 +258,11 @@ def resolve_pinned_raw_dataset(value: object, input_name: str = "rawProteome") -
         value["manifestDigest"], f"{input_name}.manifestDigest", prefixed=True
     )
     root = _resolved_path(value["path"], f"{input_name}.path", directory=True)
-    if root.name != resource_name or root.parent.name != input_name or root.parent.parent.name != "inputs":
+    if (
+        root.name != resource_name
+        or root.parent.name != input_name
+        or root.parent.parent.name != "inputs"
+    ):
         raise ProteomeInventoryError(f"{input_name}.path is inconsistent with OMF materialization")
     return PinnedDataset(root, str(value["resource"]), revision, manifest_digest)
 
@@ -315,7 +322,9 @@ def _relative_regular_file(root: Path, relative: str) -> Path:
         resolved = cursor.resolve(strict=True)
         resolved.relative_to(root)
     except (OSError, ValueError) as error:
-        raise ProteomeInventoryError(f"raw file is missing or escapes its snapshot: {relative}") from error
+        raise ProteomeInventoryError(
+            f"raw file is missing or escapes its snapshot: {relative}"
+        ) from error
     if not resolved.is_file():
         raise ProteomeInventoryError(f"raw file is not regular: {relative}")
     return resolved
@@ -367,11 +376,15 @@ def _jsonl(path: Path, max_line_bytes: int) -> Iterator[tuple[int, dict[str, Any
                 if len(raw) > max_line_bytes:
                     raise ProteomeInventoryError(f"{path.name}:{line_number} exceeds maxLineBytes")
                 if not raw.endswith(b"\n") or raw in {b"\n", b"\r\n"}:
-                    raise ProteomeInventoryError(f"{path.name}:{line_number} is not canonical JSONL")
+                    raise ProteomeInventoryError(
+                        f"{path.name}:{line_number} is not canonical JSONL"
+                    )
                 try:
                     record = json.loads(raw)
                 except (UnicodeDecodeError, json.JSONDecodeError) as error:
-                    raise ProteomeInventoryError(f"{path.name}:{line_number} is invalid JSON") from error
+                    raise ProteomeInventoryError(
+                        f"{path.name}:{line_number} is invalid JSON"
+                    ) from error
                 if not isinstance(record, dict):
                     raise ProteomeInventoryError(f"{path.name}:{line_number} must be an object")
                 yield line_number, record
@@ -390,7 +403,11 @@ def _mapping_output_spec(manifest: dict[str, Any], name: str) -> dict[str, Any]:
     item = matched[0]
     if set(item) != {"name", "records", "bytes", "sha256"}:
         raise ProteomeInventoryError(f"mapping output contract drift for {name}")
-    if not isinstance(item["records"], int) or isinstance(item["records"], bool) or item["records"] < 0:
+    if (
+        not isinstance(item["records"], int)
+        or isinstance(item["records"], bool)
+        or item["records"] < 0
+    ):
         raise ProteomeInventoryError(f"mapping output record count is invalid for {name}")
     if not isinstance(item["bytes"], int) or isinstance(item["bytes"], bool) or item["bytes"] < 0:
         raise ProteomeInventoryError(f"mapping output byte count is invalid for {name}")
@@ -435,7 +452,9 @@ def validate_mapping_manifest(
     return manifest
 
 
-def load_current_orfs(path: Path, expected_records: int, bounds: Bounds) -> dict[str, tuple[str, ...]]:
+def load_current_orfs(
+    path: Path, expected_records: int, bounds: Bounds
+) -> dict[str, tuple[str, ...]]:
     by_systematic: dict[str, set[str]] = defaultdict(set)
     seen_curies: set[str] = set()
     records = 0
@@ -443,8 +462,13 @@ def load_current_orfs(path: Path, expected_records: int, bounds: Bounds) -> dict
         records += 1
         if records > bounds.max_mapping_records:
             raise ProteomeInventoryError("current ORF mapping exceeds maxMappingRecords")
-        if record.get("schema") != MAPPING_SCHEMAS["current"] or record.get("ncbiTaxon") != NCBI_TAXON:
-            raise ProteomeInventoryError(f"current ORF mapping contract drift at line {line_number}")
+        if (
+            record.get("schema") != MAPPING_SCHEMAS["current"]
+            or record.get("ncbiTaxon") != NCBI_TAXON
+        ):
+            raise ProteomeInventoryError(
+                f"current ORF mapping contract drift at line {line_number}"
+            )
         curie = record.get("canonicalSgdCurie")
         systematic = record.get("systematicName")
         if not isinstance(curie, str) or SGD_CURIE.fullmatch(curie) is None:
@@ -480,7 +504,11 @@ def load_retired_systematics(path: Path, expected_records: int, bounds: Bounds) 
             if record.get("ncbiTaxon") != NCBI_TAXON:
                 raise ProteomeInventoryError("retired mapping taxon drift")
             systematic = record.get("systematicName")
-            if not isinstance(systematic, str) or not systematic or systematic != systematic.strip():
+            if (
+                not isinstance(systematic, str)
+                or not systematic
+                or systematic != systematic.strip()
+            ):
                 raise ProteomeInventoryError("retired systematic name is invalid")
             names.add(systematic)
         elif record.get("recordKind") != "malformed-source-row":
@@ -506,7 +534,9 @@ def _parse_csv_text(path: Path, bounds: Bounds) -> tuple[tuple[str, ...], list[d
                 for field in METADATA_COLUMNS:
                     value = row[field]
                     if not isinstance(value, str) or value != value.strip():
-                        raise ProteomeInventoryError("proteome metadata values must be exact and trimmed")
+                        raise ProteomeInventoryError(
+                            "proteome metadata values must be exact and trimmed"
+                        )
                     normalized[field] = value
                 rows.append(normalized)
     except (OSError, UnicodeDecodeError, csv.Error) as error:
@@ -531,13 +561,17 @@ def _decode_first_csv_field(raw: bytes, line_number: int) -> str:
                     index += 2
                     continue
                 if index + 1 >= len(line) or line[index + 1] != 44:
-                    raise ProteomeInventoryError(f"matrix first field is malformed at line {line_number}")
+                    raise ProteomeInventoryError(
+                        f"matrix first field is malformed at line {line_number}"
+                    )
                 field = bytes(output)
                 break
             output.append(line[index])
             index += 1
         else:
-            raise ProteomeInventoryError(f"matrix first field is unterminated at line {line_number}")
+            raise ProteomeInventoryError(
+                f"matrix first field is unterminated at line {line_number}"
+            )
     else:
         field, separator, _tail = line.partition(b",")
         if not separator:
@@ -545,7 +579,9 @@ def _decode_first_csv_field(raw: bytes, line_number: int) -> str:
     try:
         decoded = field.decode("utf-8")
     except UnicodeDecodeError as error:
-        raise ProteomeInventoryError(f"matrix identity is not UTF-8 at line {line_number}") from error
+        raise ProteomeInventoryError(
+            f"matrix identity is not UTF-8 at line {line_number}"
+        ) from error
     return _nonempty(decoded, f"matrix identity line {line_number}")
 
 
@@ -576,7 +612,9 @@ def scan_matrix_identities(
                     break
                 line_number += 1
                 if len(raw) > bounds.max_line_bytes or not raw.endswith(b"\n"):
-                    raise ProteomeInventoryError(f"matrix line {line_number} exceeds bound or lacks LF")
+                    raise ProteomeInventoryError(
+                        f"matrix line {line_number} exceeds bound or lacks LF"
+                    )
                 if len(protein_ids) >= bounds.max_protein_rows:
                     raise ProteomeInventoryError("matrix exceeds maxProteinRows")
                 protein_ids.append(_decode_first_csv_field(raw, line_number))
@@ -601,7 +639,10 @@ def load_protein_relations(
         mapping_records += 1
         if mapping_records > bounds.max_mapping_records:
             raise ProteomeInventoryError("external mapping exceeds maxMappingRecords")
-        if record.get("schema") != MAPPING_SCHEMAS["external"] or record.get("ncbiTaxon") != NCBI_TAXON:
+        if (
+            record.get("schema") != MAPPING_SCHEMAS["external"]
+            or record.get("ncbiTaxon") != NCBI_TAXON
+        ):
             raise ProteomeInventoryError(f"external mapping contract drift at line {line_number}")
         typed = record.get("typedAccession")
         targets = record.get("targets")
@@ -630,19 +671,28 @@ def load_protein_relations(
                 raise ProteomeInventoryError("external mapping target CURIE is invalid")
             if status == "current-orf":
                 if curie not in current_curies:
-                    raise ProteomeInventoryError("external current-orf target is absent from current map")
+                    raise ProteomeInventoryError(
+                        "external current-orf target is absent from current map"
+                    )
                 current.add(curie)
             else:
                 non_current_targets += 1
         if not current:
-            raise ProteomeInventoryError(f"protein accession has no exact current ORF relation: {accession}")
+            raise ProteomeInventoryError(
+                f"protein accession has no exact current ORF relation: {accession}"
+            )
         matches[str(accession)] = tuple(sorted(current))
     if mapping_records != expected_records:
         raise ProteomeInventoryError("external mapping record-count drift")
     missing = sorted(protein_accessions - set(matches))
     if missing:
-        raise ProteomeInventoryError(f"protein accessions lack exact typed UniProt relations: {missing[:3]}")
-    return matches, {"mappingRecords": mapping_records, "nonCurrentTargetsExcluded": non_current_targets}
+        raise ProteomeInventoryError(
+            f"protein accessions lack exact typed UniProt relations: {missing[:3]}"
+        )
+    return matches, {
+        "mappingRecords": mapping_records,
+        "nonCurrentTargetsExcluded": non_current_targets,
+    }
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -690,11 +740,16 @@ def build_inventory(
     """Build deterministic identity-only inventories from immutable inputs."""
     raw_specs = tuple(raw_specs)
     required_mapping_inputs = set(MAPPING_ARTIFACT_DIGESTS)
-    if set(mapping_paths) != required_mapping_inputs or set(mapping_artifact_digests) != required_mapping_inputs:
+    if (
+        set(mapping_paths) != required_mapping_inputs
+        or set(mapping_artifact_digests) != required_mapping_inputs
+    ):
         raise ProteomeInventoryError("exactly four pinned SGD mapping artifacts are required")
     for name, digest in mapping_artifact_digests.items():
         _digest(digest, f"{name} artifact manifest digest", prefixed=True)
-    if provenance is not None and dict(provenance.mapping_artifacts) != dict(mapping_artifact_digests):
+    if provenance is not None and dict(provenance.mapping_artifacts) != dict(
+        mapping_artifact_digests
+    ):
         raise ProteomeInventoryError("resolved SGD artifacts differ from the pinned digest set")
     raw_files = verify_raw_snapshot(raw_root, raw_specs)
     manifest = validate_mapping_manifest(
@@ -810,7 +865,9 @@ def build_inventory(
     reason_counts = Counter(item["reason"] for item in quarantine)
     retired_rows = reason_counts["retired-or-merged-exact-systematic-name"]
     unmatched_rows = sum(
-        count for reason, count in reason_counts.items() if reason != "retired-or-merged-exact-systematic-name"
+        count
+        for reason, count in reason_counts.items()
+        if reason != "retired-or-merged-exact-systematic-name"
     )
     counts = {
         "metadataRows": len(metadata),
@@ -824,8 +881,12 @@ def build_inventory(
         "retiredOrMergedRows": retired_rows,
         "unmatchedRows": unmatched_rows,
         "proteinRecords": len(relation_records),
-        "oneToOneProteinRelations": sum(record["currentOrfRelationCount"] == 1 for record in relation_records),
-        "oneToManyProteinRelations": sum(record["currentOrfRelationCount"] > 1 for record in relation_records),
+        "oneToOneProteinRelations": sum(
+            record["currentOrfRelationCount"] == 1 for record in relation_records
+        ),
+        "oneToManyProteinRelations": sum(
+            record["currentOrfRelationCount"] > 1 for record in relation_records
+        ),
     }
     _strict_counts(counts, expected_counts)
 
@@ -833,7 +894,9 @@ def build_inventory(
     if destination_path.exists() or destination_path.is_symlink():
         raise ProteomeInventoryError("destination must not already exist")
     destination_path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix=f".{destination_path.name}-", dir=destination_path.parent) as temporary:
+    with tempfile.TemporaryDirectory(
+        prefix=f".{destination_path.name}-", dir=destination_path.parent
+    ) as temporary:
         staging = Path(temporary) / destination_path.name
         intervention_root = staging / "intervention-inventory"
         protein_root = staging / "protein-relations"
@@ -882,9 +945,7 @@ def build_inventory(
             "identityMappingId": expected_mapping_id,
             "identityMappingSha256": expected_mapping_sha256,
             "relationFormat": PROTEIN_RECORD_SCHEMA,
-            "files": [
-                {"path": "relations.jsonl", "sha256": protein_sha, "records": protein_count}
-            ],
+            "files": [{"path": "relations.jsonl", "sha256": protein_sha, "records": protein_count}],
         }
         _write_json(protein_root / "manifest.json", protein_manifest)
         protein_manifest_sha = _sha256(protein_root / "manifest.json")

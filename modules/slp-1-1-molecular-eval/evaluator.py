@@ -49,21 +49,40 @@ HEX_DIGITS = frozenset("0123456789abcdef")
 SGD_INTERVENTION = re.compile(r"^SGD:S[0-9]{9}$")
 
 COMMON_MANIFEST_FIELDS = {
-    "schema", "datasetId", "version", "role", "labelClass",
-    "benchmarkLabelsPresent", "valueSpace", "speciesTaxa", "sourceIds", "shards",
+    "schema",
+    "datasetId",
+    "version",
+    "role",
+    "labelClass",
+    "benchmarkLabelsPresent",
+    "valueSpace",
+    "speciesTaxa",
+    "sourceIds",
+    "shards",
 }
 ROLE_MANIFEST_FIELDS = {
-    CENTERING_ROLE: COMMON_MANIFEST_FIELDS
-    | {"fittingOnly"},
+    CENTERING_ROLE: COMMON_MANIFEST_FIELDS | {"fittingOnly"},
     TRUTH_ROLE: COMMON_MANIFEST_FIELDS
     | {"evaluatorOnly", "queryResource", "queryDatasetManifestDigest", "queryManifestSha256"},
     PREDICTION_ROLE: COMMON_MANIFEST_FIELDS
-    | {"modelCheckpointContentSha256", "queryResource", "queryDatasetManifestDigest",
-       "queryManifestSha256", "targetValuesPresent", "observedMaskPresent"},
+    | {
+        "modelCheckpointContentSha256",
+        "queryResource",
+        "queryDatasetManifestDigest",
+        "queryManifestSha256",
+        "targetValuesPresent",
+        "observedMaskPresent",
+    },
 }
 COMMON_RECORD_FIELDS = {
-    "profileId", "speciesTaxon", "sourceId", "centeringGroup",
-    "perturbationId", "interventionIds", "readoutIds", "distributionTypes",
+    "profileId",
+    "speciesTaxon",
+    "sourceId",
+    "centeringGroup",
+    "perturbationId",
+    "interventionIds",
+    "readoutIds",
+    "distributionTypes",
 }
 ROLE_RECORD_FIELDS = {
     CENTERING_ROLE: COMMON_RECORD_FIELDS | {"target"},
@@ -71,19 +90,47 @@ ROLE_RECORD_FIELDS = {
     PREDICTION_ROLE: COMMON_RECORD_FIELDS | {"predictionParameters"},
 }
 QUERY_MANIFEST_FIELDS = {
-    "schema", "datasetId", "version", "role", "labelClass", "targetValuesPresent",
-    "observedMaskPresent", "valueSpace", "speciesTaxa", "sourceIds", "shards",
+    "schema",
+    "datasetId",
+    "version",
+    "role",
+    "labelClass",
+    "targetValuesPresent",
+    "observedMaskPresent",
+    "valueSpace",
+    "speciesTaxa",
+    "sourceIds",
+    "shards",
 }
 CORPUS_AUDIT_FIELDS = {
-    "schema", "rewardEnabled", "auditPassed", "strictInterventionIsolation",
-    "leakageViolations", "leakedTrajectoryGenes", "benchmarkLabelRecords",
-    "omfPriorAdmissionRequired", "datasets", "heldRoster",
+    "schema",
+    "rewardEnabled",
+    "auditPassed",
+    "strictInterventionIsolation",
+    "leakageViolations",
+    "leakedTrajectoryGenes",
+    "benchmarkLabelRecords",
+    "omfPriorAdmissionRequired",
+    "datasets",
+    "heldRoster",
 }
 CORPUS_DATASET_FIELDS = {
-    "resource", "revision", "manifestDigest", "datasetId", "version", "role",
-    "corpusManifestSha256", "contentDigest", "trajectoryGenesSha256",
-    "trajectoryGeneSetSha256", "trajectoryGeneCount", "records", "targetValues",
-    "modalities", "sourceIds", "speciesTaxa",
+    "resource",
+    "revision",
+    "manifestDigest",
+    "datasetId",
+    "version",
+    "role",
+    "corpusManifestSha256",
+    "contentDigest",
+    "trajectoryGenesSha256",
+    "trajectoryGeneSetSha256",
+    "trajectoryGeneCount",
+    "records",
+    "targetValues",
+    "modalities",
+    "sourceIds",
+    "speciesTaxa",
 }
 AUDIT_DATASET_ROLES = {
     "pretrain": "pretrain",
@@ -91,21 +138,52 @@ AUDIT_DATASET_ROLES = {
     "molecularFinal": "molecular-final",
 }
 AUDIT_ROSTER_FIELDS = {
-    "resource", "revision", "manifestDigest", "rosterSha256", "coverageSha256",
-    "assignmentDomainHex", "bucketRule", "identityMappingId", "identityMappingSha256",
-    "sourceInventories", "intersectionSize", "pretrainGeneCount",
-    "validationGeneSetSha256", "validationGeneCount", "finalGeneSetSha256",
-    "finalGeneCount", "unionGeneSetSha256", "unionGeneCount",
+    "resource",
+    "revision",
+    "manifestDigest",
+    "rosterSha256",
+    "coverageSha256",
+    "assignmentDomainHex",
+    "bucketRule",
+    "identityMappingId",
+    "identityMappingSha256",
+    "sourceInventories",
+    "intersectionSize",
+    "pretrainGeneCount",
+    "validationGeneSetSha256",
+    "validationGeneCount",
+    "finalGeneSetSha256",
+    "finalGeneCount",
+    "unionGeneSetSha256",
+    "unionGeneCount",
 }
 AUDIT_SOURCE_INVENTORY_FIELDS = {
-    "resource", "revision", "artifactManifestDigest", "sourceId", "sourceRelease",
-    "identityMappingId", "identityMappingSha256", "manifestSha256", "records",
-    "duplicateRecords", "uniqueInterventions", "qcPassing", "qcFailed",
+    "resource",
+    "revision",
+    "artifactManifestDigest",
+    "sourceId",
+    "sourceRelease",
+    "identityMappingId",
+    "identityMappingSha256",
+    "manifestSha256",
+    "records",
+    "duplicateRecords",
+    "uniqueInterventions",
+    "qcPassing",
+    "qcFailed",
     "intersectionCoverage",
 }
 ROSTER_COVERAGE_FIELDS = {
-    "schema", "assignment", "sourceCount", "identityMapping", "minimumIntersectionSize",
-    "intersectionSize", "roleCounts", "rejectionCounts", "rosterPath", "rosterSha256",
+    "schema",
+    "assignment",
+    "sourceCount",
+    "identityMapping",
+    "minimumIntersectionSize",
+    "intersectionSize",
+    "roleCounts",
+    "rejectionCounts",
+    "rosterPath",
+    "rosterSha256",
     "sources",
 }
 
@@ -152,7 +230,9 @@ def _require_exact_files(root: Path, expected: set[str], label: str) -> None:
         )
 
 
-def _bounded_lines(path: Path, maximum: int, label: str, *, compressed: bool = False) -> Iterator[tuple[int, bytes]]:
+def _bounded_lines(
+    path: Path, maximum: int, label: str, *, compressed: bool = False
+) -> Iterator[tuple[int, bytes]]:
     opener = gzip.open if compressed else open
     try:
         with opener(path, "rb") as source:
@@ -183,7 +263,7 @@ def _pinned_digest(value: object, name: str) -> str:
 
 def _dataset_resource(value: object, name: str) -> str:
     resource = _string(value, name)
-    if not resource.startswith("omf://") or "/datasetsnapshot/" not in resource:
+    if not resource.startswith(("omf://", "openfoundry://")) or "/datasetsnapshot/" not in resource:
         raise MolecularEvaluationError(f"{name} must be an OMF DatasetSnapshot resource URI")
     identity, separator, revision = resource.rpartition("@")
     if not separator or not identity.split("/")[-1]:
@@ -194,8 +274,11 @@ def _dataset_resource(value: object, name: str) -> str:
 
 def _stable_id(value: object, name: str) -> str:
     if (
-        not isinstance(value, str) or not value or value != value.strip()
-        or ":" not in value or any(character.isspace() for character in value)
+        not isinstance(value, str)
+        or not value
+        or value != value.strip()
+        or ":" not in value
+        or any(character.isspace() for character in value)
         or not all(value.partition(":")[index] for index in (0, 2))
     ):
         raise MolecularEvaluationError(f"{name} must be a trimmed stable namespaced identifier")
@@ -237,8 +320,13 @@ def _relative_file(root: Path, relative: object, label: str) -> Path:
     if not isinstance(relative, str) or not relative:
         raise MolecularEvaluationError(f"{label} must be a non-empty string")
     portable = PurePosixPath(relative)
-    if (portable.is_absolute() or relative != portable.as_posix() or "\\" in relative
-            or ":" in relative or any(part in {"", ".", ".."} for part in portable.parts)):
+    if (
+        portable.is_absolute()
+        or relative != portable.as_posix()
+        or "\\" in relative
+        or ":" in relative
+        or any(part in {"", ".", ".."} for part in portable.parts)
+    ):
         raise MolecularEvaluationError(f"{label} must be a canonical relative POSIX path")
     cursor = root
     for part in portable.parts:
@@ -249,7 +337,9 @@ def _relative_file(root: Path, relative: object, label: str) -> Path:
         path = root.joinpath(*portable.parts).resolve(strict=True)
         path.relative_to(root)
     except (OSError, ValueError) as error:
-        raise MolecularEvaluationError(f"{label} escapes or is missing from its artifact") from error
+        raise MolecularEvaluationError(
+            f"{label} escapes or is missing from its artifact"
+        ) from error
     if not path.is_file():
         raise MolecularEvaluationError(f"{label} must be a regular file")
     return path
@@ -283,12 +373,20 @@ def resolve_literal_omf_artifact(value: object, name: str) -> tuple[str, str]:
     if not isinstance(artifacts, dict) or set(artifacts) != {"payload"}:
         raise MolecularEvaluationError(f"{name}.artifacts must contain only payload")
     digest = artifacts["payload"]
-    if (not isinstance(digest, str) or not digest.startswith("sha256:")
-            or not _is_digest(digest.removeprefix("sha256:"))):
+    if (
+        not isinstance(digest, str)
+        or not digest.startswith("sha256:")
+        or not _is_digest(digest.removeprefix("sha256:"))
+    ):
         raise MolecularEvaluationError(f"{name} payload must be a SHA-256 artifact manifest")
     if value.get("resource") != f"artifact:{digest}":
         raise MolecularEvaluationError(f"{name} resource does not match its artifact manifest")
-    if not isinstance(path, str) or not path or not isinstance(paths, dict) or paths != {"payload": path}:
+    if (
+        not isinstance(path, str)
+        or not path
+        or not isinstance(paths, dict)
+        or paths != {"payload": path}
+    ):
         raise MolecularEvaluationError(f"{name} materialized payload path is inconsistent")
     return path, digest
 
@@ -301,7 +399,9 @@ class PinnedCheckpointInput:
     content_sha256: str
 
 
-def resolve_pinned_checkpoint_input(value: object, name: str = "modelCheckpoint") -> PinnedCheckpointInput:
+def resolve_pinned_checkpoint_input(
+    value: object, name: str = "modelCheckpoint"
+) -> PinnedCheckpointInput:
     """Validate and hash the exact file-valued OMF artifact containing checkpoint bytes."""
     path_value, artifact_digest = resolve_literal_omf_artifact(value, name)
     requested = Path(path_value)
@@ -441,8 +541,12 @@ class SnapshotManifest:
         if raw["benchmarkLabelsPresent"] is not False:
             raise MolecularEvaluationError("benchmark-bearing evaluation input is forbidden")
         species = raw["speciesTaxa"]
-        if (not isinstance(species, list) or not species or any(type(x) is not int or x <= 0 for x in species)
-                or len(species) != len(set(species))):
+        if (
+            not isinstance(species, list)
+            or not species
+            or any(type(x) is not int or x <= 0 for x in species)
+            or len(species) != len(set(species))
+        ):
             raise MolecularEvaluationError("speciesTaxa must contain unique positive taxonomy IDs")
         if species != [YEAST_TAXON]:
             raise MolecularEvaluationError(
@@ -469,11 +573,19 @@ class SnapshotManifest:
             if not (path_value.endswith(".jsonl") or path_value.endswith(".jsonl.gz")):
                 raise MolecularEvaluationError("shards must end in .jsonl or .jsonl.gz")
             if not _is_digest(shard["sha256"]) or _sha256(path) != shard["sha256"]:
-                raise MolecularEvaluationError(f"digest mismatch for evaluation shard: {path_value}")
-            if type(shard["bytes"]) is not int or shard["bytes"] <= 0 or shard["bytes"] > MAX_SHARD_BYTES:
+                raise MolecularEvaluationError(
+                    f"digest mismatch for evaluation shard: {path_value}"
+                )
+            if (
+                type(shard["bytes"]) is not int
+                or shard["bytes"] <= 0
+                or shard["bytes"] > MAX_SHARD_BYTES
+            ):
                 raise MolecularEvaluationError("shard bytes must be a positive bounded integer")
             if path.stat().st_size != shard["bytes"]:
-                raise MolecularEvaluationError(f"byte count mismatch for evaluation shard: {path_value}")
+                raise MolecularEvaluationError(
+                    f"byte count mismatch for evaluation shard: {path_value}"
+                )
             if type(shard["records"]) is not int or shard["records"] <= 0:
                 raise MolecularEvaluationError("shard records must be a positive integer")
             total_bytes += shard["bytes"]
@@ -489,7 +601,9 @@ class SnapshotManifest:
                 raise MolecularEvaluationError("centering reference must be fitting-only")
         elif expected_role == TRUTH_ROLE:
             if raw["evaluatorOnly"] is not True:
-                raise MolecularEvaluationError("held truth must be evaluator-only molecularValidation")
+                raise MolecularEvaluationError(
+                    "held truth must be evaluator-only molecularValidation"
+                )
             query_resource = _dataset_resource(raw["queryResource"], "queryResource")
             query_dataset_digest = _pinned_digest(
                 raw["queryDatasetManifestDigest"], "queryDatasetManifestDigest"
@@ -499,19 +613,36 @@ class SnapshotManifest:
                 raise MolecularEvaluationError("truth query digest must be lowercase SHA-256")
         else:
             if raw["targetValuesPresent"] is not False or raw["observedMaskPresent"] is not False:
-                raise MolecularEvaluationError("prediction manifest must attest no targets or observed mask")
-            model_digest, query_digest = raw["modelCheckpointContentSha256"], raw["queryManifestSha256"]
+                raise MolecularEvaluationError(
+                    "prediction manifest must attest no targets or observed mask"
+                )
+            model_digest, query_digest = (
+                raw["modelCheckpointContentSha256"],
+                raw["queryManifestSha256"],
+            )
             query_resource = _dataset_resource(raw["queryResource"], "queryResource")
             query_dataset_digest = _pinned_digest(
                 raw["queryDatasetManifestDigest"], "queryDatasetManifestDigest"
             )
             if not _is_digest(model_digest) or not _is_digest(query_digest):
-                raise MolecularEvaluationError("prediction provenance digests must be lowercase SHA-256")
-        return cls(snapshot_root, expected_role, _string(raw["datasetId"], "datasetId"),
-                   _string(raw["version"], "version"), _string(raw["valueSpace"], "valueSpace"),
-                   frozenset(species), source_ids, hashlib.sha256(manifest_bytes).hexdigest(),
-                   tuple(shards), model_digest,
-                   query_resource, query_dataset_digest, query_digest)
+                raise MolecularEvaluationError(
+                    "prediction provenance digests must be lowercase SHA-256"
+                )
+        return cls(
+            snapshot_root,
+            expected_role,
+            _string(raw["datasetId"], "datasetId"),
+            _string(raw["version"], "version"),
+            _string(raw["valueSpace"], "valueSpace"),
+            frozenset(species),
+            source_ids,
+            hashlib.sha256(manifest_bytes).hexdigest(),
+            tuple(shards),
+            model_digest,
+            query_resource,
+            query_dataset_digest,
+            query_digest,
+        )
 
     @classmethod
     def _load_prediction_tar(cls, path: Path) -> "SnapshotManifest":
@@ -523,9 +654,7 @@ class SnapshotManifest:
         try:
             with tarfile.open(path, mode="r:") as archive:
                 members = archive.getmembers()
-                if [member.name for member in members] != [
-                    "evaluation.json", "profiles-000.jsonl"
-                ]:
+                if [member.name for member in members] != ["evaluation.json", "profiles-000.jsonl"]:
                     raise MolecularEvaluationError(
                         "prediction tar must contain exactly evaluation.json then profiles-000.jsonl"
                     )
@@ -545,7 +674,9 @@ class SnapshotManifest:
                         )
                 manifest_member, records_member = members
                 if manifest_member.size <= 0 or manifest_member.size > MAX_MANIFEST_BYTES:
-                    raise MolecularEvaluationError("prediction manifest byte size is outside bounds")
+                    raise MolecularEvaluationError(
+                        "prediction manifest byte size is outside bounds"
+                    )
                 manifest_stream = archive.extractfile(manifest_member)
                 records_stream = archive.extractfile(records_member)
                 if manifest_stream is None or records_stream is None:
@@ -561,11 +692,15 @@ class SnapshotManifest:
                         raise MolecularEvaluationError("prediction records exceed aggregate bound")
                     records_digest.update(block)
         except (OSError, tarfile.TarError) as error:
-            raise MolecularEvaluationError("prediction artifact is not a valid uncompressed tar") from error
+            raise MolecularEvaluationError(
+                "prediction artifact is not a valid uncompressed tar"
+            ) from error
         try:
             raw = json.loads(manifest_bytes)
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
-            raise MolecularEvaluationError("prediction evaluation.json is not valid UTF-8 JSON") from error
+            raise MolecularEvaluationError(
+                "prediction evaluation.json is not valid UTF-8 JSON"
+            ) from error
         _strict_fields(raw, ROLE_MANIFEST_FIELDS[PREDICTION_ROLE], "prediction manifest")
         assert isinstance(raw, dict)
         if (
@@ -607,7 +742,9 @@ class SnapshotManifest:
         model_digest = raw["modelCheckpointContentSha256"]
         query_digest = raw["queryManifestSha256"]
         if not _is_digest(model_digest) or not _is_digest(query_digest):
-            raise MolecularEvaluationError("prediction provenance digests must be lowercase SHA-256")
+            raise MolecularEvaluationError(
+                "prediction provenance digests must be lowercase SHA-256"
+            )
         query_resource = _dataset_resource(raw["queryResource"], "queryResource")
         query_dataset_digest = _pinned_digest(
             raw["queryDatasetManifestDigest"], "queryDatasetManifestDigest"
@@ -672,7 +809,9 @@ class SnapshotManifest:
                 try:
                     record = json.loads(line)
                 except (UnicodeDecodeError, json.JSONDecodeError) as error:
-                    raise MolecularEvaluationError(f"invalid JSON in {name}:{line_number}") from error
+                    raise MolecularEvaluationError(
+                        f"invalid JSON in {name}:{line_number}"
+                    ) from error
                 if not isinstance(record, dict):
                     raise MolecularEvaluationError(f"{name}:{line_number} must be an object")
                 count += 1
@@ -714,10 +853,16 @@ class Profile:
 
     def query_document(self) -> dict[str, object]:
         taxon, source, group, perturbation, profile_id = self.key
-        return {"profileId": profile_id, "speciesTaxon": taxon, "sourceId": source,
-                "centeringGroup": group, "perturbationId": perturbation,
-                "interventionIds": list(self.intervention_ids), "readoutIds": list(self.readout_ids),
-                "distributionTypes": list(self.distribution_types)}
+        return {
+            "profileId": profile_id,
+            "speciesTaxon": taxon,
+            "sourceId": source,
+            "centeringGroup": group,
+            "perturbationId": perturbation,
+            "interventionIds": list(self.intervention_ids),
+            "readoutIds": list(self.readout_ids),
+            "distributionTypes": list(self.distribution_types),
+        }
 
 
 @dataclass
@@ -797,28 +942,51 @@ class ScalarMoments:
         if not self.count:
             raise MolecularEvaluationError("metric group has no observed held truth")
         pearson = self.pearson()
-        return {"targets": self.count, "rmse": math.sqrt(self.sum_square_error / self.count),
-                "mae": self.sum_absolute_error / self.count,
-                "pearson": pearson if pearson is not None else 0.0,
-                "pearsonDefined": pearson is not None,
-                "meanNll": self.sum_nll / self.count,
-                "distributionTargets": {"gaussian": self.gaussian_targets,
-                    "negative-binomial": self.negative_binomial_targets}}
+        return {
+            "targets": self.count,
+            "rmse": math.sqrt(self.sum_square_error / self.count),
+            "mae": self.sum_absolute_error / self.count,
+            "pearson": pearson if pearson is not None else 0.0,
+            "pearsonDefined": pearson is not None,
+            "meanNll": self.sum_nll / self.count,
+            "distributionTargets": {
+                "gaussian": self.gaussian_targets,
+                "negative-binomial": self.negative_binomial_targets,
+            },
+        }
 
     def gaussian_calibration_report(self) -> dict[str, object]:
         if not self.gaussian_targets:
-            return {"targets": 0,
-                    "central50": {"nominalCoverage": 0.5, "z": CENTRAL_50_NORMAL_Z,
-                        "empiricalCoverage": None, "meanIntervalWidth": None},
-                    "central90": {"nominalCoverage": 0.9, "z": CENTRAL_90_NORMAL_Z,
-                        "empiricalCoverage": None, "meanIntervalWidth": None}}
-        return {"targets": self.gaussian_targets,
-                "central50": {"nominalCoverage": 0.5, "z": CENTRAL_50_NORMAL_Z,
-                    "empiricalCoverage": self.central_50_covered / self.gaussian_targets,
-                    "meanIntervalWidth": self.sum_central_50_interval_width / self.gaussian_targets},
-                "central90": {"nominalCoverage": 0.9, "z": CENTRAL_90_NORMAL_Z,
-                    "empiricalCoverage": self.central_90_covered / self.gaussian_targets,
-                    "meanIntervalWidth": self.sum_central_90_interval_width / self.gaussian_targets}}
+            return {
+                "targets": 0,
+                "central50": {
+                    "nominalCoverage": 0.5,
+                    "z": CENTRAL_50_NORMAL_Z,
+                    "empiricalCoverage": None,
+                    "meanIntervalWidth": None,
+                },
+                "central90": {
+                    "nominalCoverage": 0.9,
+                    "z": CENTRAL_90_NORMAL_Z,
+                    "empiricalCoverage": None,
+                    "meanIntervalWidth": None,
+                },
+            }
+        return {
+            "targets": self.gaussian_targets,
+            "central50": {
+                "nominalCoverage": 0.5,
+                "z": CENTRAL_50_NORMAL_Z,
+                "empiricalCoverage": self.central_50_covered / self.gaussian_targets,
+                "meanIntervalWidth": self.sum_central_50_interval_width / self.gaussian_targets,
+            },
+            "central90": {
+                "nominalCoverage": 0.9,
+                "z": CENTRAL_90_NORMAL_Z,
+                "empiricalCoverage": self.central_90_covered / self.gaussian_targets,
+                "meanIntervalWidth": self.sum_central_90_interval_width / self.gaussian_targets,
+            },
+        }
 
 
 @dataclass(frozen=True)
@@ -831,8 +999,12 @@ class ProfileMetric:
     centroid_accuracy: float | None = None
 
 
-def _parse_profile(manifest: SnapshotManifest, record: dict[str, object], location: str,
-                   maximum_absolute_log_scale: float) -> Profile:
+def _parse_profile(
+    manifest: SnapshotManifest,
+    record: dict[str, object],
+    location: str,
+    maximum_absolute_log_scale: float,
+) -> Profile:
     _strict_fields(record, ROLE_RECORD_FIELDS[manifest.role], f"{location} {manifest.role} record")
     taxon = record["speciesTaxon"]
     if type(taxon) is not int or taxon not in manifest.species_taxa:
@@ -861,9 +1033,13 @@ def _parse_profile(manifest: SnapshotManifest, record: dict[str, object], locati
     if any(item not in {"gaussian", "negative-binomial"} for item in distributions):
         raise MolecularEvaluationError(f"{location}.distributionTypes contains an unsupported type")
     if perturbation != canonical_perturbation_id(interventions):
-        raise MolecularEvaluationError(f"{location}.perturbationId is not derived from interventionIds")
+        raise MolecularEvaluationError(
+            f"{location}.perturbationId is not derived from interventionIds"
+        )
     if profile_id != canonical_profile_id(taxon, source, group, perturbation):
-        raise MolecularEvaluationError(f"{location}.profileId is not the canonical natural profile key")
+        raise MolecularEvaluationError(
+            f"{location}.profileId is not the canonical natural profile key"
+        )
     profile = Profile(
         (taxon, source, group, perturbation, profile_id), interventions, readouts, distributions
     )
@@ -893,31 +1069,45 @@ def _parse_profile(manifest: SnapshotManifest, record: dict[str, object], locati
             )
         for index, (readout, distribution) in enumerate(zip(readouts, distributions)):
             parameter = parameters[index]
-            expected = {"mean", "logScale"} if distribution == "gaussian" else {
-                "logMean", "logInverseDispersion"
-            }
-            parameter = _strict_fields(parameter, expected, f"{location}.predictionParameters[{index}]")
+            expected = (
+                {"mean", "logScale"}
+                if distribution == "gaussian"
+                else {"logMean", "logInverseDispersion"}
+            )
+            parameter = _strict_fields(
+                parameter, expected, f"{location}.predictionParameters[{index}]"
+            )
             if distribution == "gaussian":
                 mean = _number(parameter["mean"], f"{location}.predictionParameters[{index}].mean")
-                auxiliary = _number(parameter["logScale"], f"{location}.predictionParameters[{index}].logScale")
+                auxiliary = _number(
+                    parameter["logScale"], f"{location}.predictionParameters[{index}].logScale"
+                )
                 expectation = mean
             else:
-                mean = _number(parameter["logMean"], f"{location}.predictionParameters[{index}].logMean")
-                auxiliary = _number(parameter["logInverseDispersion"], f"{location}.predictionParameters[{index}].logInverseDispersion")
+                mean = _number(
+                    parameter["logMean"], f"{location}.predictionParameters[{index}].logMean"
+                )
+                auxiliary = _number(
+                    parameter["logInverseDispersion"],
+                    f"{location}.predictionParameters[{index}].logInverseDispersion",
+                )
                 expectation = math.exp(mean)
             if (
                 abs(auxiliary) > maximum_absolute_log_scale
                 or (distribution == "negative-binomial" and abs(mean) > maximum_absolute_log_scale)
                 or abs(expectation) > MAX_ABSOLUTE_TARGET
             ):
-                raise MolecularEvaluationError(f"{location}.predictionParameters[{index}] exceeds bound")
+                raise MolecularEvaluationError(
+                    f"{location}.predictionParameters[{index}] exceeds bound"
+                )
             profile.prediction[readout], profile.log_scale[readout] = expectation, auxiliary
             profile.primary_parameter[readout] = mean
     return profile
 
 
-def _load_profiles(manifest: SnapshotManifest, max_line_bytes: int,
-                   maximum_absolute_log_scale: float) -> tuple[dict[str, Profile], int]:
+def _load_profiles(
+    manifest: SnapshotManifest, max_line_bytes: int, maximum_absolute_log_scale: float
+) -> tuple[dict[str, Profile], int]:
     profiles: dict[str, Profile] = {}
     count = 0
     for shard, line, record in manifest.records(max_line_bytes):
@@ -943,13 +1133,23 @@ def _load_query_snapshot(
     except (UnicodeDecodeError, json.JSONDecodeError) as error:
         raise MolecularEvaluationError("query.json is not valid UTF-8 JSON") from error
     manifest = _strict_fields(raw, QUERY_MANIFEST_FIELDS, "query manifest")
-    if (manifest["schema"] != QUERY_SCHEMA or manifest["role"] != "molecular-validation-query"
-            or manifest["labelClass"] != "none" or manifest["targetValuesPresent"] is not False
-            or manifest["observedMaskPresent"] is not False):
-        raise MolecularEvaluationError("query manifest is not a target-free molecularValidation query")
+    if (
+        manifest["schema"] != QUERY_SCHEMA
+        or manifest["role"] != "molecular-validation-query"
+        or manifest["labelClass"] != "none"
+        or manifest["targetValuesPresent"] is not False
+        or manifest["observedMaskPresent"] is not False
+    ):
+        raise MolecularEvaluationError(
+            "query manifest is not a target-free molecularValidation query"
+        )
     species, sources = manifest["speciesTaxa"], manifest["sourceIds"]
-    if (not isinstance(species, list) or not species or any(type(x) is not int or x <= 0 for x in species)
-            or len(species) != len(set(species))):
+    if (
+        not isinstance(species, list)
+        or not species
+        or any(type(x) is not int or x <= 0 for x in species)
+        or len(species) != len(set(species))
+    ):
         raise MolecularEvaluationError("query speciesTaxa are invalid")
     if species != [YEAST_TAXON]:
         raise MolecularEvaluationError(
@@ -964,26 +1164,40 @@ def _load_query_snapshot(
     if not isinstance(raw_shards, list) or not raw_shards or len(raw_shards) > MAX_SHARDS:
         raise MolecularEvaluationError("query manifest shard count is outside bounds")
     pseudo = SnapshotManifest(
-        root=root, role=PREDICTION_ROLE, dataset_id=_string(manifest["datasetId"], "query datasetId"),
+        root=root,
+        role=PREDICTION_ROLE,
+        dataset_id=_string(manifest["datasetId"], "query datasetId"),
         version=_string(manifest["version"], "query version"),
         value_space=_string(manifest["valueSpace"], "query valueSpace"),
-        species_taxa=frozenset(species), source_ids=source_ids,
-        manifest_sha256=_sha256(manifest_path), shards=(),
+        species_taxa=frozenset(species),
+        source_ids=source_ids,
+        manifest_sha256=_sha256(manifest_path),
+        shards=(),
     )
     profiles: dict[str, Profile] = {}
     total_records = 0
     total_bytes = 0
     seen_paths: set[str] = set()
     for shard_index, raw_shard in enumerate(raw_shards):
-        shard = _strict_fields(raw_shard, {"path", "sha256", "bytes", "records"}, f"query shards[{shard_index}]")
+        shard = _strict_fields(
+            raw_shard, {"path", "sha256", "bytes", "records"}, f"query shards[{shard_index}]"
+        )
         name = shard["path"]
-        if not isinstance(name, str) or name in seen_paths or not (name.endswith(".jsonl") or name.endswith(".jsonl.gz")):
+        if (
+            not isinstance(name, str)
+            or name in seen_paths
+            or not (name.endswith(".jsonl") or name.endswith(".jsonl.gz"))
+        ):
             raise MolecularEvaluationError("query shard paths must be unique JSONL paths")
         seen_paths.add(name)
         path = _relative_file(root, name, "query shard path")
         if not _is_digest(shard["sha256"]) or _sha256(path) != shard["sha256"]:
             raise MolecularEvaluationError(f"query shard digest mismatch: {name}")
-        if type(shard["bytes"]) is not int or shard["bytes"] <= 0 or shard["bytes"] > MAX_SHARD_BYTES:
+        if (
+            type(shard["bytes"]) is not int
+            or shard["bytes"] <= 0
+            or shard["bytes"] > MAX_SHARD_BYTES
+        ):
             raise MolecularEvaluationError("query shard bytes must be a positive bounded integer")
         if path.stat().st_size != shard["bytes"]:
             raise MolecularEvaluationError(f"query shard byte count mismatch: {name}")
@@ -999,15 +1213,20 @@ def _load_query_snapshot(
             try:
                 record = json.loads(line)
             except (UnicodeDecodeError, json.JSONDecodeError) as error:
-                raise MolecularEvaluationError(f"invalid query JSON at {name}:{line_number}") from error
+                raise MolecularEvaluationError(
+                    f"invalid query JSON at {name}:{line_number}"
+                ) from error
             _strict_fields(record, COMMON_RECORD_FIELDS, f"{name}:{line_number} query record")
             assert isinstance(record, dict)
             readouts, distributions = record.get("readoutIds"), record.get("distributionTypes")
             if not isinstance(readouts, list) or not isinstance(distributions, list):
                 raise MolecularEvaluationError("query readoutIds/distributionTypes must be lists")
             parameters = [
-                ({"mean": 0.0, "logScale": 0.0} if distribution == "gaussian"
-                 else {"logMean": 0.0, "logInverseDispersion": 0.0})
+                (
+                    {"mean": 0.0, "logScale": 0.0}
+                    if distribution == "gaussian"
+                    else {"logMean": 0.0, "logInverseDispersion": 0.0}
+                )
                 for distribution in distributions
             ]
             augmented = {**record, "predictionParameters": parameters}
@@ -1090,10 +1309,14 @@ def _load_corpus_audit(pinned: PinnedDatasetInput) -> tuple[dict[str, object], s
         or type(audit["benchmarkLabelRecords"]) is not int
         or audit["benchmarkLabelRecords"] != 0
     ):
-        raise MolecularEvaluationError("a passing admitted strict zero-leakage corpus audit is required")
+        raise MolecularEvaluationError(
+            "a passing admitted strict zero-leakage corpus audit is required"
+        )
     datasets = audit["datasets"]
     if not isinstance(datasets, dict) or set(datasets) != set(AUDIT_DATASET_ROLES):
-        raise MolecularEvaluationError("corpus audit must attest exactly all three governed corpora")
+        raise MolecularEvaluationError(
+            "corpus audit must attest exactly all three governed corpora"
+        )
     for name, identity in datasets.items():
         identity = _strict_fields(identity, CORPUS_DATASET_FIELDS, f"corpus audit dataset {name}")
         resource = _dataset_resource(identity["resource"], f"audit datasets.{name}.resource")
@@ -1105,7 +1328,9 @@ def _load_corpus_audit(pinned: PinnedDatasetInput) -> tuple[dict[str, object], s
         if identity["role"] != AUDIT_DATASET_ROLES[name]:
             raise MolecularEvaluationError(f"audit dataset {name} role is inconsistent")
         for field_name in (
-            "corpusManifestSha256", "contentDigest", "trajectoryGenesSha256",
+            "corpusManifestSha256",
+            "contentDigest",
+            "trajectoryGenesSha256",
             "trajectoryGeneSetSha256",
         ):
             if not _is_digest(identity[field_name]):
@@ -1117,9 +1342,13 @@ def _load_corpus_audit(pinned: PinnedDatasetInput) -> tuple[dict[str, object], s
         for field_name in ("modalities", "sourceIds"):
             values = identity[field_name]
             if (
-                not isinstance(values, list) or not values
+                not isinstance(values, list)
+                or not values
                 or len(values) != len(set(values))
-                or any(_stable_id(value, f"audit datasets.{name}.{field_name}[]") != value for value in values)
+                or any(
+                    _stable_id(value, f"audit datasets.{name}.{field_name}[]") != value
+                    for value in values
+                )
             ):
                 raise MolecularEvaluationError(f"audit dataset {name} {field_name} is invalid")
         if identity["speciesTaxa"] != [YEAST_TAXON]:
@@ -1130,25 +1359,35 @@ def _load_corpus_audit(pinned: PinnedDatasetInput) -> tuple[dict[str, object], s
         raise MolecularEvaluationError("audit heldRoster revision is inconsistent")
     _pinned_digest(roster["manifestDigest"], "audit heldRoster.manifestDigest")
     for field_name in (
-        "rosterSha256", "coverageSha256", "identityMappingSha256",
-        "validationGeneSetSha256", "finalGeneSetSha256", "unionGeneSetSha256",
+        "rosterSha256",
+        "coverageSha256",
+        "identityMappingSha256",
+        "validationGeneSetSha256",
+        "finalGeneSetSha256",
+        "unionGeneSetSha256",
     ):
         if not _is_digest(roster[field_name]):
             raise MolecularEvaluationError(f"invalid audit heldRoster digest {field_name}")
     for field_name in (
-        "intersectionSize", "pretrainGeneCount", "validationGeneCount",
-        "finalGeneCount", "unionGeneCount",
+        "intersectionSize",
+        "pretrainGeneCount",
+        "validationGeneCount",
+        "finalGeneCount",
+        "unionGeneCount",
     ):
         if type(roster[field_name]) is not int or roster[field_name] < 0:
             raise MolecularEvaluationError(f"invalid audit heldRoster count {field_name}")
     sources = roster["sourceInventories"]
     if not isinstance(sources, list) or len(sources) < 2:
-        raise MolecularEvaluationError("audit heldRoster requires at least two protected inventories")
+        raise MolecularEvaluationError(
+            "audit heldRoster requires at least two protected inventories"
+        )
     source_ids: list[str] = []
     source_resources: list[str] = []
     for index, source in enumerate(sources):
         source = _strict_fields(
-            source, AUDIT_SOURCE_INVENTORY_FIELDS,
+            source,
+            AUDIT_SOURCE_INVENTORY_FIELDS,
             f"audit heldRoster sourceInventories[{index}]",
         )
         resource = _dataset_resource(
@@ -1170,8 +1409,12 @@ def _load_corpus_audit(pinned: PinnedDatasetInput) -> tuple[dict[str, object], s
                     f"invalid audit protected-inventory digest {field_name}"
                 )
         for field_name in (
-            "records", "duplicateRecords", "uniqueInterventions", "qcPassing",
-            "qcFailed", "intersectionCoverage",
+            "records",
+            "duplicateRecords",
+            "uniqueInterventions",
+            "qcPassing",
+            "qcFailed",
+            "intersectionCoverage",
         ):
             if type(source[field_name]) is not int or source[field_name] < 0:
                 raise MolecularEvaluationError("invalid audit protected-inventory count")
@@ -1184,7 +1427,8 @@ def _load_corpus_audit(pinned: PinnedDatasetInput) -> tuple[dict[str, object], s
         ):
             raise MolecularEvaluationError("audit protected-inventory binding is inconsistent")
     if (
-        source_ids != sorted(source_ids) or len(source_ids) != len(set(source_ids))
+        source_ids != sorted(source_ids)
+        or len(source_ids) != len(set(source_ids))
         or len(source_resources) != len(set(source_resources))
     ):
         raise MolecularEvaluationError("audit protected inventories must be unique and sorted")
@@ -1213,7 +1457,10 @@ def _load_held_roster(
         pinned, "coverage.json", expected_files, "held roster snapshot"
     )
     coverage = _strict_fields(coverage, ROSTER_COVERAGE_FIELDS, "held roster coverage")
-    if coverage["schema"] != ROSTER_SCHEMA or coverage["rosterPath"] != "held-intervention-roster.tsv":
+    if (
+        coverage["schema"] != ROSTER_SCHEMA
+        or coverage["rosterPath"] != "held-intervention-roster.tsv"
+    ):
         raise MolecularEvaluationError("held roster coverage schema/path is invalid")
     for field_name in ("sourceCount", "minimumIntersectionSize", "intersectionSize"):
         if type(coverage[field_name]) is not int or coverage[field_name] < 1:
@@ -1221,16 +1468,16 @@ def _load_held_roster(
     if coverage["intersectionSize"] < coverage["minimumIntersectionSize"]:
         raise MolecularEvaluationError("held roster intersection is below its frozen minimum")
     assignment = _strict_fields(
-        coverage["assignment"], {"domainHex", "digest", "bucketRule", "roles"},
+        coverage["assignment"],
+        {"domainHex", "digest", "bucketRule", "roles"},
         "held roster assignment",
     )
     if (
         assignment["domainHex"] != ROSTER_ASSIGNMENT_DOMAIN.hex()
         or assignment["digest"] != "sha256"
         or assignment["bucketRule"] != "int(first-16-lowercase-hex,16) mod 100"
-        or assignment["roles"] != {
-            "0-9": "molecular-final", "10-29": "molecular-validation", "30-99": "pretrain"
-        }
+        or assignment["roles"]
+        != {"0-9": "molecular-final", "10-29": "molecular-validation", "30-99": "pretrain"}
     ):
         raise MolecularEvaluationError("held roster assignment contract has drifted")
     mapping = _strict_fields(coverage["identityMapping"], {"id", "sha256"}, "identityMapping")
@@ -1244,15 +1491,14 @@ def _load_held_roster(
     compact_sources: list[dict[str, object]] = []
     excluded_ids: set[str] = set()
     rejection_totals = {
-        "qcFailed": 0, "notPassingAllProtectedSources": 0,
+        "qcFailed": 0,
+        "notPassingAllProtectedSources": 0,
         "identicalDuplicatesCollapsed": 0,
     }
     source_fields = AUDIT_SOURCE_INVENTORY_FIELDS | {"exclusions"}
     for index, source in enumerate(sources):
         source = _strict_fields(source, source_fields, f"held roster sources[{index}]")
-        resource = _dataset_resource(
-            source["resource"], f"held roster sources[{index}].resource"
-        )
+        resource = _dataset_resource(source["resource"], f"held roster sources[{index}].resource")
         if source["revision"] != resource.rpartition("@")[2]:
             raise MolecularEvaluationError("held roster source DatasetSnapshot revision mismatch")
         _pinned_digest(
@@ -1261,12 +1507,19 @@ def _load_held_roster(
         )
         source_ids.append(_stable_id(source["sourceId"], "held roster sourceId"))
         _string(source["sourceRelease"], "held roster sourceRelease")
-        if source["identityMappingId"] != mapping["id"] or source["identityMappingSha256"] != mapping["sha256"]:
+        if (
+            source["identityMappingId"] != mapping["id"]
+            or source["identityMappingSha256"] != mapping["sha256"]
+        ):
             raise MolecularEvaluationError("held roster source identity mapping mismatch")
         if not _is_digest(source["manifestSha256"]):
             raise MolecularEvaluationError("held roster source manifest digest is invalid")
         for field_name in (
-            "records", "duplicateRecords", "uniqueInterventions", "qcPassing", "qcFailed",
+            "records",
+            "duplicateRecords",
+            "uniqueInterventions",
+            "qcPassing",
+            "qcFailed",
             "intersectionCoverage",
         ):
             if type(source[field_name]) is not int or source[field_name] < 0:
@@ -1277,24 +1530,33 @@ def _load_held_roster(
         ):
             raise MolecularEvaluationError("held roster source counts are internally inconsistent")
         if source["intersectionCoverage"] != coverage["intersectionSize"]:
-            raise MolecularEvaluationError("held roster source does not cover the complete intersection")
+            raise MolecularEvaluationError(
+                "held roster source does not cover the complete intersection"
+            )
         if not isinstance(source["exclusions"], list):
             raise MolecularEvaluationError("held roster source exclusions must be explicit")
         exclusions: list[tuple[str, str]] = []
         for exclusion_index, exclusion in enumerate(source["exclusions"]):
             exclusion = _strict_fields(
-                exclusion, {"interventionId", "reason"},
+                exclusion,
+                {"interventionId", "reason"},
                 f"held roster sources[{index}].exclusions[{exclusion_index}]",
             )
             identifier = _string(exclusion["interventionId"], "coverage exclusion interventionId")
             if SGD_INTERVENTION.fullmatch(identifier) is None or exclusion["reason"] not in {
-                "qc-failed", "not-qc-passing-in-all-protected-sources"
+                "qc-failed",
+                "not-qc-passing-in-all-protected-sources",
             }:
                 raise MolecularEvaluationError("held roster coverage exclusion is invalid")
             exclusions.append((identifier, exclusion["reason"]))
             excluded_ids.add(identifier)
-        if exclusions != sorted(set(exclusions)) or len(exclusions) != source["uniqueInterventions"] - coverage["intersectionSize"]:
-            raise MolecularEvaluationError("held roster exclusions do not explain the source intersection")
+        if (
+            exclusions != sorted(set(exclusions))
+            or len(exclusions) != source["uniqueInterventions"] - coverage["intersectionSize"]
+        ):
+            raise MolecularEvaluationError(
+                "held roster exclusions do not explain the source intersection"
+            )
         rejection_totals["qcFailed"] += sum(reason == "qc-failed" for _, reason in exclusions)
         rejection_totals["notPassingAllProtectedSources"] += sum(
             reason == "not-qc-passing-in-all-protected-sources" for _, reason in exclusions
@@ -1310,7 +1572,9 @@ def _load_held_roster(
     previous = ""
     for line_number, raw in _bounded_lines(roster_path, 4096, "held-intervention-roster.tsv"):
         if not raw.endswith(b"\n"):
-            raise MolecularEvaluationError(f"held roster line {line_number} lacks canonical newline")
+            raise MolecularEvaluationError(
+                f"held roster line {line_number} lacks canonical newline"
+            )
         try:
             columns = raw[:-1].decode("ascii").split("\t")
         except UnicodeDecodeError as error:
@@ -1332,10 +1596,13 @@ def _load_held_roster(
     if not roles or coverage["intersectionSize"] != len(roles):
         raise MolecularEvaluationError("held roster does not cover the declared intersection")
     if excluded_ids & set(roles):
-        raise MolecularEvaluationError("held roster exclusion also occurs in the admitted intersection")
-    role_counts = {role: sum(value == role for value in roles.values()) for role in (
-        "pretrain", "molecular-validation", "molecular-final"
-    )}
+        raise MolecularEvaluationError(
+            "held roster exclusion also occurs in the admitted intersection"
+        )
+    role_counts = {
+        role: sum(value == role for value in roles.values())
+        for role in ("pretrain", "molecular-validation", "molecular-final")
+    }
     if coverage["roleCounts"] != role_counts:
         raise MolecularEvaluationError("held roster roleCounts do not match recomputed assignments")
     roster_digest = _sha256(roster_path)
@@ -1345,16 +1612,23 @@ def _load_held_roster(
     return roles, coverage, roster_digest, coverage_digest
 
 
-def _validate_isolation(centering: dict[str, Profile], truth: dict[str, Profile],
-                        roster: dict[str, str]) -> None:
+def _validate_isolation(
+    centering: dict[str, Profile], truth: dict[str, Profile], roster: dict[str, str]
+) -> None:
     truth_ids = {x for profile in truth.values() for x in profile.intervention_ids}
     wrong = sorted(x for x in truth_ids if roster.get(x) != "molecular-validation")
     if wrong:
-        raise MolecularEvaluationError("held truth does not match frozen held roster: " + ", ".join(wrong[:10]))
+        raise MolecularEvaluationError(
+            "held truth does not match frozen held roster: " + ", ".join(wrong[:10])
+        )
     centering_ids = {x for profile in centering.values() for x in profile.intervention_ids}
-    held = sorted(x for x in centering_ids if roster.get(x) in {"molecular-validation", "molecular-final"})
+    held = sorted(
+        x for x in centering_ids if roster.get(x) in {"molecular-validation", "molecular-final"}
+    )
     if held:
-        raise MolecularEvaluationError("fitting centering contains held-roster interventions: " + ", ".join(held[:10]))
+        raise MolecularEvaluationError(
+            "fitting centering contains held-roster interventions: " + ", ".join(held[:10])
+        )
 
 
 def _pearson(left: list[float], right: list[float]) -> float | None:
@@ -1376,7 +1650,9 @@ def _macro(values: Iterable[float | None]) -> float:
     return sum(x if x is not None else 0.0 for x in items) / len(items) if items else 0.0
 
 
-def _references(profiles: dict[str, Profile], minimum: int) -> tuple[dict[GroupKey, dict[str, float]], dict[GroupKey, int]]:
+def _references(
+    profiles: dict[str, Profile], minimum: int
+) -> tuple[dict[GroupKey, dict[str, float]], dict[GroupKey, int]]:
     # Collapse replicates to one centroid per perturbation first. This prevents
     # high-replicate interventions from dominating the fitting reference.
     perturbation_totals: dict[tuple[GroupKey, str], dict[str, float]] = defaultdict(
@@ -1396,15 +1672,20 @@ def _references(profiles: dict[str, Profile], minimum: int) -> tuple[dict[GroupK
     counts: dict[GroupKey, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     for (group, perturbation), readout_totals in perturbation_totals.items():
         for readout, total in readout_totals.items():
-            totals[group][readout] += total / perturbation_readout_counts[(group, perturbation)][readout]
+            totals[group][readout] += (
+                total / perturbation_readout_counts[(group, perturbation)][readout]
+            )
             counts[group][readout] += 1
-    references = {group: {r: v / counts[group][r] for r, v in values.items()
-                          if counts[group][r] >= minimum} for group, values in totals.items()}
+    references = {
+        group: {r: v / counts[group][r] for r, v in values.items() if counts[group][r] >= minimum}
+        for group, values in totals.items()
+    }
     return references, {group: len(values) for group, values in perturbations.items()}
 
 
-def _profile_metrics(profiles: dict[str, Profile], references: dict[GroupKey, dict[str, float]],
-                     minimum: int) -> list[ProfileMetric]:
+def _profile_metrics(
+    profiles: dict[str, Profile], references: dict[GroupKey, dict[str, float]], minimum: int
+) -> list[ProfileMetric]:
     metrics = []
     for profile in profiles.values():
         group = profile.key[:3]
@@ -1419,9 +1700,15 @@ def _profile_metrics(profiles: dict[str, Profile], references: dict[GroupKey, di
         prediction = [profile.prediction[x] for x in readouts]
         target_shift = [profile.target[x] - references[group][x] for x in readouts]
         prediction_shift = [profile.prediction[x] - references[group][x] for x in readouts]
-        metrics.append(ProfileMetric(profile.key, len(readouts), _pearson(prediction, target),
-                                     _pearson(prediction_shift, target_shift),
-                                     _cosine(prediction_shift, target_shift)))
+        metrics.append(
+            ProfileMetric(
+                profile.key,
+                len(readouts),
+                _pearson(prediction, target),
+                _pearson(prediction_shift, target_shift),
+                _cosine(prediction_shift, target_shift),
+            )
+        )
     return metrics
 
 
@@ -1452,7 +1739,9 @@ def _validate_full_centering_support(
                 )
 
 
-def _with_accuracy(metrics: list[ProfileMetric], profiles: dict[str, Profile], minimum: int) -> list[ProfileMetric]:
+def _with_accuracy(
+    metrics: list[ProfileMetric], profiles: dict[str, Profile], minimum: int
+) -> list[ProfileMetric]:
     by_key = {x.key: x for x in profiles.values()}
     groups: dict[GroupKey, list[ProfileMetric]] = defaultdict(list)
     for metric in metrics:
@@ -1468,32 +1757,57 @@ def _with_accuracy(metrics: list[ProfileMetric], profiles: dict[str, Profile], m
             prediction = by_key[metric.key].prediction
             correct = sum((prediction[r] - by_key[metric.key].target[r]) ** 2 for r in readouts)
             others = [x for x in group_metrics if x.key != metric.key]
-            wins = sum(correct < sum((prediction[r] - by_key[x.key].target[r]) ** 2 for r in readouts)
-                       for x in others)
+            wins = sum(
+                correct < sum((prediction[r] - by_key[x.key].target[r]) ** 2 for r in readouts)
+                for x in others
+            )
             accuracies[metric.key] = wins / len(others)
-    return [ProfileMetric(x.key, x.readouts, x.ordinary_pearson, x.perturbed_centroid_pearson,
-                          x.perturbed_centroid_cosine, accuracies.get(x.key)) for x in metrics]
+    return [
+        ProfileMetric(
+            x.key,
+            x.readouts,
+            x.ordinary_pearson,
+            x.perturbed_centroid_pearson,
+            x.perturbed_centroid_cosine,
+            accuracies.get(x.key),
+        )
+        for x in metrics
+    ]
 
 
 def _profile_report(metrics: list[ProfileMetric]) -> dict[str, object]:
-    return {"profiles": len(metrics), "profileReadouts": sum(x.readouts for x in metrics),
+    return {
+        "profiles": len(metrics),
+        "profileReadouts": sum(x.readouts for x in metrics),
         "ordinaryPearsonProfiles": sum(x.ordinary_pearson is not None for x in metrics),
         "ordinaryPearsonUndefinedProfiles": sum(x.ordinary_pearson is None for x in metrics),
         "ordinaryProfilePearson": _macro(x.ordinary_pearson for x in metrics),
-        "perturbedCentroidPearsonProfiles": sum(x.perturbed_centroid_pearson is not None for x in metrics),
-        "perturbedCentroidPearsonUndefinedProfiles": sum(x.perturbed_centroid_pearson is None for x in metrics),
+        "perturbedCentroidPearsonProfiles": sum(
+            x.perturbed_centroid_pearson is not None for x in metrics
+        ),
+        "perturbedCentroidPearsonUndefinedProfiles": sum(
+            x.perturbed_centroid_pearson is None for x in metrics
+        ),
         "perturbedCentroidPearson": _macro(x.perturbed_centroid_pearson for x in metrics),
-        "perturbedCentroidCosineProfiles": sum(x.perturbed_centroid_cosine is not None for x in metrics),
-        "perturbedCentroidCosineUndefinedProfiles": sum(x.perturbed_centroid_cosine is None for x in metrics),
+        "perturbedCentroidCosineProfiles": sum(
+            x.perturbed_centroid_cosine is not None for x in metrics
+        ),
+        "perturbedCentroidCosineUndefinedProfiles": sum(
+            x.perturbed_centroid_cosine is None for x in metrics
+        ),
         "perturbedCentroidCosine": _macro(x.perturbed_centroid_cosine for x in metrics),
         "centroidAccuracyProfiles": sum(x.centroid_accuracy is not None for x in metrics),
         "centroidAccuracyUndefinedProfiles": sum(x.centroid_accuracy is None for x in metrics),
-        "centroidAccuracyCommonPanel": _macro(x.centroid_accuracy for x in metrics)}
+        "centroidAccuracyCommonPanel": _macro(x.centroid_accuracy for x in metrics),
+    }
 
 
 def _combined(moments: ScalarMoments, metrics: list[ProfileMetric]) -> dict[str, object]:
-    return {"ordinary": moments.report(), "gaussianCalibration": moments.gaussian_calibration_report(),
-            "perturbationSpecific": _profile_report(metrics)}
+    return {
+        "ordinary": moments.report(),
+        "gaussianCalibration": moments.gaussian_calibration_report(),
+        "perturbationSpecific": _profile_report(metrics),
+    }
 
 
 def molecular_profile_decision(report: dict[str, object]) -> dict[str, object]:
@@ -1501,10 +1815,16 @@ def molecular_profile_decision(report: dict[str, object]) -> dict[str, object]:
     species = report["species"]
     sources = report["sources"]
     audit = report["audit"]
-    species_pearson = {str(k): float(v["perturbationSpecific"]["perturbedCentroidPearson"])
-                       for k, v in species.items()}
-    species_profiles = {str(k): int(v["perturbationSpecific"]["profiles"]) for k, v in species.items()}
-    source_profiles = {str(k): int(v["perturbationSpecific"]["profiles"]) for k, v in sources.items()}
+    species_pearson = {
+        str(k): float(v["perturbationSpecific"]["perturbedCentroidPearson"])
+        for k, v in species.items()
+    }
+    species_profiles = {
+        str(k): int(v["perturbationSpecific"]["profiles"]) for k, v in species.items()
+    }
+    source_profiles = {
+        str(k): int(v["perturbationSpecific"]["profiles"]) for k, v in sources.items()
+    }
     minimum_species = min(species_pearson.values())
     correlations_defined = all(
         group["ordinary"]["pearsonDefined"] is True
@@ -1519,24 +1839,38 @@ def molecular_profile_decision(report: dict[str, object]) -> dict[str, object]:
         "exactProfilePanelJoin": audit["exactProfilePanelJoin"] is True,
         "zeroBenchmarkLabelRecords": audit["benchmarkLabelRecords"] == 0,
         "zeroCenteringHeldInterventionOverlap": audit["centeringHeldInterventionOverlap"] == 0,
-        "overallPerturbedCentroidPearson": specific["perturbedCentroidPearson"] >= MINIMUM_PERTURBED_CENTROID_PEARSON,
-        "minimumSpeciesPerturbedCentroidPearson": minimum_species >= MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON,
+        "overallPerturbedCentroidPearson": specific["perturbedCentroidPearson"]
+        >= MINIMUM_PERTURBED_CENTROID_PEARSON,
+        "minimumSpeciesPerturbedCentroidPearson": minimum_species
+        >= MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON,
         "everySpeciesHasEligibleProfiles": all(x > 0 for x in species_profiles.values()),
         "everySourceHasEligibleProfiles": all(x > 0 for x in source_profiles.values()),
         "everySpeciesAndSourceCorrelationDefined": correlations_defined,
     }
-    return {"schema": DIAGNOSTIC_SCHEMA, "scope": "diagnostic-only; not MODEL_CARD advancement",
-            "diagnosticPassed": all(checks.values()), "compatibilityPassed": True,
-            "compatibilityScope": "five independently admitted DatasetSnapshots, one frozen prediction artifact, and the exact checkpoint bytes",
-            "thresholds": {"minimumPerturbedCentroidPearson": MINIMUM_PERTURBED_CENTROID_PEARSON,
-                           "minimumSpeciesPerturbedCentroidPearson": MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON},
-            "observed": {"perturbedCentroidPearson": specific["perturbedCentroidPearson"],
-                         "minimumSpeciesPerturbedCentroidPearson": minimum_species,
-                         "speciesProfiles": species_profiles, "sourceProfiles": source_profiles},
-            "checks": checks,
-            "doesNotEstablish": ["the required NLL improvement against frozen baselines",
-                                 "checkpoint selection eligibility", "synthetic-lethality benchmark performance",
-                                 "portable inference or release compatibility"]}
+    return {
+        "schema": DIAGNOSTIC_SCHEMA,
+        "scope": "diagnostic-only; not MODEL_CARD advancement",
+        "diagnosticPassed": all(checks.values()),
+        "compatibilityPassed": True,
+        "compatibilityScope": "five independently admitted DatasetSnapshots, one frozen prediction artifact, and the exact checkpoint bytes",
+        "thresholds": {
+            "minimumPerturbedCentroidPearson": MINIMUM_PERTURBED_CENTROID_PEARSON,
+            "minimumSpeciesPerturbedCentroidPearson": MINIMUM_SPECIES_PERTURBED_CENTROID_PEARSON,
+        },
+        "observed": {
+            "perturbedCentroidPearson": specific["perturbedCentroidPearson"],
+            "minimumSpeciesPerturbedCentroidPearson": minimum_species,
+            "speciesProfiles": species_profiles,
+            "sourceProfiles": source_profiles,
+        },
+        "checks": checks,
+        "doesNotEstablish": [
+            "the required NLL improvement against frozen baselines",
+            "checkpoint selection eligibility",
+            "synthetic-lethality benchmark performance",
+            "portable inference or release compatibility",
+        ],
+    }
 
 
 def evaluate_molecular_predictions(
@@ -1554,12 +1888,18 @@ def evaluate_molecular_predictions(
     maximum_absolute_log_scale: float = 20.0,
 ) -> dict[str, object]:
     if minimum_reference_perturbations < 2 or minimum_profile_readouts < 2:
-        raise MolecularEvaluationError("minimum reference perturbations/readouts must be at least 2")
+        raise MolecularEvaluationError(
+            "minimum reference perturbations/readouts must be at least 2"
+        )
     if not 1024 <= max_line_bytes <= 16 * 1024 * 1024 or maximum_absolute_log_scale <= 0:
         raise MolecularEvaluationError("invalid evaluator bounds")
 
     def dataset(value: object, name: str) -> PinnedDatasetInput:
-        return value if isinstance(value, PinnedDatasetInput) else resolve_pinned_dataset_input(value, name)
+        return (
+            value
+            if isinstance(value, PinnedDatasetInput)
+            else resolve_pinned_dataset_input(value, name)
+        )
 
     pinned_centering = dataset(centering_input, "molecularCenteringReference")
     pinned_truth = dataset(truth_input, "molecularTruth")
@@ -1567,16 +1907,18 @@ def evaluate_molecular_predictions(
     pinned_audit = dataset(corpus_audit_input, "corpusAudit")
     pinned_roster = dataset(held_roster_input, "heldRoster")
     pinned_checkpoint = (
-        checkpoint_input if isinstance(checkpoint_input, PinnedCheckpointInput)
+        checkpoint_input
+        if isinstance(checkpoint_input, PinnedCheckpointInput)
         else resolve_pinned_checkpoint_input(checkpoint_input)
     )
     dataset_resources = {
-        item.resource for item in (
-            pinned_centering, pinned_truth, pinned_query, pinned_audit, pinned_roster
-        )
+        item.resource
+        for item in (pinned_centering, pinned_truth, pinned_query, pinned_audit, pinned_roster)
     }
     if len(dataset_resources) != 5:
-        raise MolecularEvaluationError("all five evaluator DatasetSnapshots must be independently pinned")
+        raise MolecularEvaluationError(
+            "all five evaluator DatasetSnapshots must be independently pinned"
+        )
 
     centering_manifest = SnapshotManifest.load(pinned_centering.path, CENTERING_ROLE)
     prediction_manifest = SnapshotManifest.load(prediction_root, PREDICTION_ROLE)
@@ -1585,14 +1927,27 @@ def evaluate_molecular_predictions(
         pinned_query, max_line_bytes
     )
     if prediction_manifest.model_checkpoint_content_sha256 != pinned_checkpoint.content_sha256:
-        raise MolecularEvaluationError("prediction manifest does not bind the supplied checkpoint bytes")
-    if len({centering_manifest.value_space, prediction_manifest.value_space, truth_manifest.value_space}) != 1:
+        raise MolecularEvaluationError(
+            "prediction manifest does not bind the supplied checkpoint bytes"
+        )
+    if (
+        len(
+            {
+                centering_manifest.value_space,
+                prediction_manifest.value_space,
+                truth_manifest.value_space,
+            }
+        )
+        != 1
+    ):
         raise MolecularEvaluationError("all molecular valueSpace values must match")
     if (
         prediction_manifest.species_taxa != truth_manifest.species_taxa
         or prediction_manifest.source_ids != truth_manifest.source_ids
     ):
-        raise MolecularEvaluationError("prediction and truth species/source declarations must match")
+        raise MolecularEvaluationError(
+            "prediction and truth species/source declarations must match"
+        )
     if (
         prediction_manifest.query_resource != pinned_query.resource
         or truth_manifest.query_resource != pinned_query.resource
@@ -1601,7 +1956,9 @@ def evaluate_molecular_predictions(
         or prediction_manifest.query_manifest_sha256 != query_manifest_sha256
         or truth_manifest.query_manifest_sha256 != query_manifest_sha256
     ):
-        raise MolecularEvaluationError("prediction/truth query binding is stale or does not match the admitted query")
+        raise MolecularEvaluationError(
+            "prediction/truth query binding is stale or does not match the admitted query"
+        )
     if prediction_manifest.value_space != query_manifest["valueSpace"]:
         raise MolecularEvaluationError("query and molecular artifact valueSpace values must match")
     if (
@@ -1620,7 +1977,9 @@ def evaluate_molecular_predictions(
     predictions, prediction_records = _load_profiles(
         prediction_manifest, max_line_bytes, maximum_absolute_log_scale
     )
-    truth, truth_records = _load_profiles(truth_manifest, max_line_bytes, maximum_absolute_log_scale)
+    truth, truth_records = _load_profiles(
+        truth_manifest, max_line_bytes, maximum_absolute_log_scale
+    )
     _assert_query_join(query, predictions, "prediction")
     _assert_query_join(query, truth, "truth")
     joined = _exact_join(truth, predictions)
@@ -1657,23 +2016,27 @@ def evaluate_molecular_predictions(
     }
     for field_name, expected in roster_bindings.items():
         if audit_roster[field_name] != expected:
-            raise MolecularEvaluationError(f"corpus audit held-roster binding mismatch: {field_name}")
+            raise MolecularEvaluationError(
+                f"corpus audit held-roster binding mismatch: {field_name}"
+            )
     if audit_roster["sourceInventories"] != roster_coverage["validatedSourceInventories"]:
-        raise MolecularEvaluationError("corpus audit held-roster source inventory bindings mismatch")
+        raise MolecularEvaluationError(
+            "corpus audit held-roster source inventory bindings mismatch"
+        )
     validation_identity = corpus_audit["datasets"]["molecularValidation"]
     assert isinstance(validation_identity, dict)
-    if (
-        set(validation_identity["speciesTaxa"]) != set(prediction_manifest.species_taxa)
-        or set(validation_identity["sourceIds"]) != set(prediction_manifest.source_ids)
-    ):
-        raise MolecularEvaluationError("query species/sources do not match audited molecularValidation")
+    if set(validation_identity["speciesTaxa"]) != set(prediction_manifest.species_taxa) or set(
+        validation_identity["sourceIds"]
+    ) != set(prediction_manifest.source_ids):
+        raise MolecularEvaluationError(
+            "query species/sources do not match audited molecularValidation"
+        )
     query_interventions = {
         identifier for profile in query.values() for identifier in profile.intervention_ids
     }
-    if (
-        validation_identity["trajectoryGeneCount"] != len(query_interventions)
-        or validation_identity["trajectoryGeneSetSha256"] != _gene_set_sha256(query_interventions)
-    ):
+    if validation_identity["trajectoryGeneCount"] != len(
+        query_interventions
+    ) or validation_identity["trajectoryGeneSetSha256"] != _gene_set_sha256(query_interventions):
         raise MolecularEvaluationError(
             "target-free query intervention domain does not match audited molecularValidation"
         )
@@ -1699,60 +2062,81 @@ def evaluate_molecular_predictions(
         for readout, target in profile.target.items():
             moment = ScalarMoments()
             moment.add(
-                profile.prediction[readout], target, distribution_by_readout[readout],
-                profile.primary_parameter[readout], profile.log_scale[readout],
+                profile.prediction[readout],
+                target,
+                distribution_by_readout[readout],
+                profile.primary_parameter[readout],
+                profile.log_scale[readout],
             )
             source_moments[source].merge(moment)
             species_moments[taxon].merge(moment)
             pair_moments[(taxon, source)].merge(moment)
-    if (
-        set(source_moments) != set(prediction_manifest.source_ids)
-        or set(species_moments) != set(prediction_manifest.species_taxa)
+    if set(source_moments) != set(prediction_manifest.source_ids) or set(species_moments) != set(
+        prediction_manifest.species_taxa
     ):
-        raise MolecularEvaluationError("every declared species and source requires observed held truth")
+        raise MolecularEvaluationError(
+            "every declared species and source requires observed held truth"
+        )
     overall_moments = ScalarMoments()
     for item in source_moments.values():
         overall_moments.merge(item)
 
     def selected(taxon: int | None = None, source: str | None = None) -> list[ProfileMetric]:
         return [
-            metric for metric in metrics
+            metric
+            for metric in metrics
             if (taxon is None or metric.key[0] == taxon)
             and (source is None or metric.key[1] == source)
         ]
 
     overall = _combined(overall_moments, metrics)
-    species = {str(key): _combined(value, selected(taxon=key)) for key, value in sorted(species_moments.items())}
-    sources = {key: _combined(value, selected(source=key)) for key, value in sorted(source_moments.items())}
-    pairs = {f"{key[0]}|{key[1]}": _combined(value, selected(*key)) for key, value in sorted(pair_moments.items())}
+    species = {
+        str(key): _combined(value, selected(taxon=key))
+        for key, value in sorted(species_moments.items())
+    }
+    sources = {
+        key: _combined(value, selected(source=key)) for key, value in sorted(source_moments.items())
+    }
+    pairs = {
+        f"{key[0]}|{key[1]}": _combined(value, selected(*key))
+        for key, value in sorted(pair_moments.items())
+    }
     report: dict[str, object] = {
         "schema": REPORT_SCHEMA,
         "method": {
             "name": "fitting-centroid target-separated typed-distribution evaluation",
-            "class": "Systema-inspired", "citationDoi": SYSTEMA_DOI,
+            "class": "Systema-inspired",
+            "citationDoi": SYSTEMA_DOI,
             "referenceDefinition": "Every preregistered readout is centered using fitting-only perturbation centroids. Isolation is independently established by the admitted audit and frozen roster, never inferred from centering overlap alone.",
             "queryBindingDefinition": "Prediction and evaluator-only truth exact-join the same canonical target-free query identities, interventions, distribution types, and readout panels.",
             "likelihoodDefinition": "Non-null truth is scored under the declared Gaussian or negative-binomial distribution. Null truth is not scored; predictions still cover the entire preregistered panel.",
         },
         "inputs": {
             "centeringReference": {
-                "resource": pinned_centering.resource, "revision": pinned_centering.revision,
+                "resource": pinned_centering.resource,
+                "revision": pinned_centering.revision,
                 "datasetManifestDigest": pinned_centering.manifest_digest,
-                "datasetId": centering_manifest.dataset_id, "version": centering_manifest.version,
-                "manifestSha256": centering_manifest.manifest_sha256, "records": centering_records,
+                "datasetId": centering_manifest.dataset_id,
+                "version": centering_manifest.version,
+                "manifestSha256": centering_manifest.manifest_sha256,
+                "records": centering_records,
             },
             "predictions": {
-                "datasetId": prediction_manifest.dataset_id, "version": prediction_manifest.version,
+                "datasetId": prediction_manifest.dataset_id,
+                "version": prediction_manifest.version,
                 "manifestSha256": prediction_manifest.manifest_sha256,
                 "modelCheckpointContentSha256": prediction_manifest.model_checkpoint_content_sha256,
                 "queryResource": prediction_manifest.query_resource,
                 "queryDatasetManifestDigest": prediction_manifest.query_dataset_manifest_digest,
-                "queryManifestSha256": query_manifest_sha256, "records": prediction_records,
+                "queryManifestSha256": query_manifest_sha256,
+                "records": prediction_records,
             },
             "heldTruth": {
-                "resource": pinned_truth.resource, "revision": pinned_truth.revision,
+                "resource": pinned_truth.resource,
+                "revision": pinned_truth.revision,
                 "datasetManifestDigest": pinned_truth.manifest_digest,
-                "datasetId": truth_manifest.dataset_id, "version": truth_manifest.version,
+                "datasetId": truth_manifest.dataset_id,
+                "version": truth_manifest.version,
                 "manifestSha256": truth_manifest.manifest_sha256,
                 "queryResource": truth_manifest.query_resource,
                 "queryDatasetManifestDigest": truth_manifest.query_dataset_manifest_digest,
@@ -1760,20 +2144,26 @@ def evaluate_molecular_predictions(
                 "records": truth_records,
             },
             "molecularQuery": {
-                "datasetId": query_manifest["datasetId"], "version": query_manifest["version"],
-                "resource": pinned_query.resource, "revision": pinned_query.revision,
+                "datasetId": query_manifest["datasetId"],
+                "version": query_manifest["version"],
+                "resource": pinned_query.resource,
+                "revision": pinned_query.revision,
                 "datasetManifestDigest": pinned_query.manifest_digest,
-                "queryManifestSha256": query_manifest_sha256, "records": query_records,
+                "queryManifestSha256": query_manifest_sha256,
+                "records": query_records,
             },
             "corpusAudit": {
-                "resource": pinned_audit.resource, "revision": pinned_audit.revision,
+                "resource": pinned_audit.resource,
+                "revision": pinned_audit.revision,
                 "datasetManifestDigest": pinned_audit.manifest_digest,
                 "contentSha256": corpus_audit_digest,
             },
             "heldRoster": {
-                "resource": pinned_roster.resource, "revision": pinned_roster.revision,
+                "resource": pinned_roster.resource,
+                "revision": pinned_roster.revision,
                 "datasetManifestDigest": pinned_roster.manifest_digest,
-                "rosterSha256": roster_digest, "coverageSha256": roster_coverage_digest,
+                "rosterSha256": roster_digest,
+                "coverageSha256": roster_coverage_digest,
             },
             "modelCheckpoint": {
                 "resource": pinned_checkpoint.resource,
@@ -1783,13 +2173,18 @@ def evaluate_molecular_predictions(
             "valueSpace": prediction_manifest.value_space,
         },
         "audit": {
-            "strictCorpusAuditPassed": True, "heldRosterValidationMatch": True,
-            "exactTargetFreeQueryManifest": True, "exactProfilePanelJoin": True,
-            "benchmarkLabelRecords": 0, "centeringHeldInterventionOverlap": 0,
+            "strictCorpusAuditPassed": True,
+            "heldRosterValidationMatch": True,
+            "exactTargetFreeQueryManifest": True,
+            "exactProfilePanelJoin": True,
+            "benchmarkLabelRecords": 0,
+            "centeringHeldInterventionOverlap": 0,
             "speciesTaxa": sorted(prediction_manifest.species_taxa),
             "sourceIds": sorted(prediction_manifest.source_ids),
             "nullTruthValuesNotScored": nulls,
-            "predictionsCoverPreregisteredValues": sum(len(item.readout_ids) for item in joined.values()),
+            "predictionsCoverPreregisteredValues": sum(
+                len(item.readout_ids) for item in joined.values()
+            ),
             "minimumReferencePerturbations": minimum_reference_perturbations,
             "minimumProfileReadouts": minimum_profile_readouts,
             "referencePerturbationsByGroup": {
@@ -1800,7 +2195,10 @@ def evaluate_molecular_predictions(
                 "admitted-frozen-held-roster-datasetsnapshot",
             ],
         },
-        "overall": overall, "species": species, "sources": sources, "speciesSources": pairs,
+        "overall": overall,
+        "species": species,
+        "sources": sources,
+        "speciesSources": pairs,
     }
     report["diagnostic"] = molecular_profile_decision(report)
     return report

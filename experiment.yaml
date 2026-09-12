@@ -1,5 +1,5 @@
 name: slp-1-1-response-omf2
-objective: Reproduce the retained native-panel rank-32 molecular response model under OMF 2.0.
+objective: Reproduce the retained native-panel rank-32 molecular response model under OpenFoundry.
 modelCard: MODEL_CARD.md
 data:
   training:
@@ -22,10 +22,10 @@ evaluate:
   metrics: metrics.json
   artifacts: {report: report.json}
 metrics:
-  k562_mse: {direction: minimize, maximum: 0.00350}
-  rpe1_mse: {direction: minimize, maximum: 0.00830}
-  k562_centered_pearson: {minimum: 0.10}
-  rpe1_centered_pearson: {minimum: 0.10}
+  k562_mse: {direction: minimize}
+  rpe1_mse: {direction: minimize}
+  k562_centered_pearson: {direction: maximize}
+  rpe1_centered_pearson: {direction: maximize}
 primaryMetric: k562_mse
 baseline: full-ridge
 candidates:

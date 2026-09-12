@@ -1,0 +1,38 @@
+# Promotion policy for evaluations/slp-1-1-molecular.yaml.
+apiVersion: openfoundry.dev/v1alpha1
+kind: Policy
+metadata:
+  name: default
+spec:
+  rules:
+  - name: allow-slp-operator
+    effect: allow
+    match:
+      actor: slp-researcher
+      resource: abiome/slp
+  - name: deny-unapproved-network
+    effect: deny
+    match:
+      action: network.egress
+      purpose: unapproved
+  config:
+    dirtyWorktree: archive
+    promotion:
+      requireEvaluationPass: true
+      thresholds:
+        strict-corpus-audit:
+          minimum: 1
+        held-intervention-leakage:
+          maximum: 0
+        benchmark-label-records:
+          maximum: 0
+        validation-nll-improvement:
+          minimum: 0.02
+        validation-nll-delta-nats:
+          minimum: 0.02
+        validation-effect-pearson:
+          minimum: 0.1
+        worst-species-nll-improvement:
+          minimum: 0.0
+        worst-species-nll-delta-nats:
+          minimum: 0.0

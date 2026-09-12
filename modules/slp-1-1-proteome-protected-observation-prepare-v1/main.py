@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 PROTECTED_AUDIT_SCHEMA = "slp.proteome-protected-observation-preparation-audit/v1"
@@ -67,7 +67,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     if role not in PRODUCTION_PROTECTED_ROLES or set(request.config) != {"role"}:
         raise ValueError("protected role or config surface is not governed")
 
-    output_root = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_root = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     directory = f"proteome-observation-{role}-v1"
     result = build_protected_observations(
         datasets["rawProteome"].path,

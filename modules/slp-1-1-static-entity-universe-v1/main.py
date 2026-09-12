@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _validation_outputs() -> dict[str, object]:
@@ -51,9 +51,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     intervention = resolve_pinned_dataset(
         request.inputs["interventionInventory"], "interventionInventory"
     )
-    relations = resolve_pinned_dataset(
-        request.inputs["proteinRelations"], "proteinRelations"
-    )
+    relations = resolve_pinned_dataset(request.inputs["proteinRelations"], "proteinRelations")
     config = request.config
     bounds = Bounds(
         max_manifest_bytes=config.get("maxManifestBytes", 1_048_576),
@@ -62,7 +60,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         max_relation_records=config.get("maxRelationRecords", 10_000),
         max_archive_bytes=config.get("maxArchiveBytes", 64 * 1024 * 1024),
     )
-    output_root = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_root = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     result = build_entity_universe(
         intervention,
         relations,
@@ -71,15 +69,30 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     )
     outputs = {
         "auditSummary": result["audit"],
-        **{key: result[key] for key in (
-            "archiveSha256", "auditSha256", "manifestSha256", "entitySetSha256",
-            "relationSetSha256", "actionEntities", "readoutQueryEntities",
-            "actionIdSetSha256", "proteinIdSetSha256", "relationEdgeSetSha256",
-            "fullEntityIdSetSha256",
-            "fullEntityKeySetSha256",
-            "totalEntities", "relationRecords", "relationEdges", "oneToManyRelations",
-            "relationTargetGenes", "relationTargetsInUniverse", "relationSupportOnly",
-        )},
+        **{
+            key: result[key]
+            for key in (
+                "archiveSha256",
+                "auditSha256",
+                "manifestSha256",
+                "entitySetSha256",
+                "relationSetSha256",
+                "actionEntities",
+                "readoutQueryEntities",
+                "actionIdSetSha256",
+                "proteinIdSetSha256",
+                "relationEdgeSetSha256",
+                "fullEntityIdSetSha256",
+                "fullEntityKeySetSha256",
+                "totalEntities",
+                "relationRecords",
+                "relationEdges",
+                "oneToManyRelations",
+                "relationTargetGenes",
+                "relationTargetsInUniverse",
+                "relationSupportOnly",
+            )
+        },
     }
     return ProtocolResult(
         status="ok",

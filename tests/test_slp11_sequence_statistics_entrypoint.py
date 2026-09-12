@@ -43,7 +43,7 @@ OUTPUT_KEYS = {
 
 class _Result:
     def __init__(self, **values: object) -> None:
-        self.protocol = "omf.module/v1"
+        self.protocol = "openfoundry.module/v1"
         self.outputs: dict[str, object] = {}
         self.state: dict[str, object] = {}
         self.metrics: dict[str, object] = {}
@@ -52,18 +52,18 @@ class _Result:
 
 
 def _load_entrypoint() -> types.ModuleType:
-    sdk = types.ModuleType("omf.sdk")
+    sdk = types.ModuleType("openfoundry.sdk")
     sdk.ProtocolRequest = object
     sdk.ProtocolResult = _Result
     sdk.main = lambda _handlers: 0
-    package = types.ModuleType("omf")
+    package = types.ModuleType("openfoundry")
     package.sdk = sdk
     spec = importlib.util.spec_from_file_location(
         "slp_sequence_statistics_entrypoint_test", MODULE / "main.py"
     )
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
-    with patch.dict(sys.modules, {"omf": package, "omf.sdk": sdk}):
+    with patch.dict(sys.modules, {"openfoundry": package, "openfoundry.sdk": sdk}):
         spec.loader.exec_module(module)
     return module
 
@@ -77,9 +77,7 @@ def _request(
 ) -> SimpleNamespace:
     return SimpleNamespace(
         operation=operation,
-        inputs={name: {"input": name} for name in INPUT_NAMES}
-        if inputs is None
-        else inputs,
+        inputs={name: {"input": name} for name in INPUT_NAMES} if inputs is None else inputs,
         config={} if config is None else config,
         state={} if state is None else state,
         context={"runId": "wiring-test"},
@@ -214,7 +212,7 @@ class SequenceStatisticsEntrypointTests(unittest.TestCase):
             result_file = Path(temporary) / "stage" / "result.json"
             with (
                 patch.dict(sys.modules, {"feature_block": feature_block}),
-                patch.dict(os.environ, {"OMF_RESULT_FILE": str(result_file)}),
+                patch.dict(os.environ, {"OPENFOUNDRY_RESULT_FILE": str(result_file)}),
             ):
                 result = self.entrypoint.run(request)
 
@@ -226,8 +224,7 @@ class SequenceStatisticsEntrypointTests(unittest.TestCase):
                         "resolved-dataset:sgdProteinSequences",
                         "resolved-artifact:sgdCurrentOrfs",
                         "resolved-artifact:sgdMappingManifest",
-                        result_file.parent
-                        / "sequence-statistics-feature-block-v1",
+                        result_file.parent / "sequence-statistics-feature-block-v1",
                         ANY,
                     )
                 ],
@@ -277,17 +274,13 @@ class SequenceStatisticsEntrypointTests(unittest.TestCase):
                 {
                     "name": "sequenceStatisticsFeatureBlock",
                     "kind": "dataset",
-                    "path": (
-                        "sequence-statistics-feature-block-v1/"
-                        "sequence-feature-block.tar"
-                    ),
+                    "path": ("sequence-statistics-feature-block-v1/sequence-feature-block.tar"),
                 },
                 {
                     "name": "sequenceStatisticsFeatureBlockAudit",
                     "kind": "audit",
                     "path": (
-                        "sequence-statistics-feature-block-v1/"
-                        "sequence-feature-block-audit.json"
+                        "sequence-statistics-feature-block-v1/sequence-feature-block-audit.json"
                     ),
                 },
             ],
@@ -302,7 +295,7 @@ class SequenceStatisticsEntrypointTests(unittest.TestCase):
         with (
             patch.dict(sys.modules, {"feature_block": feature_block}),
             patch.dict(os.environ, {}, clear=True),
-            self.assertRaisesRegex(ValueError, "OMF_RESULT_FILE"),
+            self.assertRaisesRegex(ValueError, "OPENFOUNDRY_RESULT_FILE"),
         ):
             self.entrypoint.run(_request("run"))
 
@@ -312,7 +305,7 @@ class SequenceStatisticsEntrypointTests(unittest.TestCase):
             node for node in ast.walk(ast.parse(source)) if isinstance(node, ast.ImportFrom)
         ]
         imports = {node.module for node in import_nodes}
-        self.assertEqual(imports, {"__future__", "pathlib", "omf.sdk", "feature_block"})
+        self.assertEqual(imports, {"__future__", "pathlib", "openfoundry.sdk", "feature_block"})
         self.assertTrue(all(node.level == 0 for node in import_nodes))
         self.assertTrue((MODULE / "feature_block.py").is_file())
         self.assertEqual((MODULE / "requirements.lock").read_bytes(), b"")

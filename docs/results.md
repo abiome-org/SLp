@@ -8276,3 +8276,48 @@ behavior. Wrangler's deployment build passed. For the requested
 **27 tests in 5.85 seconds**. Historical trained model artifacts remain in their
 existing artifact locations; the Git checkpoint captures source, architecture,
 configuration and recorded results rather than weight binaries.
+
+## 2026-09-11 — OpenFoundry format update
+
+Updated the working integration from OMF's tagged `v2.0.0` to the renamed
+OpenFoundry upstream at `e29c12bc2ef74f836f919df4bc55e02a47bebc79`. Upstream has
+not tagged this change and still reports package version 2.0.0; the exact Git
+revision and installation receipt identify this build. The new CLI/runtime was
+installed from a clean checkout with upstream hash-locked binary dependencies
+using Homebrew Python 3.11. The existing uv Python 3.12 could not create a usable
+venv on this host; its failed new environment was moved aside, without changing
+the old OMF environment.
+
+The project now uses `openfoundry.yaml`, the new resource and module protocols,
+SDK imports and environment variables. The bootstrap and launcher read
+`openfoundry-version.json`. A fresh `.openfoundry/` controller state initialized
+successfully under the existing configured actor `slp-researcher`; `doctor`
+reported zero failures and agent context reported action catalog version 3.
+The old `.omf/` state, source/runtime and recorded artifacts were preserved.
+Cross-brand state import was not attempted.
+
+Moved all seven definitions' existing metric bounds into promotion policies,
+verified value-for-value against the preceding checkpoint. The default policy
+covers the existing response experiment; alternative complete profiles cover
+the other bounded replay/evaluation definitions. Tests verify that missing or
+out-of-bounds scores still reject promotion and actor rules remain the same.
+Generic dataset URI readers accept the new scheme while retaining exact digest
+checks and historical provenance. Fixed corpus identities were not relabeled.
+
+Ruff formatted the changed Python integration files. AST comparison verified
+that all 40 changed model/module Python files differ only by the intended
+protocol/URI handling and formatting, with no numerical model changes. Two
+older tests were updated to follow the previously consolidated documentation.
+Validation passed: **57 model/adapter tests**, **168 corpus/adapter tests** and
+**5 OpenFoundry integration tests** covering all authored resource manifests,
+all ten experiment definitions, promotion profiles and real SDK/file-protocol
+interoperability. There were also 138 passing pytest subtests. Five tests that
+require unavailable exact historical production inputs were skipped; no data
+was fetched to satisfy them. Corpus tests used `TMPDIR=/private/tmp` to avoid
+the host's symlinked `/var` temporary path. Formatting, shell syntax, repository
+payload/link audit and Git whitespace checks passed.
+
+No research training, GPU allocation, dataset transfer, release promotion or
+deployment was performed. Existing experiments retain isolated Linux execution; this
+check exercises the macOS controller and protocol/schema integration, not a new
+end-to-end artifact replay or OpenFoundry service deployment.

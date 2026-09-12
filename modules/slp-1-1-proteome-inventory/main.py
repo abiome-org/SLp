@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _validation_outputs() -> dict[str, object]:
@@ -51,7 +51,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         max_line_bytes=config.get("maxLineBytes", 2_097_152),
         max_quarantine_rows=config.get("maxQuarantineRows", 512),
     )
-    output_root = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_root = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     result = build_inventory(
         raw.path,
         {name: artifact.path for name, artifact in artifacts.items()},
@@ -62,8 +62,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             revision=raw.revision,
             manifest_digest=raw.manifest_digest,
             mapping_artifacts={
-                name: artifact.artifact_manifest_digest
-                for name, artifact in artifacts.items()
+                name: artifact.artifact_manifest_digest for name, artifact in artifacts.items()
             },
         ),
     )

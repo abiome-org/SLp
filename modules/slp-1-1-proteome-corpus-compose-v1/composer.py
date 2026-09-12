@@ -125,9 +125,7 @@ def canonical_json_bytes(value: object) -> bytes:
 
 
 def pretty_json_bytes(value: object) -> bytes:
-    return (
-        json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def sha256_bytes(payload: bytes) -> str:
@@ -254,9 +252,7 @@ class Bounds:
             ("maxTargetValues", self.max_target_values, 1, 2_000_000_000),
         ):
             if type(value) is not int or not minimum <= value <= maximum:
-                raise CorpusComposeError(
-                    f"{name} must be an integer in [{minimum}, {maximum}]"
-                )
+                raise CorpusComposeError(f"{name} must be an integer in [{minimum}, {maximum}]")
 
 
 PRODUCTION_CONTRACT = ExpectedContract(
@@ -326,9 +322,9 @@ PRODUCTION_CONTRACT = ExpectedContract(
 
 def _dataset_resource(value: object, label: str) -> tuple[str, str]:
     resource = _nonempty(value, label)
-    if not resource.startswith("omf://"):
+    if not resource.startswith(("omf://", "openfoundry://")):
         raise CorpusComposeError(f"{label} must be an OMF DatasetSnapshot URI")
-    identity, separator, revision = resource.removeprefix("omf://").rpartition("@")
+    identity, separator, revision = resource.split("://", 1)[1].rpartition("@")
     if not separator:
         raise CorpusComposeError(f"{label} must carry an exact revision")
     _prefixed_digest(revision, f"{label} revision")
@@ -375,9 +371,7 @@ def resolve_pinned_dataset(value: object, input_name: str) -> PinnedDataset:
         raise CorpusComposeError(f"{input_name} must be a materialized DatasetSnapshot")
     if set(value) != {"resource", "mode", "path", "manifestDigest"}:
         raise CorpusComposeError(f"{input_name} has a spoofed DatasetSnapshot shape")
-    resource_name, revision = _dataset_resource(
-        value["resource"], f"{input_name}.resource"
-    )
+    resource_name, revision = _dataset_resource(value["resource"], f"{input_name}.resource")
     if value["mode"] != "copy":
         raise CorpusComposeError(f"{input_name} must be copied, not mutable")
     manifest = _prefixed_digest(value["manifestDigest"], f"{input_name}.manifestDigest")
@@ -387,9 +381,7 @@ def resolve_pinned_dataset(value: object, input_name: str) -> PinnedDataset:
         or root.parent.name != input_name
         or root.parent.parent.name != "inputs"
     ):
-        raise CorpusComposeError(
-            f"{input_name}.path is inconsistent with OMF materialization"
-        )
+        raise CorpusComposeError(f"{input_name}.path is inconsistent with OMF materialization")
     return PinnedDataset(input_name, root, str(value["resource"]), revision, manifest)
 
 
@@ -417,38 +409,25 @@ def _regular_child(root: Path, name: str) -> Path:
         path = cursor.resolve(strict=True)
         path.relative_to(root)
     except (OSError, ValueError) as error:
-        raise CorpusComposeError(
-            f"snapshot file is missing or escapes its root: {name}"
-        ) from error
+        raise CorpusComposeError(f"snapshot file is missing or escapes its root: {name}") from error
     if not path.is_file():
         raise CorpusComposeError(f"snapshot member is not a regular file: {name}")
     return path
 
 
-def verify_dataset(
-    dataset: PinnedDataset, expected: ExpectedDataset
-) -> dict[str, Path]:
-    if (
-        dataset.resource != expected.resource
-        or dataset.manifest_digest != expected.manifest_digest
-    ):
+def verify_dataset(dataset: PinnedDataset, expected: ExpectedDataset) -> dict[str, Path]:
+    if dataset.resource != expected.resource or dataset.manifest_digest != expected.manifest_digest:
         raise CorpusComposeError(f"{dataset.input_name} immutable identity drift")
     if _omf_tree_digest(expected.files) != expected.tree_digest:
-        raise CorpusComposeError(
-            f"{dataset.input_name} expected tree is internally inconsistent"
-        )
+        raise CorpusComposeError(f"{dataset.input_name} expected tree is internally inconsistent")
     expected_names = {item.name for item in expected.files}
     actual_paths = [item for item in dataset.path.rglob("*")]
     if any(item.is_symlink() for item in actual_paths):
         raise CorpusComposeError(f"{dataset.input_name} contains a symlink")
     if any(item.is_dir() for item in actual_paths):
-        raise CorpusComposeError(
-            f"{dataset.input_name} contains an undeclared directory"
-        )
+        raise CorpusComposeError(f"{dataset.input_name} contains an undeclared directory")
     actual_names = {
-        item.relative_to(dataset.path).as_posix()
-        for item in actual_paths
-        if item.is_file()
+        item.relative_to(dataset.path).as_posix() for item in actual_paths if item.is_file()
     }
     if actual_names != expected_names:
         raise CorpusComposeError(f"{dataset.input_name} file set drift")
@@ -484,11 +463,7 @@ def deterministic_tar_bytes(members: Mapping[str, bytes]) -> bytes:
 
 def read_canonical_tar(path: Path, bounds: Bounds, label: str) -> dict[str, bytes]:
     _reject_symlink_components(path, label)
-    if (
-        path.is_symlink()
-        or not path.is_file()
-        or path.stat().st_size > bounds.max_archive_bytes
-    ):
+    if path.is_symlink() or not path.is_file() or path.stat().st_size > bounds.max_archive_bytes:
         raise CorpusComposeError(f"{label} is not a bounded regular archive")
     blobs: dict[str, bytes] = {}
     total = 0
@@ -645,20 +620,14 @@ def _input_identity(expected: ExpectedDataset) -> dict[str, object]:
 
 
 def composite_key_sha256(keys: Iterable[tuple[int, str]]) -> str:
-    documents = [
-        {"entityId": entity, "ncbiTaxon": taxon} for taxon, entity in sorted(set(keys))
-    ]
+    documents = [{"entityId": entity, "ncbiTaxon": taxon} for taxon, entity in sorted(set(keys))]
     return sha256_bytes(canonical_json(documents).encode("ascii"))
 
 
 def composite_perturbation_id(keys: Iterable[tuple[int, str]]) -> str:
-    documents = [
-        {"entityId": entity, "ncbiTaxon": taxon} for taxon, entity in sorted(set(keys))
-    ]
+    documents = [{"entityId": entity, "ncbiTaxon": taxon} for taxon, entity in sorted(set(keys))]
     if not documents:
-        raise CorpusComposeError(
-            "a perturbation requires at least one composite action"
-        )
+        raise CorpusComposeError("a perturbation requires at least one composite action")
     digest = sha256_bytes(canonical_json(documents).encode("ascii"))
     return f"slp-perturbation:sha256-{digest}"
 
@@ -714,9 +683,7 @@ class ObservationData:
     readout_sha256: str
 
 
-def _validate_ref(
-    value: object, path: str, payload: bytes, label: str, **counts: int
-) -> None:
+def _validate_ref(value: object, path: str, payload: bytes, label: str, **counts: int) -> None:
     expected: dict[str, object] = _file_ref(path, payload)
     expected.update(counts)
     if value != expected:
@@ -726,9 +693,7 @@ def _validate_ref(
 def parse_feature_snapshot(
     paths: Mapping[str, Path], bounds: Bounds, expected: ExpectedContract
 ) -> FeatureData:
-    blobs = read_canonical_tar(
-        paths["sequence-feature-block.tar"], bounds, "feature archive"
-    )
+    blobs = read_canonical_tar(paths["sequence-feature-block.tar"], bounds, "feature archive")
     if tuple(blobs) != FEATURE_MEMBERS:
         raise CorpusComposeError("feature archive member set drift")
     manifest_bytes = blobs["static-feature-block/manifest.json"]
@@ -828,9 +793,7 @@ def parse_feature_snapshot(
             raise CorpusComposeError(f"feature entity {index} identity drift")
         keys.append(key)
     if keys != sorted(set(keys)):
-        raise CorpusComposeError(
-            "feature composite keys must be strictly ordered and unique"
-        )
+        raise CorpusComposeError("feature composite keys must be strictly ordered and unique")
     semantic = manifest["semanticHashes"]
     if (
         not isinstance(semantic, dict)
@@ -924,20 +887,10 @@ def parse_roster_snapshot(
         try:
             identifier, role, digest = raw.decode("ascii").split("\t")
         except (UnicodeDecodeError, ValueError) as error:
-            raise CorpusComposeError(
-                f"held roster row {number} is malformed"
-            ) from error
-        if (
-            not SGD_RE.fullmatch(identifier)
-            or identifier <= previous
-            or role not in role_counts
-        ):
-            raise CorpusComposeError(
-                f"held roster row {number} identity or order drift"
-            )
-        expected_digest = hashlib.sha256(
-            domain + identifier.encode("ascii")
-        ).hexdigest()
+            raise CorpusComposeError(f"held roster row {number} is malformed") from error
+        if not SGD_RE.fullmatch(identifier) or identifier <= previous or role not in role_counts:
+            raise CorpusComposeError(f"held roster row {number} identity or order drift")
+        expected_digest = hashlib.sha256(domain + identifier.encode("ascii")).hexdigest()
         bucket = int(expected_digest[:16], 16) % 100
         expected_role = (
             "molecular-final"
@@ -968,8 +921,7 @@ def _source_members(manifest: Mapping[str, Any]) -> tuple[str, ...]:
         if not isinstance(item, dict) or not isinstance(item.get("path"), str):
             raise CorpusComposeError("source shard reference is invalid")
         names.append(
-            "proteome-observations/"
-            + _canonical_relative(item["path"], "source shard path")
+            "proteome-observations/" + _canonical_relative(item["path"], "source shard path")
         )
     names.append("proteome-observations/trajectory-genes.txt")
     return tuple(sorted(names))
@@ -978,9 +930,7 @@ def _source_members(manifest: Mapping[str, Any]) -> tuple[str, ...]:
 def parse_observation_snapshot(
     paths: Mapping[str, Path], bounds: Bounds, expected: ExpectedContract
 ) -> ObservationData:
-    blobs = read_canonical_tar(
-        paths["observation-corpus.tar"], bounds, "observation archive"
-    )
+    blobs = read_canonical_tar(paths["observation-corpus.tar"], bounds, "observation archive")
     manifest_bytes = blobs.get("proteome-observations/manifest.json")
     if manifest_bytes is None:
         raise CorpusComposeError("observation manifest is missing")
@@ -1038,9 +988,7 @@ def parse_observation_snapshot(
         "source readout dictionary",
         records=expected.readouts,
     )
-    readout_rows = _canonical_jsonl(
-        readout_payload, "source readouts", bounds, bounds.max_readouts
-    )
+    readout_rows = _canonical_jsonl(readout_payload, "source readouts", bounds, bounds.max_readouts)
     readout_keys: list[tuple[int, str]] = []
     for number, row in enumerate(readout_rows, start=1):
         expected_fields = {
@@ -1060,17 +1008,10 @@ def parse_observation_snapshot(
             or key[0] != SPECIES_TAXON
             or not UNIPROT_RE.fullmatch(str(key[1]))
         ):
-            raise CorpusComposeError(
-                f"source readout {number} has an invalid composite identity"
-            )
+            raise CorpusComposeError(f"source readout {number} has an invalid composite identity")
         readout_keys.append((key[0], str(key[1])))
-    if (
-        readout_keys != sorted(set(readout_keys))
-        or len(readout_keys) != expected.readouts
-    ):
-        raise CorpusComposeError(
-            "source readout composite keys are duplicated or unordered"
-        )
+    if readout_keys != sorted(set(readout_keys)) or len(readout_keys) != expected.readouts:
+        raise CorpusComposeError("source readout composite keys are duplicated or unordered")
     trajectory_payload = blobs["proteome-observations/trajectory-genes.txt"]
     _validate_ref(
         manifest["trajectoryGenes"],
@@ -1100,9 +1041,7 @@ def parse_observation_snapshot(
         )
         path = _canonical_relative(ref["path"], f"source shard {index} path")
         if path != f"shards/shard-{index:05d}.npz":
-            raise CorpusComposeError(
-                "source shard paths are not contiguous and canonical"
-            )
+            raise CorpusComposeError("source shard paths are not contiguous and canonical")
         payload = blobs["proteome-observations/" + path]
         _validate_ref(
             ref,
@@ -1112,9 +1051,7 @@ def parse_observation_snapshot(
             records=ref["records"],
             values=ref["values"],
         )
-        arrays = read_deterministic_npz(
-            payload, SOURCE_SHARD_ARRAYS, f"source shard {index}"
-        )
+        arrays = read_deterministic_npz(payload, SOURCE_SHARD_ARRAYS, f"source shard {index}")
         records = ref["records"]
         values = ref["values"]
         _validate_source_shard(arrays, records, values, expected.readouts, index)
@@ -1142,14 +1079,8 @@ def parse_observation_snapshot(
     )
 
 
-def _require_shape_dtype(
-    array: np.ndarray, shape: tuple[int, ...], dtype: str, label: str
-) -> None:
-    if (
-        array.shape != shape
-        or array.dtype != np.dtype(dtype)
-        or not array.flags.c_contiguous
-    ):
+def _require_shape_dtype(array: np.ndarray, shape: tuple[int, ...], dtype: str, label: str) -> None:
+    if array.shape != shape or array.dtype != np.dtype(dtype) or not array.flags.c_contiguous:
         raise CorpusComposeError(f"{label} dtype, shape, or layout drift")
 
 
@@ -1160,12 +1091,7 @@ def _validate_source_shard(
     readouts: int,
     index: int,
 ) -> None:
-    if (
-        type(records) is not int
-        or type(values) is not int
-        or records <= 0
-        or values <= 0
-    ):
+    if type(records) is not int or type(values) is not int or records <= 0 or values <= 0:
         raise CorpusComposeError(f"source shard {index} has invalid counts")
     for name in (
         "action_id",
@@ -1190,9 +1116,7 @@ def _validate_source_shard(
         ("metadata_row", "<i4"),
         ("species_taxon", "<i4"),
     ):
-        _require_shape_dtype(
-            arrays[name], (records,), dtype, f"source shard {index}/{name}"
-        )
+        _require_shape_dtype(arrays[name], (records,), dtype, f"source shard {index}/{name}")
     _require_shape_dtype(
         arrays["target_indptr"],
         (records + 1,),
@@ -1236,9 +1160,7 @@ def _dataset_snapshot_identity(expected: ExpectedDataset) -> dict[str, str]:
     }
 
 
-def _lineage_input(
-    expected: ExpectedDataset, semantic_sha256: str
-) -> dict[str, object]:
+def _lineage_input(expected: ExpectedDataset, semantic_sha256: str) -> dict[str, object]:
     _bare_digest(semantic_sha256, "input semanticSha256")
     return {
         "datasetSnapshot": _dataset_snapshot_identity(expected),
@@ -1250,9 +1172,7 @@ def _lineage_input(
     }
 
 
-def _feature_pack(
-    feature: FeatureData, expected: ExpectedContract
-) -> dict[str, object]:
+def _feature_pack(feature: FeatureData, expected: ExpectedContract) -> dict[str, object]:
     semantic = _bare_digest(
         feature.manifest["semanticHashes"]["featureDefinitionSha256"],
         "feature definition digest",
@@ -1289,9 +1209,7 @@ def _rewrite_shard(
     query_map: np.ndarray,
     context_index: int,
 ) -> tuple[bytes, int, int, set[tuple[int, str]], set[int]]:
-    source = read_deterministic_npz(
-        payload, SOURCE_SHARD_ARRAYS, f"source shard {shard_index}"
-    )
+    source = read_deterministic_npz(payload, SOURCE_SHARD_ARRAYS, f"source shard {shard_index}")
     records = len(source["record_id"])
     values = len(source["target_value"])
     actions: list[int] = []
@@ -1378,14 +1296,10 @@ def build_composite_corpus(
 
     feature_key_set = set(feature.keys)
     if CONTEXT_ID in {entity for _, entity in feature.keys}:
-        raise CorpusComposeError(
-            "the dedicated context identity collides with a feature entity"
-        )
+        raise CorpusComposeError("the dedicated context identity collides with a feature entity")
     corpus_keys = (*feature.keys, (SPECIES_TAXON, CONTEXT_ID))
     if list(corpus_keys) != sorted(set(corpus_keys)):
-        raise CorpusComposeError(
-            "corpus composite entity keys are not strictly ordered and unique"
-        )
+        raise CorpusComposeError("corpus composite entity keys are not strictly ordered and unique")
     if not set(source.readout_keys).issubset(feature_key_set) or not set(
         source.trajectory_keys
     ).issubset(feature_key_set):
@@ -1417,12 +1331,8 @@ def build_composite_corpus(
     entity_payload = deterministic_npz_bytes(entity_arrays)
     source_feature_value_sha = _array_bytes_sha256([feature.values])
     source_feature_present_sha = _array_bytes_sha256([feature.present])
-    composed_feature_value_sha = _array_bytes_sha256(
-        [entity_values[: expected.feature_rows]]
-    )
-    composed_feature_present_sha = _array_bytes_sha256(
-        [entity_present[: expected.feature_rows]]
-    )
+    composed_feature_value_sha = _array_bytes_sha256([entity_values[: expected.feature_rows]])
+    composed_feature_present_sha = _array_bytes_sha256([entity_present[: expected.feature_rows]])
     if (
         source_feature_value_sha != composed_feature_value_sha
         or source_feature_present_sha != composed_feature_present_sha
@@ -1432,12 +1342,8 @@ def build_composite_corpus(
     context_index = entity_lookup[(SPECIES_TAXON, CONTEXT_ID)]
 
     query_rows = sorted((key, 0) for key in source.readout_keys)
-    query_entity_index = np.asarray(
-        [entity_lookup[key] for key, _ in query_rows], dtype="<i8"
-    )
-    query_readout_index = np.asarray(
-        [readout for _, readout in query_rows], dtype="<i8"
-    )
+    query_entity_index = np.asarray([entity_lookup[key] for key, _ in query_rows], dtype="<i8")
+    query_readout_index = np.asarray([readout for _, readout in query_rows], dtype="<i8")
     query_payload = deterministic_npz_bytes(
         {
             "query_entity_index": query_entity_index,
@@ -1446,26 +1352,18 @@ def build_composite_corpus(
     )
     query_lookup = {
         (corpus_keys[int(entity)], int(readout)): index
-        for index, (entity, readout) in enumerate(
-            zip(query_entity_index, query_readout_index)
-        )
+        for index, (entity, readout) in enumerate(zip(query_entity_index, query_readout_index))
     }
-    query_map = np.asarray(
-        [query_lookup[(key, 0)] for key in source.readout_keys], dtype="<i8"
-    )
+    query_map = np.asarray([query_lookup[(key, 0)] for key in source.readout_keys], dtype="<i8")
     panel_payload = deterministic_npz_bytes(
         {
-            "panel_id": _fixed_strings(
-                ["slp-panel:mendeley-w8jtmnszd9-v2-proteome-v1"]
-            ),
+            "panel_id": _fixed_strings(["slp-panel:mendeley-w8jtmnszd9-v2-proteome-v1"]),
             "panel_indptr": np.asarray([0, expected.readouts], dtype="<i8"),
             "panel_query_index": np.arange(expected.readouts, dtype="<i8"),
         }
     )
     trajectory_payload = b"".join(
-        canonical_json_bytes(
-            {"schema": TRAJECTORY_SCHEMA, "ncbiTaxon": taxon, "entityId": entity}
-        )
+        canonical_json_bytes({"schema": TRAJECTORY_SCHEMA, "ncbiTaxon": taxon, "entityId": entity})
         for taxon, entity in source.trajectory_keys
     )
 
@@ -1480,12 +1378,8 @@ def build_composite_corpus(
         )
         path = f"shards/shard-{index:05d}.npz"
         output_shards.append(payload)
-        shard_refs.append(
-            {**_file_ref(path, payload), "records": records, "targetValues": values}
-        )
-        arrays = read_deterministic_npz(
-            payload, OUTPUT_SHARD_ARRAYS, f"composed shard {index}"
-        )
+        shard_refs.append({**_file_ref(path, payload), "records": records, "targetValues": values})
+        arrays = read_deterministic_npz(payload, OUTPUT_SHARD_ARRAYS, f"composed shard {index}")
         output_target_arrays.append(arrays["target_value"])
         active_actions.update(actions)
         active_queries.update(queries)
@@ -1494,9 +1388,7 @@ def build_composite_corpus(
     ):
         raise CorpusComposeError("composed action or query population drift")
     source_target_sha = _array_bytes_sha256(
-        read_deterministic_npz(blob, SOURCE_SHARD_ARRAYS, f"source shard {index}")[
-            "target_value"
-        ]
+        read_deterministic_npz(blob, SOURCE_SHARD_ARRAYS, f"source shard {index}")["target_value"]
         for index, blob in enumerate(source.shard_blobs)
     )
     output_target_sha = _array_bytes_sha256(output_target_arrays)
@@ -1569,14 +1461,11 @@ def build_composite_corpus(
             "redistributionAllowed": True,
         },
         "modalities": sorted(
-            set(source.manifest["modalities"])
-            | {"slp-modality:protein-sequence-statistics"}
+            set(source.manifest["modalities"]) | {"slp-modality:protein-sequence-statistics"}
         ),
         "sources": [{"id": source.manifest["source"]["id"]}],
         "sampling": {"scheme": SAMPLING_SCHEME, "sourceWeights": [1.0]},
-        "species": [
-            {"taxon": SPECIES_TAXON, "featureValue": [1.0], "featurePresent": [True]}
-        ],
+        "species": [{"taxon": SPECIES_TAXON, "featureValue": [1.0], "featurePresent": [True]}],
         "featurePack": feature_pack,
         "entityTypes": ENTITY_TYPES,
         "contextTypes": [CONTEXT_TYPE],
@@ -1710,9 +1599,7 @@ def build_composite_corpus(
 
 
 def _validate_dataset_snapshot_identity(value: object, label: str) -> None:
-    item = _strict(
-        value, {"resource", "revision", "outerManifestDigest", "treeDigest"}, label
-    )
+    item = _strict(value, {"resource", "revision", "outerManifestDigest", "treeDigest"}, label)
     _, revision = _dataset_resource(item["resource"], f"{label}.resource")
     if item["revision"] != revision:
         raise CorpusComposeError(f"{label} revision does not match resource")
@@ -1722,9 +1609,7 @@ def _validate_dataset_snapshot_identity(value: object, label: str) -> None:
 
 def _validate_lineage(value: object, label: str) -> None:
     item = _strict(value, {"datasetSnapshot", "semanticSha256", "files"}, label)
-    _validate_dataset_snapshot_identity(
-        item["datasetSnapshot"], f"{label}.datasetSnapshot"
-    )
+    _validate_dataset_snapshot_identity(item["datasetSnapshot"], f"{label}.datasetSnapshot")
     _bare_digest(item["semanticSha256"], f"{label}.semanticSha256")
     files = item["files"]
     if not isinstance(files, list) or not files:
@@ -1795,9 +1680,7 @@ def _validate_feature_pack(value: object) -> None:
         _validate_dataset_snapshot_identity(
             block["datasetSnapshot"], f"featurePack.blocks[{index}].datasetSnapshot"
         )
-        _bare_digest(
-            block["semanticSha256"], f"featurePack.blocks[{index}].semanticSha256"
-        )
+        _bare_digest(block["semanticSha256"], f"featurePack.blocks[{index}].semanticSha256")
         _bare_digest(
             block["entityKeySetSha256"],
             f"featurePack.blocks[{index}].entityKeySetSha256",
@@ -1811,9 +1694,7 @@ def _validate_feature_pack(value: object) -> None:
             f"featurePack.blocks[{index}]",
         )
     if end != FEATURE_DIM:
-        raise CorpusComposeError(
-            "featurePack block dimensions do not cover entityFeatureDim"
-        )
+        raise CorpusComposeError("featurePack block dimensions do not cover entityFeatureDim")
 
 
 def _validate_manifest_ref(
@@ -1878,12 +1759,8 @@ def _validate_output_shard(
             "<i8",
             f"{axis}_entity_index",
         )
-        _require_shape_dtype(
-            arrays[f"{axis}_type"], (records, width), "<i8", f"{axis}_type"
-        )
-        _require_shape_dtype(
-            arrays[f"{axis}_mask"], (records, width), "|b1", f"{axis}_mask"
-        )
+        _require_shape_dtype(arrays[f"{axis}_type"], (records, width), "<i8", f"{axis}_type")
+        _require_shape_dtype(arrays[f"{axis}_mask"], (records, width), "|b1", f"{axis}_mask")
         _require_shape_dtype(
             arrays[f"{axis}_covariate_value"],
             (records, width, covariates),
@@ -1914,9 +1791,7 @@ def _validate_output_shard(
     for row, entity_index in enumerate(arrays["action_entity_index"].reshape(-1)):
         key = (int(entity_taxon[int(entity_index)]), str(entity_id[int(entity_index)]))
         if str(arrays["perturbation_id"][row]) != composite_perturbation_id([key]):
-            raise CorpusComposeError(
-                "perturbation_id is not derived from the composite action key"
-            )
+            raise CorpusComposeError("perturbation_id is not derived from the composite action key")
     if np.any(arrays["context_type"] != 0) or np.any(arrays["action_type"] != 0):
         raise CorpusComposeError("composed context or action type drift")
     _require_shape_dtype(
@@ -1942,12 +1817,8 @@ def _validate_output_shard(
     )
     if not bool(arrays["observation_covariate_present"].all()):
         raise CorpusComposeError("audit-only observation covariates must be present")
-    _require_shape_dtype(
-        arrays["target_indptr"], (records + 1,), "<i8", "target_indptr"
-    )
-    _require_shape_dtype(
-        arrays["target_query_index"], (values,), "<i8", "target_query_index"
-    )
+    _require_shape_dtype(arrays["target_indptr"], (records + 1,), "<i8", "target_indptr")
+    _require_shape_dtype(arrays["target_query_index"], (values,), "<i8", "target_query_index")
     _require_shape_dtype(arrays["target_value"], (values,), "<f4", "target_value")
     indptr = arrays["target_indptr"]
     target_queries = arrays["target_query_index"]
@@ -2070,9 +1941,7 @@ def validate_composite_corpus_archive(
             "observation": expected_observation_covariates,
         }
     ):
-        raise CorpusComposeError(
-            "corpus rights, modalities, source, species, or covariate drift"
-        )
+        raise CorpusComposeError("corpus rights, modalities, source, species, or covariate drift")
     readout_types = manifest["readoutTypes"]
     if (
         not isinstance(readout_types, list)
@@ -2135,9 +2004,7 @@ def validate_composite_corpus_archive(
     if not isinstance(shards, list) or len(shards) != counts["shards"]:
         raise CorpusComposeError("corpus shard count drift")
     expected_members = set(OUTPUT_STATIC_MEMBERS) | {
-        "composite-corpus/" + str(item.get("path"))
-        for item in shards
-        if isinstance(item, dict)
+        "composite-corpus/" + str(item.get("path")) for item in shards if isinstance(item, dict)
     }
     if set(blobs) != expected_members:
         raise CorpusComposeError("composite corpus member set drift")
@@ -2161,17 +2028,13 @@ def validate_composite_corpus_archive(
         },
         "entityDictionary",
     )
-    _require_shape_dtype(
-        entities["entity_taxon"], (counts["entities"],), "<i8", "entity_taxon"
-    )
+    _require_shape_dtype(entities["entity_taxon"], (counts["entities"],), "<i8", "entity_taxon")
     if (
         entities["entity_id"].shape != (counts["entities"],)
         or entities["entity_id"].dtype.kind != "U"
     ):
         raise CorpusComposeError("entity_id dtype or shape drift")
-    _require_shape_dtype(
-        entities["entity_type"], (counts["entities"],), "<i8", "entity_type"
-    )
+    _require_shape_dtype(entities["entity_type"], (counts["entities"],), "<i8", "entity_type")
     _require_shape_dtype(
         entities["entity_feature_value"],
         (counts["entities"], FEATURE_DIM),
@@ -2189,9 +2052,7 @@ def validate_composite_corpus_archive(
         for taxon, entity in zip(entities["entity_taxon"], entities["entity_id"])
     ]
     if keys != sorted(set(keys)):
-        raise CorpusComposeError(
-            "entity dictionary composite keys are duplicated or unordered"
-        )
+        raise CorpusComposeError("entity dictionary composite keys are duplicated or unordered")
     for key, entity_type in zip(keys, entities["entity_type"]):
         expected_type = (
             0
@@ -2218,12 +2079,8 @@ def validate_composite_corpus_archive(
     if np.any(entities["entity_feature_value"][empty_rows] != 0):
         raise CorpusComposeError("missing entity feature storage must be zero")
     context_rows = np.flatnonzero(entities["entity_type"] == 2)
-    if len(context_rows) != counts["contexts"] or not bool(
-        empty_rows[context_rows].all()
-    ):
-        raise CorpusComposeError(
-            "context rows must be exactly the missing-feature rows"
-        )
+    if len(context_rows) != counts["contexts"] or not bool(empty_rows[context_rows].all()):
+        raise CorpusComposeError("context rows must be exactly the missing-feature rows")
     context_index = int(context_rows[0])
     feature_keys = [key for key, keep in zip(keys, full_rows) if bool(keep)]
     if pack_block["entityKeySetSha256"] != composite_key_sha256(feature_keys):
@@ -2255,13 +2112,9 @@ def validate_composite_corpus_archive(
         raise CorpusComposeError("query entity index is outside the dictionary")
     query_keys = [
         (keys[int(entity)], int(readout))
-        for entity, readout in zip(
-            queries["query_entity_index"], queries["query_readout_index"]
-        )
+        for entity, readout in zip(queries["query_entity_index"], queries["query_readout_index"])
     ]
-    if query_keys != sorted(set(query_keys)) or any(
-        readout != 0 for _, readout in query_keys
-    ):
+    if query_keys != sorted(set(query_keys)) or any(readout != 0 for _, readout in query_keys):
         raise CorpusComposeError(
             "query composite identities are duplicated, unordered, or mistyped"
         )
@@ -2277,25 +2130,16 @@ def validate_composite_corpus_archive(
     panels = read_deterministic_npz(
         panel_payload, {"panel_id", "panel_indptr", "panel_query_index"}, "queryPanels"
     )
-    if (
-        panels["panel_id"].shape != (counts["panels"],)
-        or panels["panel_id"].dtype.kind != "U"
-    ):
+    if panels["panel_id"].shape != (counts["panels"],) or panels["panel_id"].dtype.kind != "U":
         raise CorpusComposeError("panel_id dtype or shape drift")
-    _require_shape_dtype(
-        panels["panel_indptr"], (counts["panels"] + 1,), "<i8", "panel_indptr"
-    )
+    _require_shape_dtype(panels["panel_indptr"], (counts["panels"] + 1,), "<i8", "panel_indptr")
     _require_shape_dtype(
         panels["panel_query_index"], (counts["queries"],), "<i8", "panel_query_index"
     )
     if not np.array_equal(
         panels["panel_indptr"], np.asarray([0, counts["queries"]], dtype="<i8")
-    ) or not np.array_equal(
-        panels["panel_query_index"], np.arange(counts["queries"], dtype="<i8")
-    ):
-        raise CorpusComposeError(
-            "query panel does not contain the exact ordered query dictionary"
-        )
+    ) or not np.array_equal(panels["panel_query_index"], np.arange(counts["queries"], dtype="<i8")):
+        raise CorpusComposeError("query panel does not contain the exact ordered query dictionary")
 
     trajectory_payload = blobs["composite-corpus/trajectory-interventions.jsonl"]
     _validate_manifest_ref(
@@ -2321,9 +2165,7 @@ def validate_composite_corpus_archive(
             or key not in set(keys)
             or SGD_RE.fullmatch(str(key[1])) is None
         ):
-            raise CorpusComposeError(
-                "trajectory intervention has invalid composite identity"
-            )
+            raise CorpusComposeError("trajectory intervention has invalid composite identity")
         trajectory_keys.append((int(key[0]), str(key[1])))
     if trajectory_keys != sorted(set(trajectory_keys)):
         raise CorpusComposeError("trajectory interventions are duplicated or unordered")
@@ -2347,9 +2189,7 @@ def validate_composite_corpus_archive(
             "targetValues": ref["targetValues"],
         }:
             raise CorpusComposeError(f"shards[{index}] reference drift")
-        arrays = read_deterministic_npz(
-            payload, OUTPUT_SHARD_ARRAYS, f"shards[{index}]"
-        )
+        arrays = read_deterministic_npz(payload, OUTPUT_SHARD_ARRAYS, f"shards[{index}]")
         _validate_output_shard(
             arrays,
             ref["records"],
@@ -2369,9 +2209,7 @@ def validate_composite_corpus_archive(
         target_arrays.append(arrays["target_value"])
     active_action_keys = {keys[index] for index in active_actions}
     if active_action_keys != set(trajectory_keys) or active_contexts != {context_index}:
-        raise CorpusComposeError(
-            "active action/context populations do not match declarations"
-        )
+        raise CorpusComposeError("active action/context populations do not match declarations")
     if record_total != counts["records"] or target_total != counts["targetValues"]:
         raise CorpusComposeError("record or target totals do not match counts")
     return {
@@ -2444,8 +2282,7 @@ def validate_composition_audit(
         identity["key"] != ["ncbiTaxon", "entityId"]
         or identity["corpusEntityKeySetSha256"] != summary["entityKeySetSha256"]
         or identity["featureEntityKeySetSha256"] != summary["featureEntityKeySetSha256"]
-        or identity["contextEntity"]
-        != {"ncbiTaxon": SPECIES_TAXON, "entityId": CONTEXT_ID}
+        or identity["contextEntity"] != {"ncbiTaxon": SPECIES_TAXON, "entityId": CONTEXT_ID}
     ):
         raise CorpusComposeError("composition audit identity drift")
     target = _strict(

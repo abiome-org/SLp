@@ -246,9 +246,9 @@ def _trimmed(value: object, label: str) -> str:
 
 def _dataset_resource(value: object, label: str) -> tuple[str, str]:
     resource = _trimmed(value, label)
-    if not resource.startswith("omf://"):
+    if not resource.startswith(("omf://", "openfoundry://")):
         raise SgdMapError(f"{label} must be an OMF DatasetSnapshot resource URI")
-    identity, separator, revision = resource.removeprefix("omf://").rpartition("@")
+    identity, separator, revision = resource.split("://", 1)[1].rpartition("@")
     if not separator:
         raise SgdMapError(f"{label} must contain an exact resource revision")
     revision = _pinned_digest(revision, f"{label} revision")
@@ -256,9 +256,7 @@ def _dataset_resource(value: object, label: str) -> tuple[str, str]:
     if (
         len(parts) < 3
         or any(
-            not part
-            or part in {".", ".."}
-            or any(character.isspace() for character in part)
+            not part or part in {".", ".."} or any(character.isspace() for character in part)
             for part in parts
         )
         or parts[-2] != "datasetsnapshot"
@@ -348,9 +346,7 @@ def verify_raw_snapshot(
         path = actual[name]
         size = path.stat().st_size
         if size != spec.bytes:
-            raise SgdMapError(
-                f"raw byte-count drift for {name}: expected {spec.bytes}, got {size}"
-            )
+            raise SgdMapError(f"raw byte-count drift for {name}: expected {spec.bytes}, got {size}")
         digest = _sha256(path)
         if digest != spec.sha256:
             raise SgdMapError(f"raw SHA-256 drift for {name}")
@@ -378,9 +374,7 @@ def _read_physical_lines(path: Path, max_line_bytes: int) -> Iterator[tuple[int,
                 try:
                     text = raw.decode("utf-8")
                 except UnicodeDecodeError as error:
-                    raise SgdMapError(
-                        f"invalid UTF-8 in {path.name}:{line_number}"
-                    ) from error
+                    raise SgdMapError(f"invalid UTF-8 in {path.name}:{line_number}") from error
                 if "\x00" in text:
                     raise SgdMapError(f"NUL byte in {path.name}:{line_number}")
                 yield line_number, text
@@ -453,22 +447,16 @@ def parse_features(path: Path, spec: FileSpec, bounds: MapBounds) -> FeatureStat
             raise SgdMapError("SGD_features.tab exceeds maxFeatureRecords")
         fields = line.split("\t")
         if len(fields) != 16:
-            raise SgdMapError(
-                f"SGD_features.tab:{line_number} must contain exactly 16 columns"
-            )
+            raise SgdMapError(f"SGD_features.tab:{line_number} must contain exactly 16 columns")
         primary = _trimmed(fields[0], f"SGD_features.tab:{line_number} primary SGDID")
         if SGD_ID.fullmatch(primary) is None:
             raise SgdMapError(f"malformed primary SGDID in SGD_features.tab:{line_number}")
-        feature_type = _trimmed(
-            fields[1], f"SGD_features.tab:{line_number} feature type"
-        )
+        feature_type = _trimmed(fields[1], f"SGD_features.tab:{line_number} feature type")
         current_ids.add(primary)
         types[primary].add(feature_type)
         if feature_type != "ORF":
             continue
-        systematic = _trimmed(
-            fields[3], f"SGD_features.tab:{line_number} systematic feature name"
-        )
+        systematic = _trimmed(fields[3], f"SGD_features.tab:{line_number} systematic feature name")
         previous = systematic_to_primary.get(systematic)
         if previous is not None:
             raise SgdMapError(
@@ -530,9 +518,7 @@ def parse_features(path: Path, spec: FileSpec, bounds: MapBounds) -> FeatureStat
 
 
 def _retired_record(fields: list[str], line_number: int) -> dict[str, object]:
-    systematic = _trimmed(
-        fields[0], f"deleted_merged_features.tab:{line_number} systematic name"
-    )
+    systematic = _trimmed(fields[0], f"deleted_merged_features.tab:{line_number} systematic name")
     type_status = _trimmed(
         fields[1], f"deleted_merged_features.tab:{line_number} feature type/status"
     )
@@ -542,9 +528,7 @@ def _retired_record(fields: list[str], line_number: int) -> dict[str, object]:
             f"invalid retired feature type/status in deleted_merged_features.tab:{line_number}"
         )
     _trimmed(fields[2], f"deleted_merged_features.tab:{line_number} chromosome")
-    primary = _trimmed(
-        fields[6], f"deleted_merged_features.tab:{line_number} primary SGDID"
-    )
+    primary = _trimmed(fields[6], f"deleted_merged_features.tab:{line_number} primary SGDID")
     issues: list[str] = []
     retired_curie: str | None = None
     if SGD_ID.fullmatch(primary) is None:
@@ -605,9 +589,7 @@ def parse_retired(path: Path, spec: FileSpec, bounds: MapBounds) -> RetiredState
     for line_number, line in _read_physical_lines(path, bounds.max_line_bytes):
         physical_lines += 1
         if physical_lines > bounds.max_retired_physical_lines:
-            raise SgdMapError(
-                "deleted_merged_features.tab exceeds maxRetiredPhysicalLines"
-            )
+            raise SgdMapError("deleted_merged_features.tab exceeds maxRetiredPhysicalLines")
         fields = line.split("\t")
         if len(fields) != 13:
             irregular_records += 1
@@ -647,9 +629,7 @@ def parse_retired(path: Path, spec: FileSpec, bounds: MapBounds) -> RetiredState
     )
 
 
-def _target_status(
-    primary: str, features: FeatureState, retired: RetiredState
-) -> str:
+def _target_status(primary: str, features: FeatureState, retired: RetiredState) -> str:
     if primary in features.current_orf_ids:
         return "current-orf"
     if primary in features.current_primary_ids:
@@ -667,9 +647,9 @@ def parse_external_relations(
     bounds: MapBounds,
 ) -> tuple[tuple[dict[str, object], ...], dict[str, int]]:
     # typed key -> primary ID -> exact (feature name, undocumented display column) assertions
-    groups: dict[
-        tuple[str, str, str], dict[str, set[tuple[str, str]]]
-    ] = defaultdict(lambda: defaultdict(set))
+    groups: dict[tuple[str, str, str], dict[str, set[tuple[str, str]]]] = defaultdict(
+        lambda: defaultdict(set)
+    )
     physical_lines = 0
     records = 0
     for line_number, line in _read_physical_lines(path, bounds.max_line_bytes):
@@ -812,9 +792,7 @@ def normalize_sgd_snapshot(
         ("retired-merged-quarantine.jsonl", retired.records),
     ):
         count, digest, size = _write_jsonl(output_root / name, records)
-        output_specs.append(
-            {"name": name, "records": count, "bytes": size, "sha256": digest}
-        )
+        output_specs.append({"name": name, "records": count, "bytes": size, "sha256": digest})
 
     digest_basis = {
         "schema": DIGEST_SCHEMA,
@@ -850,15 +828,11 @@ def normalize_sgd_snapshot(
             "featureBlankLines": features.blank_lines,
             "externalPhysicalRows": external_summary["physicalRows"],
             "typedExternalRelations": external_summary["typedRelations"],
-            "oneToManyTypedExternalRelations": external_summary[
-                "oneToManyTypedRelations"
-            ],
+            "oneToManyTypedExternalRelations": external_summary["oneToManyTypedRelations"],
             "retiredValidRows": retired.valid_records,
             "retiredIrregularRows": retired.irregular_records,
         },
-        "externalTargetAssertionsByStatus": external_summary[
-            "targetAssertionsByStatus"
-        ],
+        "externalTargetAssertionsByStatus": external_summary["targetAssertionsByStatus"],
         "sourceDataset": (
             {
                 "resource": source_provenance.resource,
@@ -884,9 +858,7 @@ def normalize_sgd_snapshot(
         "mappingManifestSha256": manifest_sha256,
         "currentOrfCount": len(features.orf_records),
         "typedExternalRelationCount": int(external_summary["typedRelations"]),
-        "oneToManyExternalRelationCount": int(
-            external_summary["oneToManyTypedRelations"]
-        ),
+        "oneToManyExternalRelationCount": int(external_summary["oneToManyTypedRelations"]),
         "retiredQuarantineCount": len(retired.records),
         "retiredIrregularCount": retired.irregular_records,
     }

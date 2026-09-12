@@ -8,7 +8,8 @@ import tempfile
 import unittest
 
 
-MODULE = Path(__file__).resolve().parents[1] / "modules" / "slp-1-1-molecular-baselines"
+ROOT = Path(__file__).resolve().parents[1]
+MODULE = ROOT / "modules" / "slp-1-1-molecular-baselines"
 sys.path.insert(0, str(MODULE))
 
 from baselines import (  # noqa: E402
@@ -66,7 +67,9 @@ class MolecularBaselineTest(unittest.TestCase):
             **extra,
         }
 
-    def _basal(self, context: str, values: list[float | None], **extra: object) -> dict[str, object]:
+    def _basal(
+        self, context: str, values: list[float | None], **extra: object
+    ) -> dict[str, object]:
         return self._profile(context, values, **extra)
 
     def _perturbed(
@@ -145,13 +148,9 @@ class MolecularBaselineTest(unittest.TestCase):
             self._basal("CTX:t3", [1.0, 1.0, 1.0]),
             self._perturbed("CTX:t3", "PERT:b-t3", ["GENE:b"], [0.0, 2.0, 4.0]),
             self._basal("CTX:t4", [0.0, 0.0, 0.0]),
-            self._perturbed(
-                "CTX:t4", "PERT:ab-t4", ["GENE:a", "GENE:b"], [5.0, 7.0, 9.0]
-            ),
+            self._perturbed("CTX:t4", "PERT:ab-t4", ["GENE:a", "GENE:b"], [5.0, 7.0, 9.0]),
             self._basal("CTX:t5", [0.0, 0.0, 0.0]),
-            self._perturbed(
-                "CTX:t5", "PERT:bc-t5", ["GENE:b", "GENE:c"], [2.5, 1.0, 5.0]
-            ),
+            self._perturbed("CTX:t5", "PERT:bc-t5", ["GENE:b", "GENE:c"], [2.5, 1.0, 5.0]),
         ]
 
     def _reference_records(self) -> list[dict[str, object]]:
@@ -200,9 +199,7 @@ class MolecularBaselineTest(unittest.TestCase):
             context = self._rows(output, "context-only")
             txpert = self._rows(output, "txpert-mean-additive")
             prediction_manifest = json.loads(
-                (output / "context-only" / "predictions.json").read_text(
-                    encoding="utf-8"
-                )
+                (output / "context-only" / "predictions.json").read_text(encoding="utf-8")
             )
 
         self.assertEqual(
@@ -220,7 +217,9 @@ class MolecularBaselineTest(unittest.TestCase):
         self.assertEqual(txpert[2]["predictionMean"], [102.5, None, 305.0])
         self.assertEqual(report["baselines"]["txpert-mean-additive"]["exactEffectPredictions"], 3)
         self.assertEqual(report["baselines"]["txpert-mean-additive"]["globalFallbackComponents"], 5)
-        self.assertEqual(report["evaluationCompatibility"]["reasonCode"], "prediction-log-scale-not-defined")
+        self.assertEqual(
+            report["evaluationCompatibility"]["reasonCode"], "prediction-log-scale-not-defined"
+        )
         self.assertEqual(report["featureBilinearRidge"]["reasonCode"], "feature-vectors-absent")
         self.assertEqual(report["profileLevel"], "context-perturbation-centroid-v1")
         self.assertNotIn("predictionLogScale", json.dumps(prediction_manifest))
@@ -318,9 +317,7 @@ class MolecularBaselineTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             without_c = [
-                profile
-                for profile in self._training_records()
-                if profile["contextId"] != "CTX:t5"
+                profile for profile in self._training_records() if profile["contextId"] != "CTX:t5"
             ]
             without_c.extend(
                 [
@@ -338,9 +335,7 @@ class MolecularBaselineTest(unittest.TestCase):
                     ),
                 ]
             )
-            training, training_sha = self._snapshot(
-                root, "training", TRAINING_ROLE, without_c
-            )
+            training, training_sha = self._snapshot(root, "training", TRAINING_ROLE, without_c)
             reference, _ = self._snapshot(
                 root,
                 "reference",
@@ -403,11 +398,10 @@ class MolecularBaselineTest(unittest.TestCase):
         for record in bad_records:
             with self.subTest(record=record), tempfile.TemporaryDirectory() as temporary:
                 root = Path(temporary)
-                snapshot, _ = self._snapshot(
-                    root, "bad", TRAINING_ROLE, [record]
-                )
+                snapshot, _ = self._snapshot(root, "bad", TRAINING_ROLE, [record])
                 with self.assertRaisesRegex(
-                    MolecularBaselineError, "fields do not match|explicit interventionIds|non-empty list"
+                    MolecularBaselineError,
+                    "fields do not match|explicit interventionIds|non-empty list",
                 ):
                     load_snapshot(snapshot, TRAINING_ROLE, Limits())
 
@@ -431,9 +425,7 @@ class MolecularBaselineTest(unittest.TestCase):
     def test_requires_frozen_centroid_profile_level(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            snapshot, _ = self._snapshot(
-                root, "training", TRAINING_ROLE, self._training_records()
-            )
+            snapshot, _ = self._snapshot(root, "training", TRAINING_ROLE, self._training_records())
             manifest_path = snapshot / "baseline.json"
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             manifest["profileLevel"] = "replicate"
@@ -442,9 +434,7 @@ class MolecularBaselineTest(unittest.TestCase):
                 encoding="utf-8",
                 newline="\n",
             )
-            with self.assertRaisesRegex(
-                MolecularBaselineError, "context-perturbation-centroid-v1"
-            ):
+            with self.assertRaisesRegex(MolecularBaselineError, "context-perturbation-centroid-v1"):
                 load_snapshot(snapshot, TRAINING_ROLE, Limits())
 
     def test_source_species_and_pair_checksum_mismatches_are_rejected(self) -> None:
@@ -466,9 +456,7 @@ class MolecularBaselineTest(unittest.TestCase):
                 load_snapshot(snapshot, TRAINING_ROLE, Limits())
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            training, _ = self._snapshot(
-                root, "training", TRAINING_ROLE, self._training_records()
-            )
+            training, _ = self._snapshot(root, "training", TRAINING_ROLE, self._training_records())
             reference, _ = self._snapshot(
                 root,
                 "reference",
@@ -492,9 +480,7 @@ class MolecularBaselineTest(unittest.TestCase):
                 training_sha=training_sha,
                 aggregation_sha="d" * 64,
             )
-            with self.assertRaisesRegex(
-                MolecularBaselineError, "aggregation protocol mismatch"
-            ):
+            with self.assertRaisesRegex(MolecularBaselineError, "aggregation protocol mismatch"):
                 build_baselines(training, reference, root / "output")
 
     def test_cross_snapshot_identity_mismatch_and_shard_drift_are_rejected(self) -> None:
@@ -504,9 +490,7 @@ class MolecularBaselineTest(unittest.TestCase):
                 root, "training", TRAINING_ROLE, self._training_records()
             )
             human_reference = [
-                self._basal(
-                    "CTX:human", [1.0, 1.0, 1.0], taxon=9606, source="fixture:human"
-                ),
+                self._basal("CTX:human", [1.0, 1.0, 1.0], taxon=9606, source="fixture:human"),
                 self._perturbed(
                     "CTX:human",
                     "PERT:a-t1",
@@ -530,9 +514,7 @@ class MolecularBaselineTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            snapshot, _ = self._snapshot(
-                root, "training", TRAINING_ROLE, self._training_records()
-            )
+            snapshot, _ = self._snapshot(root, "training", TRAINING_ROLE, self._training_records())
             with (snapshot / "profiles-000.jsonl").open("a", encoding="utf-8") as handle:
                 handle.write("{}\n")
             with self.assertRaisesRegex(MolecularBaselineError, "checksum mismatch"):
@@ -560,8 +542,9 @@ class MolecularBaselineTest(unittest.TestCase):
                 ),
             ):
                 bad = {**exact, field: value}
-                with self.subTest(field=field), self.assertRaisesRegex(
-                    MolecularBaselineError, error
+                with (
+                    self.subTest(field=field),
+                    self.assertRaisesRegex(MolecularBaselineError, error),
                 ):
                     resolve_pinned_dataset(bad, "molecularTraining")
             with self.assertRaisesRegex(MolecularBaselineError, "exact materialized|fields"):
@@ -570,7 +553,10 @@ class MolecularBaselineTest(unittest.TestCase):
     def test_schemas_and_protocol_names_are_frozen_without_benchmark_vocabulary(self) -> None:
         input_schema = json.loads((MODULE / "input.schema.json").read_text(encoding="utf-8"))
         output_schema = json.loads((MODULE / "output.schema.json").read_text(encoding="utf-8"))
-        readme = (MODULE / "README.md").read_text(encoding="utf-8")
+        reference = (ROOT / "docs/module-reference.md").read_text(encoding="utf-8")
+        readme = reference.split("## slp-1-1-molecular-baselines: README\n", 1)[1].split(
+            "\n## ", 1
+        )[0]
         canonical_digests = [
             hashlib.sha256(
                 json.dumps(schema, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -599,6 +585,7 @@ class MolecularBaselineTest(unittest.TestCase):
         self.assertIn("prediction-log-scale-not-defined", readme)
         for forbidden in ("synthetic-lethality", "depmap", "benchmark test"):
             self.assertNotIn(forbidden, readme.casefold())
+
 
 if __name__ == "__main__":
     unittest.main()

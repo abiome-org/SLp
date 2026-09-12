@@ -1,7 +1,7 @@
 # Outcome-blind protected-gene roster. OMF resolves each dataset alias to an
 # immutable revision during admission; the module revalidates both inventories
 # and the independently reconstructed exact roster before emitting any split.
-apiVersion: omf.dev/v1alpha1
+apiVersion: openfoundry.dev/v1alpha1
 kind: WorkloadSpec
 metadata:
   name: slp-1-1-held-roster

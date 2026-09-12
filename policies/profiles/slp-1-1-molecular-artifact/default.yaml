@@ -1,0 +1,42 @@
+# Promotion policy for evaluations/slp-1-1-molecular-artifact.yaml.
+apiVersion: openfoundry.dev/v1alpha1
+kind: Policy
+metadata:
+  name: default
+spec:
+  rules:
+  - name: allow-slp-operator
+    effect: allow
+    match:
+      actor: slp-researcher
+      resource: abiome/slp
+  - name: deny-unapproved-network
+    effect: deny
+    match:
+      action: network.egress
+      purpose: unapproved
+  config:
+    dirtyWorktree: archive
+    promotion:
+      requireEvaluationPass: true
+      thresholds:
+        molecular-profile-diagnostic-only:
+          minimum: 1
+        molecular-artifact-compatibility:
+          minimum: 1
+        strict-corpus-audit:
+          minimum: 1
+        frozen-held-roster-match:
+          minimum: 1
+        target-free-query-manifest-match:
+          minimum: 1
+        exact-profile-panel-join:
+          minimum: 1
+        centering-held-intervention-overlap:
+          maximum: 0
+        benchmark-label-records:
+          maximum: 0
+        perturbation-specific-pearson:
+          minimum: 0.1
+        worst-species-perturbation-specific-pearson:
+          minimum: 0.0

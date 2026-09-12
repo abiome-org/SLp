@@ -1,5 +1,11 @@
 # Module reference
 
+Working module manifests, SDK imports and file-protocol adapters now target
+OpenFoundry. Historical `omf://` resource IDs below are immutable provenance,
+not aliases for newly admitted OpenFoundry resources. Modules that pin those
+old inputs remain specific to their recorded corpus; re-admission requires
+new verified input contracts. See the [upgrade guide](development.md#openfoundry).
+
 Reference for retained research modules. Current training and usage are in
 [development.md](development.md) and the [model card](../MODEL_CARD.md).
 Module-local contracts are retained only where packaging or tests consume them.
@@ -101,7 +107,7 @@ It is not an offline wheelhouse or a portable release closure: execution still
 requires acquiring those exact distributions, and release portability remains
 blocked until the dependency payload is retained and verified independently.
 The module carries a small standard-library implementation of the documented
-`omf.module/v1` request/result file protocol because OMF 1.0 does not inject
+`openfoundry.module/v1` request/result file protocol because OMF 1.0 does not inject
 its controller SDK into non-empty isolated dependency environments. This is
 part of the admitted code package, not a host interpreter or `PYTHONPATH`
 dependency.

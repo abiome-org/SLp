@@ -1,0 +1,24 @@
+# Promotion policy for experiment-slp12-replay.yaml.
+apiVersion: openfoundry.dev/v1alpha1
+kind: Policy
+metadata:
+  name: default
+spec:
+  rules:
+  - name: allow-slp-operator
+    effect: allow
+    match:
+      actor: slp-researcher
+      resource: abiome/slp
+  - name: deny-unapproved-network
+    effect: deny
+    match:
+      action: network.egress
+      purpose: unapproved
+  config:
+    dirtyWorktree: archive
+    promotion:
+      requireEvaluationPass: true
+      thresholds:
+        portability_max_error:
+          maximum: 0.0003

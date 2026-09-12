@@ -46,7 +46,9 @@ def _rehash_raw(fixture: Fixture) -> None:
     )
 
 
-def _configure_role_matrix(fixture: Fixture, role: str, *, selected_token: str | None = None) -> None:
+def _configure_role_matrix(
+    fixture: Fixture, role: str, *, selected_token: str | None = None
+) -> None:
     matrix_path = fixture.raw / "yeast5k_noimpute_wide.csv"
     with matrix_path.open(newline="", encoding="utf-8") as stream:
         rows = list(csv.reader(stream))
@@ -69,9 +71,7 @@ def _fixture_role_contract(fixture: Fixture, role: str) -> prepare.ObservationRo
     systematic = "YAL011W" if role == prepare.ROLE_VALIDATION else "YAL014C"
     genes = [fixture.genes[systematic]]
     filename = "KO-V" if role == prepare.ROLE_VALIDATION else "KO-F"
-    with (fixture.raw / "yeast5k_metadata.csv").open(
-        newline="", encoding="utf-8"
-    ) as stream:
+    with (fixture.raw / "yeast5k_metadata.csv").open(newline="", encoding="utf-8") as stream:
         rows = list(csv.DictReader(stream))
     selected_index = next(index for index, row in enumerate(rows) if row["Filename"] == filename)
     action_sequence = genes
@@ -115,10 +115,7 @@ def _build(fixture: Fixture, destination: Path, role: str) -> dict[str, object]:
 
 def _archive_blobs(path: Path) -> dict[str, bytes]:
     with tarfile.open(path, mode="r:") as archive:
-        return {
-            member.name: archive.extractfile(member).read()
-            for member in archive.getmembers()
-        }
+        return {member.name: archive.extractfile(member).read() for member in archive.getmembers()}
 
 
 class ProteomeProtectedPreparationTest(unittest.TestCase):
@@ -186,9 +183,7 @@ class ProteomeProtectedPreparationTest(unittest.TestCase):
                     selected_token=token,
                 )
                 output = Path(temporary) / "output"
-                with self.assertRaisesRegex(
-                    prepare.ProteomeObservationError, prepare.ROLE_FINAL
-                ):
+                with self.assertRaisesRegex(prepare.ProteomeObservationError, prepare.ROLE_FINAL):
                     _build(fixture, output, prepare.ROLE_FINAL)
                 self.assertFalse(output.exists())
 
@@ -239,11 +234,9 @@ class ProteomeProtectedPreparationTest(unittest.TestCase):
         self.assertEqual(
             {path.name for path in PRETRAIN_MODULE.iterdir() if path.is_file()},
             {
-                "CONTRACT.md",
                 "main.py",
                 "module.yaml",
                 "observation_prepare.py",
-                "README.md",
                 "requirements.lock",
             },
         )

@@ -1,7 +1,7 @@
 # Exact pretraining-only quantitative proteome normalization. The module pins
 # all source, identity, roster, and count contracts again at runtime. It has no
 # reward or benchmark input and emits only regular file artifacts.
-apiVersion: omf.dev/v1alpha1
+apiVersion: openfoundry.dev/v1alpha1
 kind: WorkloadSpec
 metadata:
   name: slp-1-1-proteome-observation-pretrain-v1

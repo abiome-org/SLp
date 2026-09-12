@@ -38,7 +38,7 @@
     "curie": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*:[^\\s]+$"},
     "resource": {
       "type": "string",
-      "pattern": "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"
+      "pattern": "^(?:omf|openfoundry)://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"
     },
     "curieList": {
       "type": "array", "items": {"$ref": "#/$defs/curie"}, "uniqueItems": true

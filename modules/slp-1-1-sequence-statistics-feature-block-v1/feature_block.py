@@ -59,9 +59,21 @@ SOURCE_PEPTIDE_RE = re.compile(rf"^[{AA_ORDER}*]+$")
 CURRENT_PEPTIDE_RE = re.compile(rf"^M[{AA_ORDER}]*\*$")
 
 FORBIDDEN_KEY_PARTS = {
-    "abundance", "benchmark", "embedding", "expression", "fitness", "fold",
-    "label", "measurement", "outcome", "phenotype", "reward", "score", "split",
-    "targetvalue", "trajectory",
+    "abundance",
+    "benchmark",
+    "embedding",
+    "expression",
+    "fitness",
+    "fold",
+    "label",
+    "measurement",
+    "outcome",
+    "phenotype",
+    "reward",
+    "score",
+    "split",
+    "targetvalue",
+    "trajectory",
 }
 
 SOURCE_CLASS_TOKENS = {
@@ -80,7 +92,12 @@ LIMITATIONS = [
 ]
 
 ACCESS_BOUNDARY = {
-    "inputNames": ["staticEntityUniverse", "sgdProteinSequences", "sgdCurrentOrfs", "sgdMappingManifest"],
+    "inputNames": [
+        "staticEntityUniverse",
+        "sgdProteinSequences",
+        "sgdCurrentOrfs",
+        "sgdMappingManifest",
+    ],
     "heldRosterConsumed": False,
     "quantitativeOutcomesConsumed": False,
     "trainingPartitionAssignmentsConsumed": False,
@@ -117,21 +134,31 @@ def _bootstrap_prefixed_digest(value: object, label: str) -> str:
 def _bootstrap_canonical_relative(value: object, label: str) -> str:
     relative = _bootstrap_nonempty(value, label)
     posix = PurePosixPath(relative)
-    if relative != posix.as_posix() or posix.is_absolute() or "\\" in relative or ":" in relative or any(part in {"", ".", ".."} for part in posix.parts):
+    if (
+        relative != posix.as_posix()
+        or posix.is_absolute()
+        or "\\" in relative
+        or ":" in relative
+        or any(part in {"", ".", ".."} for part in posix.parts)
+    ):
         raise SequenceFeatureBlockError(f"{label} is not a canonical relative path")
     return relative
 
 
 def _bootstrap_dataset_resource(value: object, label: str) -> tuple[str, str]:
     resource = _bootstrap_nonempty(value, label)
-    if not resource.startswith("omf://"):
+    if not resource.startswith(("omf://", "openfoundry://")):
         raise SequenceFeatureBlockError(f"{label} must be an OMF DatasetSnapshot URI")
-    identity, separator, revision = resource.removeprefix("omf://").rpartition("@")
+    identity, separator, revision = resource.split("://", 1)[1].rpartition("@")
     if not separator:
         raise SequenceFeatureBlockError(f"{label} must carry an exact revision")
     _bootstrap_prefixed_digest(revision, f"{label} revision")
     parts = identity.split("/")
-    if len(parts) < 3 or parts[-2] != "datasetsnapshot" or RESOURCE_NAME_RE.fullmatch(parts[-1]) is None:
+    if (
+        len(parts) < 3
+        or parts[-2] != "datasetsnapshot"
+        or RESOURCE_NAME_RE.fullmatch(parts[-1]) is None
+    ):
         raise SequenceFeatureBlockError(f"{label} must identify a DatasetSnapshot")
     return parts[-1], revision
 
@@ -218,7 +245,9 @@ class ExpectedContract:
         _bootstrap_bare_digest(self.universe_entity_key_sha256, "universe key SHA-256")
         _bootstrap_bare_digest(self.universe_entity_jsonl_sha256, "universe entity JSONL SHA-256")
         _bootstrap_bare_digest(self.universe_manifest_sha256, "universe manifest SHA-256")
-        _bootstrap_bare_digest(self.universe_relation_jsonl_sha256, "universe relation JSONL SHA-256")
+        _bootstrap_bare_digest(
+            self.universe_relation_jsonl_sha256, "universe relation JSONL SHA-256"
+        )
         for name, value in (
             ("fastaDecompressedBytes", self.fasta_decompressed_bytes),
             ("fastaRecords", self.fasta_records),
@@ -273,8 +302,16 @@ PRODUCTION_CONTRACT = ExpectedContract(
         manifest_digest="sha256:a65f94081c0b60a8b486ed968b58fc4d021ba3ea7f5f11425d3a1635cbb10684",
         tree_digest="sha256:7ec354f427cfd8a2fcc3de1004c7e4ac77402a78b5cc0a0b5ef89ba24656fd3f",
         files=(
-            FileSpec("entity-universe-audit.json", 4_880, "339412ea008cf383db2258d0788d71c2cf357183b331d49f4168aa7f113f1a0f"),
-            FileSpec("entity-universe.tar", 1_525_760, "d947bf618b854dd33a7157ac0f0380c544e9a4377bddb00806c9ca07f689a544"),
+            FileSpec(
+                "entity-universe-audit.json",
+                4_880,
+                "339412ea008cf383db2258d0788d71c2cf357183b331d49f4168aa7f113f1a0f",
+            ),
+            FileSpec(
+                "entity-universe.tar",
+                1_525_760,
+                "d947bf618b854dd33a7157ac0f0380c544e9a4377bddb00806c9ca07f689a544",
+            ),
         ),
     ),
     sequences=ExpectedDataset(
@@ -285,9 +322,21 @@ PRODUCTION_CONTRACT = ExpectedContract(
         manifest_digest="sha256:8f88480196b5cd8f3c15d65dbdbc09f83305c371fb476c70a38825dad2be4283",
         tree_digest="sha256:823a18ed8039ee44ee44b860551fea749b9012c941e6b9cd5163938da19b168a",
         files=(
-            FileSpec("dates_of_genome_releases.tab", 2_050, "cc5d40722442a605d1d6dcf9a36442d87076829a04f776f87b3de0020f92f9e7"),
-            FileSpec("orf_protein.README", 930, "b53064bef6424f0e9b5c5a6af88602bb15949e68bedb397b6731b094ebca5be9"),
-            FileSpec("orf_trans_all_R64-5-1_20240529.fasta.gz", 2_689_634, "17e8b47e1ae23178c6000fbc4ab548f102d1b250ef9dff5d811feb3f03dd2c5b"),
+            FileSpec(
+                "dates_of_genome_releases.tab",
+                2_050,
+                "cc5d40722442a605d1d6dcf9a36442d87076829a04f776f87b3de0020f92f9e7",
+            ),
+            FileSpec(
+                "orf_protein.README",
+                930,
+                "b53064bef6424f0e9b5c5a6af88602bb15949e68bedb397b6731b094ebca5be9",
+            ),
+            FileSpec(
+                "orf_trans_all_R64-5-1_20240529.fasta.gz",
+                2_689_634,
+                "17e8b47e1ae23178c6000fbc4ab548f102d1b250ef9dff5d811feb3f03dd2c5b",
+            ),
         ),
     ),
     current_orfs=ExpectedArtifact(
@@ -374,7 +423,9 @@ class Bounds:
             ("maxArchiveBytes", self.max_archive_bytes, 1024, 1024**3),
         ):
             if type(value) is not int or not minimum <= value <= maximum:
-                raise SequenceFeatureBlockError(f"{name} must be an integer in [{minimum}, {maximum}]")
+                raise SequenceFeatureBlockError(
+                    f"{name} must be an integer in [{minimum}, {maximum}]"
+                )
 
 
 def canonical_json(value: object) -> str:
@@ -457,9 +508,9 @@ def _canonical_relative(value: object, label: str) -> str:
 
 def _dataset_resource(value: object, label: str) -> tuple[str, str]:
     resource = _nonempty(value, label)
-    if not resource.startswith("omf://"):
+    if not resource.startswith(("omf://", "openfoundry://")):
         raise SequenceFeatureBlockError(f"{label} must be an OMF DatasetSnapshot URI")
-    identity, separator, revision = resource.removeprefix("omf://").rpartition("@")
+    identity, separator, revision = resource.split("://", 1)[1].rpartition("@")
     if not separator:
         raise SequenceFeatureBlockError(f"{label} must carry an exact revision")
     _prefixed_digest(revision, f"{label} revision")
@@ -468,7 +519,10 @@ def _dataset_resource(value: object, label: str) -> tuple[str, str]:
         len(parts) < 3
         or parts[-2] != "datasetsnapshot"
         or RESOURCE_NAME_RE.fullmatch(parts[-1]) is None
-        or any(not part or part in {".", ".."} or any(char.isspace() for char in part) for part in parts)
+        or any(
+            not part or part in {".", ".."} or any(char.isspace() for char in part)
+            for part in parts
+        )
     ):
         raise SequenceFeatureBlockError(f"{label} must identify a DatasetSnapshot")
     return parts[-1], revision
@@ -503,8 +557,14 @@ def resolve_pinned_dataset(value: object, input_name: str) -> PinnedDataset:
         raise SequenceFeatureBlockError(f"{input_name} must be copied, not mutable")
     manifest = _prefixed_digest(value["manifestDigest"], f"{input_name}.manifestDigest")
     root = _resolved_path(value["path"], f"{input_name}.path", directory=True)
-    if root.name != resource_name or root.parent.name != input_name or root.parent.parent.name != "inputs":
-        raise SequenceFeatureBlockError(f"{input_name}.path is inconsistent with OMF materialization")
+    if (
+        root.name != resource_name
+        or root.parent.name != input_name
+        or root.parent.parent.name != "inputs"
+    ):
+        raise SequenceFeatureBlockError(
+            f"{input_name}.path is inconsistent with OMF materialization"
+        )
     return PinnedDataset(input_name, root, str(value["resource"]), revision, manifest)
 
 
@@ -532,7 +592,9 @@ def resolve_literal_artifact(value: object, input_name: str) -> LiteralArtifact:
         or path.parent.parent.name != input_name
         or path.parent.parent.parent.name != "inputs"
     ):
-        raise SequenceFeatureBlockError(f"{input_name}.path is inconsistent with OMF materialization")
+        raise SequenceFeatureBlockError(
+            f"{input_name}.path is inconsistent with OMF materialization"
+        )
     return LiteralArtifact(input_name, path, digest)
 
 
@@ -547,7 +609,9 @@ def _regular_child(root: Path, name: str) -> Path:
         path = cursor.resolve(strict=True)
         path.relative_to(root)
     except (OSError, ValueError) as error:
-        raise SequenceFeatureBlockError(f"snapshot file is missing or escapes its root: {name}") from error
+        raise SequenceFeatureBlockError(
+            f"snapshot file is missing or escapes its root: {name}"
+        ) from error
     if not path.is_file():
         raise SequenceFeatureBlockError(f"snapshot member is not a regular file: {name}")
     return path
@@ -557,7 +621,9 @@ def _verify_dataset(dataset: PinnedDataset, expected: ExpectedDataset) -> dict[s
     if dataset.resource != expected.resource or dataset.manifest_digest != expected.manifest_digest:
         raise SequenceFeatureBlockError(f"{dataset.input_name} immutable identity drift")
     if _omf_tree_digest(expected.files) != expected.tree_digest:
-        raise SequenceFeatureBlockError(f"{dataset.input_name} OMF tree digest does not bind its files")
+        raise SequenceFeatureBlockError(
+            f"{dataset.input_name} OMF tree digest does not bind its files"
+        )
     actual_names = {item.name for item in dataset.path.iterdir()}
     expected_by_name = {item.name: item for item in expected.files}
     if actual_names != set(expected_by_name):
@@ -610,12 +676,17 @@ def _read_canonical_json(path: Path, maximum_bytes: int, label: str) -> dict[str
         value = json.loads(raw)
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
         raise SequenceFeatureBlockError(f"{label} is not valid UTF-8 JSON") from error
-    if not isinstance(value, dict) or raw not in {_canonical_json_bytes(value), _pretty_json_bytes(value)}:
+    if not isinstance(value, dict) or raw not in {
+        _canonical_json_bytes(value),
+        _pretty_json_bytes(value),
+    }:
         raise SequenceFeatureBlockError(f"{label} is not canonical JSON")
     return value
 
 
-def _jsonl_blob(payload: bytes, bounds: Bounds, maximum_records: int, label: str) -> list[dict[str, Any]]:
+def _jsonl_blob(
+    payload: bytes, bounds: Bounds, maximum_records: int, label: str
+) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     if payload and not payload.endswith(b"\n"):
         raise SequenceFeatureBlockError(f"{label} lacks a terminal LF")
@@ -637,7 +708,9 @@ def _jsonl_blob(payload: bytes, bounds: Bounds, maximum_records: int, label: str
     return records
 
 
-def _read_canonical_jsonl(path: Path, bounds: Bounds, maximum_records: int, label: str) -> list[dict[str, Any]]:
+def _read_canonical_jsonl(
+    path: Path, bounds: Bounds, maximum_records: int, label: str
+) -> list[dict[str, Any]]:
     if path.stat().st_size > bounds.max_fasta_bytes:
         raise SequenceFeatureBlockError(f"{label} exceeds its byte bound")
     try:
@@ -684,7 +757,9 @@ def _write_tar(path: Path, members: Mapping[str, bytes]) -> None:
     path.write_bytes(_tar_bytes(members))
 
 
-def _read_exact_tar(path: Path, expected_names: Sequence[str], bounds: Bounds, label: str) -> dict[str, bytes]:
+def _read_exact_tar(
+    path: Path, expected_names: Sequence[str], bounds: Bounds, label: str
+) -> dict[str, bytes]:
     if path.is_symlink() or not path.is_file():
         raise SequenceFeatureBlockError(f"{label} must be a regular file")
     if path.stat().st_size > bounds.max_archive_bytes:
@@ -719,20 +794,28 @@ def _read_exact_tar(path: Path, expected_names: Sequence[str], bounds: Bounds, l
 
 
 def _file_ref(path: str, payload: bytes, *, records: int | None = None) -> dict[str, object]:
-    result: dict[str, object] = {"path": path, "sha256": _sha256_bytes(payload), "bytes": len(payload)}
+    result: dict[str, object] = {
+        "path": path,
+        "sha256": _sha256_bytes(payload),
+        "bytes": len(payload),
+    }
     if records is not None:
         result["records"] = records
     return result
 
 
-def _validate_file_ref(value: object, path: str, payload: bytes, label: str, *, records: int | None = None) -> None:
+def _validate_file_ref(
+    value: object, path: str, payload: bytes, label: str, *, records: int | None = None
+) -> None:
     fields = {"path", "sha256", "bytes"} | ({"records"} if records is not None else set())
     ref = _strict_fields(value, fields, label)
     if ref != _file_ref(path, payload, records=records):
         raise SequenceFeatureBlockError(f"{label} does not match payload")
 
 
-def _validate_universe(paths: Mapping[str, Path], bounds: Bounds, expected: ExpectedContract) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any], dict[str, object]]:
+def _validate_universe(
+    paths: Mapping[str, Path], bounds: Bounds, expected: ExpectedContract
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any], dict[str, object]]:
     names = (
         "static-entity-universe/entities.jsonl",
         "static-entity-universe/manifest.json",
@@ -751,17 +834,36 @@ def _validate_universe(paths: Mapping[str, Path], bounds: Bounds, expected: Expe
         raise SequenceFeatureBlockError("entity-universe inner manifest digest drift")
     manifest = _strict_fields(
         manifest,
-        {"schema", "version", "identityKey", "ordering", "source", "identityMapping", "semanticSetHashes", "inputs", "entities", "relations", "contentPolicy"},
+        {
+            "schema",
+            "version",
+            "identityKey",
+            "ordering",
+            "source",
+            "identityMapping",
+            "semanticSetHashes",
+            "inputs",
+            "entities",
+            "relations",
+            "contentPolicy",
+        },
         "entity-universe manifest",
     )
     if manifest["schema"] != UNIVERSE_SCHEMA or manifest["version"] != 1:
         raise SequenceFeatureBlockError("entity-universe schema drift")
-    if manifest["identityKey"] != ["ncbiTaxon", "entityId"] or manifest["ordering"] != "ascending-ncbiTaxon-then-codepoint-entityId":
+    if (
+        manifest["identityKey"] != ["ncbiTaxon", "entityId"]
+        or manifest["ordering"] != "ascending-ncbiTaxon-then-codepoint-entityId"
+    ):
         raise SequenceFeatureBlockError("entity-universe identity contract drift")
-    source = _strict_fields(manifest["source"], {"id", "release", "ncbiTaxon"}, "entity-universe source")
+    source = _strict_fields(
+        manifest["source"], {"id", "release", "ncbiTaxon"}, "entity-universe source"
+    )
     if source["ncbiTaxon"] != SPECIES_TAXON:
         raise SequenceFeatureBlockError("entity-universe species taxon drift")
-    mapping = _strict_fields(manifest["identityMapping"], {"id", "sha256"}, "entity-universe mapping")
+    mapping = _strict_fields(
+        manifest["identityMapping"], {"id", "sha256"}, "entity-universe mapping"
+    )
     if mapping != {"id": expected.mapping_id, "sha256": expected.mapping_sha256}:
         raise SequenceFeatureBlockError("entity-universe mapping drift")
 
@@ -771,30 +873,49 @@ def _validate_universe(paths: Mapping[str, Path], bounds: Bounds, expected: Expe
     if _sha256_bytes(relation_payload) != expected.universe_relation_jsonl_sha256:
         raise SequenceFeatureBlockError("entity-universe relation-set digest drift")
     entities = _jsonl_blob(entity_payload, bounds, bounds.max_records, "entity-universe entities")
-    relations = _jsonl_blob(relation_payload, bounds, bounds.max_records, "entity-universe relations")
+    relations = _jsonl_blob(
+        relation_payload, bounds, bounds.max_records, "entity-universe relations"
+    )
     keys: list[tuple[int, str]] = []
     gene_keys: set[tuple[int, str]] = set()
     protein_keys: set[tuple[int, str]] = set()
     for index, record in enumerate(entities, start=1):
-        row = _strict_fields(record, {"schema", "ncbiTaxon", "entityId", "entityClass", "usages"}, f"entity row {index}")
+        row = _strict_fields(
+            record,
+            {"schema", "ncbiTaxon", "entityId", "entityClass", "usages"},
+            f"entity row {index}",
+        )
         entity_id, entity_class = row["entityId"], row["entityClass"]
         if row["schema"] != ENTITY_SCHEMA or row["ncbiTaxon"] != SPECIES_TAXON:
             raise SequenceFeatureBlockError("entity row schema or taxon drift")
-        if entity_class == "gene" and (not isinstance(entity_id, str) or SGD_CURIE_RE.fullmatch(entity_id) is None):
+        if entity_class == "gene" and (
+            not isinstance(entity_id, str) or SGD_CURIE_RE.fullmatch(entity_id) is None
+        ):
             raise SequenceFeatureBlockError("invalid gene identity")
-        if entity_class == "protein" and (not isinstance(entity_id, str) or UNIPROT_CURIE_RE.fullmatch(entity_id) is None):
+        if entity_class == "protein" and (
+            not isinstance(entity_id, str) or UNIPROT_CURIE_RE.fullmatch(entity_id) is None
+        ):
             raise SequenceFeatureBlockError("invalid protein identity")
         if entity_class not in {"gene", "protein"}:
             raise SequenceFeatureBlockError("unknown entity class")
         usages = row["usages"]
-        if not isinstance(usages, list) or not usages or usages != sorted(set(usages)) or any(item not in {"action", "readout-query", "relation-support"} for item in usages):
+        if (
+            not isinstance(usages, list)
+            or not usages
+            or usages != sorted(set(usages))
+            or any(item not in {"action", "readout-query", "relation-support"} for item in usages)
+        ):
             raise SequenceFeatureBlockError("invalid entity usage set")
         key = (SPECIES_TAXON, entity_id)
         keys.append(key)
         (gene_keys if entity_class == "gene" else protein_keys).add(key)
     if keys != sorted(keys) or len(keys) != len(set(keys)):
         raise SequenceFeatureBlockError("entity rows are duplicated or out of order")
-    if len(gene_keys) != expected.universe_genes or len(protein_keys) != expected.universe_proteins or len(keys) != expected.universe_rows:
+    if (
+        len(gene_keys) != expected.universe_genes
+        or len(protein_keys) != expected.universe_proteins
+        or len(keys) != expected.universe_rows
+    ):
         raise SequenceFeatureBlockError("entity-universe count drift")
     if framed_key_sha256(keys) != expected.universe_entity_key_sha256:
         raise SequenceFeatureBlockError("entity-universe composite-key digest drift")
@@ -804,21 +925,59 @@ def _validate_universe(paths: Mapping[str, Path], bounds: Bounds, expected: Expe
     for index, record in enumerate(relations, start=1):
         row = _strict_fields(
             record,
-            {"schema", "proteinId", "sourceAccession", "sourceAccessionType", "ncbiTaxon", "currentOrfRelations", "currentOrfRelationCount", "chooseFirstAllowed"},
+            {
+                "schema",
+                "proteinId",
+                "sourceAccession",
+                "sourceAccessionType",
+                "ncbiTaxon",
+                "currentOrfRelations",
+                "currentOrfRelationCount",
+                "chooseFirstAllowed",
+            },
             f"relation row {index}",
         )
         protein = row["proteinId"]
         targets = row["currentOrfRelations"]
-        if row["schema"] != RELATION_SCHEMA or row["ncbiTaxon"] != SPECIES_TAXON or row["chooseFirstAllowed"] is not False:
+        if (
+            row["schema"] != RELATION_SCHEMA
+            or row["ncbiTaxon"] != SPECIES_TAXON
+            or row["chooseFirstAllowed"] is not False
+        ):
             raise SequenceFeatureBlockError("relation schema, taxon, or ambiguity policy drift")
-        if not isinstance(protein, str) or UNIPROT_CURIE_RE.fullmatch(protein) is None or (SPECIES_TAXON, protein) not in protein_keys:
+        if (
+            not isinstance(protein, str)
+            or UNIPROT_CURIE_RE.fullmatch(protein) is None
+            or (SPECIES_TAXON, protein) not in protein_keys
+        ):
             raise SequenceFeatureBlockError("relation protein is absent from the universe")
-        if not isinstance(targets, list) or not targets or targets != sorted(set(targets)) or row["currentOrfRelationCount"] != len(targets):
-            raise SequenceFeatureBlockError("relation targets are missing, duplicated, or unordered")
-        if any(not isinstance(item, str) or SGD_CURIE_RE.fullmatch(item) is None or (SPECIES_TAXON, item) not in gene_keys for item in targets):
+        if (
+            not isinstance(targets, list)
+            or not targets
+            or targets != sorted(set(targets))
+            or row["currentOrfRelationCount"] != len(targets)
+        ):
+            raise SequenceFeatureBlockError(
+                "relation targets are missing, duplicated, or unordered"
+            )
+        if any(
+            not isinstance(item, str)
+            or SGD_CURIE_RE.fullmatch(item) is None
+            or (SPECIES_TAXON, item) not in gene_keys
+            for item in targets
+        ):
             raise SequenceFeatureBlockError("relation target is absent from the gene universe")
-        accession_type = _strict_fields(row["sourceAccessionType"], {"source", "type", "namespaceInferred", "caseNormalization"}, "relation accession type")
-        if accession_type != {"source": "UniProtKB", "type": "UniProtKB ID", "namespaceInferred": False, "caseNormalization": "none"}:
+        accession_type = _strict_fields(
+            row["sourceAccessionType"],
+            {"source", "type", "namespaceInferred", "caseNormalization"},
+            "relation accession type",
+        )
+        if accession_type != {
+            "source": "UniProtKB",
+            "type": "UniProtKB ID",
+            "namespaceInferred": False,
+            "caseNormalization": "none",
+        }:
             raise SequenceFeatureBlockError("relation accession typing drift")
         if row["sourceAccession"] != protein.removeprefix("UniProtKB:") or protein in relation_map:
             raise SequenceFeatureBlockError("relation accession mismatch or duplicate")
@@ -827,30 +986,84 @@ def _validate_universe(paths: Mapping[str, Path], bounds: Bounds, expected: Expe
     if set(relation_map) != {key[1] for key in protein_keys} or not edge_keys <= gene_keys:
         raise SequenceFeatureBlockError("entity universe is not relation closed")
 
-    entity_section = _strict_fields(manifest["entities"], {"format", "file", "counts"}, "manifest entities")
+    entity_section = _strict_fields(
+        manifest["entities"], {"format", "file", "counts"}, "manifest entities"
+    )
     if entity_section["format"] != ENTITY_SCHEMA:
         raise SequenceFeatureBlockError("entity format drift")
-    _validate_file_ref(entity_section["file"], "entities.jsonl", entity_payload, "entity file reference", records=len(entities))
-    relation_section = _strict_fields(manifest["relations"], {"format", "file", "relationSetSha256", "edges", "oneToManyRecords", "chooseFirstAllowed", "targetGenes", "targetsInUniverse"}, "manifest relations")
-    if relation_section["format"] != RELATION_SCHEMA or relation_section["chooseFirstAllowed"] is not False:
+    _validate_file_ref(
+        entity_section["file"],
+        "entities.jsonl",
+        entity_payload,
+        "entity file reference",
+        records=len(entities),
+    )
+    relation_section = _strict_fields(
+        manifest["relations"],
+        {
+            "format",
+            "file",
+            "relationSetSha256",
+            "edges",
+            "oneToManyRecords",
+            "chooseFirstAllowed",
+            "targetGenes",
+            "targetsInUniverse",
+        },
+        "manifest relations",
+    )
+    if (
+        relation_section["format"] != RELATION_SCHEMA
+        or relation_section["chooseFirstAllowed"] is not False
+    ):
         raise SequenceFeatureBlockError("relation manifest contract drift")
-    _validate_file_ref(relation_section["file"], "relations.jsonl", relation_payload, "relation file reference", records=len(relations))
+    _validate_file_ref(
+        relation_section["file"],
+        "relations.jsonl",
+        relation_payload,
+        "relation file reference",
+        records=len(relations),
+    )
     if relation_section["relationSetSha256"] != _sha256_bytes(relation_payload):
         raise SequenceFeatureBlockError("relation set hash drift")
     hashes = manifest["semanticSetHashes"]
-    if not isinstance(hashes, dict) or hashes.get("fullEntityKeySet") != {"basis": "ncbiTaxon-TAB-entityId", "sha256": expected.universe_entity_key_sha256}:
+    if not isinstance(hashes, dict) or hashes.get("fullEntityKeySet") != {
+        "basis": "ncbiTaxon-TAB-entityId",
+        "sha256": expected.universe_entity_key_sha256,
+    }:
         raise SequenceFeatureBlockError("entity-universe semantic key hash drift")
-    policy = _strict_fields(manifest["contentPolicy"], {"containsDisplaySymbols", "containsNumericFeatures", "containsOutcomesOrLabels", "containsTrainingPartitionAssignments", "crossTaxonIdentityMerge"}, "entity-universe content policy")
+    policy = _strict_fields(
+        manifest["contentPolicy"],
+        {
+            "containsDisplaySymbols",
+            "containsNumericFeatures",
+            "containsOutcomesOrLabels",
+            "containsTrainingPartitionAssignments",
+            "crossTaxonIdentityMerge",
+        },
+        "entity-universe content policy",
+    )
     if any(value is not False for value in policy.values()):
         raise SequenceFeatureBlockError("entity-universe content policy drift")
 
-    audit = _read_canonical_json(paths["entity-universe-audit.json"], bounds.max_manifest_bytes, "entity-universe audit")
+    audit = _read_canonical_json(
+        paths["entity-universe-audit.json"], bounds.max_manifest_bytes, "entity-universe audit"
+    )
     if audit.get("schema") != "slp.static-entity-universe-audit/v1":
         raise SequenceFeatureBlockError("entity-universe audit schema drift")
     outputs = audit.get("outputs")
-    if not isinstance(outputs, dict) or outputs.get("archiveSha256") != _sha256_file(archive_path) or outputs.get("manifestSha256") != _sha256_bytes(manifest_payload):
+    if (
+        not isinstance(outputs, dict)
+        or outputs.get("archiveSha256") != _sha256_file(archive_path)
+        or outputs.get("manifestSha256") != _sha256_bytes(manifest_payload)
+    ):
         raise SequenceFeatureBlockError("entity-universe audit does not bind its archive")
-    if audit.get("inputs") != manifest["inputs"] or audit.get("semanticSetHashes") != manifest["semanticSetHashes"] or audit.get("identityMapping") != mapping or audit.get("source") != source:
+    if (
+        audit.get("inputs") != manifest["inputs"]
+        or audit.get("semanticSetHashes") != manifest["semanticSetHashes"]
+        or audit.get("identityMapping") != mapping
+        or audit.get("source") != source
+    ):
         raise SequenceFeatureBlockError("entity-universe audit provenance drift")
     provenance = {
         "resource": expected.universe.resource,
@@ -858,7 +1071,9 @@ def _validate_universe(paths: Mapping[str, Path], bounds: Bounds, expected: Expe
         "manifestDigest": expected.universe.manifest_digest,
         "treeDigest": expected.universe.tree_digest,
         "archive": _file_ref("entity-universe.tar", archive_path.read_bytes()),
-        "audit": _file_ref("entity-universe-audit.json", paths["entity-universe-audit.json"].read_bytes()),
+        "audit": _file_ref(
+            "entity-universe-audit.json", paths["entity-universe-audit.json"].read_bytes()
+        ),
         "innerManifestSha256": _sha256_bytes(manifest_payload),
         "entityKeySetSha256": expected.universe_entity_key_sha256,
     }
@@ -868,28 +1083,61 @@ def _validate_universe(paths: Mapping[str, Path], bounds: Bounds, expected: Expe
 def _mapping_output_spec(manifest: Mapping[str, Any], name: str) -> dict[str, Any]:
     basis = manifest.get("digestBasis")
     outputs = basis.get("outputFiles") if isinstance(basis, dict) else None
-    matches = [item for item in outputs or [] if isinstance(item, dict) and item.get("name") == name]
+    matches = [
+        item for item in outputs or [] if isinstance(item, dict) and item.get("name") == name
+    ]
     if len(matches) != 1 or set(matches[0]) != {"name", "records", "bytes", "sha256"}:
         raise SequenceFeatureBlockError(f"mapping manifest output contract drift for {name}")
     return matches[0]
 
 
-def _load_mapping(current: LiteralArtifact, mapping_artifact: LiteralArtifact, bounds: Bounds, expected: ExpectedContract) -> tuple[dict[str, str], dict[str, object]]:
+def _load_mapping(
+    current: LiteralArtifact,
+    mapping_artifact: LiteralArtifact,
+    bounds: Bounds,
+    expected: ExpectedContract,
+) -> tuple[dict[str, str], dict[str, object]]:
     _verify_artifact(current, expected.current_orfs)
     _verify_artifact(mapping_artifact, expected.mapping_manifest)
-    manifest = _read_canonical_json(mapping_artifact.path, bounds.max_manifest_bytes, "SGD mapping manifest")
-    if manifest.get("schema") != MAPPING_MANIFEST_SCHEMA or manifest.get("identityMappingId") != expected.mapping_id or manifest.get("identityMappingSha256") != expected.mapping_sha256 or manifest.get("ncbiTaxon") != SPECIES_TAXON:
+    manifest = _read_canonical_json(
+        mapping_artifact.path, bounds.max_manifest_bytes, "SGD mapping manifest"
+    )
+    if (
+        manifest.get("schema") != MAPPING_MANIFEST_SCHEMA
+        or manifest.get("identityMappingId") != expected.mapping_id
+        or manifest.get("identityMappingSha256") != expected.mapping_sha256
+        or manifest.get("ncbiTaxon") != SPECIES_TAXON
+    ):
         raise SequenceFeatureBlockError("SGD mapping manifest identity drift")
     basis = manifest.get("digestBasis")
-    if not isinstance(basis, dict) or _sha256_bytes(_canonical_json_bytes(basis)) != expected.mapping_sha256:
+    if (
+        not isinstance(basis, dict)
+        or _sha256_bytes(_canonical_json_bytes(basis)) != expected.mapping_sha256
+    ):
         raise SequenceFeatureBlockError("SGD mapping digest basis does not reproduce its identity")
     spec = _mapping_output_spec(manifest, "current-orfs.jsonl")
-    if spec != {"name": "current-orfs.jsonl", "records": expected.current_orf_records, "bytes": expected.current_orfs.bytes, "sha256": expected.current_orfs.sha256}:
-        raise SequenceFeatureBlockError("current-ORF specification differs from its mapping manifest")
+    if spec != {
+        "name": "current-orfs.jsonl",
+        "records": expected.current_orf_records,
+        "bytes": expected.current_orfs.bytes,
+        "sha256": expected.current_orfs.sha256,
+    }:
+        raise SequenceFeatureBlockError(
+            "current-ORF specification differs from its mapping manifest"
+        )
     records = _read_canonical_jsonl(current.path, bounds, bounds.max_records, "current ORFs")
     by_id: dict[str, str] = {}
     systematic_ids: set[str] = set()
-    expected_fields = {"schema", "canonicalSgdCurie", "systematicName", "featureQualifier", "ncbiTaxon", "displayMetadata", "secondaryIdentifiers", "secondaryIdentifiersResolve"}
+    expected_fields = {
+        "schema",
+        "canonicalSgdCurie",
+        "systematicName",
+        "featureQualifier",
+        "ncbiTaxon",
+        "displayMetadata",
+        "secondaryIdentifiers",
+        "secondaryIdentifiersResolve",
+    }
     for index, record in enumerate(records, start=1):
         row = _strict_fields(record, expected_fields, f"current ORF row {index}")
         curie, systematic = row["canonicalSgdCurie"], row["systematicName"]
@@ -897,17 +1145,38 @@ def _load_mapping(current: LiteralArtifact, mapping_artifact: LiteralArtifact, b
             raise SequenceFeatureBlockError("current ORF schema or taxon drift")
         if not isinstance(curie, str) or SGD_CURIE_RE.fullmatch(curie) is None or curie in by_id:
             raise SequenceFeatureBlockError("current ORF identity is invalid or duplicated")
-        if not isinstance(systematic, str) or not systematic or systematic != systematic.strip() or systematic in systematic_ids:
+        if (
+            not isinstance(systematic, str)
+            or not systematic
+            or systematic != systematic.strip()
+            or systematic in systematic_ids
+        ):
             raise SequenceFeatureBlockError("current ORF systematic name is invalid or ambiguous")
-        if not isinstance(row["featureQualifier"], str) or row["featureQualifier"] != row["featureQualifier"].strip():
+        if (
+            not isinstance(row["featureQualifier"], str)
+            or row["featureQualifier"] != row["featureQualifier"].strip()
+        ):
             raise SequenceFeatureBlockError("current ORF feature qualifier is invalid")
-        display = _strict_fields(row["displayMetadata"], {"aliases", "resolvesIdentity", "standardGeneName"}, "current ORF display metadata")
-        if display["resolvesIdentity"] is not False or row["secondaryIdentifiersResolve"] is not False:
+        display = _strict_fields(
+            row["displayMetadata"],
+            {"aliases", "resolvesIdentity", "standardGeneName"},
+            "current ORF display metadata",
+        )
+        if (
+            display["resolvesIdentity"] is not False
+            or row["secondaryIdentifiersResolve"] is not False
+        ):
             raise SequenceFeatureBlockError("non-primary identifiers must not resolve identity")
-        if not isinstance(display["aliases"], list) or any(not isinstance(item, str) for item in display["aliases"]):
+        if not isinstance(display["aliases"], list) or any(
+            not isinstance(item, str) for item in display["aliases"]
+        ):
             raise SequenceFeatureBlockError("current ORF aliases are malformed")
-        if not isinstance(display["standardGeneName"], (str, type(None))) or not isinstance(row["secondaryIdentifiers"], list):
-            raise SequenceFeatureBlockError("current ORF display or secondary metadata is malformed")
+        if not isinstance(display["standardGeneName"], (str, type(None))) or not isinstance(
+            row["secondaryIdentifiers"], list
+        ):
+            raise SequenceFeatureBlockError(
+                "current ORF display or secondary metadata is malformed"
+            )
         by_id[curie] = systematic
         systematic_ids.add(systematic)
     if len(by_id) != expected.current_orf_records:
@@ -954,12 +1223,17 @@ def _decompress_exact(path: Path, bounds: Bounds, expected: ExpectedContract) ->
                 raise SequenceFeatureBlockError("decompressed FASTA exceeds maxFastaBytes")
     except (OSError, EOFError, gzip.BadGzipFile) as error:
         raise SequenceFeatureBlockError("protein FASTA is not a valid gzip stream") from error
-    if len(payload) != expected.fasta_decompressed_bytes or _sha256_bytes(payload) != expected.fasta_decompressed_sha256:
+    if (
+        len(payload) != expected.fasta_decompressed_bytes
+        or _sha256_bytes(payload) != expected.fasta_decompressed_sha256
+    ):
         raise SequenceFeatureBlockError("decompressed FASTA content drift")
     return payload
 
 
-def _parse_fasta(payload: bytes, current_by_id: Mapping[str, str], bounds: Bounds, expected: ExpectedContract) -> tuple[dict[str, bytes], list[dict[str, object]], dict[str, int]]:
+def _parse_fasta(
+    payload: bytes, current_by_id: Mapping[str, str], bounds: Bounds, expected: ExpectedContract
+) -> tuple[dict[str, bytes], list[dict[str, object]], dict[str, int]]:
     try:
         text = payload.decode("ascii")
     except UnicodeDecodeError as error:
@@ -977,7 +1251,11 @@ def _parse_fasta(payload: bytes, current_by_id: Mapping[str, str], bounds: Bound
             return
         curie, systematic, source_class = current_header
         raw = "".join(fragments)
-        if not raw or len(raw) > bounds.max_sequence_length or SOURCE_PEPTIDE_RE.fullmatch(raw) is None:
+        if (
+            not raw
+            or len(raw) > bounds.max_sequence_length
+            or SOURCE_PEPTIDE_RE.fullmatch(raw) is None
+        ):
             raise SequenceFeatureBlockError(f"invalid peptide alphabet or length for {curie}")
         if curie in current_by_id and CURRENT_PEPTIDE_RE.fullmatch(raw) is None:
             raise SequenceFeatureBlockError(
@@ -992,14 +1270,22 @@ def _parse_fasta(payload: bytes, current_by_id: Mapping[str, str], bounds: Bound
             finish()
             match = FASTA_HEADER_RE.fullmatch(line)
             if match is None:
-                raise SequenceFeatureBlockError(f"FASTA header contract drift at line {line_number}")
+                raise SequenceFeatureBlockError(
+                    f"FASTA header contract drift at line {line_number}"
+                )
             curie = f"SGD:{match.group('sgdid')}"
             if curie in raw_sequences:
                 raise SequenceFeatureBlockError(f"duplicate FASTA SGD identity: {curie}")
-            current_header = (curie, match.group("systematic"), _source_class(match.group("description")))
+            current_header = (
+                curie,
+                match.group("systematic"),
+                _source_class(match.group("description")),
+            )
         else:
             if current_header is None or not line:
-                raise SequenceFeatureBlockError(f"FASTA sequence line is orphaned or empty at line {line_number}")
+                raise SequenceFeatureBlockError(
+                    f"FASTA sequence line is orphaned or empty at line {line_number}"
+                )
             if len(line) > bounds.max_line_bytes:
                 raise SequenceFeatureBlockError(f"FASTA line {line_number} exceeds maxLineBytes")
             fragments.append(line)
@@ -1016,16 +1302,23 @@ def _parse_fasta(payload: bytes, current_by_id: Mapping[str, str], bounds: Bound
     non_current = sorted(set(raw_sequences) - set(current_by_id))
     if len(non_current) != expected.non_current_records:
         raise SequenceFeatureBlockError("non-current FASTA record count drift")
-    stop_absent = tuple(sorted((curie, metadata[curie][0]) for curie in non_current if not metadata[curie][2].endswith("*")))
+    stop_absent = tuple(
+        sorted(
+            (curie, metadata[curie][0])
+            for curie in non_current
+            if not metadata[curie][2].endswith("*")
+        )
+    )
     if stop_absent != tuple(sorted(expected.stop_absent_non_current)):
         raise SequenceFeatureBlockError("stop-absent non-current sequence set drift")
-    internal_stop = tuple(sorted(
-        curie for curie in non_current
-        if "*" in (metadata[curie][2].removesuffix("*"))
-    ))
+    internal_stop = tuple(
+        sorted(curie for curie in non_current if "*" in (metadata[curie][2].removesuffix("*")))
+    )
     if internal_stop != tuple(sorted(expected.internal_stop_non_current)):
         raise SequenceFeatureBlockError("internal-stop non-current sequence set drift")
-    non_m_start = tuple(sorted(curie for curie in non_current if not metadata[curie][2].startswith("M")))
+    non_m_start = tuple(
+        sorted(curie for curie in non_current if not metadata[curie][2].startswith("M"))
+    )
     if non_m_start != tuple(sorted(expected.non_m_start_non_current)):
         raise SequenceFeatureBlockError("non-methionine-start non-current sequence set drift")
     source_counts = Counter(item[1] for item in metadata.values())
@@ -1047,13 +1340,19 @@ def _parse_fasta(payload: bytes, current_by_id: Mapping[str, str], bounds: Bound
         }
         for curie in non_current
     ]
-    return {
-        curie: raw_sequences[curie][:-1].encode("ascii")
-        for curie in current_by_id
-    }, excluded, dict(source_counts)
+    return (
+        {curie: raw_sequences[curie][:-1].encode("ascii") for curie in current_by_id},
+        excluded,
+        dict(source_counts),
+    )
 
 
-def _load_sequences(paths: Mapping[str, Path], current_by_id: Mapping[str, str], bounds: Bounds, expected: ExpectedContract) -> tuple[dict[str, bytes], list[dict[str, object]], dict[str, object]]:
+def _load_sequences(
+    paths: Mapping[str, Path],
+    current_by_id: Mapping[str, str],
+    bounds: Bounds,
+    expected: ExpectedContract,
+) -> tuple[dict[str, bytes], list[dict[str, object]], dict[str, object]]:
     fasta_path = paths["orf_trans_all_R64-5-1_20240529.fasta.gz"]
     payload = _decompress_exact(fasta_path, bounds, expected)
     sequences, excluded, source_counts = _parse_fasta(payload, current_by_id, bounds, expected)
@@ -1062,19 +1361,39 @@ def _load_sequences(paths: Mapping[str, Path], current_by_id: Mapping[str, str],
         "revision": expected.sequences.resource.rpartition("@")[2],
         "manifestDigest": expected.sequences.manifest_digest,
         "treeDigest": expected.sequences.tree_digest,
-        "files": [_file_ref(spec.name, paths[spec.name].read_bytes()) for spec in sorted(expected.sequences.files, key=lambda item: item.name)],
-        "decompressedFasta": {"bytes": len(payload), "sha256": _sha256_bytes(payload), "records": expected.fasta_records},
-        "source": {"speciesTaxon": SPECIES_TAXON, "strainTaxon": STRAIN_TAXON, "release": SOURCE_RELEASE, "headerRelease": HEADER_RELEASE},
-        "sourceClassCounts": {key: source_counts.get(key, 0) for key in sorted(SOURCE_CLASS_TOKENS)},
+        "files": [
+            _file_ref(spec.name, paths[spec.name].read_bytes())
+            for spec in sorted(expected.sequences.files, key=lambda item: item.name)
+        ],
+        "decompressedFasta": {
+            "bytes": len(payload),
+            "sha256": _sha256_bytes(payload),
+            "records": expected.fasta_records,
+        },
+        "source": {
+            "speciesTaxon": SPECIES_TAXON,
+            "strainTaxon": STRAIN_TAXON,
+            "release": SOURCE_RELEASE,
+            "headerRelease": HEADER_RELEASE,
+        },
+        "sourceClassCounts": {
+            key: source_counts.get(key, 0) for key in sorted(SOURCE_CLASS_TOKENS)
+        },
     }
     return sequences, excluded, provenance
 
 
 def _npy_bytes(descr: str, shape: tuple[int, ...], payload: bytes) -> bytes:
-    if descr not in {"<f4", "|b1"} or not shape or any(type(item) is not int or item < 0 for item in shape):
+    if (
+        descr not in {"<f4", "|b1"}
+        or not shape
+        or any(type(item) is not int or item < 0 for item in shape)
+    ):
         raise SequenceFeatureBlockError("unsupported NPY dtype or shape")
     shape_text = repr(shape)
-    header = f"{{'descr': '{descr}', 'fortran_order': False, 'shape': {shape_text}, }}".encode("latin1")
+    header = f"{{'descr': '{descr}', 'fortran_order': False, 'shape': {shape_text}, }}".encode(
+        "latin1"
+    )
     preamble = b"\x93NUMPY\x01\x00"
     padding = (-((len(preamble) + 2 + len(header) + 1) % 64)) % 64
     header += b" " * padding + b"\n"
@@ -1083,15 +1402,17 @@ def _npy_bytes(descr: str, shape: tuple[int, ...], payload: bytes) -> bytes:
     return preamble + struct.pack("<H", len(header)) + header + payload
 
 
-def _parse_npy(payload: bytes, expected_descr: str, expected_shape: tuple[int, ...], label: str) -> bytes:
+def _parse_npy(
+    payload: bytes, expected_descr: str, expected_shape: tuple[int, ...], label: str
+) -> bytes:
     if len(payload) < 10 or payload[:8] != b"\x93NUMPY\x01\x00":
         raise SequenceFeatureBlockError(f"{label} is not NPY v1.0")
     header_length = struct.unpack("<H", payload[8:10])[0]
     expected_empty = _npy_bytes(expected_descr, expected_shape, b"")
     expected_header_length = struct.unpack("<H", expected_empty[8:10])[0]
-    if header_length != expected_header_length or payload[:10 + header_length] != expected_empty:
+    if header_length != expected_header_length or payload[: 10 + header_length] != expected_empty:
         raise SequenceFeatureBlockError(f"{label} NPY header is not canonical")
-    data = payload[10 + header_length:]
+    data = payload[10 + header_length :]
     elements = math.prod(expected_shape)
     expected_bytes = elements * (4 if expected_descr == "<f4" else 1)
     if len(data) != expected_bytes:
@@ -1124,7 +1445,16 @@ def _validate_manifest_inputs(inputs_value: object, expected: ExpectedContract) 
     )
     universe = _strict_fields(
         inputs["staticEntityUniverse"],
-        {"resource", "revision", "manifestDigest", "treeDigest", "archive", "audit", "innerManifestSha256", "entityKeySetSha256"},
+        {
+            "resource",
+            "revision",
+            "manifestDigest",
+            "treeDigest",
+            "archive",
+            "audit",
+            "innerManifestSha256",
+            "entityKeySetSha256",
+        },
         "feature inputs.staticEntityUniverse",
     )
     if (
@@ -1144,7 +1474,16 @@ def _validate_manifest_inputs(inputs_value: object, expected: ExpectedContract) 
 
     sequences = _strict_fields(
         inputs["sgdProteinSequences"],
-        {"resource", "revision", "manifestDigest", "treeDigest", "files", "decompressedFasta", "source", "sourceClassCounts"},
+        {
+            "resource",
+            "revision",
+            "manifestDigest",
+            "treeDigest",
+            "files",
+            "decompressedFasta",
+            "source",
+            "sourceClassCounts",
+        },
         "feature inputs.sgdProteinSequences",
     )
     expected_sequence_source = {
@@ -1158,13 +1497,15 @@ def _validate_manifest_inputs(inputs_value: object, expected: ExpectedContract) 
         or sequences["revision"] != expected.sequences.resource.rpartition("@")[2]
         or sequences["manifestDigest"] != expected.sequences.manifest_digest
         or sequences["treeDigest"] != expected.sequences.tree_digest
-        or sequences["decompressedFasta"] != {
+        or sequences["decompressedFasta"]
+        != {
             "bytes": expected.fasta_decompressed_bytes,
             "sha256": expected.fasta_decompressed_sha256,
             "records": expected.fasta_records,
         }
         or sequences["source"] != expected_sequence_source
-        or sequences["sourceClassCounts"] != {key: value for key, value in sorted(expected.source_class_counts)}
+        or sequences["sourceClassCounts"]
+        != {key: value for key, value in sorted(expected.source_class_counts)}
     ):
         raise SequenceFeatureBlockError("SGD protein-sequence input provenance drift")
     expected_sequence_files = [
@@ -1178,15 +1519,25 @@ def _validate_manifest_inputs(inputs_value: object, expected: ExpectedContract) 
         ("sgdCurrentOrfs", expected.current_orfs, expected.current_orf_records),
         ("sgdMappingManifest", expected.mapping_manifest, None),
     ):
-        extra = {"identityMappingId", "identityMappingSha256"} if name == "sgdMappingManifest" else set()
+        extra = (
+            {"identityMappingId", "identityMappingSha256"}
+            if name == "sgdMappingManifest"
+            else set()
+        )
         artifact = _strict_fields(
-            inputs[name], {"resource", "artifactManifestDigest", "payload"} | extra,
+            inputs[name],
+            {"resource", "artifactManifestDigest", "payload"} | extra,
             f"feature inputs.{name}",
         )
-        if artifact["resource"] != f"artifact:{artifact_expected.manifest_digest}" or artifact["artifactManifestDigest"] != artifact_expected.manifest_digest:
+        if (
+            artifact["resource"] != f"artifact:{artifact_expected.manifest_digest}"
+            or artifact["artifactManifestDigest"] != artifact_expected.manifest_digest
+        ):
             raise SequenceFeatureBlockError(f"{name} artifact identity drift")
         payload_expected: dict[str, object] = {
-            "path": "payload", "sha256": artifact_expected.sha256, "bytes": artifact_expected.bytes,
+            "path": "payload",
+            "sha256": artifact_expected.sha256,
+            "bytes": artifact_expected.bytes,
         }
         if records is not None:
             payload_expected["records"] = records
@@ -1225,7 +1576,20 @@ def validate_archive(
         raise SequenceFeatureBlockError("feature-block manifest is not canonical JSON")
     manifest = _strict_fields(
         manifest,
-        {"schema", "version", "identityKey", "ordering", "featureDefinition", "source", "identityMapping", "inputs", "files", "counts", "semanticHashes", "contentPolicy"},
+        {
+            "schema",
+            "version",
+            "identityKey",
+            "ordering",
+            "featureDefinition",
+            "source",
+            "identityMapping",
+            "inputs",
+            "files",
+            "counts",
+            "semanticHashes",
+            "contentPolicy",
+        },
         "feature-block manifest",
     )
     if (
@@ -1238,39 +1602,78 @@ def validate_archive(
         raise SequenceFeatureBlockError("feature-block schema or identity contract drift")
     definition = _strict_fields(
         manifest["featureDefinition"],
-        {"names", "dimension", "dtype", "layout", "floatSemantics", "formula", "lengthScale", "aminoAcidOrder", "stopPolicy", "normalization", "clipping", "fitted", "parameterCount", "identifierFeatures", "missingness"},
+        {
+            "names",
+            "dimension",
+            "dtype",
+            "layout",
+            "floatSemantics",
+            "formula",
+            "lengthScale",
+            "aminoAcidOrder",
+            "stopPolicy",
+            "normalization",
+            "clipping",
+            "fitted",
+            "parameterCount",
+            "identifierFeatures",
+            "missingness",
+        },
         "feature definition",
     )
     if (
-        any(type(definition[key]) is not bool for key in ("clipping", "fitted", "identifierFeatures"))
+        any(
+            type(definition[key]) is not bool
+            for key in ("clipping", "fitted", "identifierFeatures")
+        )
         or type(definition["parameterCount"]) is not int
-        or definition != {
-        "names": list(FEATURE_NAMES),
-        "dimension": FEATURE_DIM,
-        "dtype": "little-endian-float32",
-        "layout": "C-row-major",
-        "floatSemantics": "IEEE-754-binary32-round-to-nearest-ties-to-even",
-        "formula": "[len(peptide)/4096] + [count(aa)/len(peptide) for aa in aminoAcidOrder]",
-        "lengthScale": 4096,
-        "aminoAcidOrder": AA_ORDER,
-        "stopPolicy": "feature-bearing-current-ORFs-require-and-strip-exactly-one-terminal-stop",
-        "normalization": "none-beyond-declared-ratios",
-        "clipping": False,
-        "fitted": False,
-        "parameterCount": 0,
-        "identifierFeatures": False,
-        "missingness": "all-values-present",
+        or definition
+        != {
+            "names": list(FEATURE_NAMES),
+            "dimension": FEATURE_DIM,
+            "dtype": "little-endian-float32",
+            "layout": "C-row-major",
+            "floatSemantics": "IEEE-754-binary32-round-to-nearest-ties-to-even",
+            "formula": "[len(peptide)/4096] + [count(aa)/len(peptide) for aa in aminoAcidOrder]",
+            "lengthScale": 4096,
+            "aminoAcidOrder": AA_ORDER,
+            "stopPolicy": "feature-bearing-current-ORFs-require-and-strip-exactly-one-terminal-stop",
+            "normalization": "none-beyond-declared-ratios",
+            "clipping": False,
+            "fitted": False,
+            "parameterCount": 0,
+            "identifierFeatures": False,
+            "missingness": "all-values-present",
         }
     ):
         raise SequenceFeatureBlockError("immutable feature definition drift")
-    if manifest["source"] != {"speciesTaxon": SPECIES_TAXON, "strainTaxon": STRAIN_TAXON, "release": SOURCE_RELEASE}:
+    if manifest["source"] != {
+        "speciesTaxon": SPECIES_TAXON,
+        "strainTaxon": STRAIN_TAXON,
+        "release": SOURCE_RELEASE,
+    }:
         raise SequenceFeatureBlockError("feature source provenance drift")
-    if manifest["identityMapping"] != {"id": expected.mapping_id, "sha256": expected.mapping_sha256}:
+    if manifest["identityMapping"] != {
+        "id": expected.mapping_id,
+        "sha256": expected.mapping_sha256,
+    }:
         raise SequenceFeatureBlockError("feature identity mapping drift")
     _validate_manifest_inputs(manifest["inputs"], expected)
     counts = _strict_fields(
         manifest["counts"],
-        {"rows", "genes", "proteins", "featuresPerRow", "presentValues", "excludedNonCurrentSequences", "currentOrfsOutsideUniverse", "multiTargetProteinConsensus", "missingEntities", "ambiguousEntities", "trainableParameters"},
+        {
+            "rows",
+            "genes",
+            "proteins",
+            "featuresPerRow",
+            "presentValues",
+            "excludedNonCurrentSequences",
+            "currentOrfsOutsideUniverse",
+            "multiTargetProteinConsensus",
+            "missingEntities",
+            "ambiguousEntities",
+            "trainableParameters",
+        },
         "feature counts",
     )
     expected_counts = {
@@ -1290,7 +1693,9 @@ def validate_archive(
         raise SequenceFeatureBlockError("feature production counts drift")
     rows = counts["rows"]
     entities = _jsonl_blob(blobs[names[0]], bounds, bounds.max_records, "feature entities")
-    excluded = _jsonl_blob(blobs[names[1]], bounds, bounds.max_records, "excluded non-current sequences")
+    excluded = _jsonl_blob(
+        blobs[names[1]], bounds, bounds.max_records, "excluded non-current sequences"
+    )
     provenance = _jsonl_blob(blobs[names[4]], bounds, bounds.max_records, "sequence provenance")
     if len(excluded) != counts["excludedNonCurrentSequences"]:
         raise SequenceFeatureBlockError("excluded sequence count does not match the manifest")
@@ -1312,10 +1717,23 @@ def validate_archive(
         raise SequenceFeatureBlockError("feature row/provenance count mismatch")
     keys: list[tuple[int, str]] = []
     for index, (entity, provenance_row) in enumerate(zip(entities, provenance, strict=True)):
-        row = _strict_fields(entity, {"schema", "rowIndex", "ncbiTaxon", "entityId"}, f"feature entity {index}")
+        row = _strict_fields(
+            entity, {"schema", "rowIndex", "ncbiTaxon", "entityId"}, f"feature entity {index}"
+        )
         prov = _strict_fields(
             provenance_row,
-            {"schema", "rowIndex", "ncbiTaxon", "entityId", "sourceStrainTaxon", "sourceSequenceIds", "derivation", "canonicalPeptideSha256", "canonicalPeptideLength", "aminoAcidCounts"},
+            {
+                "schema",
+                "rowIndex",
+                "ncbiTaxon",
+                "entityId",
+                "sourceStrainTaxon",
+                "sourceSequenceIds",
+                "derivation",
+                "canonicalPeptideSha256",
+                "canonicalPeptideLength",
+                "aminoAcidCounts",
+            },
             f"sequence provenance {index}",
         )
         if (
@@ -1329,24 +1747,39 @@ def validate_archive(
             prov["schema"] != SEQUENCE_PROVENANCE_SCHEMA
             or type(prov["rowIndex"]) is not int
             or prov["rowIndex"] != index
-            or (prov["ncbiTaxon"], prov["entityId"])
-            != (row["ncbiTaxon"], row["entityId"])
+            or (prov["ncbiTaxon"], prov["entityId"]) != (row["ncbiTaxon"], row["entityId"])
             or prov["sourceStrainTaxon"] != STRAIN_TAXON
         ):
             raise SequenceFeatureBlockError("sequence provenance does not align with entity row")
         ids = prov["sourceSequenceIds"]
-        if not isinstance(ids, list) or not ids or ids != sorted(set(ids)) or any(not isinstance(item, str) or SGD_CURIE_RE.fullmatch(item) is None for item in ids):
+        if (
+            not isinstance(ids, list)
+            or not ids
+            or ids != sorted(set(ids))
+            or any(
+                not isinstance(item, str) or SGD_CURIE_RE.fullmatch(item) is None for item in ids
+            )
+        ):
             raise SequenceFeatureBlockError("sequence provenance IDs are invalid")
         _bare_digest(prov["canonicalPeptideSha256"], "canonical peptide hash")
         length, aa_counts = prov["canonicalPeptideLength"], prov["aminoAcidCounts"]
-        if type(length) is not int or length <= 0 or not isinstance(aa_counts, list) or len(aa_counts) != len(AA_ORDER) or any(type(value) is not int or value < 0 for value in aa_counts) or sum(aa_counts) != length:
+        if (
+            type(length) is not int
+            or length <= 0
+            or not isinstance(aa_counts, list)
+            or len(aa_counts) != len(AA_ORDER)
+            or any(type(value) is not int or value < 0 for value in aa_counts)
+            or sum(aa_counts) != length
+        ):
             raise SequenceFeatureBlockError("sequence sufficient statistics are invalid")
         if row["entityId"].startswith("SGD:"):
             if prov["derivation"] != "direct-current-orf" or ids != [row["entityId"]]:
                 raise SequenceFeatureBlockError("gene sequence provenance is not direct")
         elif row["entityId"].startswith("UniProtKB:"):
             if prov["derivation"] != "exact-related-peptide-consensus":
-                raise SequenceFeatureBlockError("protein sequence provenance is not relation-derived")
+                raise SequenceFeatureBlockError(
+                    "protein sequence provenance is not relation-derived"
+                )
         else:
             raise SequenceFeatureBlockError("feature entity namespace is unsupported")
         keys.append((row["ncbiTaxon"], row["entityId"]))
@@ -1355,27 +1788,59 @@ def validate_archive(
     if framed_key_sha256(keys) != expected.universe_entity_key_sha256:
         raise SequenceFeatureBlockError("feature rows differ from the pinned composite universe")
     gene_count = sum(entity["entityId"].startswith("SGD:") for entity in entities)
-    if gene_count != expected.universe_genes or len(entities) - gene_count != expected.universe_proteins:
+    if (
+        gene_count != expected.universe_genes
+        or len(entities) - gene_count != expected.universe_proteins
+    ):
         raise SequenceFeatureBlockError("feature namespace counts drift")
     multi_target = {
         row["entityId"]: row["canonicalPeptideSha256"]
-        for row in provenance if len(row["sourceSequenceIds"]) > 1
+        for row in provenance
+        if len(row["sourceSequenceIds"]) > 1
     }
     if multi_target != dict(expected.multi_target_peptide_sha256):
         raise SequenceFeatureBlockError("multi-target peptide consensus provenance drift")
 
-    excluded_fields = {"schema", "ncbiTaxon", "sourceStrainTaxon", "sequenceId", "systematicName", "sourceClass", "exclusionReason", "terminalStopPresent", "internalStopCount", "startsWithMethionine", "rawSequenceSha256"}
+    excluded_fields = {
+        "schema",
+        "ncbiTaxon",
+        "sourceStrainTaxon",
+        "sequenceId",
+        "systematicName",
+        "sourceClass",
+        "exclusionReason",
+        "terminalStopPresent",
+        "internalStopCount",
+        "startsWithMethionine",
+        "rawSequenceSha256",
+    }
     excluded_ids: list[str] = []
     absent_stop: list[tuple[str, str]] = []
     internal_stop: list[str] = []
     non_m_start: list[str] = []
     for index, excluded_row in enumerate(excluded):
         row = _strict_fields(excluded_row, excluded_fields, f"excluded sequence {index}")
-        if row["schema"] != EXCLUDED_SEQUENCE_SCHEMA or row["ncbiTaxon"] != SPECIES_TAXON or row["sourceStrainTaxon"] != STRAIN_TAXON or row["exclusionReason"] != "not-current-orf":
+        if (
+            row["schema"] != EXCLUDED_SEQUENCE_SCHEMA
+            or row["ncbiTaxon"] != SPECIES_TAXON
+            or row["sourceStrainTaxon"] != STRAIN_TAXON
+            or row["exclusionReason"] != "not-current-orf"
+        ):
             raise SequenceFeatureBlockError("excluded sequence schema or provenance drift")
-        if not isinstance(row["sequenceId"], str) or SGD_CURIE_RE.fullmatch(row["sequenceId"]) is None or not isinstance(row["systematicName"], str) or not row["systematicName"]:
+        if (
+            not isinstance(row["sequenceId"], str)
+            or SGD_CURIE_RE.fullmatch(row["sequenceId"]) is None
+            or not isinstance(row["systematicName"], str)
+            or not row["systematicName"]
+        ):
             raise SequenceFeatureBlockError("excluded sequence identity is invalid")
-        if row["sourceClass"] not in SOURCE_CLASS_TOKENS or type(row["terminalStopPresent"]) is not bool or type(row["startsWithMethionine"]) is not bool or type(row["internalStopCount"]) is not int or row["internalStopCount"] < 0:
+        if (
+            row["sourceClass"] not in SOURCE_CLASS_TOKENS
+            or type(row["terminalStopPresent"]) is not bool
+            or type(row["startsWithMethionine"]) is not bool
+            or type(row["internalStopCount"]) is not int
+            or row["internalStopCount"] < 0
+        ):
             raise SequenceFeatureBlockError("excluded sequence anomaly metadata is invalid")
         _bare_digest(row["rawSequenceSha256"], "excluded raw-sequence SHA-256")
         excluded_ids.append(row["sequenceId"])
@@ -1385,21 +1850,31 @@ def validate_archive(
             internal_stop.append(row["sequenceId"])
         if not row["startsWithMethionine"]:
             non_m_start.append(row["sequenceId"])
-    if excluded_ids != sorted(set(excluded_ids)) or tuple(absent_stop) != tuple(sorted(expected.stop_absent_non_current)) or tuple(internal_stop) != tuple(sorted(expected.internal_stop_non_current)) or tuple(non_m_start) != tuple(sorted(expected.non_m_start_non_current)):
+    if (
+        excluded_ids != sorted(set(excluded_ids))
+        or tuple(absent_stop) != tuple(sorted(expected.stop_absent_non_current))
+        or tuple(internal_stop) != tuple(sorted(expected.internal_stop_non_current))
+        or tuple(non_m_start) != tuple(sorted(expected.non_m_start_non_current))
+    ):
         raise SequenceFeatureBlockError("excluded sequence anomaly set drift")
     present_data = _parse_npy(blobs[names[3]], "|b1", (rows, FEATURE_DIM), "present.npy")
     if any(value != 1 for value in present_data) or counts["presentValues"] != rows * FEATURE_DIM:
         raise SequenceFeatureBlockError("feature mask is not entirely present")
     values_data = _parse_npy(blobs[names[5]], "<f4", (rows, FEATURE_DIM), "values.npy")
     expected_value_data = _float32_rows(
-        (row["canonicalPeptideLength"] / 4096.0,) + tuple(
-            count / row["canonicalPeptideLength"] for count in row["aminoAcidCounts"]
-        )
+        (row["canonicalPeptideLength"] / 4096.0,)
+        + tuple(count / row["canonicalPeptideLength"] for count in row["aminoAcidCounts"])
         for row in provenance
     )
     if values_data != expected_value_data:
-        raise SequenceFeatureBlockError("feature values do not equal the declared sufficient-statistics transform")
-    file_fields = _strict_fields(manifest["files"], {"entities", "excludedNonCurrent", "present", "sequenceProvenance", "values"}, "feature files")
+        raise SequenceFeatureBlockError(
+            "feature values do not equal the declared sufficient-statistics transform"
+        )
+    file_fields = _strict_fields(
+        manifest["files"],
+        {"entities", "excludedNonCurrent", "present", "sequenceProvenance", "values"},
+        "feature files",
+    )
     for key, member, record_count in (
         ("entities", names[0], len(entities)),
         ("excludedNonCurrent", names[1], len(excluded)),
@@ -1407,11 +1882,36 @@ def validate_archive(
         ("sequenceProvenance", names[4], len(provenance)),
         ("values", names[5], None),
     ):
-        _validate_file_ref(file_fields[key], member.removeprefix("static-feature-block/"), blobs[member], f"files.{key}", records=record_count)
-    hashes = _strict_fields(manifest["semanticHashes"], {"entityKeySetSha256", "featureDefinitionSha256", "sequenceProvenanceSha256"}, "semantic hashes")
-    if hashes["entityKeySetSha256"] != framed_key_sha256(keys) or hashes["featureDefinitionSha256"] != _sha256_bytes(_canonical_json_bytes(definition)) or hashes["sequenceProvenanceSha256"] != _sha256_bytes(blobs[names[4]]):
+        _validate_file_ref(
+            file_fields[key],
+            member.removeprefix("static-feature-block/"),
+            blobs[member],
+            f"files.{key}",
+            records=record_count,
+        )
+    hashes = _strict_fields(
+        manifest["semanticHashes"],
+        {"entityKeySetSha256", "featureDefinitionSha256", "sequenceProvenanceSha256"},
+        "semantic hashes",
+    )
+    if (
+        hashes["entityKeySetSha256"] != framed_key_sha256(keys)
+        or hashes["featureDefinitionSha256"] != _sha256_bytes(_canonical_json_bytes(definition))
+        or hashes["sequenceProvenanceSha256"] != _sha256_bytes(blobs[names[4]])
+    ):
         raise SequenceFeatureBlockError("feature semantic hash drift")
-    policy = _strict_fields(manifest["contentPolicy"], {"containsIdentifiersAsValues", "containsOutcomesOrLabels", "containsTrainingPartitionAssignments", "containsBenchmarkData", "containsFreeTextDescriptions", "crossTaxonIdentityMerge"}, "feature content policy")
+    policy = _strict_fields(
+        manifest["contentPolicy"],
+        {
+            "containsIdentifiersAsValues",
+            "containsOutcomesOrLabels",
+            "containsTrainingPartitionAssignments",
+            "containsBenchmarkData",
+            "containsFreeTextDescriptions",
+            "crossTaxonIdentityMerge",
+        },
+        "feature content policy",
+    )
     if any(value is not False for value in policy.values()):
         raise SequenceFeatureBlockError("feature content policy drift")
     return manifest
@@ -1429,7 +1929,18 @@ def validate_audit(
     audit = _read_canonical_json(audit_file, bounds.max_manifest_bytes, "feature-block audit")
     audit = _strict_fields(
         audit,
-        {"schema", "inputs", "source", "identityMapping", "featureDefinition", "outputs", "counts", "multiTargetPeptideConsensus", "accessBoundary", "limitations"},
+        {
+            "schema",
+            "inputs",
+            "source",
+            "identityMapping",
+            "featureDefinition",
+            "outputs",
+            "counts",
+            "multiTargetPeptideConsensus",
+            "accessBoundary",
+            "limitations",
+        },
         "feature-block audit",
     )
     if audit["schema"] != AUDIT_SCHEMA:
@@ -1493,9 +2004,15 @@ def build_sequence_feature_block(
 ) -> dict[str, object]:
     universe_paths = _verify_dataset(universe_dataset, expected.universe)
     sequence_paths = _verify_dataset(sequence_dataset, expected.sequences)
-    entities, relations, _universe_manifest, universe_provenance = _validate_universe(universe_paths, bounds, expected)
-    current_by_id, mapping_provenance = _load_mapping(current_artifact, mapping_artifact, bounds, expected)
-    current_sequences, excluded, sequence_provenance_input = _load_sequences(sequence_paths, current_by_id, bounds, expected)
+    entities, relations, _universe_manifest, universe_provenance = _validate_universe(
+        universe_paths, bounds, expected
+    )
+    current_by_id, mapping_provenance = _load_mapping(
+        current_artifact, mapping_artifact, bounds, expected
+    )
+    current_sequences, excluded, sequence_provenance_input = _load_sequences(
+        sequence_paths, current_by_id, bounds, expected
+    )
     gene_ids = {item["entityId"] for item in entities if item["entityClass"] == "gene"}
     if not gene_ids <= set(current_by_id) or not gene_ids <= set(current_sequences):
         raise SequenceFeatureBlockError("universe gene lacks a current SGD peptide")
@@ -1517,29 +2034,43 @@ def build_sequence_feature_block(
             derivation = "exact-related-peptide-consensus"
         peptides = [current_sequences[item] for item in source_ids]
         if not peptides or any(peptide != peptides[0] for peptide in peptides[1:]):
-            raise SequenceFeatureBlockError(f"related peptides do not form an exact consensus for {entity_id}")
+            raise SequenceFeatureBlockError(
+                f"related peptides do not form an exact consensus for {entity_id}"
+            )
         peptide = peptides[0]
         peptide_sha = _sha256_bytes(peptide)
         residue_counts = Counter(peptide)
         if len(source_ids) > 1:
             multi_target_hashes[entity_id] = peptide_sha
-        feature_entities.append({"schema": FEATURE_ENTITY_SCHEMA, "rowIndex": row_index, "ncbiTaxon": SPECIES_TAXON, "entityId": entity_id})
-        provenance_rows.append({
-            "schema": SEQUENCE_PROVENANCE_SCHEMA,
-            "rowIndex": row_index,
-            "ncbiTaxon": SPECIES_TAXON,
-            "entityId": entity_id,
-            "sourceStrainTaxon": STRAIN_TAXON,
-            "sourceSequenceIds": list(source_ids),
-            "derivation": derivation,
-            "canonicalPeptideSha256": peptide_sha,
-            "canonicalPeptideLength": len(peptide),
-            "aminoAcidCounts": [residue_counts[ord(residue)] for residue in AA_ORDER],
-        })
+        feature_entities.append(
+            {
+                "schema": FEATURE_ENTITY_SCHEMA,
+                "rowIndex": row_index,
+                "ncbiTaxon": SPECIES_TAXON,
+                "entityId": entity_id,
+            }
+        )
+        provenance_rows.append(
+            {
+                "schema": SEQUENCE_PROVENANCE_SCHEMA,
+                "rowIndex": row_index,
+                "ncbiTaxon": SPECIES_TAXON,
+                "entityId": entity_id,
+                "sourceStrainTaxon": STRAIN_TAXON,
+                "sourceSequenceIds": list(source_ids),
+                "derivation": derivation,
+                "canonicalPeptideSha256": peptide_sha,
+                "canonicalPeptideLength": len(peptide),
+                "aminoAcidCounts": [residue_counts[ord(residue)] for residue in AA_ORDER],
+            }
+        )
         feature_rows.append(_feature_vector(peptide))
     if multi_target_hashes != dict(expected.multi_target_peptide_sha256):
         raise SequenceFeatureBlockError("multi-target peptide consensus set drift")
-    if len(feature_rows) != expected.universe_rows or len(feature_rows) * FEATURE_DIM != expected.present_values:
+    if (
+        len(feature_rows) != expected.universe_rows
+        or len(feature_rows) * FEATURE_DIM != expected.present_values
+    ):
         raise SequenceFeatureBlockError("feature matrix cardinality drift")
 
     entity_bytes = _jsonl_bytes(feature_entities)
@@ -1547,7 +2078,9 @@ def build_sequence_feature_block(
     provenance_bytes = _jsonl_bytes(provenance_rows)
     values_data = _float32_rows(feature_rows)
     values_bytes = _npy_bytes("<f4", (len(feature_rows), FEATURE_DIM), values_data)
-    present_bytes = _npy_bytes("|b1", (len(feature_rows), FEATURE_DIM), b"\x01" * expected.present_values)
+    present_bytes = _npy_bytes(
+        "|b1", (len(feature_rows), FEATURE_DIM), b"\x01" * expected.present_values
+    )
     definition = {
         "names": list(FEATURE_NAMES),
         "dimension": FEATURE_DIM,
@@ -1578,19 +2111,30 @@ def build_sequence_feature_block(
         "identityKey": ["ncbiTaxon", "entityId"],
         "ordering": "ascending-ncbiTaxon-then-codepoint-entityId",
         "featureDefinition": definition,
-        "source": {"speciesTaxon": SPECIES_TAXON, "strainTaxon": STRAIN_TAXON, "release": SOURCE_RELEASE},
+        "source": {
+            "speciesTaxon": SPECIES_TAXON,
+            "strainTaxon": STRAIN_TAXON,
+            "release": SOURCE_RELEASE,
+        },
         "identityMapping": {"id": expected.mapping_id, "sha256": expected.mapping_sha256},
         "inputs": inputs,
         "files": {
             "entities": _file_ref("entities.jsonl", entity_bytes, records=len(feature_entities)),
-            "excludedNonCurrent": _file_ref("excluded-non-current.jsonl", excluded_bytes, records=len(excluded)),
+            "excludedNonCurrent": _file_ref(
+                "excluded-non-current.jsonl", excluded_bytes, records=len(excluded)
+            ),
             "present": _file_ref("present.npy", present_bytes),
-            "sequenceProvenance": _file_ref("sequence-provenance.jsonl", provenance_bytes, records=len(provenance_rows)),
+            "sequenceProvenance": _file_ref(
+                "sequence-provenance.jsonl", provenance_bytes, records=len(provenance_rows)
+            ),
             "values": _file_ref("values.npy", values_bytes),
         },
         "counts": {
-            "rows": len(feature_rows), "genes": genes, "proteins": proteins,
-            "featuresPerRow": FEATURE_DIM, "presentValues": len(feature_rows) * FEATURE_DIM,
+            "rows": len(feature_rows),
+            "genes": genes,
+            "proteins": proteins,
+            "featuresPerRow": FEATURE_DIM,
+            "presentValues": len(feature_rows) * FEATURE_DIM,
             "excludedNonCurrentSequences": len(excluded),
             "currentOrfsOutsideUniverse": len(set(current_by_id) - gene_ids),
             "multiTargetProteinConsensus": len(multi_target_hashes),
@@ -1599,7 +2143,9 @@ def build_sequence_feature_block(
             "trainableParameters": 0,
         },
         "semanticHashes": {
-            "entityKeySetSha256": framed_key_sha256((item["ncbiTaxon"], item["entityId"]) for item in feature_entities),
+            "entityKeySetSha256": framed_key_sha256(
+                (item["ncbiTaxon"], item["entityId"]) for item in feature_entities
+            ),
             "featureDefinitionSha256": _sha256_bytes(_canonical_json_bytes(definition)),
             "sequenceProvenanceSha256": _sha256_bytes(provenance_bytes),
         },
@@ -1625,7 +2171,9 @@ def build_sequence_feature_block(
     if destination_path.exists() or destination_path.is_symlink():
         raise SequenceFeatureBlockError("destination must not already exist")
     destination_path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix=f".{destination_path.name}-", dir=destination_path.parent) as temporary:
+    with tempfile.TemporaryDirectory(
+        prefix=f".{destination_path.name}-", dir=destination_path.parent
+    ) as temporary:
         staging = Path(temporary) / destination_path.name
         staging.mkdir()
         archive_path = staging / "sequence-feature-block.tar"

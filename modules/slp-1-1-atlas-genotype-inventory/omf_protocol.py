@@ -35,7 +35,7 @@ class ProtocolRequest:
         allowed = {"protocol", "operation", "inputs", "config", "state", "context"}
         if set(value) - allowed:
             raise ValueError("OMF request contains unsupported fields")
-        if value.get("protocol", "omf.module/v1") != "omf.module/v1":
+        if value.get("protocol", "openfoundry.module/v1") != "openfoundry.module/v1":
             raise ValueError("unsupported OMF protocol")
         operation = value.get("operation")
         if operation not in OPERATIONS:
@@ -62,7 +62,7 @@ class ProtocolResult:
         if self.status not in {"ok", "error"}:
             raise ValueError("OMF result status must be ok or error")
         return {
-            "protocol": "omf.module/v1",
+            "protocol": "openfoundry.module/v1",
             "status": self.status,
             "outputs": self.outputs,
             "state": self.state,
@@ -107,8 +107,8 @@ def dispatch(handlers: Mapping[str, Handler], request_path: Path, result_path: P
 
 def main(handlers: Mapping[str, Handler]) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--request", type=Path, default=os.getenv("OMF_REQUEST_FILE"))
-    parser.add_argument("--result", type=Path, default=os.getenv("OMF_RESULT_FILE"))
+    parser.add_argument("--request", type=Path, default=os.getenv("OPENFOUNDRY_REQUEST_FILE"))
+    parser.add_argument("--result", type=Path, default=os.getenv("OPENFOUNDRY_RESULT_FILE"))
     arguments = parser.parse_args()
     if arguments.request is None or arguments.result is None:
         parser.error("request and result paths are required")

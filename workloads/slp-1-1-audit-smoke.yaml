@@ -1,7 +1,7 @@
 # Contract-only smoke graph. Replace these dataset aliases only after the three
 # corpora, held roster, and protected source inventories are separately admitted
 # and verified. OMF pins their exact revisions during run admission.
-apiVersion: omf.dev/v1alpha1
+apiVersion: openfoundry.dev/v1alpha1
 kind: WorkloadSpec
 metadata:
   name: slp-1-1-audit-smoke

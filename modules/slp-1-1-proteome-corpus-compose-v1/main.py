@@ -5,12 +5,10 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 ZERO = "0" * 64
-REQUIRED_INPUTS = frozenset(
-    {"observations", "staticFeatures", "heldInterventionRoster"}
-)
+REQUIRED_INPUTS = frozenset({"observations", "staticFeatures", "heldInterventionRoster"})
 BOUND_DEFAULTS = {
     "maxManifestBytes": 2 * 1024 * 1024,
     "maxLineBytes": 64 * 1024,
@@ -34,9 +32,7 @@ def _validate_surface(request: ProtocolRequest, operation: str) -> None:
         raise ValueError("proteome corpus composer is stateless")
     extra = set(request.config) - set(BOUND_DEFAULTS)
     if extra:
-        raise ValueError(
-            "unsupported composer config keys: " + ", ".join(sorted(extra))
-        )
+        raise ValueError("unsupported composer config keys: " + ", ".join(sorted(extra)))
 
 
 def _bounds(request: ProtocolRequest):
@@ -46,18 +42,12 @@ def _bounds(request: ProtocolRequest):
         max_manifest_bytes=request.config.get(
             "maxManifestBytes", BOUND_DEFAULTS["maxManifestBytes"]
         ),
-        max_line_bytes=request.config.get(
-            "maxLineBytes", BOUND_DEFAULTS["maxLineBytes"]
-        ),
-        max_archive_bytes=request.config.get(
-            "maxArchiveBytes", BOUND_DEFAULTS["maxArchiveBytes"]
-        ),
+        max_line_bytes=request.config.get("maxLineBytes", BOUND_DEFAULTS["maxLineBytes"]),
+        max_archive_bytes=request.config.get("maxArchiveBytes", BOUND_DEFAULTS["maxArchiveBytes"]),
         max_records=request.config.get("maxRecords", BOUND_DEFAULTS["maxRecords"]),
         max_entities=request.config.get("maxEntities", BOUND_DEFAULTS["maxEntities"]),
         max_readouts=request.config.get("maxReadouts", BOUND_DEFAULTS["maxReadouts"]),
-        max_target_values=request.config.get(
-            "maxTargetValues", BOUND_DEFAULTS["maxTargetValues"]
-        ),
+        max_target_values=request.config.get("maxTargetValues", BOUND_DEFAULTS["maxTargetValues"]),
     )
 
 
@@ -96,16 +86,14 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     from composer import build_composite_corpus, resolve_pinned_dataset
 
     _validate_surface(request, "run")
-    result_file = os.environ.get("OMF_RESULT_FILE")
+    result_file = os.environ.get("OPENFOUNDRY_RESULT_FILE")
     if not result_file:
-        raise ValueError("OMF_RESULT_FILE is required for artifact placement")
+        raise ValueError("OPENFOUNDRY_RESULT_FILE is required for artifact placement")
     output_root = Path(result_file).parent
     result = build_composite_corpus(
         resolve_pinned_dataset(request.inputs["observations"], "observations"),
         resolve_pinned_dataset(request.inputs["staticFeatures"], "staticFeatures"),
-        resolve_pinned_dataset(
-            request.inputs["heldInterventionRoster"], "heldInterventionRoster"
-        ),
+        resolve_pinned_dataset(request.inputs["heldInterventionRoster"], "heldInterventionRoster"),
         output_root / "proteome-corpus-compose-v1",
         _bounds(request),
     )

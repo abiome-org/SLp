@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _validation_outputs() -> dict[str, object]:
@@ -33,8 +33,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     if len(request.inputs) < 2:
         raise ValueError("at least two protected inventory dataset inputs are required")
     resolved_inputs = [
-        resolve_pinned_dataset_input(value, name)
-        for name, value in sorted(request.inputs.items())
+        resolve_pinned_dataset_input(value, name) for name, value in sorted(request.inputs.items())
     ]
     paths = [item.path for item in resolved_inputs]
 
@@ -51,7 +50,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         expected_final_count=config["expectedFinalCount"],
         expected_roster_sha256=config["expectedRosterSha256"],
     )
-    output_root = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_root = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     roster_root = output_root / "held-roster"
     report = build_held_roster(paths, roster_root, bounds)
     role_counts = report["roleCounts"]

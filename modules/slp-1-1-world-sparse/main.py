@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 STATE_SCHEMA = "slp.world-sparse-state/v2"
 
@@ -49,7 +49,9 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     from slp_sparse_training import TrainingConfig, train_sparse_world
 
     required = {
-        "pretrain", "molecularPredictionQuery", "corpusAuditEvidence",
+        "pretrain",
+        "molecularPredictionQuery",
+        "corpusAuditEvidence",
         "heldRosterEvidence",
     }
     if set(request.inputs) != required:
@@ -70,9 +72,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     if not isinstance(request.config, dict):
         raise ValueError("training config must be an object")
     config_value = dict(request.config)
-    expected_audit_digest = config_value.pop(
-        "expectedCorpusAuditArtifactManifestDigest", None
-    )
+    expected_audit_digest = config_value.pop("expectedCorpusAuditArtifactManifestDigest", None)
     evidence = validate_admitted_training_evidence(
         pretrain,
         query,
@@ -85,9 +85,9 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     config = _training_config(config_value, TrainingConfig)
     outcome = train_sparse_world(pretrain, config)
 
-    result_file = os.environ.get("OMF_RESULT_FILE")
+    result_file = os.environ.get("OPENFOUNDRY_RESULT_FILE")
     if not result_file:
-        raise ValueError("OMF_RESULT_FILE is required for artifact placement")
+        raise ValueError("OPENFOUNDRY_RESULT_FILE is required for artifact placement")
     output_directory = Path(result_file).absolute().parent
     checkpoint_path, checkpoint_sha256 = write_sparse_checkpoint(
         output_directory, outcome.model, outcome.report, evidence
@@ -159,7 +159,11 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         },
         artifacts=[
             {"name": "worldCheckpoint", "kind": "checkpoint", "path": checkpoint_path.name},
-            {"name": "molecularValidationPredictions", "kind": "prediction", "path": prediction_path.name},
+            {
+                "name": "molecularValidationPredictions",
+                "kind": "prediction",
+                "path": prediction_path.name,
+            },
             {"name": "trainingReport", "kind": "evaluation", "path": report_path.name},
         ],
     )
@@ -169,12 +173,19 @@ def _training_config(value: object, config_type: type) -> object:
     if not isinstance(value, dict):
         raise ValueError("training config must be an object")
     mapping = {
-        "seed": "seed", "epochs": "epochs", "drawsPerEpoch": "draws_per_epoch",
-        "batchSize": "batch_size", "learningRate": "learning_rate",
-        "weightDecay": "weight_decay", "gradientClipNorm": "gradient_clip_norm",
-        "predictionBatchSize": "prediction_batch_size", "dModel": "d_model",
-        "nhead": "nhead", "encoderLayers": "encoder_layers",
-        "decoderLayers": "decoder_layers", "ffnMultiplier": "ffn_multiplier",
+        "seed": "seed",
+        "epochs": "epochs",
+        "drawsPerEpoch": "draws_per_epoch",
+        "batchSize": "batch_size",
+        "learningRate": "learning_rate",
+        "weightDecay": "weight_decay",
+        "gradientClipNorm": "gradient_clip_norm",
+        "predictionBatchSize": "prediction_batch_size",
+        "dModel": "d_model",
+        "nhead": "nhead",
+        "encoderLayers": "encoder_layers",
+        "decoderLayers": "decoder_layers",
+        "ffnMultiplier": "ffn_multiplier",
         "dropout": "dropout",
     }
     unexpected = set(value) - set(mapping)

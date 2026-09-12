@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _validation_outputs() -> dict[str, object]:
@@ -31,7 +31,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         raise ValueError("source must be an OMF dataset input with a materialized path")
     from prepare import prepare_yeast_snapshot, write_deterministic_tar
 
-    output_root = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_root = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     corpus_path = output_root / "prepared-corpus"
     report = prepare_yeast_snapshot(source["path"], corpus_path, request.config)
     archive_path = output_root / "prepared-corpus.tar"

@@ -78,7 +78,13 @@ def _write_roster(root: Path) -> Path:
     for gene in (VALIDATION_GENE, FINAL_GENE):
         digest = hashlib.sha256(ROSTER_DOMAIN + gene.encode("ascii")).hexdigest()
         bucket = int(digest[:16], 16) % 100
-        role = "molecular-final" if bucket < 10 else "molecular-validation" if bucket < 30 else "pretrain"
+        role = (
+            "molecular-final"
+            if bucket < 10
+            else "molecular-validation"
+            if bucket < 30
+            else "pretrain"
+        )
         rows.append(f"{gene}\t{role}\t{digest}\n")
     path = root / "held-intervention-roster.tsv"
     path.write_text("".join(sorted(rows)), encoding="ascii", newline="")
@@ -91,9 +97,13 @@ def _sha256(path: Path) -> str:
 
 
 def _write_audit(
-    root: Path, pretrain: CorpusIndex, query: object,
-    pretrain_input: dict[str, str], query_input: dict[str, str],
-    roster_input: dict[str, str], roster_path: Path,
+    root: Path,
+    pretrain: CorpusIndex,
+    query: object,
+    pretrain_input: dict[str, str],
+    query_input: dict[str, str],
+    roster_input: dict[str, str],
+    roster_path: Path,
 ) -> Path:
     root.mkdir(parents=True, exist_ok=True)
     validation = [VALIDATION_GENE]
@@ -116,6 +126,7 @@ def _write_audit(
             "trajectoryGeneSetSha256": canonical_sha256(genes),
             "trajectoryGeneCount": len(genes),
         }
+
     audit = {
         "schema": AUDIT_SCHEMA,
         "rewardEnabled": False,
@@ -180,7 +191,9 @@ def _write_audit(
 
 
 def _case(
-    root: Path, *, query_gene: str = VALIDATION_GENE,
+    root: Path,
+    *,
+    query_gene: str = VALIDATION_GENE,
     pretrain_active_gene: str = "SGD:S0002",
 ):
     pretrain_root = root / "inputs" / "pretrain" / "pretrain-snapshot"
@@ -194,12 +207,22 @@ def _case(
     roster_path = _write_roster(root / "inputs" / "heldRosterEvidence" / "held-roster")
     roster_input = _dataset_input(roster_path.parent, "held-roster", "4")
     audit_path = _write_audit(
-        root / "evidence" / "audit" / "payload", pretrain, query,
-        pretrain_input, query_input, roster_input, roster_path,
+        root / "evidence" / "audit" / "payload",
+        pretrain,
+        query,
+        pretrain_input,
+        query_input,
+        roster_input,
+        roster_path,
     )
     audit_input = _artifact_input(audit_path, "3")
     evidence = validate_admitted_training_evidence(
-        pretrain, query, pretrain_input, query_input, audit_input, roster_input,
+        pretrain,
+        query,
+        pretrain_input,
+        query_input,
+        audit_input,
+        roster_input,
         expected_corpus_audit_manifest_digest=AUDIT_MANIFEST_DIGEST,
     )
     return pretrain, query, pretrain_input, query_input, audit_input, roster_input, evidence
@@ -228,7 +251,12 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             audit_path.write_bytes(canonical_json_bytes(audit, newline=True))
             with self.assertRaisesRegex(ValueError, "held-roster provenance"):
                 validate_admitted_training_evidence(
-                    pretrain, query, pretrain_input, query_input, audit_input, roster_input,
+                    pretrain,
+                    query,
+                    pretrain_input,
+                    query_input,
+                    audit_input,
+                    roster_input,
                     expected_corpus_audit_manifest_digest=AUDIT_MANIFEST_DIGEST,
                 )
 
@@ -239,14 +267,10 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             second_validation = _assigned_gene("molecular-validation", start=20_000)
             self.assertNotEqual(second_validation, VALIDATION_GENE)
             roster_path = Path(roster_input["path"]) / "held-intervention-roster.tsv"
-            digest = hashlib.sha256(
-                ROSTER_DOMAIN + second_validation.encode("ascii")
-            ).hexdigest()
+            digest = hashlib.sha256(ROSTER_DOMAIN + second_validation.encode("ascii")).hexdigest()
             lines = roster_path.read_text(encoding="ascii").splitlines()
             lines.append(f"{second_validation}\tmolecular-validation\t{digest}")
-            roster_path.write_text(
-                "\n".join(sorted(lines)) + "\n", encoding="ascii", newline=""
-            )
+            roster_path.write_text("\n".join(sorted(lines)) + "\n", encoding="ascii", newline="")
             audit_path = Path(audit_input["path"])
             audit = json.loads(audit_path.read_text())
             validation = sorted([VALIDATION_GENE, second_validation])
@@ -269,7 +293,12 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             audit_path.write_bytes(canonical_json_bytes(audit, newline=True))
             with self.assertRaisesRegex(ValueError, "does not exactly equal"):
                 validate_admitted_training_evidence(
-                    pretrain, query, pretrain_input, query_input, audit_input, roster_input,
+                    pretrain,
+                    query,
+                    pretrain_input,
+                    query_input,
+                    audit_input,
+                    roster_input,
                     expected_corpus_audit_manifest_digest=AUDIT_MANIFEST_DIGEST,
                 )
 
@@ -282,7 +311,12 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             audit_input["paths"] = {"payload": audit_input["path"]}
             with self.assertRaisesRegex(ValueError, "file artifact semantics"):
                 validate_admitted_training_evidence(
-                    pretrain, query, pretrain_input, query_input, audit_input, roster_input,
+                    pretrain,
+                    query,
+                    pretrain_input,
+                    query_input,
+                    audit_input,
+                    roster_input,
                     expected_corpus_audit_manifest_digest=AUDIT_MANIFEST_DIGEST,
                 )
 
@@ -291,7 +325,12 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             (Path(roster_input["path"]) / "nested").mkdir()
             with self.assertRaisesRegex(ValueError, "undeclared entries|non-regular or nested"):
                 validate_admitted_training_evidence(
-                    pretrain, query, pretrain_input, query_input, audit_input, roster_input,
+                    pretrain,
+                    query,
+                    pretrain_input,
+                    query_input,
+                    audit_input,
+                    roster_input,
                     expected_corpus_audit_manifest_digest=AUDIT_MANIFEST_DIGEST,
                 )
 
@@ -299,7 +338,12 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             pretrain, query, pretrain_input, query_input, audit_input, roster_input, _ = case
             with self.assertRaisesRegex(ValueError, "frozen artifact manifest digest"):
                 validate_admitted_training_evidence(
-                    pretrain, query, pretrain_input, query_input, audit_input, roster_input,
+                    pretrain,
+                    query,
+                    pretrain_input,
+                    query_input,
+                    audit_input,
+                    roster_input,
                     expected_corpus_audit_manifest_digest="sha256:" + "f" * 64,
                 )
 
@@ -325,10 +369,19 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
         self.assertEqual(
             set(schema["$defs"]["sourceInventory"]["required"]),
             {
-                "resource", "revision", "artifactManifestDigest", "sourceId",
-                "sourceRelease", "identityMappingId", "identityMappingSha256",
-                "manifestSha256", "records", "duplicateRecords",
-                "uniqueInterventions", "qcPassing", "qcFailed",
+                "resource",
+                "revision",
+                "artifactManifestDigest",
+                "sourceId",
+                "sourceRelease",
+                "identityMappingId",
+                "identityMappingSha256",
+                "manifestSha256",
+                "records",
+                "duplicateRecords",
+                "uniqueInterventions",
+                "qcPassing",
+                "qcFailed",
                 "intersectionCoverage",
             },
         )
@@ -338,8 +391,10 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
 
     def test_reward_disabled_audit_contract_is_fail_closed(self) -> None:
         mutations = (
-            (lambda document: document.__setitem__("schema", "slp.corpus-audit/v1.1"),
-             "zero-leakage"),
+            (
+                lambda document: document.__setitem__("schema", "slp.corpus-audit/v1.1"),
+                "zero-leakage",
+            ),
             (lambda document: document.pop("rewardEnabled"), "exact admitted"),
             (lambda document: document.__setitem__("rewardEnabled", True), "zero-leakage"),
             (lambda document: document.__setitem__("leakageViolations", False), "zero-leakage"),
@@ -373,7 +428,15 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
     def test_checkpoint_is_invariant_to_protected_truth_content_fingerprints(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            pretrain, query, pretrain_input, query_input, audit_input, roster_input, first_evidence = _case(root / "case")
+            (
+                pretrain,
+                query,
+                pretrain_input,
+                query_input,
+                audit_input,
+                roster_input,
+                first_evidence,
+            ) = _case(root / "case")
             audit_path = Path(audit_input["path"])
             audit = json.loads(audit_path.read_text())
             for name, digit in (("molecularValidation", "c"), ("molecularFinal", "d")):
@@ -381,12 +444,18 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
                 audit["datasets"][name]["contentDigest"] = digit * 64
             audit_path.write_bytes(canonical_json_bytes(audit, newline=True))
             second_evidence = validate_admitted_training_evidence(
-                pretrain, query, pretrain_input, query_input, audit_input, roster_input,
+                pretrain,
+                query,
+                pretrain_input,
+                query_input,
+                audit_input,
+                roster_input,
                 expected_corpus_audit_manifest_digest=AUDIT_MANIFEST_DIGEST,
             )
             self.assertEqual(first_evidence, second_evidence)
             outcome = train_sparse_world(pretrain, _config())
-            (root / "one").mkdir(); (root / "two").mkdir()
+            (root / "one").mkdir()
+            (root / "two").mkdir()
             one, one_digest = write_sparse_checkpoint(
                 root / "one", outcome.model, outcome.report, first_evidence
             )
@@ -402,7 +471,12 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             pretrain, query, pretrain_input, query_input, audit_input, roster_input, _ = case
             with self.assertRaisesRegex(ValueError, "materialized admitted OMF artifact"):
                 validate_admitted_training_evidence(
-                    pretrain, query, pretrain_input, query_input, {}, roster_input,
+                    pretrain,
+                    query,
+                    pretrain_input,
+                    query_input,
+                    {},
+                    roster_input,
                     expected_corpus_audit_manifest_digest=AUDIT_MANIFEST_DIGEST,
                 )
             roster_path = Path(roster_input["path"]) / "held-intervention-roster.tsv"
@@ -413,7 +487,12 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             roster_path.write_text("\n".join(rows) + "\n", encoding="ascii", newline="")
             with self.assertRaisesRegex(ValueError, "frozen assignment"):
                 validate_admitted_training_evidence(
-                    pretrain, query, pretrain_input, query_input, audit_input, roster_input,
+                    pretrain,
+                    query,
+                    pretrain_input,
+                    query_input,
+                    audit_input,
+                    roster_input,
                     expected_corpus_audit_manifest_digest=AUDIT_MANIFEST_DIGEST,
                 )
 
@@ -423,9 +502,14 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             pretrain, query, _, _, _, _, evidence = _case(root / "case")
             first = train_sparse_world(pretrain, _config())
             second = train_sparse_world(pretrain, _config())
-            (root / "one").mkdir(); (root / "two").mkdir()
-            one, one_digest = write_sparse_checkpoint(root / "one", first.model, first.report, evidence)
-            two, two_digest = write_sparse_checkpoint(root / "two", second.model, second.report, evidence)
+            (root / "one").mkdir()
+            (root / "two").mkdir()
+            one, one_digest = write_sparse_checkpoint(
+                root / "one", first.model, first.report, evidence
+            )
+            two, two_digest = write_sparse_checkpoint(
+                root / "two", second.model, second.report, evidence
+            )
             self.assertEqual(one_digest, two_digest)
             self.assertEqual(one.read_bytes(), two.read_bytes())
             rng = torch.random.get_rng_state().clone()
@@ -439,15 +523,19 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
                 load_sparse_checkpoint(one, expected_sha256="not-a-digest")
 
             raw = one.read_bytes()
-            header_size = struct.unpack(">Q", raw[len(CHECKPOINT_MAGIC):len(CHECKPOINT_MAGIC) + 8])[0]
+            header_size = struct.unpack(
+                ">Q", raw[len(CHECKPOINT_MAGIC) : len(CHECKPOINT_MAGIC) + 8]
+            )[0]
             start = len(CHECKPOINT_MAGIC) + 8
-            header = json.loads(raw[start:start + header_size])
+            header = json.loads(raw[start : start + header_size])
             header["modelConfig"]["d_model"] = 4096
             malicious_header = canonical_json_bytes(header)
             malicious = root / "oversized-config.slpc"
             malicious.write_bytes(
-                CHECKPOINT_MAGIC + struct.pack(">Q", len(malicious_header))
-                + malicious_header + raw[start + header_size:]
+                CHECKPOINT_MAGIC
+                + struct.pack(">Q", len(malicious_header))
+                + malicious_header
+                + raw[start + header_size :]
             )
             with self.assertRaisesRegex(ValueError, "d_model violates its bound"):
                 load_sparse_checkpoint(malicious, expected_sha256=_sha256(malicious))
@@ -463,7 +551,9 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             pretrain, query, _, query_input, _, _, evidence = _case(root / "case")
             outcome = train_sparse_world(pretrain, _config())
             root.mkdir(exist_ok=True)
-            checkpoint, checkpoint_digest = write_sparse_checkpoint(root, outcome.model, outcome.report, evidence)
+            checkpoint, checkpoint_digest = write_sparse_checkpoint(
+                root, outcome.model, outcome.report, evidence
+            )
             prediction = write_target_free_predictions(
                 root, outcome.model, query, query_input, checkpoint_digest, batch_size=1
             )
@@ -478,29 +568,38 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
                 profiles_stream = archive.extractfile("profiles-000.jsonl")
                 assert manifest_stream is not None and profiles_stream is not None
                 manifest = json.loads(manifest_stream.read())
-                produced = [
-                    json.loads(line) for line in profiles_stream.read().splitlines()
-                ]
+                produced = [json.loads(line) for line in profiles_stream.read().splitlines()]
             self.assertEqual(manifest["modelCheckpointContentSha256"], checkpoint_digest)
             self.assertFalse(manifest["targetValuesPresent"])
             self.assertFalse(manifest["observedMaskPresent"])
             self.assertNotIn("sourceCorpusContentDigest", json.dumps(manifest))
-            expected = [json.loads(line) for line in (query.root / "profiles-query.jsonl").read_text().splitlines()]
+            expected = [
+                json.loads(line)
+                for line in (query.root / "profiles-query.jsonl").read_text().splitlines()
+            ]
             self.assertEqual(len(produced), len(expected))
             for actual, query_row in zip(produced, expected, strict=True):
-                self.assertEqual(
-                    {name: actual[name] for name in query_row}, query_row
-                )
+                self.assertEqual({name: actual[name] for name in query_row}, query_row)
                 self.assertEqual(set(actual), set(query_row) | {"predictionParameters"})
                 self.assertEqual(len(actual["predictionParameters"]), len(actual["readoutIds"]))
                 self.assertNotIn("target", json.dumps(actual).lower())
-                for distribution, parameters in zip(actual["distributionTypes"], actual["predictionParameters"], strict=True):
-                    expected_fields = {"mean", "logScale"} if distribution == "gaussian" else {"logMean", "logInverseDispersion"}
+                for distribution, parameters in zip(
+                    actual["distributionTypes"], actual["predictionParameters"], strict=True
+                ):
+                    expected_fields = (
+                        {"mean", "logScale"}
+                        if distribution == "gaussian"
+                        else {"logMean", "logInverseDispersion"}
+                    )
                     self.assertEqual(set(parameters), expected_fields)
             report = build_artifact_report(
-                outcome.report, evidence=evidence, molecular_query=query,
-                molecular_query_input=query_input, checkpoint_content_sha256=checkpoint_digest,
-                prediction_content_sha256=prediction[1], prediction_records=prediction[2],
+                outcome.report,
+                evidence=evidence,
+                molecular_query=query,
+                molecular_query_input=query_input,
+                checkpoint_content_sha256=checkpoint_digest,
+                prediction_content_sha256=prediction[1],
+                prediction_records=prediction[2],
                 prediction_queries=prediction[3],
             )
             report_path, _ = write_canonical_report(root, report)
@@ -513,7 +612,9 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
     def test_omf_run_repeats_and_rejects_any_truth_input(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             stage = Path(temporary) / "stage"
-            pretrain, query, pretrain_input, query_input, audit_input, roster_input, _ = _case(stage)
+            pretrain, query, pretrain_input, query_input, audit_input, roster_input, _ = _case(
+                stage
+            )
             request = types.SimpleNamespace(
                 inputs={
                     "pretrain": pretrain_input,
@@ -523,17 +624,26 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
                 },
                 config={
                     "expectedCorpusAuditArtifactManifestDigest": AUDIT_MANIFEST_DIGEST,
-                    "seed": 83, "epochs": 2, "drawsPerEpoch": 8, "batchSize": 4,
-                    "learningRate": 0.01, "predictionBatchSize": 2, "dModel": 8,
-                    "nhead": 2, "encoderLayers": 1, "decoderLayers": 1,
-                    "ffnMultiplier": 2, "dropout": 0.0,
+                    "seed": 83,
+                    "epochs": 2,
+                    "drawsPerEpoch": 8,
+                    "batchSize": 4,
+                    "learningRate": 0.01,
+                    "predictionBatchSize": 2,
+                    "dModel": 8,
+                    "nhead": 2,
+                    "encoderLayers": 1,
+                    "decoderLayers": 1,
+                    "ffnMultiplier": 2,
+                    "dropout": 0.0,
                 },
             )
             sparse_main = _load_main_with_sdk_stub()
-            with patch.dict(os.environ, {"OMF_RESULT_FILE": str(stage / "result.json")}):
+            with patch.dict(os.environ, {"OPENFOUNDRY_RESULT_FILE": str(stage / "result.json")}):
                 result = sparse_main.run(request)
-            repeat = stage / "repeat"; repeat.mkdir()
-            with patch.dict(os.environ, {"OMF_RESULT_FILE": str(repeat / "result.json")}):
+            repeat = stage / "repeat"
+            repeat.mkdir()
+            with patch.dict(os.environ, {"OPENFOUNDRY_RESULT_FILE": str(repeat / "result.json")}):
                 repeated = sparse_main.run(request)
             self.assertEqual(result.outputs, repeated.outputs)
             self.assertEqual(result.state, repeated.state)
@@ -541,11 +651,14 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
             self.assertEqual(len(result.artifacts), 3)
             self.assertTrue(result.outputs["predictionsTargetFree"])
             self.assertFalse(result.outputs["heldTruthAccessible"])
-            self.assertEqual(result.state["releaseBlockers"], [
-                "hash-pinned-offline-wheelhouse-required",
-                "omf-1.0-artifact-to-inference-adapter-gap",
-                "omf-corpus-audit-producer-lineage-policy-required",
-            ])
+            self.assertEqual(
+                result.state["releaseBlockers"],
+                [
+                    "hash-pinned-offline-wheelhouse-required",
+                    "omf-1.0-artifact-to-inference-adapter-gap",
+                    "omf-corpus-audit-producer-lineage-policy-required",
+                ],
+            )
             self.assertNotIn(str(stage), json.dumps(result.state))
             missing_audit_pin = deepcopy(request)
             missing_audit_pin.config.pop("expectedCorpusAuditArtifactManifestDigest")
@@ -558,7 +671,7 @@ class SparseOmfTrainingArtifactsTest(unittest.TestCase):
 
 
 def _load_main_with_sdk_stub():
-    sdk = types.ModuleType("omf.sdk")
+    sdk = types.ModuleType("openfoundry.sdk")
 
     class Result:
         def __init__(self, **values):
@@ -567,12 +680,12 @@ def _load_main_with_sdk_stub():
     sdk.ProtocolRequest = object
     sdk.ProtocolResult = Result
     sdk.main = lambda _handlers: 0
-    package = types.ModuleType("omf")
+    package = types.ModuleType("openfoundry")
     package.sdk = sdk
     spec = importlib.util.spec_from_file_location("slp_sparse_omf_main_test", MODULE / "main.py")
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
-    with patch.dict(sys.modules, {"omf": package, "omf.sdk": sdk}):
+    with patch.dict(sys.modules, {"openfoundry": package, "openfoundry.sdk": sdk}):
         spec.loader.exec_module(module)
     return module
 

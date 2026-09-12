@@ -1,4 +1,4 @@
-# Building SLp with Open Model Factory 2
+# Building SLp with OpenFoundry
 
 ## Objective and working style
 
@@ -35,32 +35,38 @@ SLp-1 remains frozen historical evidence. Reuse ideas supported by its code and
 results, not its fixed gene universe, feature layout or benchmark conclusions.
 Do not modify `model/v1/` or overwrite historical results and releases.
 
-## OMF 2 workflow
+## OpenFoundry workflow
 
 Read `MODEL_CARD.md` and the latest section of `docs/results.md` before substantial
-work. The exact upstream runtime is pinned in `omf-version.json`.
-Run `bash scripts/bootstrap_omf2.sh` on Linux with Python 3.11/3.12 to install it.
+work. The exact upstream runtime is pinned in `openfoundry-version.json`.
+Run `bash scripts/bootstrap_openfoundry.sh` with Python 3.11/3.12 to install it.
+The pin names an exact unreleased commit because upstream still reports 2.0.0.
+Keep the old `.omf/` state and runtime intact; there is no cross-brand migration.
+Use checkpoint `slp-1.2-0910` for historical OMF replay. The working project uses
+`openfoundry.yaml` and fresh `.openfoundry/` state. See the upgrade section in
+`docs/development.md` for promotion profiles and platform limits.
 From the project root, use the launcher to pin child Python processes as well:
 
 ```sh
-bash scripts/omf2.sh doctor
-bash scripts/omf2.sh agent context
-bash scripts/omf2.sh agent capabilities experiment.run
-bash scripts/omf2.sh experiment run experiment.yaml --candidate rank32
-bash scripts/omf2.sh experiment list
-bash scripts/omf2.sh experiment review <run-id> --baseline <baseline-id>
-bash scripts/omf2.sh experiment reproduce <run-id>
-bash scripts/omf2.sh experiment export <run-id> --to <new-model-directory>
+bash scripts/openfoundry.sh doctor
+bash scripts/openfoundry.sh agent context
+bash scripts/openfoundry.sh agent capabilities experiment.run
+bash scripts/openfoundry.sh experiment run experiment.yaml --candidate rank32
+bash scripts/openfoundry.sh experiment list
+bash scripts/openfoundry.sh experiment review <run-id> --baseline <baseline-id>
+bash scripts/openfoundry.sh experiment reproduce <run-id>
+bash scripts/openfoundry.sh experiment export <run-id> --to <new-model-directory>
 ```
 
 Global `--project` and `--actor` options precede subcommands. The actor defaults
 to the configured owner. Use the existing identity; never create a substitute
-to work around a denial. Existing `omf.dev/v1alpha1` resource manifests remain
-valid in OMF 2; do not invent a v2 resource API version.
+to work around a denial. Use `openfoundry.dev/v1alpha1` resource manifests and `openfoundry.module/v1`
+module requests/results. The former `omf.*` protocols are not accepted by this
+runtime. Historical resource URIs and artifact provenance remain unchanged.
 
 The active `experiment.yaml` names captured scripts, data inputs, artifacts,
 metrics, candidates and compute limits. Scripts accept explicit paths and need
-no OMF imports. Capture uncommitted source using the configured `archive` mode.
+no OpenFoundry imports. Capture uncommitted source using the configured `archive` mode.
 Place hash-pinned dependency locks inside each captured source directory.
 Keep source self-contained: admitted packages cannot rely on sibling repository
 imports or absolute run paths. Use explicit training and evaluation input lists.
@@ -68,8 +74,8 @@ Custom stage graphs may continue using `modules/`, `workloads/`, `evaluations/`,
 `bindings/`, `rights/` and `sources/` where appropriate.
 
 Use exact executors and report the capabilities actually exercised. Do not
-silently substitute an executor. Interrupted work is managed with `omf operation
-reconcile` or `omf operation cancel`; do not edit runtime records by hand.
+silently substitute an executor. Interrupted work is managed with `openfoundry operation
+reconcile` or `openfoundry operation cancel`; do not edit runtime records by hand.
 
 ## Model and data design
 
@@ -106,12 +112,12 @@ not the sole durable copy. Preserve other prefixes in the shared Abiome bucket.
 Bucket presence does not establish training admission or CV3 eligibility.
 
 Git holds source and configuration. Artifact stores hold datasets, checkpoints
-and model bundles. `.omf/` is generated, untracked state: use OMF commands for
+and model bundles. `.openfoundry/` is generated, untracked state: use OpenFoundry commands for
 migration, backup and recovery; never manually edit or commit it. Keep real
 payloads, credentials, caches, `results/` and `ontology/` out of commits. Tiny
 synthetic contract fixtures belong under `data/fixtures/`.
 
-OMF 2 separates saving a release from selecting it. Follow the current project
+OpenFoundry separates saving a release from selecting it. Follow the current project
 policy and real runtime requirements; do not fabricate reports, signatures or
 approvals. Existing v1 releases must be recreated from their recorded runs before
 new promotion/deployment. Export only to a new destination; review exact local
@@ -119,7 +125,7 @@ and remote paths before uploading and never overwrite a release.
 
 Ordinary-script experiments materialize file/directory artifacts for evaluation
 and export. A standalone SLp inference bundle must include the actual weights,
-configuration, code and dependency contract. The separate OMF ModelPackage
+configuration, code and dependency contract. The separate OpenFoundry ModelPackage
 service adapter still needs verified large-artifact state materialization;
 do not claim that serving integration based only on successful experiment export.
 

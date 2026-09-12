@@ -173,9 +173,17 @@ class PredictionQueryIndex:
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
             raise ValueError("query.json is not valid UTF-8 JSON") from error
         fields = {
-            "schema", "datasetId", "version", "role", "labelClass",
-            "targetValuesPresent", "observedMaskPresent", "valueSpace",
-            "speciesTaxa", "sourceIds", "shards",
+            "schema",
+            "datasetId",
+            "version",
+            "role",
+            "labelClass",
+            "targetValuesPresent",
+            "observedMaskPresent",
+            "valueSpace",
+            "speciesTaxa",
+            "sourceIds",
+            "shards",
         }
         _expect_keys(manifest, fields, "query manifest")
         if (
@@ -193,7 +201,8 @@ class PredictionQueryIndex:
             raise ValueError("query and pretrain value spaces differ")
         taxa_value = manifest["speciesTaxa"]
         if (
-            not isinstance(taxa_value, list) or not taxa_value
+            not isinstance(taxa_value, list)
+            or not taxa_value
             or any(type(item) is not int or item <= 0 for item in taxa_value)
             or len(taxa_value) != len(set(taxa_value))
         ):
@@ -213,14 +222,21 @@ class PredictionQueryIndex:
         for item in raw_shards:
             _expect_keys(item, {"path", "sha256", "bytes", "records"}, "query shard")
             path_value = _require_nonempty(item["path"], "query shard path")
-            if path_value in paths or not (path_value.endswith(".jsonl") or path_value.endswith(".jsonl.gz")):
+            if path_value in paths or not (
+                path_value.endswith(".jsonl") or path_value.endswith(".jsonl.gz")
+            ):
                 raise ValueError("query shard paths must be unique JSONL paths")
             paths.add(path_value)
             digest = _require_sha(item["sha256"], "query shard sha256")
             path = _resolve_file(root_path, path_value)
             _verify_digest(path, digest)
             byte_count, record_count = item["bytes"], item["records"]
-            if type(byte_count) is not int or byte_count <= 0 or byte_count > 8 * 1024**3 or path.stat().st_size != byte_count:
+            if (
+                type(byte_count) is not int
+                or byte_count <= 0
+                or byte_count > 8 * 1024**3
+                or path.stat().st_size != byte_count
+            ):
                 raise ValueError("query shard byte count is invalid")
             if type(record_count) is not int or record_count <= 0:
                 raise ValueError("query shard record count is invalid")
@@ -229,13 +245,23 @@ class PredictionQueryIndex:
             if total_records > 2_000_000 or total_bytes > 64 * 1024**3:
                 raise ValueError("query snapshot exceeds its aggregate bound")
             shards.append(QueryShardReference(path_value, digest, byte_count, record_count))
-        expected_files = {manifest_path.resolve(), *(_resolve_file(root_path, item) for item in paths)}
+        expected_files = {
+            manifest_path.resolve(),
+            *(_resolve_file(root_path, item) for item in paths),
+        }
         observed_files = {path.resolve() for path in root_path.rglob("*") if path.is_file()}
         if observed_files != expected_files:
             raise ValueError("query snapshot contains undeclared files")
         result = cls(
-            root_path, dataset_id, version, value_space, species_taxa, sources,
-            hashlib.sha256(raw).hexdigest(), tuple(shards), feature_corpus,
+            root_path,
+            dataset_id,
+            version,
+            value_space,
+            species_taxa,
+            sources,
+            hashlib.sha256(raw).hexdigest(),
+            tuple(shards),
+            feature_corpus,
         )
         seen_profiles: set[str] = set()
         seen_taxa: set[int] = set()
@@ -285,8 +311,14 @@ class PredictionQueryIndex:
 
     def _validate_record(self, record: object) -> dict[str, object]:
         fields = {
-            "profileId", "speciesTaxon", "sourceId", "centeringGroup",
-            "perturbationId", "interventionIds", "readoutIds", "distributionTypes",
+            "profileId",
+            "speciesTaxon",
+            "sourceId",
+            "centeringGroup",
+            "perturbationId",
+            "interventionIds",
+            "readoutIds",
+            "distributionTypes",
         }
         _expect_keys(record, fields, "query record")
         assert isinstance(record, dict)
@@ -303,9 +335,12 @@ class PredictionQueryIndex:
         readouts = record["readoutIds"]
         distributions = record["distributionTypes"]
         if (
-            not isinstance(interventions, list) or not interventions
-            or not isinstance(readouts, list) or not readouts
-            or not isinstance(distributions, list) or len(distributions) != len(readouts)
+            not isinstance(interventions, list)
+            or not interventions
+            or not isinstance(readouts, list)
+            or not readouts
+            or not isinstance(distributions, list)
+            or len(distributions) != len(readouts)
             or any(item not in LIKELIHOODS for item in distributions)
             or any(not isinstance(item, str) for item in interventions + readouts)
             or len(interventions) > self.feature_corpus.bounds["maxActionTokens"]
@@ -318,22 +353,34 @@ class PredictionQueryIndex:
             _require_curie(item, "query entity")
         if any(not YEAST_SYSTEMATIC_GENE.fullmatch(item) for item in interventions):
             raise ValueError("query interventionIds must be systematic yeast gene IDs")
-        perturbation = "PERTURBATION:" + hashlib.sha256(
-            json.dumps(interventions, sort_keys=True, separators=(",", ":")).encode()
-        ).hexdigest()
+        perturbation = (
+            "PERTURBATION:"
+            + hashlib.sha256(
+                json.dumps(interventions, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+        )
         profile_document = {
-            "speciesTaxon": taxon, "sourceId": source,
-            "centeringGroup": group, "perturbationId": perturbation,
+            "speciesTaxon": taxon,
+            "sourceId": source,
+            "centeringGroup": group,
+            "perturbationId": perturbation,
         }
-        profile = "PROFILE:" + hashlib.sha256(
-            json.dumps(profile_document, sort_keys=True, separators=(",", ":")).encode()
-        ).hexdigest()
+        profile = (
+            "PROFILE:"
+            + hashlib.sha256(
+                json.dumps(profile_document, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+        )
         if record["perturbationId"] != perturbation or record["profileId"] != profile:
             raise ValueError("query perturbationId/profileId is not canonical")
-        entity_lookup = {str(item): index for index, item in enumerate(self.feature_corpus.entity_id)}
+        entity_lookup = {
+            str(item): index for index, item in enumerate(self.feature_corpus.entity_id)
+        }
         missing = sorted(set(interventions + readouts) - set(entity_lookup))
         if missing:
-            raise ValueError("query entity lacks admitted static features: " + ", ".join(missing[:10]))
+            raise ValueError(
+                "query entity lacks admitted static features: " + ", ".join(missing[:10])
+            )
         for item in interventions + readouts:
             entity_taxon = int(self.feature_corpus.entity_species_taxon[entity_lookup[item]])
             if entity_taxon not in (0, taxon):
@@ -349,9 +396,13 @@ class PredictionQueryIndex:
         action_type = corpus.action_types.index("SLPACT:gene-deletion")
         likelihood_to_readout: dict[str, int] = {}
         for likelihood in LIKELIHOODS:
-            matches = [index for index, item in enumerate(corpus.readouts) if item.likelihood == likelihood]
+            matches = [
+                index for index, item in enumerate(corpus.readouts) if item.likelihood == likelihood
+            ]
             if len(matches) != 1:
-                raise ValueError("query v1 requires an unambiguous distribution-to-readout type mapping")
+                raise ValueError(
+                    "query v1 requires an unambiguous distribution-to-readout type mapping"
+                )
             likelihood_to_readout[likelihood] = matches[0]
         batch = len(records)
         action_width = max(len(item["interventionIds"]) for item in records)
@@ -373,8 +424,12 @@ class PredictionQueryIndex:
 
         action_ids = [list(item["interventionIds"]) for item in records]
         readout_ids = [list(item["readoutIds"]) for item in records]
-        action_value, action_present, action_entity_type, action_mask = feature_block(action_ids, action_width)
-        query_value, query_present, query_entity_type, query_mask = feature_block(readout_ids, query_width)
+        action_value, action_present, action_entity_type, action_mask = feature_block(
+            action_ids, action_width
+        )
+        query_value, query_present, query_entity_type, query_mask = feature_block(
+            readout_ids, query_width
+        )
         readout_type = np.full((batch, query_width), -1, np.int64)
         likelihood_type = np.full((batch, query_width), -1, np.int64)
         for row, item in enumerate(records):
@@ -382,23 +437,47 @@ class PredictionQueryIndex:
                 readout_type[row, column] = likelihood_to_readout[str(likelihood)]
                 likelihood_type[row, column] = LIKELIHOODS.index(str(likelihood))
         taxa = [int(item["speciesTaxon"]) for item in records]
-        species_value = np.asarray([corpus.species_feature_value[item] for item in taxa], np.float32)
-        species_present = np.asarray([corpus.species_feature_present[item] for item in taxa], np.bool_)
+        species_value = np.asarray(
+            [corpus.species_feature_value[item] for item in taxa], np.float32
+        )
+        species_present = np.asarray(
+            [corpus.species_feature_present[item] for item in taxa], np.bool_
+        )
         context_width = 1
         world = WorldBatch(
-            context_features=torch.zeros((batch, context_width, corpus.entity_feature_dim), dtype=torch.float32),
-            context_feature_present=torch.zeros((batch, context_width, corpus.entity_feature_dim), dtype=torch.bool),
+            context_features=torch.zeros(
+                (batch, context_width, corpus.entity_feature_dim), dtype=torch.float32
+            ),
+            context_feature_present=torch.zeros(
+                (batch, context_width, corpus.entity_feature_dim), dtype=torch.bool
+            ),
             context_entity_type=torch.full((batch, context_width), -1, dtype=torch.long),
             context_type=torch.full((batch, context_width), -1, dtype=torch.long),
-            context_covariates=torch.zeros((batch, context_width, len(corpus._covariate_indices("context", "world"))), dtype=torch.float32),
-            context_covariate_present=torch.zeros((batch, context_width, len(corpus._covariate_indices("context", "world"))), dtype=torch.bool),
+            context_covariates=torch.zeros(
+                (batch, context_width, len(corpus._covariate_indices("context", "world"))),
+                dtype=torch.float32,
+            ),
+            context_covariate_present=torch.zeros(
+                (batch, context_width, len(corpus._covariate_indices("context", "world"))),
+                dtype=torch.bool,
+            ),
             context_mask=torch.zeros((batch, context_width), dtype=torch.bool),
             action_features=_float_tensor(action_value),
             action_feature_present=_bool_tensor(action_present),
             action_entity_type=_long_tensor(action_entity_type),
-            action_type=torch.where(_bool_tensor(action_mask), torch.full((batch, action_width), action_type, dtype=torch.long), torch.full((batch, action_width), -1, dtype=torch.long)),
-            action_covariates=torch.zeros((batch, action_width, len(corpus._covariate_indices("action", "world"))), dtype=torch.float32),
-            action_covariate_present=torch.zeros((batch, action_width, len(corpus._covariate_indices("action", "world"))), dtype=torch.bool),
+            action_type=torch.where(
+                _bool_tensor(action_mask),
+                torch.full((batch, action_width), action_type, dtype=torch.long),
+                torch.full((batch, action_width), -1, dtype=torch.long),
+            ),
+            action_covariates=torch.zeros(
+                (batch, action_width, len(corpus._covariate_indices("action", "world"))),
+                dtype=torch.float32,
+            ),
+            action_covariate_present=torch.zeros(
+                (batch, action_width, len(corpus._covariate_indices("action", "world"))),
+                dtype=torch.bool,
+            ),
             action_mask=_bool_tensor(action_mask),
             query_features=_float_tensor(query_value),
             query_feature_present=_bool_tensor(query_present),
@@ -408,10 +487,18 @@ class PredictionQueryIndex:
             query_mask=_bool_tensor(query_mask),
             species_features=_float_tensor(species_value),
             species_feature_present=_bool_tensor(species_present),
-            record_covariates=torch.zeros((batch, len(corpus._covariate_indices("record", "world"))), dtype=torch.float32),
-            record_covariate_present=torch.zeros((batch, len(corpus._covariate_indices("record", "world"))), dtype=torch.bool),
-            observation_covariates=torch.zeros((batch, len(corpus._covariate_indices("observation", "world"))), dtype=torch.float32),
-            observation_covariate_present=torch.zeros((batch, len(corpus._covariate_indices("observation", "world"))), dtype=torch.bool),
+            record_covariates=torch.zeros(
+                (batch, len(corpus._covariate_indices("record", "world"))), dtype=torch.float32
+            ),
+            record_covariate_present=torch.zeros(
+                (batch, len(corpus._covariate_indices("record", "world"))), dtype=torch.bool
+            ),
+            observation_covariates=torch.zeros(
+                (batch, len(corpus._covariate_indices("observation", "world"))), dtype=torch.float32
+            ),
+            observation_covariate_present=torch.zeros(
+                (batch, len(corpus._covariate_indices("observation", "world"))), dtype=torch.bool
+            ),
         )
         return MaterializedQueryBatch(world, records)
 
@@ -594,9 +681,7 @@ class CorpusIndex:
         ]
         if len(gene_lines) != genes_ref.count or gene_lines != sorted(set(gene_lines)):
             raise ValueError("trajectoryGenes must be a sorted unique counted CURIE list")
-        trajectory_genes = frozenset(
-            _require_curie(item, "trajectory gene") for item in gene_lines
-        )
+        trajectory_genes = frozenset(_require_curie(item, "trajectory gene") for item in gene_lines)
         if not trajectory_genes.issubset(set(str(item) for item in entity_id)):
             raise ValueError("trajectoryGenes must resolve through the entity dictionary")
         shards = _parse_shards(manifest["shards"], root, bounds)
@@ -615,9 +700,7 @@ class CorpusIndex:
             ],
         }
         content_digest = hashlib.sha256(
-            json.dumps(
-                identity_document, sort_keys=True, separators=(",", ":")
-            ).encode("utf-8")
+            json.dumps(identity_document, sort_keys=True, separators=(",", ":")).encode("utf-8")
         ).hexdigest()
 
         result = cls(
@@ -671,9 +754,7 @@ class CorpusIndex:
                 raise ValueError("record_id values must be unique across shards")
             seen_records.update(record_ids)
             seen_sources.update(int(item) for item in shard.arrays["source_index"])
-            action_references = shard.arrays["action_entity_index"][
-                shard.arrays["action_mask"]
-            ]
+            action_references = shard.arrays["action_entity_index"][shard.arrays["action_mask"]]
             for entity_index in action_references:
                 if int(result.entity_species_taxon[int(entity_index)]) != 0:
                     active_species_actions.add(str(result.entity_id[int(entity_index)]))
@@ -718,9 +799,7 @@ class CorpusIndex:
             "record_covariate_dim": len(self._covariate_indices("record", "world")),
             "context_covariate_dim": len(self._covariate_indices("context", "world")),
             "action_covariate_dim": len(self._covariate_indices("action", "world")),
-            "observation_covariate_dim": len(
-                self._covariate_indices("observation", "world")
-            ),
+            "observation_covariate_dim": len(self._covariate_indices("observation", "world")),
         }
         config.update(overrides)
         return WorldConfig(**config)
@@ -757,9 +836,7 @@ class CorpusIndex:
         selected_panels = arrays["query_panel_index"][row_index]
         panel_queries = [self._panel_queries(int(panel)) for panel in selected_panels]
         query_count = max(len(items) for items in panel_queries)
-        query_value = np.zeros(
-            (batch_size, query_count, self.entity_feature_dim), dtype=np.float32
-        )
+        query_value = np.zeros((batch_size, query_count, self.entity_feature_dim), dtype=np.float32)
         query_present = np.zeros_like(query_value, dtype=np.bool_)
         query_entity_type = np.full((batch_size, query_count), -1, dtype=np.int64)
         readout_type = np.full((batch_size, query_count), -1, dtype=np.int64)
@@ -789,9 +866,7 @@ class CorpusIndex:
                     [self.readouts[int(item)].implicit_zero for item in query_readouts],
                     dtype=np.bool_,
                 )
-                local_index = {
-                    int(query): position for position, query in enumerate(queries)
-                }
+                local_index = {int(query): position for position, query in enumerate(queries)}
                 start = int(target_indptr[source_row])
                 stop = int(target_indptr[source_row + 1])
                 for offset in range(start, stop):
@@ -837,9 +912,7 @@ class CorpusIndex:
             likelihood_type=_long_tensor(likelihood_type),
             query_mask=_bool_tensor(query_mask),
             species_features=_float_tensor(arrays["species_feature_value"][row_index]),
-            species_feature_present=_bool_tensor(
-                arrays["species_feature_present"][row_index]
-            ),
+            species_feature_present=_bool_tensor(arrays["species_feature_present"][row_index]),
             record_covariates=_float_tensor(
                 self._select_covariates(
                     arrays["record_covariate_value"][row_index], "record", "world"
@@ -926,12 +999,10 @@ class CorpusIndex:
             ),
             source_index=_long_tensor(arrays["source_index"][row_index]),
             replicate_id=tuple(str(item) for item in arrays["replicate_id"][row_index]),
-            perturbation_id=tuple(
-                str(item) for item in arrays["perturbation_id"][row_index]
-            ),
-            centering_group=tuple(
-                str(item) for item in arrays["centering_group"][row_index]
-            ) if self.role == PREDICTION_QUERY_ROLE else tuple("" for _ in row_index),
+            perturbation_id=tuple(str(item) for item in arrays["perturbation_id"][row_index]),
+            centering_group=tuple(str(item) for item in arrays["centering_group"][row_index])
+            if self.role == PREDICTION_QUERY_ROLE
+            else tuple("" for _ in row_index),
             species_taxon=_long_tensor(arrays["species_taxon"][row_index]),
         )
         return MaterializedBatch(
@@ -987,9 +1058,7 @@ class CorpusIndex:
             if definition.access == access
         )
 
-    def _select_covariates(
-        self, values: np.ndarray, axis: str, access: str
-    ) -> np.ndarray:
+    def _select_covariates(self, values: np.ndarray, axis: str, access: str) -> np.ndarray:
         return values[..., self._covariate_indices(axis, access)]
 
     def _validate_shard_arrays(
@@ -1024,17 +1093,13 @@ class CorpusIndex:
             if arrays[name].shape[0] != records:
                 raise ValueError(f"{name} record count does not match manifest")
         _validate_curie_array(arrays["record_id"], records, "record_id", unique=True)
-        _validate_curie_array(
-            arrays["observation_unit_id"], records, "observation_unit_id"
-        )
+        _validate_curie_array(arrays["observation_unit_id"], records, "observation_unit_id")
         _validate_curie_array(arrays["replicate_id"], records, "replicate_id")
         _validate_curie_array(arrays["perturbation_id"], records, "perturbation_id")
         _require_int64(arrays["source_index"], (records,), "source_index")
         _validate_index(arrays["source_index"], len(self.sources), "source_index")
         _require_int64(arrays["species_taxon"], (records,), "species_taxon")
-        if not set(int(item) for item in arrays["species_taxon"]).issubset(
-            set(self.species_taxa)
-        ):
+        if not set(int(item) for item in arrays["species_taxon"]).issubset(set(self.species_taxa)):
             raise ValueError("species_taxon contains an undeclared taxon")
         _require_float32(
             arrays["species_feature_value"],
@@ -1056,9 +1121,7 @@ class CorpusIndex:
             expected_present = np.asarray(self.species_feature_present[int(taxon)], np.bool_)
             if not np.array_equal(arrays["species_feature_value"][row], expected_value):
                 raise ValueError("species feature value does not match declared taxon")
-            if not np.array_equal(
-                arrays["species_feature_present"][row], expected_present
-            ):
+            if not np.array_equal(arrays["species_feature_present"][row], expected_present):
                 raise ValueError("species feature presence does not match declared taxon")
 
         context_shape = arrays["context_entity_index"].shape
@@ -1083,9 +1146,7 @@ class CorpusIndex:
             len(self.action_types),
             len(self.covariates["action"]),
         )
-        if not (
-            arrays["context_mask"].any(axis=1) | arrays["action_mask"].any(axis=1)
-        ).all():
+        if not (arrays["context_mask"].any(axis=1) | arrays["action_mask"].any(axis=1)).all():
             raise ValueError("every record requires context or action memory")
         for axis in ("record", "observation"):
             value_name = f"{axis}_covariate_value"
@@ -1108,13 +1169,9 @@ class CorpusIndex:
                 (reference.target_values,),
                 "target_query_index",
             )
-            _require_float32(
-                arrays["target_value"], (reference.target_values,), "target_value"
-            )
+            _require_float32(arrays["target_value"], (reference.target_values,), "target_value")
             _validate_csr(arrays["target_indptr"], reference.target_values, "target")
-            _validate_index(
-                arrays["target_query_index"], len(self.query_id), "target_query_index"
-            )
+            _validate_index(arrays["target_query_index"], len(self.query_id), "target_query_index")
             if not np.isfinite(arrays["target_value"]).all():
                 raise ValueError("target values must be finite")
         for row in range(records):
@@ -1123,9 +1180,7 @@ class CorpusIndex:
                 raise ValueError("every record requires a non-empty query panel")
             taxon = int(arrays["species_taxon"][row])
             for axis in ("context", "action"):
-                active_references = arrays[f"{axis}_entity_index"][row][
-                    arrays[f"{axis}_mask"][row]
-                ]
+                active_references = arrays[f"{axis}_entity_index"][row][arrays[f"{axis}_mask"][row]]
                 referenced_taxa = self.entity_species_taxon[active_references]
                 if any(int(item) not in (0, taxon) for item in referenced_taxa):
                     raise ValueError(f"{axis} entity taxon does not match the record")
@@ -1176,9 +1231,17 @@ class CorpusIndex:
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
             raise ValueError("query.json is not valid UTF-8 JSON") from error
         fields = {
-            "schema", "datasetId", "version", "role", "labelClass",
-            "targetValuesPresent", "observedMaskPresent", "valueSpace",
-            "speciesTaxa", "sourceIds", "shards",
+            "schema",
+            "datasetId",
+            "version",
+            "role",
+            "labelClass",
+            "targetValuesPresent",
+            "observedMaskPresent",
+            "valueSpace",
+            "speciesTaxa",
+            "sourceIds",
+            "shards",
         }
         _expect_keys(manifest, fields, "query manifest")
         if (
@@ -1207,7 +1270,11 @@ class CorpusIndex:
                 raise ValueError("query identity shards must be uncompressed JSONL")
             digest = _require_sha(item["sha256"], "query shard sha256")
             _verify_digest(path, digest)
-            if type(item["bytes"]) is not int or item["bytes"] <= 0 or path.stat().st_size != item["bytes"]:
+            if (
+                type(item["bytes"]) is not int
+                or item["bytes"] <= 0
+                or path.stat().st_size != item["bytes"]
+            ):
                 raise ValueError("query identity shard byte count mismatch")
             typed = self.load_shard(index)
             count = 0
@@ -1230,8 +1297,14 @@ class CorpusIndex:
         self, record: object, shard: SparseShard, row: int, seen_profiles: set[str]
     ) -> None:
         fields = {
-            "profileId", "speciesTaxon", "sourceId", "centeringGroup",
-            "perturbationId", "interventionIds", "readoutIds", "distributionTypes",
+            "profileId",
+            "speciesTaxon",
+            "sourceId",
+            "centeringGroup",
+            "perturbationId",
+            "interventionIds",
+            "readoutIds",
+            "distributionTypes",
         }
         _expect_keys(record, fields, "query identity record")
         profile = _require_curie(record["profileId"], "profileId")
@@ -1243,18 +1316,24 @@ class CorpusIndex:
         intervention_ids = sorted(str(self.entity_id[int(item)]) for item in actions)
         if len(intervention_ids) != len(set(intervention_ids)):
             raise ValueError("query interventionIds cannot contain duplicates")
-        perturbation_id = "PERTURBATION:" + hashlib.sha256(
-            json.dumps(intervention_ids, sort_keys=True, separators=(",", ":")).encode("utf-8")
-        ).hexdigest()
+        perturbation_id = (
+            "PERTURBATION:"
+            + hashlib.sha256(
+                json.dumps(intervention_ids, sort_keys=True, separators=(",", ":")).encode("utf-8")
+            ).hexdigest()
+        )
         profile_document = {
             "speciesTaxon": int(shard.arrays["species_taxon"][row]),
             "sourceId": self.sources[int(shard.arrays["source_index"][row])],
             "centeringGroup": str(shard.arrays["centering_group"][row]),
             "perturbationId": perturbation_id,
         }
-        profile_id = "PROFILE:" + hashlib.sha256(
-            json.dumps(profile_document, sort_keys=True, separators=(",", ":")).encode("utf-8")
-        ).hexdigest()
+        profile_id = (
+            "PROFILE:"
+            + hashlib.sha256(
+                json.dumps(profile_document, sort_keys=True, separators=(",", ":")).encode("utf-8")
+            ).hexdigest()
+        )
         expected = {
             "profileId": profile_id,
             "speciesTaxon": int(shard.arrays["species_taxon"][row]),
@@ -1263,18 +1342,14 @@ class CorpusIndex:
             "perturbationId": perturbation_id,
             "interventionIds": intervention_ids,
             "readoutIds": [
-                str(self.entity_id[int(self.query_entity_index[int(item)])])
-                for item in panel
+                str(self.entity_id[int(self.query_entity_index[int(item)])]) for item in panel
             ],
             "distributionTypes": [
-                self.readouts[int(self.query_readout_index[int(item)])].likelihood
-                for item in panel
+                self.readouts[int(self.query_readout_index[int(item)])].likelihood for item in panel
             ],
         }
         if record != expected:
-            differing = sorted(
-                name for name in fields if record.get(name) != expected.get(name)
-            )
+            differing = sorted(name for name in fields if record.get(name) != expected.get(name))
             raise ValueError(
                 "query identity record does not exactly match typed model input; "
                 f"fields={differing}"
@@ -1328,11 +1403,13 @@ class DeterministicHierarchicalSampler:
 
         groups: dict[int, dict[str, dict[str, list[int]]]] = {}
         for position, source in enumerate(self.source_index):
-            groups.setdefault(source, {}).setdefault(
-                self.perturbation_id[position], {}
-            ).setdefault(self.replicate_id[position], []).append(position)
+            groups.setdefault(source, {}).setdefault(self.perturbation_id[position], {}).setdefault(
+                self.replicate_id[position], []
+            ).append(position)
         states: dict[int, _HierarchyState] = {
-            source: _HierarchyState(groups[source], random.Random(self.seed + 104729 * (source + 1)))
+            source: _HierarchyState(
+                groups[source], random.Random(self.seed + 104729 * (source + 1))
+            )
             for source in groups
         }
         return tuple(self.locations[states[source].next()] for source in source_slots)
@@ -1357,9 +1434,7 @@ class _HierarchyState:
         self.record_cursor = {item: 0 for item in self.records}
 
     def next(self) -> int:
-        perturbation = self.perturbations[
-            self.perturbation_cursor % len(self.perturbations)
-        ]
+        perturbation = self.perturbations[self.perturbation_cursor % len(self.perturbations)]
         self.perturbation_cursor += 1
         replicates = self.replicates[perturbation]
         replicate_cursor = self.replicate_cursor[perturbation]
@@ -1377,9 +1452,7 @@ def pinned_dataset_path(value: object, input_name: str = "corpus") -> str:
 
     required = {"manifestDigest", "mode", "path", "resource"}
     if not isinstance(value, dict) or set(value) != required:
-        raise ValueError(
-            f"{input_name} must be an exact materialized OMF DatasetSnapshot input"
-        )
+        raise ValueError(f"{input_name} must be an exact materialized OMF DatasetSnapshot input")
     if value["mode"] != "copy":
         raise ValueError(f"{input_name} must be an immutable copied DatasetSnapshot")
     manifest_digest = value["manifestDigest"]
@@ -1390,9 +1463,9 @@ def pinned_dataset_path(value: object, input_name: str = "corpus") -> str:
     ):
         raise ValueError(f"{input_name}.manifestDigest must be admission-pinned")
     resource = value["resource"]
-    if not isinstance(resource, str) or not resource.startswith("omf://"):
+    if not isinstance(resource, str) or not resource.startswith(("omf://", "openfoundry://")):
         raise ValueError(f"{input_name}.resource must be an OMF DatasetSnapshot URI")
-    identity, separator, revision = resource.removeprefix("omf://").rpartition("@")
+    identity, separator, revision = resource.split("://", 1)[1].rpartition("@")
     if (
         not separator
         or not revision.startswith("sha256:")
@@ -1404,7 +1477,10 @@ def pinned_dataset_path(value: object, input_name: str = "corpus") -> str:
         len(parts) < 3
         or parts[-2] != "datasetsnapshot"
         or RESOURCE_NAME.fullmatch(parts[-1]) is None
-        or any(not part or part in {".", ".."} or any(char.isspace() for char in part) for part in parts)
+        or any(
+            not part or part in {".", ".."} or any(char.isspace() for char in part)
+            for part in parts
+        )
     ):
         raise ValueError(f"{input_name}.resource kind must be DatasetSnapshot")
     resource_name = parts[-1]
@@ -1570,9 +1646,7 @@ def _parse_feature_pack(value: Any) -> tuple[int, int, str, str]:
 
 def _parse_species(
     value: Any, feature_dim: int
-) -> tuple[
-    tuple[int, ...], dict[int, tuple[float, ...]], dict[int, tuple[bool, ...]]
-]:
+) -> tuple[tuple[int, ...], dict[int, tuple[float, ...]], dict[int, tuple[bool, ...]]]:
     if not isinstance(value, list) or not value:
         raise ValueError("species must be a non-empty list")
     taxa: list[int] = []
@@ -1671,9 +1745,7 @@ def _parse_bounds(value: Any) -> dict[str, int]:
     return {name: int(value[name]) for name in names}
 
 
-def _parse_file_ref(
-    value: Any, name: str, *, allow_empty: bool = False
-) -> FileReference:
+def _parse_file_ref(value: Any, name: str, *, allow_empty: bool = False) -> FileReference:
     _expect_keys(value, {"path", "sha256", "count"}, name)
     path = _require_nonempty(value["path"], f"{name} path")
     digest = _require_sha(value["sha256"], f"{name} sha256")
@@ -1685,9 +1757,7 @@ def _parse_file_ref(
     return FileReference(path, digest, count)
 
 
-def _parse_shards(
-    value: Any, root: Path, bounds: dict[str, int]
-) -> tuple[ShardReference, ...]:
+def _parse_shards(value: Any, root: Path, bounds: dict[str, int]) -> tuple[ShardReference, ...]:
     if not isinstance(value, list) or not value:
         raise ValueError("shards must be a non-empty list")
     result: list[ShardReference] = []
@@ -1743,7 +1813,9 @@ def _validate_entity_dictionary(
     _validate_index(entity_type, type_count, "entity_type")
     _require_int64(entity_species_taxon, (count,), "entity_species_taxon")
     if any(int(item) != 0 and int(item) not in species_taxa for item in entity_species_taxon):
-        raise ValueError("entity species taxon must be declared or zero for species-neutral entities")
+        raise ValueError(
+            "entity species taxon must be declared or zero for species-neutral entities"
+        )
     _require_float32(value, (count, feature_dim), "entity_feature_value")
     _require_bool(present, (count, feature_dim), "entity_feature_present")
     _validate_masked_storage(value, present, "entity features")
@@ -1817,9 +1889,7 @@ def _validate_token_references(
         raise ValueError(f"padded {axis} tokens cannot contain covariates")
 
 
-def _validate_curie_array(
-    value: np.ndarray, count: int, name: str, unique: bool = False
-) -> None:
+def _validate_curie_array(value: np.ndarray, count: int, name: str, unique: bool = False) -> None:
     if value.ndim != 1 or value.shape != (count,) or value.dtype.kind not in "US":
         raise ValueError(f"{name} must be a fixed-width string vector")
     items = [str(item) for item in value]
@@ -1829,9 +1899,7 @@ def _validate_curie_array(
         raise ValueError(f"{name} must be unique")
 
 
-def _validate_string_array(
-    value: np.ndarray, count: int, name: str, *, unique: bool
-) -> None:
+def _validate_string_array(value: np.ndarray, count: int, name: str, *, unique: bool) -> None:
     if value.ndim != 1 or value.shape != (count,) or value.dtype.kind not in "US":
         raise ValueError(f"{name} must be a fixed-width string vector")
     items = [str(item) for item in value]

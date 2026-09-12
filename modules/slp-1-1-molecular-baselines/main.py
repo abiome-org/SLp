@@ -4,7 +4,7 @@ import hashlib
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _validation_outputs() -> dict[str, object]:
@@ -40,20 +40,16 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     from baselines import Limits, build_baselines, resolve_pinned_dataset
 
     training = resolve_pinned_dataset(request.inputs["molecularTraining"], "molecularTraining")
-    reference = resolve_pinned_dataset(
-        request.inputs["molecularReference"], "molecularReference"
-    )
+    reference = resolve_pinned_dataset(request.inputs["molecularReference"], "molecularReference")
     if training.resource == reference.resource or training.path == reference.path:
         raise ValueError("molecular training and reference snapshots must be distinct")
     limits = Limits(
         max_shards=int(request.config.get("maxShards", 256)),
         max_records=int(request.config.get("maxRecords", 2_000_000)),
-        max_readouts_per_record=int(
-            request.config.get("maxReadoutsPerRecord", 100_000)
-        ),
+        max_readouts_per_record=int(request.config.get("maxReadoutsPerRecord", 100_000)),
         max_line_bytes=int(request.config.get("maxLineBytes", 16 * 1024 * 1024)),
     )
-    result_parent = Path(os.environ["OMF_RESULT_FILE"]).parent
+    result_parent = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     output_root = result_parent / "molecular-baselines"
     report = build_baselines(training.path, reference.path, output_root, limits)
     report["omfInputs"] = {
@@ -100,9 +96,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         outputs=outputs,
         metrics={
             "context_only_predicted_values": outputs["contextOnlyPredictedValues"],
-            "txpert_mean_additive_predicted_values": outputs[
-                "txpertMeanAdditivePredictedValues"
-            ],
+            "txpert_mean_additive_predicted_values": outputs["txpertMeanAdditivePredictedValues"],
         },
         artifacts=[
             {
@@ -118,12 +112,16 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             {
                 "name": "txpertMeanAdditivePredictionManifest",
                 "kind": "dataset",
-                "path": str(Path("molecular-baselines") / "txpert-mean-additive" / "predictions.json"),
+                "path": str(
+                    Path("molecular-baselines") / "txpert-mean-additive" / "predictions.json"
+                ),
             },
             {
                 "name": "txpertMeanAdditivePredictionRecords",
                 "kind": "dataset",
-                "path": str(Path("molecular-baselines") / "txpert-mean-additive" / "predictions.jsonl"),
+                "path": str(
+                    Path("molecular-baselines") / "txpert-mean-additive" / "predictions.jsonl"
+                ),
             },
             {
                 "name": "molecularBaselineReport",
@@ -132,6 +130,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             },
         ],
     )
+
 
 if __name__ == "__main__":
     raise SystemExit(main({"validate": validate, "run": run}))

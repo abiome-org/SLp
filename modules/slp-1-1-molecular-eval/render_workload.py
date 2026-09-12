@@ -18,7 +18,9 @@ QUERY_MANIFEST_TOKEN = "@@MOLECULAR_QUERY_MANIFEST_DIGEST@@"
 CHECKPOINT_TOKEN = "@@MODEL_CHECKPOINT@@"
 ARTIFACT_REFERENCE = re.compile(r"sha256:[0-9a-f]{64}")
 DATASET_REFERENCE = re.compile(r"dataset/[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
-DATASET_RESOURCE = re.compile(r"omf://.+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}")
+DATASET_RESOURCE = re.compile(
+    r"(?:omf|openfoundry)://.+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}"
+)
 PINNED_DIGEST = re.compile(r"sha256:[0-9a-f]{64}")
 
 
@@ -34,7 +36,9 @@ def _artifact_reference(value: str, name: str) -> str:
 
 def _dataset_reference(value: str) -> str:
     if DATASET_REFERENCE.fullmatch(value) is None:
-        raise WorkloadRenderError("query dataset must be an exact dataset/<resource-name> reference")
+        raise WorkloadRenderError(
+            "query dataset must be an exact dataset/<resource-name> reference"
+        )
     return value
 
 
@@ -60,11 +64,16 @@ def render_workload_text(
         QUERY_TOKEN: _dataset_reference(query_dataset),
         CHECKPOINT_TOKEN: _artifact_reference(model_checkpoint, "model checkpoint artifact"),
     }
-    dataset_values = [values[token] for token in (CENTERING_TOKEN, TRUTH_TOKEN, AUDIT_TOKEN, ROSTER_TOKEN, QUERY_TOKEN)]
+    dataset_values = [
+        values[token]
+        for token in (CENTERING_TOKEN, TRUTH_TOKEN, AUDIT_TOKEN, ROSTER_TOKEN, QUERY_TOKEN)
+    ]
     if len(set(dataset_values)) != len(dataset_values):
         raise WorkloadRenderError("all five DatasetSnapshots must be distinct")
     if DATASET_RESOURCE.fullmatch(query_resource) is None:
-        raise WorkloadRenderError("query resource must be an exact revision-pinned OMF DatasetSnapshot URI")
+        raise WorkloadRenderError(
+            "query resource must be an exact revision-pinned OMF DatasetSnapshot URI"
+        )
     if PINNED_DIGEST.fullmatch(query_manifest_digest) is None:
         raise WorkloadRenderError("query outer manifest must be an exact SHA-256 digest")
     values[QUERY_RESOURCE_TOKEN] = query_resource

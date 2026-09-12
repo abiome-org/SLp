@@ -198,9 +198,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
             encoding="utf-8",
             newline="\n",
         )
-        manifest_sha = hashlib.sha256(
-            mapping_paths["sgdMappingManifest"].read_bytes()
-        ).hexdigest()
+        manifest_sha = hashlib.sha256(mapping_paths["sgdMappingManifest"].read_bytes()).hexdigest()
         return {
             "raw": raw,
             "raw_spec": raw_spec,
@@ -275,9 +273,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
                 audit["identityMapping"]["artifactManifestDigests"], self.ARTIFACT_DIGESTS
             )
             self.assertIs(audit["phenotypeBoundary"]["phenotypeValuesUsed"], False)
-            self.assertIs(
-                audit["phenotypeBoundary"]["phenotypeValuesReadByAdapter"], False
-            )
+            self.assertIs(audit["phenotypeBoundary"]["phenotypeValuesReadByAdapter"], False)
             self.assertNotIn("phenotypeValuesInterpreted", audit["phenotypeBoundary"])
             self.assertEqual(audit["counts"]["allAssignmentUnionIncludingWildType"], 8)
             self.assertEqual(audit["counts"]["candidateNonWildTypeUnion"], 7)
@@ -327,7 +323,9 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
             inventory.extract_condition_identities(bad_prefix, inventory.Bounds())
 
         with self.assertRaisesRegex(inventory.AtlasInventoryError, "exactly the ptbs"):
-            inventory.extract_condition_identities({**self._parsed(), "extra": {}}, inventory.Bounds())
+            inventory.extract_condition_identities(
+                {**self._parsed(), "extra": {}}, inventory.Bounds()
+            )
 
     def test_raw_mapping_and_provenance_drift_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -372,12 +370,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
     def test_literal_materialized_input_shapes_are_strict(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            raw = (
-                root
-                / "inputs"
-                / "rawAtlasSummary"
-                / "slp-1-1-atlas-genotype-summary-raw-v1"
-            )
+            raw = root / "inputs" / "rawAtlasSummary" / "slp-1-1-atlas-genotype-summary-raw-v1"
             raw.mkdir(parents=True)
             dataset = {
                 "resource": inventory.RAW_DATASET_RESOURCE,
@@ -416,9 +409,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
             )
             legacy_path = root / "inputs" / "sgdCurrentOrfs" / "payload-legacy"
             legacy_path.write_text("payload")
-            with self.assertRaisesRegex(
-                inventory.AtlasInventoryError, "OMF materialization"
-            ):
+            with self.assertRaisesRegex(inventory.AtlasInventoryError, "OMF materialization"):
                 inventory.resolve_literal_artifact(
                     {
                         **artifact,
@@ -467,7 +458,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
 
         main_text = (MODULE_ROOT / "main.py").read_text()
         self.assertIn("from omf_protocol import", main_text)
-        self.assertNotIn("from omf.sdk import", main_text)
+        self.assertNotIn("from openfoundry.sdk import", main_text)
         protocol_spec = importlib.util.spec_from_file_location(
             "atlas_omf_protocol", MODULE_ROOT / "omf_protocol.py"
         )
@@ -476,7 +467,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
         sys.modules[protocol_spec.name] = protocol_module
         protocol_spec.loader.exec_module(protocol_module)
         request = protocol_module.ProtocolRequest.from_bytes(
-            b'{"operation":"validate","protocol":"omf.module/v1"}'
+            b'{"operation":"validate","protocol":"openfoundry.module/v1"}'
         )
         self.assertEqual(request.operation, "validate")
 
@@ -488,9 +479,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
         required = set(module["spec"]["contracts"]["input"]["required"])
         self.assertEqual(required, {"rawAtlasSummary", *inventory.MAPPING_ARTIFACT_DIGESTS})
 
-        workload = (
-            ROOT / "workloads" / "slp-1-1-atlas-genotype-inventory.yaml"
-        ).read_text()
+        workload = (ROOT / "workloads" / "slp-1-1-atlas-genotype-inventory.yaml").read_text()
         # OMF 1.0 accepts dataset/<name> in workload inputs and records the
         # resolved immutable resource URI/revision in the admitted Run.
         self.assertIn("rawAtlasSummary: dataset/slp-1-1-atlas-genotype-summary-raw-v1", workload)
@@ -521,9 +510,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
         self.assertNotIn('"path": "atlas-genotype-inventory/intervention-inventory",', main_text)
         self.assertNotIn('"path": "atlas-genotype-inventory/identity-evidence",', main_text)
 
-        source = yaml.safe_load(
-            (ROOT / "sources" / "yeast-single-cell-atlas-v1.yaml").read_text()
-        )
+        source = yaml.safe_load((ROOT / "sources" / "yeast-single-cell-atlas-v1.yaml").read_text())
         summary = source["identityOnlyAllowlist"][0]
         self.assertEqual(summary["name"], "ptb_summary.Rdata")
         self.assertEqual(summary["bytes"], 345032)
@@ -539,9 +526,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
             "da99869c11d1a6c034454568098aa50bc3313cd4508dbd506d43241b0fb4695d",
         )
         quantitative_probe = next(
-            item
-            for item in source["metadataProbe"]["files"]
-            if item["name"] == "seus_split.RData"
+            item for item in source["metadataProbe"]["files"] if item["name"] == "seus_split.RData"
         )
         self.assertIs(quantitative_probe["gzipIntegrityVerified"], True)
         self.assertEqual(quantitative_probe["decompressedSerializationBytes"], 21596869016)
@@ -566,9 +551,7 @@ class AtlasGenotypeInventoryTest(unittest.TestCase):
         self.assertIs(admission["containsPhenotypeColumns"], True)
         self.assertIs(admission["adapterUsesPhenotypeValues"], False)
         self.assertIs(admission["protectedMolecularTruthSnapshot"], False)
-        self.assertEqual(
-            admission["prohibitedUses"], ["fitting", "reward", "molecular-evaluation"]
-        )
+        self.assertEqual(admission["prohibitedUses"], ["fitting", "reward", "molecular-evaluation"])
 
 
 if __name__ == "__main__":

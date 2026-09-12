@@ -162,22 +162,14 @@ def _sorted_curies(value: object, label: str, *, allow_empty: bool) -> tuple[str
 def resolve_pinned_dataset(value: object, input_name: str) -> PinnedDataset:
     """Resolve OMF's exact copied, revision-pinned DatasetSnapshot shape."""
 
-    item = _exact_object(
-        value, {"resource", "mode", "path", "manifestDigest"}, input_name
-    )
+    item = _exact_object(value, {"resource", "mode", "path", "manifestDigest"}, input_name)
     if item["mode"] != "copy":
-        raise MolecularBaselineError(
-            f"{input_name} must be an immutable copied DatasetSnapshot"
-        )
-    manifest_digest = _sha256(
-        item["manifestDigest"], f"{input_name}.manifestDigest", prefix=True
-    )
+        raise MolecularBaselineError(f"{input_name} must be an immutable copied DatasetSnapshot")
+    manifest_digest = _sha256(item["manifestDigest"], f"{input_name}.manifestDigest", prefix=True)
     resource = _string(item["resource"], f"{input_name}.resource")
-    if not resource.startswith("omf://"):
-        raise MolecularBaselineError(
-            f"{input_name}.resource must be an OMF DatasetSnapshot URI"
-        )
-    identity, separator, revision_raw = resource.removeprefix("omf://").rpartition("@")
+    if not resource.startswith(("omf://", "openfoundry://")):
+        raise MolecularBaselineError(f"{input_name}.resource must be an OMF DatasetSnapshot URI")
+    identity, separator, revision_raw = resource.split("://", 1)[1].rpartition("@")
     if not separator:
         raise MolecularBaselineError(
             f"{input_name}.resource must contain an admission-pinned revision"
@@ -366,7 +358,9 @@ def load_snapshot(root_value: str | Path, expected_role: str, limits: Limits) ->
         "aggregationProtocolSha256",
         "shards",
     }
-    expected = common | ({"pairedTrainingManifestSha256"} if expected_role == REFERENCE_ROLE else set())
+    expected = common | (
+        {"pairedTrainingManifestSha256"} if expected_role == REFERENCE_ROLE else set()
+    )
     manifest = _exact_object(raw_manifest, expected, "baseline.json")
     if manifest["schema"] != SNAPSHOT_SCHEMA:
         raise MolecularBaselineError(f"baseline.json.schema must be {SNAPSHOT_SCHEMA}")
@@ -377,7 +371,9 @@ def load_snapshot(root_value: str | Path, expected_role: str, limits: Limits) ->
     if manifest["taskName"] not in TASKS:
         raise MolecularBaselineError("baseline.json.taskName is not a frozen protocol task")
     if manifest["labelClass"] != "molecular" or manifest["benchmarkLabelsPresent"] is not False:
-        raise MolecularBaselineError("snapshot must contain molecular values and no benchmark labels")
+        raise MolecularBaselineError(
+            "snapshot must contain molecular values and no benchmark labels"
+        )
     _curie(manifest["valueSpace"], "baseline.json.valueSpace")
     if manifest["recordsEncoding"] != "identity-keyed-sparse-jsonl-v1":
         raise MolecularBaselineError("baseline.json.recordsEncoding is not supported")
@@ -396,7 +392,9 @@ def load_snapshot(root_value: str | Path, expected_role: str, limits: Limits) ->
         or any(not isinstance(item, int) or isinstance(item, bool) or item < 1 for item in taxa_raw)
         or taxa_raw != sorted(set(taxa_raw))
     ):
-        raise MolecularBaselineError("baseline.json.speciesTaxa must be sorted unique positive integers")
+        raise MolecularBaselineError(
+            "baseline.json.speciesTaxa must be sorted unique positive integers"
+        )
     sources = _sorted_curies(manifest["sourceIds"], "baseline.json.sourceIds", allow_empty=False)
     if expected_role == REFERENCE_ROLE:
         _sha256(
@@ -513,7 +511,9 @@ def _validate_pair(training: Snapshot, reference: Snapshot) -> None:
     training_keys = {profile.key for profile in training.profiles}
     overlap = training_keys & {profile.key for profile in reference.profiles}
     if overlap:
-        raise MolecularBaselineError(f"training/reference contain duplicate identity keys: {min(overlap)}")
+        raise MolecularBaselineError(
+            f"training/reference contain duplicate identity keys: {min(overlap)}"
+        )
     context_owner: dict[str, tuple[int, str]] = {}
     perturbation_definition: dict[str, tuple[int, tuple[str, ...]]] = {}
     intervention_taxon: dict[str, int] = {}
@@ -534,9 +534,7 @@ def _validate_pair(training: Snapshot, reference: Snapshot) -> None:
                     f"perturbationId {profile.perturbation_id} has a cross-snapshot intervention/species mismatch"
                 )
         for intervention in profile.intervention_ids:
-            previous_taxon = intervention_taxon.setdefault(
-                intervention, profile.species_taxon
-            )
+            previous_taxon = intervention_taxon.setdefault(intervention, profile.species_taxon)
             if previous_taxon != profile.species_taxon:
                 raise MolecularBaselineError(
                     f"interventionId {intervention} has a cross-snapshot species mismatch"
@@ -557,14 +555,10 @@ def _validate_pair(training: Snapshot, reference: Snapshot) -> None:
         )
     task = reference.task_name
     train_interventions = {
-        intervention
-        for profile in training_outcomes
-        for intervention in profile.intervention_ids
+        intervention for profile in training_outcomes for intervention in profile.intervention_ids
     }
     reference_interventions = {
-        intervention
-        for profile in reference_outcomes
-        for intervention in profile.intervention_ids
+        intervention for profile in reference_outcomes for intervention in profile.intervention_ids
     }
     if task in {"intervention-gene-cold", "double-cold"}:
         leaked = sorted(train_interventions & reference_interventions)
@@ -611,7 +605,9 @@ def _mean(values: Iterable[float]) -> float:
     return result
 
 
-def _append(table: dict[tuple[object, ...], list[float]], key: tuple[object, ...], value: float) -> None:
+def _append(
+    table: dict[tuple[object, ...], list[float]], key: tuple[object, ...], value: float
+) -> None:
     table.setdefault(key, []).append(value)
 
 
@@ -762,8 +758,7 @@ def _write_prediction_artifact(
     with shard.open("w", encoding="utf-8", newline="\n") as handle:
         for row in rows:
             handle.write(
-                json.dumps(row, ensure_ascii=False, sort_keys=True, allow_nan=False)
-                + "\n"
+                json.dumps(row, ensure_ascii=False, sort_keys=True, allow_nan=False) + "\n"
             )
     manifest = {
         "schema": PREDICTION_SCHEMA,
@@ -777,9 +772,7 @@ def _write_prediction_artifact(
         "speciesTaxa": sorted({row["speciesTaxon"] for row in rows}),
         "sourceIds": sorted({row["sourceId"] for row in rows}),
         "profileLevel": reference.manifest["profileLevel"],
-        "aggregationProtocolSha256": reference.manifest[
-            "aggregationProtocolSha256"
-        ],
+        "aggregationProtocolSha256": reference.manifest["aggregationProtocolSha256"],
         "trainingManifestSha256": training.manifest_sha256,
         "referenceManifestSha256": reference.manifest_sha256,
         "uncertainty": {
@@ -834,9 +827,7 @@ def build_baselines(
         "protocolResource": "evaluations/slp-1-1-molecular-comparison-protocol-v1.yaml",
         "taskName": reference.task_name,
         "profileLevel": reference.manifest["profileLevel"],
-        "aggregationProtocolSha256": reference.manifest[
-            "aggregationProtocolSha256"
-        ],
+        "aggregationProtocolSha256": reference.manifest["aggregationProtocolSha256"],
         "training": {
             "manifestSha256": training.manifest_sha256,
             "profiles": len(training.profiles),

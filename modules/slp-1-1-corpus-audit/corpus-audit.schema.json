@@ -46,7 +46,7 @@
         "modalities", "sourceIds", "speciesTaxa"
       ],
       "properties": {
-        "resource": {"type": "string", "pattern": "^omf://.+/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"},
+        "resource": {"type": "string", "pattern": "^(?:omf|openfoundry)://.+/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"},
         "revision": {"$ref": "#/$defs/prefixedSha256"},
         "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
         "datasetId": {"$ref": "#/$defs/curie"},
@@ -76,7 +76,7 @@
         "qcPassing", "qcFailed", "intersectionCoverage"
       ],
       "properties": {
-        "resource": {"type": "string", "pattern": "^omf://.+/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"},
+        "resource": {"type": "string", "pattern": "^(?:omf|openfoundry)://.+/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"},
         "revision": {"$ref": "#/$defs/prefixedSha256"},
         "artifactManifestDigest": {"$ref": "#/$defs/prefixedSha256"},
         "sourceId": {"$ref": "#/$defs/curie"},
@@ -103,7 +103,7 @@
         "finalGeneCount", "unionGeneSetSha256", "unionGeneCount"
       ],
       "properties": {
-        "resource": {"type": "string", "pattern": "^omf://.+/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"},
+        "resource": {"type": "string", "pattern": "^(?:omf|openfoundry)://.+/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"},
         "revision": {"$ref": "#/$defs/prefixedSha256"},
         "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},
         "rosterSha256": {"$ref": "#/$defs/sha256"},

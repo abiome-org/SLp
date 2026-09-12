@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _validation_outputs() -> dict[str, object]:
@@ -39,9 +39,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
 
     if set(request.inputs) != {"rawSgdMapping"}:
         raise ValueError("run requires exactly one rawSgdMapping DatasetSnapshot input")
-    resolved = resolve_pinned_dataset_input(
-        request.inputs["rawSgdMapping"], "rawSgdMapping"
-    )
+    resolved = resolve_pinned_dataset_input(request.inputs["rawSgdMapping"], "rawSgdMapping")
     config = request.config
     bounds = MapBounds(
         max_feature_records=config.get("maxFeatureRecords", 20_000),
@@ -49,14 +47,12 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         max_retired_physical_lines=config.get("maxRetiredPhysicalLines", 256),
         max_line_bytes=config.get("maxLineBytes", 4_096),
         max_targets_per_external_key=config.get("maxTargetsPerExternalKey", 1_024),
-        max_assertions_per_external_target=config.get(
-            "maxAssertionsPerExternalTarget", 64
-        ),
+        max_assertions_per_external_target=config.get("maxAssertionsPerExternalTarget", 64),
         max_display_aliases_per_orf=config.get("maxDisplayAliasesPerOrf", 128),
     )
     result = normalize_sgd_snapshot(
         resolved.path,
-        Path(os.environ["OMF_RESULT_FILE"]).parent / "sgd-map",
+        Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent / "sgd-map",
         bounds,
         source_provenance=SourceProvenance(
             resource=resolved.resource,
@@ -73,18 +69,14 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             "mappingManifestSha256": result["mappingManifestSha256"],
             "currentOrfCount": result["currentOrfCount"],
             "typedExternalRelationCount": result["typedExternalRelationCount"],
-            "oneToManyExternalRelationCount": result[
-                "oneToManyExternalRelationCount"
-            ],
+            "oneToManyExternalRelationCount": result["oneToManyExternalRelationCount"],
             "retiredQuarantineCount": result["retiredQuarantineCount"],
             "retiredIrregularCount": result["retiredIrregularCount"],
         },
         metrics={
             "current_orfs": result["currentOrfCount"],
             "typed_external_relations": result["typedExternalRelationCount"],
-            "one_to_many_external_relations": result[
-                "oneToManyExternalRelationCount"
-            ],
+            "one_to_many_external_relations": result["oneToManyExternalRelationCount"],
             "retired_quarantine_records": result["retiredQuarantineCount"],
         },
         artifacts=[

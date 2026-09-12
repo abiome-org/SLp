@@ -34,20 +34,42 @@ RESOURCE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 INPUT_NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
 
 INTERVENTION_MANIFEST_FIELDS = {
-    "schema", "sourceId", "sourceRelease", "ncbiTaxon", "stableIdNamespace",
-    "identityMappingId", "identityMappingSha256", "inventoryFormat", "files",
+    "schema",
+    "sourceId",
+    "sourceRelease",
+    "ncbiTaxon",
+    "stableIdNamespace",
+    "identityMappingId",
+    "identityMappingSha256",
+    "inventoryFormat",
+    "files",
 }
 INTERVENTION_RECORD_FIELDS = {"schema", "interventionId", "ncbiTaxon", "qcPassing"}
 PROTEIN_MANIFEST_FIELDS = {
-    "schema", "sourceId", "sourceRelease", "ncbiTaxon", "identityMappingId",
-    "identityMappingSha256", "relationFormat", "files",
+    "schema",
+    "sourceId",
+    "sourceRelease",
+    "ncbiTaxon",
+    "identityMappingId",
+    "identityMappingSha256",
+    "relationFormat",
+    "files",
 }
 PROTEIN_RECORD_FIELDS = {
-    "schema", "proteinId", "sourceAccession", "sourceAccessionType", "ncbiTaxon",
-    "currentOrfRelations", "currentOrfRelationCount", "chooseFirstAllowed",
+    "schema",
+    "proteinId",
+    "sourceAccession",
+    "sourceAccessionType",
+    "ncbiTaxon",
+    "currentOrfRelations",
+    "currentOrfRelationCount",
+    "chooseFirstAllowed",
 }
 ACCESSION_TYPE_FIELDS = {
-    "source", "type", "namespaceInferred", "caseNormalization",
+    "source",
+    "type",
+    "namespaceInferred",
+    "caseNormalization",
 }
 FILE_FIELDS = {"path", "sha256", "records"}
 ENTITY_FIELDS = {"schema", "ncbiTaxon", "entityId", "entityClass", "usages"}
@@ -55,15 +77,27 @@ ENTITY_FIELDS = {"schema", "ncbiTaxon", "entityId", "entityClass", "usages"}
 # Any appearance of these as input object keys is incompatible with an
 # identity-only universe.  The source contracts use none of these keys.
 FORBIDDEN_INPUT_KEY_PARTS = {
-    "abundance", "benchmark", "embedding", "expression", "feature", "fitness",
-    "fold", "label", "measurement", "outcome", "phenotype", "reward", "role",
-    "score", "split", "value", "vector",
+    "abundance",
+    "benchmark",
+    "embedding",
+    "expression",
+    "feature",
+    "fitness",
+    "fold",
+    "label",
+    "measurement",
+    "outcome",
+    "phenotype",
+    "reward",
+    "role",
+    "score",
+    "split",
+    "value",
+    "vector",
 }
 
 PRODUCTION_MAPPING_ID = "slp-sgd-map:2026-08-28-object-set-v1"
-PRODUCTION_MAPPING_SHA256 = (
-    "6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a"
-)
+PRODUCTION_MAPPING_SHA256 = "6fd789df6099b78a8842baa8f1d20ab0a3fe77f27ce512ee783444eb2627ef2a"
 
 
 class StaticEntityUniverseError(ValueError):
@@ -86,7 +120,11 @@ class Bounds:
             ("maxRelationRecords", self.max_relation_records, 1, 10_000_000),
             ("maxArchiveBytes", self.max_archive_bytes, 1024, 1024**3),
         ):
-            if not isinstance(value, int) or isinstance(value, bool) or not minimum <= value <= maximum:
+            if (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or not minimum <= value <= maximum
+            ):
                 raise StaticEntityUniverseError(
                     f"{name} must be an integer in [{minimum}, {maximum}]"
                 )
@@ -219,9 +257,9 @@ def _prefixed_digest(value: object, label: str) -> str:
 
 def _dataset_resource(value: object, label: str) -> tuple[str, str]:
     resource = _nonempty(value, label)
-    if not resource.startswith("omf://"):
+    if not resource.startswith(("omf://", "openfoundry://")):
         raise StaticEntityUniverseError(f"{label} must be an OMF DatasetSnapshot URI")
-    identity, separator, revision = resource.removeprefix("omf://").rpartition("@")
+    identity, separator, revision = resource.split("://", 1)[1].rpartition("@")
     if not separator:
         raise StaticEntityUniverseError(f"{label} must carry an exact revision")
     _prefixed_digest(revision, f"{label} revision")
@@ -230,7 +268,10 @@ def _dataset_resource(value: object, label: str) -> tuple[str, str]:
         len(parts) < 3
         or parts[-2] != "datasetsnapshot"
         or RESOURCE_NAME.fullmatch(parts[-1]) is None
-        or any(not part or part in {".", ".."} or any(char.isspace() for char in part) for part in parts)
+        or any(
+            not part or part in {".", ".."} or any(char.isspace() for char in part)
+            for part in parts
+        )
     ):
         raise StaticEntityUniverseError(f"{label} must identify a DatasetSnapshot")
     return parts[-1], revision
@@ -243,15 +284,9 @@ PRODUCTION_CONTRACT = ExpectedContract(
             "slp-1-1-proteome-intervention-inventory-v1@"
             "sha256:bd688dffdf4d96c01d4147580b1a8705c2149acadbc843a719537817a74505d9"
         ),
-        manifest_digest=(
-            "sha256:a1f5222f3dca31d2ca68ca46a271d39cdca3425a903b5dceb7373481450ada36"
-        ),
-        inner_manifest_sha256=(
-            "dd683a2585a15377282e669f61dce38c44ea9d3d9d55be71b24842048c05f3e5"
-        ),
-        records_sha256=(
-            "15e011d9f3bbea2e034f47dd06b260f834475ffee8adb452046dbb2701ead497"
-        ),
+        manifest_digest=("sha256:a1f5222f3dca31d2ca68ca46a271d39cdca3425a903b5dceb7373481450ada36"),
+        inner_manifest_sha256=("dd683a2585a15377282e669f61dce38c44ea9d3d9d55be71b24842048c05f3e5"),
+        records_sha256=("15e011d9f3bbea2e034f47dd06b260f834475ffee8adb452046dbb2701ead497"),
     ),
     relations=ExpectedSnapshot(
         resource=(
@@ -259,15 +294,9 @@ PRODUCTION_CONTRACT = ExpectedContract(
             "slp-1-1-proteome-protein-relations-v1@"
             "sha256:acad3427907644f8ab8af38ed36066a6e1148ef92557b727351b0a4fba2b446c"
         ),
-        manifest_digest=(
-            "sha256:c159573f4f7a2e41b18930d724dea9fb297452a659bdf6050e4718efc1a6c58a"
-        ),
-        inner_manifest_sha256=(
-            "8d559638f48ee4516f7e6fce9e0248e9a1762d58803fe2ed761eff8734f45f86"
-        ),
-        records_sha256=(
-            "c72996b4ddc6870a3ab722060eef2fa2747fa9dd121d3e70514dd196c5283b8d"
-        ),
+        manifest_digest=("sha256:c159573f4f7a2e41b18930d724dea9fb297452a659bdf6050e4718efc1a6c58a"),
+        inner_manifest_sha256=("8d559638f48ee4516f7e6fce9e0248e9a1762d58803fe2ed761eff8734f45f86"),
+        records_sha256=("c72996b4ddc6870a3ab722060eef2fa2747fa9dd121d3e70514dd196c5283b8d"),
     ),
     mapping_id=PRODUCTION_MAPPING_ID,
     mapping_sha256=PRODUCTION_MAPPING_SHA256,
@@ -316,11 +345,13 @@ def resolve_pinned_dataset(value: object, input_name: str) -> PinnedDataset:
     resource_name, revision = _dataset_resource(value["resource"], f"{input_name}.resource")
     if value["mode"] != "copy":
         raise StaticEntityUniverseError(f"{input_name} must be copied, not mutable")
-    manifest_digest = _prefixed_digest(
-        value["manifestDigest"], f"{input_name}.manifestDigest"
-    )
+    manifest_digest = _prefixed_digest(value["manifestDigest"], f"{input_name}.manifestDigest")
     root = _resolved_directory(value["path"], f"{input_name}.path")
-    if root.name != resource_name or root.parent.name != input_name or root.parent.parent.name != "inputs":
+    if (
+        root.name != resource_name
+        or root.parent.name != input_name
+        or root.parent.parent.name != "inputs"
+    ):
         raise StaticEntityUniverseError(
             f"{input_name}.path is inconsistent with OMF materialization"
         )
@@ -413,7 +444,9 @@ def _read_manifest(path: Path, bounds: Bounds, label: str) -> tuple[dict[str, An
     return value, _sha256_bytes(raw)
 
 
-def _jsonl(path: Path, bounds: Bounds, limit: int, label: str) -> Iterator[tuple[int, dict[str, Any]]]:
+def _jsonl(
+    path: Path, bounds: Bounds, limit: int, label: str
+) -> Iterator[tuple[int, dict[str, Any]]]:
     try:
         with path.open("rb") as stream:
             line_number = 0
@@ -431,7 +464,9 @@ def _jsonl(path: Path, bounds: Bounds, limit: int, label: str) -> Iterator[tuple
                 try:
                     record = json.loads(raw)
                 except (UnicodeDecodeError, json.JSONDecodeError) as error:
-                    raise StaticEntityUniverseError(f"{label}:{line_number} is invalid JSON") from error
+                    raise StaticEntityUniverseError(
+                        f"{label}:{line_number} is invalid JSON"
+                    ) from error
                 if not isinstance(record, dict):
                     raise StaticEntityUniverseError(f"{label}:{line_number} must be an object")
                 if raw != _canonical_json_bytes(record):
@@ -450,12 +485,18 @@ def _one_file(manifest: Mapping[str, Any], expected_path: str, label: str) -> di
     if item["path"] != expected_path:
         raise StaticEntityUniverseError(f"{label} record path drift")
     _bare_digest(item["sha256"], f"{label} record SHA-256")
-    if not isinstance(item["records"], int) or isinstance(item["records"], bool) or item["records"] < 0:
+    if (
+        not isinstance(item["records"], int)
+        or isinstance(item["records"], bool)
+        or item["records"] < 0
+    ):
         raise StaticEntityUniverseError(f"{label} record count is invalid")
     return item
 
 
-def _input_identity(dataset: PinnedDataset, manifest_sha: str, file_spec: Mapping[str, Any]) -> dict[str, object]:
+def _input_identity(
+    dataset: PinnedDataset, manifest_sha: str, file_spec: Mapping[str, Any]
+) -> dict[str, object]:
     return {
         "resource": dataset.resource,
         "revision": dataset.revision,
@@ -472,7 +513,9 @@ def framed_ascii_set_sha256(values: Iterable[str]) -> str:
     try:
         payload = b"".join(item.encode("ascii") + b"\n" for item in sorted(unique))
     except (AttributeError, UnicodeEncodeError) as error:
-        raise StaticEntityUniverseError("semantic identity sets must contain ASCII strings") from error
+        raise StaticEntityUniverseError(
+            "semantic identity sets must contain ASCII strings"
+        ) from error
     return _sha256_bytes(payload)
 
 
@@ -485,7 +528,9 @@ def framed_composite_key_set_sha256(values: Iterable[tuple[int, str]]) -> str:
         if not isinstance(identifier, str) or not identifier or identifier != identifier.strip():
             raise StaticEntityUniverseError("semantic entity keys require trimmed identifiers")
         if "\t" in identifier or "\n" in identifier or "\r" in identifier:
-            raise StaticEntityUniverseError("semantic entity keys cannot contain framing characters")
+            raise StaticEntityUniverseError(
+                "semantic entity keys cannot contain framing characters"
+            )
         framed.append(f"{taxon}\t{identifier}")
     return framed_ascii_set_sha256(framed)
 
@@ -504,7 +549,9 @@ def _load_interventions(
 ) -> tuple[list[dict[str, object]], dict[str, object], dict[str, Any]]:
     _check_snapshot_pin(dataset, expected.intervention, "interventionInventory")
     files = _snapshot_files(dataset.path, {"inventory.json", "interventions.jsonl"})
-    manifest, manifest_sha = _read_manifest(files["inventory.json"], bounds, "intervention manifest")
+    manifest, manifest_sha = _read_manifest(
+        files["inventory.json"], bounds, "intervention manifest"
+    )
     if manifest_sha != expected.intervention.inner_manifest_sha256:
         raise StaticEntityUniverseError("intervention inner manifest digest drift")
     manifest = _strict_fields(manifest, INTERVENTION_MANIFEST_FIELDS, "intervention manifest")
@@ -525,7 +572,10 @@ def _load_interventions(
         bounds.max_line_bytes * bounds.max_intervention_records,
         "interventions.jsonl",
     )
-    if file_spec["sha256"] != actual_records_sha or actual_records_sha != expected.intervention.records_sha256:
+    if (
+        file_spec["sha256"] != actual_records_sha
+        or actual_records_sha != expected.intervention.records_sha256
+    ):
         raise StaticEntityUniverseError("intervention record-set digest drift")
 
     by_key: dict[tuple[int, str], bool] = {}
@@ -534,7 +584,9 @@ def _load_interventions(
         files["interventions.jsonl"], bounds, bounds.max_intervention_records, "interventions.jsonl"
     ):
         record_count += 1
-        record = _strict_fields(raw, INTERVENTION_RECORD_FIELDS, f"interventions.jsonl:{line_number}")
+        record = _strict_fields(
+            raw, INTERVENTION_RECORD_FIELDS, f"interventions.jsonl:{line_number}"
+        )
         if record["schema"] != INTERVENTION_RECORD_SCHEMA:
             raise StaticEntityUniverseError("intervention record schema drift")
         identifier = record["interventionId"]
@@ -594,11 +646,16 @@ def _load_relations(
 ]:
     _check_snapshot_pin(dataset, expected.relations, "proteinRelations")
     files = _snapshot_files(dataset.path, {"manifest.json", "relations.jsonl"})
-    manifest, manifest_sha = _read_manifest(files["manifest.json"], bounds, "protein relation manifest")
+    manifest, manifest_sha = _read_manifest(
+        files["manifest.json"], bounds, "protein relation manifest"
+    )
     if manifest_sha != expected.relations.inner_manifest_sha256:
         raise StaticEntityUniverseError("protein relation inner manifest digest drift")
     manifest = _strict_fields(manifest, PROTEIN_MANIFEST_FIELDS, "protein relation manifest")
-    if manifest["schema"] != PROTEIN_MANIFEST_SCHEMA or manifest["relationFormat"] != PROTEIN_RECORD_SCHEMA:
+    if (
+        manifest["schema"] != PROTEIN_MANIFEST_SCHEMA
+        or manifest["relationFormat"] != PROTEIN_RECORD_SCHEMA
+    ):
         raise StaticEntityUniverseError("protein relation manifest schema drift")
     taxon = manifest["ncbiTaxon"]
     if not isinstance(taxon, int) or isinstance(taxon, bool) or taxon <= 0:
@@ -611,7 +668,10 @@ def _load_relations(
         bounds.max_line_bytes * bounds.max_relation_records,
         "relations.jsonl",
     )
-    if file_spec["sha256"] != actual_records_sha or actual_records_sha != expected.relations.records_sha256:
+    if (
+        file_spec["sha256"] != actual_records_sha
+        or actual_records_sha != expected.relations.records_sha256
+    ):
         raise StaticEntityUniverseError("protein relation record-set digest drift")
 
     by_key: dict[tuple[int, str], dict[str, Any]] = {}
@@ -637,23 +697,26 @@ def _load_relations(
             record["sourceAccessionType"], ACCESSION_TYPE_FIELDS, "sourceAccessionType"
         )
         if accession_type != {
-            "source": "UniProtKB", "type": "UniProtKB ID",
-            "namespaceInferred": False, "caseNormalization": "none",
+            "source": "UniProtKB",
+            "type": "UniProtKB ID",
+            "namespaceInferred": False,
+            "caseNormalization": "none",
         }:
             raise StaticEntityUniverseError("typed UniProt accession contract drift")
         targets = record["currentOrfRelations"]
         if (
             not isinstance(targets, list)
             or not targets
-            or any(not isinstance(item, str) or SGD_CURIE.fullmatch(item) is None for item in targets)
+            or any(
+                not isinstance(item, str) or SGD_CURIE.fullmatch(item) is None for item in targets
+            )
             or targets != sorted(targets)
             or len(targets) != len(set(targets))
         ):
             raise StaticEntityUniverseError("currentOrfRelations must be sorted unique SGD CURIEs")
-        if (
-            type(record["currentOrfRelationCount"]) is not int
-            or record["currentOrfRelationCount"] != len(targets)
-        ):
+        if type(record["currentOrfRelationCount"]) is not int or record[
+            "currentOrfRelationCount"
+        ] != len(targets):
             raise StaticEntityUniverseError("protein relation cardinality drift")
         if record["chooseFirstAllowed"] is not False:
             raise StaticEntityUniverseError("protein relations may never select a first gene")
@@ -761,21 +824,27 @@ def canonicalize_entities(records: Iterable[Mapping[str, object]]) -> list[dict[
                 raise StaticEntityUniverseError("gene usage must be action or relation-support")
         elif entity_class == "protein":
             if UNIPROT_CURIE.fullmatch(identifier) is None:
-                raise StaticEntityUniverseError("protein entityId must be a canonical UniProtKB CURIE")
+                raise StaticEntityUniverseError(
+                    "protein entityId must be a canonical UniProtKB CURIE"
+                )
             if usages != ["readout-query"]:
                 raise StaticEntityUniverseError("protein usage must be readout-query")
         else:
             raise StaticEntityUniverseError("entityClass must be gene or protein")
         key = (taxon, identifier)
         normalized = {
-            "schema": ENTITY_SCHEMA, "ncbiTaxon": taxon,
-            "entityId": identifier, "entityClass": entity_class,
+            "schema": ENTITY_SCHEMA,
+            "ncbiTaxon": taxon,
+            "entityId": identifier,
+            "entityClass": entity_class,
             "usages": list(usages),
         }
         if key in by_key:
             previous = by_key[key]
             if previous["entityClass"] != entity_class:
-                raise StaticEntityUniverseError("one composite entity identity has conflicting classes")
+                raise StaticEntityUniverseError(
+                    "one composite entity identity has conflicting classes"
+                )
             previous["usages"] = sorted(set(previous["usages"]) | set(usages))
         else:
             by_key[key] = normalized
@@ -787,7 +856,12 @@ def _jsonl_bytes(records: Sequence[Mapping[str, object]]) -> bytes:
 
 
 def _file_ref(path: str, content: bytes, records: int) -> dict[str, object]:
-    return {"path": path, "sha256": _sha256_bytes(content), "bytes": len(content), "records": records}
+    return {
+        "path": path,
+        "sha256": _sha256_bytes(content),
+        "bytes": len(content),
+        "records": records,
+    }
 
 
 def _tar_info(name: str, size: int) -> tarfile.TarInfo:
@@ -878,11 +952,12 @@ def _validate_output_relation(
         or targets != sorted(targets)
         or len(targets) != len(set(targets))
     ):
-        raise StaticEntityUniverseError("output currentOrfRelations must be sorted unique SGD CURIEs")
-    if (
-        type(record["currentOrfRelationCount"]) is not int
-        or record["currentOrfRelationCount"] != len(targets)
-    ):
+        raise StaticEntityUniverseError(
+            "output currentOrfRelations must be sorted unique SGD CURIEs"
+        )
+    if type(record["currentOrfRelationCount"]) is not int or record[
+        "currentOrfRelationCount"
+    ] != len(targets):
         raise StaticEntityUniverseError("output protein relation cardinality drift")
     if record["chooseFirstAllowed"] is not False:
         raise StaticEntityUniverseError("output protein relations may never select a first gene")
@@ -892,7 +967,14 @@ def _validate_output_relation(
 def _validate_snapshot_identity(value: object, label: str) -> dict[str, Any]:
     identity = _strict_fields(
         value,
-        {"resource", "revision", "manifestDigest", "innerManifestSha256", "recordsSha256", "records"},
+        {
+            "resource",
+            "revision",
+            "manifestDigest",
+            "innerManifestSha256",
+            "recordsSha256",
+            "records",
+        },
         label,
     )
     _, revision = _dataset_resource(identity["resource"], f"{label}.resource")
@@ -901,7 +983,11 @@ def _validate_snapshot_identity(value: object, label: str) -> dict[str, Any]:
     _prefixed_digest(identity["manifestDigest"], f"{label}.manifestDigest")
     _bare_digest(identity["innerManifestSha256"], f"{label}.innerManifestSha256")
     _bare_digest(identity["recordsSha256"], f"{label}.recordsSha256")
-    if not isinstance(identity["records"], int) or isinstance(identity["records"], bool) or identity["records"] < 0:
+    if (
+        not isinstance(identity["records"], int)
+        or isinstance(identity["records"], bool)
+        or identity["records"] < 0
+    ):
         raise StaticEntityUniverseError(f"{label}.records must be a non-negative integer")
     return identity
 
@@ -947,8 +1033,13 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
                 raise StaticEntityUniverseError("archive member set or order drift")
             for member in members:
                 if (
-                    not member.isfile() or member.mode != 0o644 or member.mtime != 0
-                    or member.uid != 0 or member.gid != 0 or member.uname != "" or member.gname != ""
+                    not member.isfile()
+                    or member.mode != 0o644
+                    or member.mtime != 0
+                    or member.uid != 0
+                    or member.gid != 0
+                    or member.uname != ""
+                    or member.gname != ""
                     or member.pax_headers
                 ):
                     raise StaticEntityUniverseError("archive member metadata drift")
@@ -972,9 +1063,17 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
     manifest = _strict_fields(
         manifest,
         {
-            "schema", "version", "identityKey", "ordering", "source",
-            "identityMapping", "semanticSetHashes", "inputs", "entities",
-            "relations", "contentPolicy",
+            "schema",
+            "version",
+            "identityKey",
+            "ordering",
+            "source",
+            "identityMapping",
+            "semanticSetHashes",
+            "inputs",
+            "entities",
+            "relations",
+            "contentPolicy",
         },
         "entity-universe manifest",
     )
@@ -984,7 +1083,10 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
         or manifest["version"] != 1
     ):
         raise StaticEntityUniverseError("entity-universe manifest schema drift")
-    if manifest["identityKey"] != ["ncbiTaxon", "entityId"] or manifest["ordering"] != "ascending-ncbiTaxon-then-codepoint-entityId":
+    if (
+        manifest["identityKey"] != ["ncbiTaxon", "entityId"]
+        or manifest["ordering"] != "ascending-ncbiTaxon-then-codepoint-entityId"
+    ):
         raise StaticEntityUniverseError("entity-universe identity or ordering contract drift")
 
     source = _strict_fields(manifest["source"], {"id", "release", "ncbiTaxon"}, "source")
@@ -1016,7 +1118,9 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
     )
     entities = canonicalize_entities(entity_records)
     if entities != entity_records:
-        raise StaticEntityUniverseError("entity records are duplicated or not in composite-key order")
+        raise StaticEntityUniverseError(
+            "entity records are duplicated or not in composite-key order"
+        )
     relation_records = _jsonl_blob(
         relation_payload, bounds, bounds.max_relation_records, "relations.jsonl"
     )
@@ -1026,39 +1130,33 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
     ]
     relation_keys = [(record["ncbiTaxon"], record["proteinId"]) for record in relations]
     if relation_keys != sorted(relation_keys) or len(relation_keys) != len(set(relation_keys)):
-        raise StaticEntityUniverseError("relation records are duplicated or not in composite-key order")
+        raise StaticEntityUniverseError(
+            "relation records are duplicated or not in composite-key order"
+        )
     if any(item["ncbiTaxon"] != source_taxon for item in entities) or any(
         item["ncbiTaxon"] != source_taxon for item in relations
     ):
         raise StaticEntityUniverseError("output entity or relation taxon differs from source")
 
     entity_by_key = {(item["ncbiTaxon"], item["entityId"]): item for item in entities}
-    action_keys = {
-        key for key, item in entity_by_key.items() if "action" in item["usages"]
-    }
+    action_keys = {key for key, item in entity_by_key.items() if "action" in item["usages"]}
     support_keys = {
         key for key, item in entity_by_key.items() if "relation-support" in item["usages"]
     }
-    protein_keys = {
-        key for key, item in entity_by_key.items() if item["entityClass"] == "protein"
-    }
+    protein_keys = {key for key, item in entity_by_key.items() if item["entityClass"] == "protein"}
     related_keys = {
         (record["ncbiTaxon"], target)
         for record in relations
         for target in record["currentOrfRelations"]
     }
     relation_protein_keys = set(relation_keys)
-    gene_keys = {
-        key for key, item in entity_by_key.items() if item["entityClass"] == "gene"
-    }
+    gene_keys = {key for key, item in entity_by_key.items() if item["entityClass"] == "gene"}
     if support_keys != related_keys or protein_keys != relation_protein_keys:
         raise StaticEntityUniverseError("entity usages do not preserve exact relation closure")
     if gene_keys != action_keys | related_keys:
         raise StaticEntityUniverseError("gene universe contains an unbound or missing identity")
 
-    entity_section = _strict_fields(
-        manifest["entities"], {"format", "file", "counts"}, "entities"
-    )
+    entity_section = _strict_fields(manifest["entities"], {"format", "file", "counts"}, "entities")
     if entity_section["format"] != ENTITY_SCHEMA:
         raise StaticEntityUniverseError("entity output format drift")
     _validate_file_ref(
@@ -1067,8 +1165,13 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
     entity_counts = _strict_fields(
         entity_section["counts"],
         {
-            "genes", "proteins", "actionEligible", "readoutQueryEligible",
-            "relationSupport", "relationSupportOnly", "currentModelEligibleKeys",
+            "genes",
+            "proteins",
+            "actionEligible",
+            "readoutQueryEligible",
+            "relationSupport",
+            "relationSupportOnly",
+            "currentModelEligibleKeys",
             "totalSourceUniverse",
         },
         "entities.counts",
@@ -1090,15 +1193,28 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
     relation_section = _strict_fields(
         manifest["relations"],
         {
-            "format", "file", "relationSetSha256", "edges", "oneToManyRecords",
-            "chooseFirstAllowed", "targetGenes", "targetsInUniverse",
+            "format",
+            "file",
+            "relationSetSha256",
+            "edges",
+            "oneToManyRecords",
+            "chooseFirstAllowed",
+            "targetGenes",
+            "targetsInUniverse",
         },
         "relations",
     )
-    if relation_section["format"] != PROTEIN_RECORD_SCHEMA or relation_section["chooseFirstAllowed"] is not False:
+    if (
+        relation_section["format"] != PROTEIN_RECORD_SCHEMA
+        or relation_section["chooseFirstAllowed"] is not False
+    ):
         raise StaticEntityUniverseError("relation output format or ambiguity policy drift")
     relation_ref = _validate_file_ref(
-        relation_section["file"], "relations.jsonl", relation_payload, len(relations), "relations.file"
+        relation_section["file"],
+        "relations.jsonl",
+        relation_payload,
+        len(relations),
+        "relations.file",
     )
     edge_count = sum(len(record["currentOrfRelations"]) for record in relations)
     expected_relation_values = {
@@ -1117,8 +1233,12 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
     hashes = _strict_fields(
         manifest["semanticSetHashes"],
         {
-            "framing", "actionIdSet", "proteinIdSet", "relationEdgeSet",
-            "fullEntityIdSet", "fullEntityKeySet",
+            "framing",
+            "actionIdSet",
+            "proteinIdSet",
+            "relationEdgeSet",
+            "fullEntityIdSet",
+            "fullEntityKeySet",
         },
         "semanticSetHashes",
     )
@@ -1151,10 +1271,13 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
         if value["basis"] != basis or value["sha256"] != digest:
             raise StaticEntityUniverseError(f"semanticSetHashes.{name} digest drift")
     full_id_hash = _strict_fields(
-        hashes["fullEntityIdSet"], {"basis", "ncbiTaxon", "sha256"}, "semanticSetHashes.fullEntityIdSet"
+        hashes["fullEntityIdSet"],
+        {"basis", "ncbiTaxon", "sha256"},
+        "semanticSetHashes.fullEntityIdSet",
     )
     if (
-        full_id_hash["basis"] != "union-of-action-protein-and-relation-target-IDs-under-one-bound-ncbiTaxon"
+        full_id_hash["basis"]
+        != "union-of-action-protein-and-relation-target-IDs-under-one-bound-ncbiTaxon"
         or full_id_hash["ncbiTaxon"] != source_taxon
         or full_id_hash["sha256"] != framed_ascii_set_sha256(key[1] for key in entity_by_key)
     ):
@@ -1163,14 +1286,19 @@ def validate_archive(path: str | Path, bounds: Bounds) -> dict[str, Any]:
     policy = _strict_fields(
         manifest["contentPolicy"],
         {
-            "containsDisplaySymbols", "containsNumericFeatures", "containsOutcomesOrLabels",
-            "containsTrainingPartitionAssignments", "crossTaxonIdentityMerge",
+            "containsDisplaySymbols",
+            "containsNumericFeatures",
+            "containsOutcomesOrLabels",
+            "containsTrainingPartitionAssignments",
+            "crossTaxonIdentityMerge",
         },
         "contentPolicy",
     )
     if any(value is not False for value in policy.values()):
         raise StaticEntityUniverseError("content policy must remain entirely false")
-    if intervention_identity["records"] < len(action_keys) or relation_identity["records"] != len(relations):
+    if intervention_identity["records"] < len(action_keys) or relation_identity["records"] != len(
+        relations
+    ):
         raise StaticEntityUniverseError("input provenance record counts conflict with output")
     return manifest
 
@@ -1191,9 +1319,13 @@ def build_entity_universe(
         relation_dataset, bounds, expected
     )
     for label, details in (
-        ("intervention", intervention_details), ("protein relation", relation_details)
+        ("intervention", intervention_details),
+        ("protein relation", relation_details),
     ):
-        if details["mappingId"] != expected.mapping_id or details["mappingSha256"] != expected.mapping_sha256:
+        if (
+            details["mappingId"] != expected.mapping_id
+            or details["mappingSha256"] != expected.mapping_sha256
+        ):
             raise StaticEntityUniverseError(f"{label} identity mapping drift")
     for key in ("sourceId", "sourceRelease", "ncbiTaxon"):
         if intervention_details[key] != relation_details[key]:
@@ -1207,9 +1339,7 @@ def build_entity_universe(
     relation_support_count = sum("relation-support" in item["usages"] for item in entities)
     support_only_count = sum(item["usages"] == ["relation-support"] for item in entities)
     action_keys = {
-        (item["ncbiTaxon"], item["entityId"])
-        for item in entities
-        if "action" in item["usages"]
+        (item["ncbiTaxon"], item["entityId"]) for item in entities if "action" in item["usages"]
     }
     related_keys = {
         (record["ncbiTaxon"], target)
@@ -1220,7 +1350,10 @@ def build_entity_universe(
     relation_targets_external = len(related_keys - action_keys)
     if relation_targets_present != expected.relation_targets_in_action_universe:
         raise StaticEntityUniverseError("relation target/action overlap count drift")
-    if relation_targets_external != expected.relation_support_only or support_only_count != expected.relation_support_only:
+    if (
+        relation_targets_external != expected.relation_support_only
+        or support_only_count != expected.relation_support_only
+    ):
         raise StaticEntityUniverseError("relation-support-only entity count drift")
     if len(entities) != expected.total_entities:
         raise StaticEntityUniverseError("relation-closed entity-universe count drift")
@@ -1296,11 +1429,14 @@ def build_entity_universe(
             "oneToManyRecords": len(one_to_many),
             "chooseFirstAllowed": False,
             "targetGenes": len(related_keys),
-            "targetsInUniverse": len(related_keys & {
-                (item["ncbiTaxon"], item["entityId"])
-                for item in entities
-                if item["entityClass"] == "gene"
-            }),
+            "targetsInUniverse": len(
+                related_keys
+                & {
+                    (item["ncbiTaxon"], item["entityId"])
+                    for item in entities
+                    if item["entityClass"] == "gene"
+                }
+            ),
         },
         "contentPolicy": {
             "containsDisplaySymbols": False,
@@ -1315,7 +1451,9 @@ def build_entity_universe(
     if destination_path.exists() or destination_path.is_symlink():
         raise StaticEntityUniverseError("destination must not already exist")
     destination_path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix=f".{destination_path.name}-", dir=destination_path.parent) as temporary:
+    with tempfile.TemporaryDirectory(
+        prefix=f".{destination_path.name}-", dir=destination_path.parent
+    ) as temporary:
         staging = Path(temporary) / destination_path.name
         staging.mkdir()
         archive_path = staging / "entity-universe.tar"

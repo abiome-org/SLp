@@ -178,7 +178,7 @@
       "properties": {
         "resource": {
           "type": "string",
-          "pattern": "^omf://(?:[^/@\\s]+/)+datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+          "pattern": "^(?:omf|openfoundry)://(?:[^/@\\s]+/)+datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
         },
         "revision": {"$ref": "#/$defs/prefixedSha256"},
         "manifestDigest": {"$ref": "#/$defs/prefixedSha256"},

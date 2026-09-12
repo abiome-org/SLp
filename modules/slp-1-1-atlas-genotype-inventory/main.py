@@ -55,7 +55,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         max_line_bytes=config.get("maxLineBytes", 2_097_152),
         max_evidence_records=config.get("maxEvidenceRecords", 4_000),
     )
-    output_root = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_root = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     result = build_inventory(
         raw.path,
         {name: artifact.path for name, artifact in artifacts.items()},
@@ -66,8 +66,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             revision=raw.revision,
             manifest_digest=raw.manifest_digest,
             mapping_artifacts={
-                name: artifact.artifact_manifest_digest
-                for name, artifact in artifacts.items()
+                name: artifact.artifact_manifest_digest for name, artifact in artifacts.items()
             },
         ),
     )
@@ -78,25 +77,19 @@ def run(request: ProtocolRequest) -> ProtocolResult:
         "evidenceManifestSha256": result["evidenceManifestSha256"],
         "candidateNonWildTypeIntersection": result["candidateNonWildTypeIntersection"],
         "uniqueCurrentInterventions": result["uniqueCurrentInterventions"],
-        "retiredOrMergedCandidateAssignments": result[
-            "retiredOrMergedCandidateAssignments"
-        ],
+        "retiredOrMergedCandidateAssignments": result["retiredOrMergedCandidateAssignments"],
         "unmatchedCandidateAssignments": result["unmatchedCandidateAssignments"],
     }
     return ProtocolResult(
         status="ok",
         outputs=outputs,
         metrics={
-            "candidate_non_wild_type_intersection": outputs[
-                "candidateNonWildTypeIntersection"
-            ],
+            "candidate_non_wild_type_intersection": outputs["candidateNonWildTypeIntersection"],
             "unique_current_interventions": outputs["uniqueCurrentInterventions"],
             "retired_or_merged_candidate_assignments": outputs[
                 "retiredOrMergedCandidateAssignments"
             ],
-            "unmatched_candidate_assignments": outputs[
-                "unmatchedCandidateAssignments"
-            ],
+            "unmatched_candidate_assignments": outputs["unmatchedCandidateAssignments"],
         },
         artifacts=[
             {

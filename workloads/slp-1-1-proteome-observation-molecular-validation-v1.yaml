@@ -1,6 +1,6 @@
 # Data-steward preparation of molecular-validation truth. This is not a
 # training workload and emits only the validation role as a regular file.
-apiVersion: omf.dev/v1alpha1
+apiVersion: openfoundry.dev/v1alpha1
 kind: WorkloadSpec
 metadata:
   name: slp-1-1-proteome-observation-molecular-validation-v1

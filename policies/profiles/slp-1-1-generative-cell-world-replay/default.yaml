@@ -1,0 +1,30 @@
+# Promotion policy for experiment-cell-world-replay.yaml.
+apiVersion: openfoundry.dev/v1alpha1
+kind: Policy
+metadata:
+  name: default
+spec:
+  rules:
+  - name: allow-slp-operator
+    effect: allow
+    match:
+      actor: slp-researcher
+      resource: abiome/slp
+  - name: deny-unapproved-network
+    effect: deny
+    match:
+      action: network.egress
+      purpose: unapproved
+  config:
+    dirtyWorktree: archive
+    promotion:
+      requireEvaluationPass: true
+      thresholds:
+        empty_action_max_error:
+          maximum: 0.0
+        action_permutation_max_error:
+          maximum: 1.0e-05
+        portability_max_error:
+          maximum: 1.0e-05
+        sample_difference:
+          minimum: 1.0e-05

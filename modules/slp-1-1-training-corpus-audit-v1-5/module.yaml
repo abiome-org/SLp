@@ -1,4 +1,4 @@
-apiVersion: omf.dev/v1alpha1
+apiVersion: openfoundry.dev/v1alpha1
 kind: Module
 metadata:
   name: slp-1-1-training-corpus-audit-v1-5
@@ -19,7 +19,7 @@ spec:
           type: object
           required: [resource, mode, path, manifestDigest]
           properties:
-            resource: {type: string, pattern: "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
+            resource: {type: string, pattern: "^(?:omf|openfoundry)://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
             mode: {const: copy}
             path: {type: string, minLength: 1}
             manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
@@ -28,7 +28,7 @@ spec:
           type: object
           required: [resource, mode, path, manifestDigest]
           properties:
-            resource: {type: string, pattern: "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
+            resource: {type: string, pattern: "^(?:omf|openfoundry)://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
             mode: {const: copy}
             path: {type: string, minLength: 1}
             manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
@@ -37,7 +37,7 @@ spec:
           type: object
           required: [resource, mode, path, manifestDigest]
           properties:
-            resource: {type: string, pattern: "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
+            resource: {type: string, pattern: "^(?:omf|openfoundry)://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
             mode: {const: copy}
             path: {type: string, minLength: 1}
             manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
@@ -47,7 +47,7 @@ spec:
           type: object
           required: [resource, mode, path, manifestDigest]
           properties:
-            resource: {type: string, pattern: "^omf://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
+            resource: {type: string, pattern: "^(?:omf|openfoundry)://abiome/slp/datasetsnapshot/.+@sha256:[0-9a-f]{64}$"}
             mode: {const: copy}
             path: {type: string, minLength: 1}
             manifestDigest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}

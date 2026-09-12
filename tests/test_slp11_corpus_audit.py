@@ -32,6 +32,26 @@ class CorpusAuditTest(unittest.TestCase):
     MAPPING_ID = "TESTMAP:sgd-fixture-v1"
     MAPPING_SHA = hashlib.sha256(b"fixture mapping").hexdigest()
 
+    def test_resource_parsing_accepts_each_brand_but_requires_exact_revision(self):
+        revision = "a" * 64
+        for scheme in ("omf", "openfoundry"):
+            with self.subTest(scheme=scheme):
+                resource = f"{scheme}://abiome/slp/datasetsnapshot/fixture@sha256:{revision}"
+                self.assertEqual(
+                    audit._dataset_resource(resource, "input"), ("fixture", f"sha256:{revision}")
+                )
+                for invalid in (
+                    resource.split("@")[0],
+                    resource[:-1],
+                    resource.replace("datasetsnapshot", "release"),
+                ):
+                    with self.assertRaises(audit.CorpusAuditError):
+                        audit._dataset_resource(invalid, "input")
+        with self.assertRaises(audit.CorpusAuditError):
+            audit._dataset_resource(
+                f"https://abiome/slp/datasetsnapshot/fixture@sha256:{revision}", "input"
+            )
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.by_role: dict[str, str] = {}
@@ -54,9 +74,7 @@ class CorpusAuditTest(unittest.TestCase):
         revision = hashlib.sha256((resource_name + " revision").encode()).hexdigest()
         manifest = hashlib.sha256((resource_name + " manifest").encode()).hexdigest()
         return {
-            "resource": (
-                f"omf://abiome/slp/datasetsnapshot/{resource_name}@sha256:{revision}"
-            ),
+            "resource": (f"omf://abiome/slp/datasetsnapshot/{resource_name}@sha256:{revision}"),
             "mode": "copy",
             "path": str(path),
             "manifestDigest": f"sha256:{manifest}",
@@ -156,9 +174,7 @@ class CorpusAuditTest(unittest.TestCase):
                 "scheme": "slp.source-intervention-replicate-record/v1",
                 "sourceWeights": [1.0],
             },
-            "species": [
-                {"taxon": 4932, "featureValue": [1.0], "featurePresent": [True]}
-            ],
+            "species": [{"taxon": 4932, "featureValue": [1.0], "featurePresent": [True]}],
             "featurePack": {
                 "revision": "TESTFEATURE:fixture-v1",
                 "sha256": "0" * 64,
@@ -279,8 +295,7 @@ class CorpusAuditTest(unittest.TestCase):
         roster_path = directory / "held-intervention-roster.tsv"
         roster_path.write_bytes(
             "".join(
-                f"{identifier}\t{role}\t{digest}\n"
-                for identifier, role, digest in assignments
+                f"{identifier}\t{role}\t{digest}\n" for identifier, role, digest in assignments
             ).encode("ascii")
         )
         counts = {
@@ -393,7 +408,9 @@ class CorpusAuditTest(unittest.TestCase):
                 )
                 payload = root / "output" / "corpus-audit" / "corpus-audit.json"
                 self.assertEqual(hashlib.sha256(payload.read_bytes()).hexdigest(), digest)
-                self.assertEqual(set(path.name for path in payload.parent.iterdir()), {payload.name})
+                self.assertEqual(
+                    set(path.name for path in payload.parent.iterdir()), {payload.name}
+                )
                 schema = json.loads((MODULE / "corpus-audit.schema.json").read_text())
                 self.assertEqual(set(schema["required"]), set(report))
                 self.assertEqual(
@@ -423,13 +440,17 @@ class CorpusAuditTest(unittest.TestCase):
                 ),
                 ({**pretrain, "manifestDigest": "latest"}, "sha256"),
                 (
-                    {**pretrain, "resource": pretrain["resource"].replace("fixture-pretrain@", "spoof@")},
+                    {
+                        **pretrain,
+                        "resource": pretrain["resource"].replace("fixture-pretrain@", "spoof@"),
+                    },
                     "path is inconsistent",
                 ),
             )
             for value, message in cases:
-                with self.subTest(message=message), self.assertRaisesRegex(
-                    audit.CorpusAuditError, message
+                with (
+                    self.subTest(message=message),
+                    self.assertRaisesRegex(audit.CorpusAuditError, message),
                 ):
                     audit.audit_corpora(
                         {**inputs, "pretrain": value},
@@ -453,9 +474,7 @@ class CorpusAuditTest(unittest.TestCase):
                 else:
                     (directory / "extra.txt").write_text("not declared")
                 with self.assertRaisesRegex(audit.CorpusAuditError, message):
-                    audit.audit_corpora(
-                        inputs, held, inventories, reward_enabled=False
-                    )
+                    audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_hidden_or_missing_shard_members_are_fatal(self) -> None:
         for mutation in ("hidden", "missing-target"):
@@ -476,16 +495,17 @@ class CorpusAuditTest(unittest.TestCase):
                 manifest["shards"][0]["sha256"] = _sha256(shard)
                 manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
                 with self.assertRaisesRegex(audit.CorpusAuditError, "NPZ arrays mismatch"):
-                    audit.audit_corpora(
-                        inputs, held, inventories, reward_enabled=False
-                    )
+                    audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_sgd_taxon_zero_and_cross_species_active_actions_are_fatal(self) -> None:
         for entity_taxon, add_declared_species, message in (
             (0, False, "SGD entities must retain"),
             (9606, True, "active action entity taxon"),
         ):
-            with self.subTest(entity_taxon=entity_taxon), tempfile.TemporaryDirectory() as temporary:
+            with (
+                self.subTest(entity_taxon=entity_taxon),
+                tempfile.TemporaryDirectory() as temporary,
+            ):
                 root = Path(temporary)
                 inputs, held, inventories = self._fixture(root)
                 directory = Path(inputs["pretrain"]["path"])
@@ -508,9 +528,7 @@ class CorpusAuditTest(unittest.TestCase):
                 manifest["entityDictionary"]["sha256"] = _sha256(entity_path)
                 manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
                 with self.assertRaisesRegex(audit.CorpusAuditError, message):
-                    audit.audit_corpora(
-                        inputs, held, inventories, reward_enabled=False
-                    )
+                    audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_duplicate_record_ids_are_fatal(self) -> None:
         second_pretrain = next(
@@ -530,18 +548,14 @@ class CorpusAuditTest(unittest.TestCase):
             shard = directory / "shard-000.npz"
             with np.load(shard, allow_pickle=False) as source:
                 arrays = {name: source[name] for name in source.files}
-            arrays["record_id"] = np.asarray(
-                ["TEST:duplicate", "TEST:duplicate"], dtype="<U64"
-            )
+            arrays["record_id"] = np.asarray(["TEST:duplicate", "TEST:duplicate"], dtype="<U64")
             np.savez(shard, **arrays)
             manifest_path = directory / "corpus.json"
             manifest = json.loads(manifest_path.read_bytes())
             manifest["shards"][0]["sha256"] = _sha256(shard)
             manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "record_id values must be unique"):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_roster_intersection_is_recomputed_from_protected_inventories(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -569,9 +583,7 @@ class CorpusAuditTest(unittest.TestCase):
                 manifest["files"][0]["records"] += 1
                 manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "exact QC-passing"):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
             with self.assertRaisesRegex(audit.CorpusAuditError, "at least two"):
                 audit.audit_corpora(
                     inputs,
@@ -589,21 +601,15 @@ class CorpusAuditTest(unittest.TestCase):
             with self.assertRaisesRegex(
                 audit.CorpusAuditError, "quantitative fitting trajectories"
             ):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_reward_flag_and_reward_input_are_fail_closed(self) -> None:
         for value in (None, True, 0, "false"):
             with self.subTest(value=value), tempfile.TemporaryDirectory() as temporary:
                 root = Path(temporary)
                 inputs, held, inventories = self._fixture(root)
-                with self.assertRaisesRegex(
-                    audit.CorpusAuditError, "requires rewardEnabled=false"
-                ):
-                    audit.audit_corpora(
-                        inputs, held, inventories, reward_enabled=value
-                    )
+                with self.assertRaisesRegex(audit.CorpusAuditError, "requires rewardEnabled=false"):
+                    audit.audit_corpora(inputs, held, inventories, reward_enabled=value)
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             inputs, held, inventories = self._fixture(root)
@@ -631,9 +637,7 @@ class CorpusAuditTest(unittest.TestCase):
             coverage["rosterSha256"] = _sha256(roster)
             coverage_path.write_bytes(audit.canonical_json_bytes(coverage, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "forged or drifted"):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_validation_final_overlap_and_wrong_role_are_fatal(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -641,18 +645,14 @@ class CorpusAuditTest(unittest.TestCase):
             shared = self.by_role["molecular-validation"]
             inputs, held, inventories = self._fixture(root, {"molecularFinal": [shared]})
             with self.assertRaisesRegex(audit.CorpusAuditError, "overlap"):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             inputs, held, inventories = self._fixture(
                 root, {"molecularValidation": [self.by_role["pretrain"]]}
             )
             with self.assertRaisesRegex(audit.CorpusAuditError, "roster role"):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_input_omissions_extras_and_record_level_trajectory_drift_fail(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -663,9 +663,7 @@ class CorpusAuditTest(unittest.TestCase):
                 {**inputs, "unexpected": inputs["pretrain"]},
             ):
                 with self.assertRaisesRegex(audit.CorpusAuditError, "must be exactly"):
-                    audit.audit_corpora(
-                        changed, held, inventories, reward_enabled=False
-                    )
+                    audit.audit_corpora(changed, held, inventories, reward_enabled=False)
 
             directory = Path(inputs["pretrain"]["path"])
             genes = directory / "trajectory-genes.txt"
@@ -675,9 +673,7 @@ class CorpusAuditTest(unittest.TestCase):
             manifest["trajectoryGenes"].update(sha256=_sha256(genes), count=0)
             manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "record-level species actions"):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_benchmark_and_coverage_source_provenance_drift_are_fatal(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -688,9 +684,7 @@ class CorpusAuditTest(unittest.TestCase):
             manifest["benchmarkLabelsPresent"] = True
             manifest_path.write_bytes(audit.canonical_json_bytes(manifest, newline=True))
             with self.assertRaisesRegex(audit.CorpusAuditError, "benchmark labels"):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -702,9 +696,7 @@ class CorpusAuditTest(unittest.TestCase):
             with self.assertRaisesRegex(
                 audit.CorpusAuditError, "exactly reproduce|deterministically sorted"
             ):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_symlink_is_fatal_when_host_permits_creation(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -720,9 +712,7 @@ class CorpusAuditTest(unittest.TestCase):
             except OSError:
                 self.skipTest("symlink creation is not permitted on this Windows host")
             with self.assertRaisesRegex(audit.CorpusAuditError, "symlink"):
-                audit.audit_corpora(
-                    inputs, held, inventories, reward_enabled=False
-                )
+                audit.audit_corpora(inputs, held, inventories, reward_enabled=False)
 
     def test_module_workload_and_local_schema_freeze_exact_boundary(self) -> None:
         module = yaml.safe_load((MODULE / "module.yaml").read_text())
@@ -746,9 +736,7 @@ class CorpusAuditTest(unittest.TestCase):
         inputs = workload["spec"]["graph"]["stages"][0]["inputs"]
         protected = {key for key in inputs if key.startswith("protectedInventory")}
         self.assertGreaterEqual(len(protected), 2)
-        self.assertEqual(
-            set(inputs), {*audit.EXPECTED_ROLES, "heldRoster", *protected}
-        )
+        self.assertEqual(set(inputs), {*audit.EXPECTED_ROLES, "heldRoster", *protected})
         self.assertIs(
             workload["spec"]["graph"]["stages"][0]["config"]["rewardEnabled"],
             False,

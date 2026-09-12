@@ -603,28 +603,73 @@ test labels. The public benchmark has already been inspected historically;
 rerunning it is reproduction, not untouched confirmation. The released
 evaluation reports preserve every fold and matched control.
 
-## Open Model Factory 2
+## OpenFoundry
 
-The runtime is pinned by [omf-version.json](../omf-version.json). On Linux or WSL:
+The working project uses the renamed OpenFoundry API and action catalog v3,
+pinned to upstream commit `e29c12bc2ef74f836f919df4bc55e02a47bebc79` in
+[openfoundry-version.json](../openfoundry-version.json). This is an **unreleased
+commit**, not a new version tag: upstream still reports package version 2.0.0.
+The launcher checks an installation receipt against the complete source pin.
 
 ```sh
-bash scripts/bootstrap_omf2.sh --diagnostics
-bash scripts/omf2.sh doctor
-bash scripts/omf2.sh agent context
-bash scripts/omf2.sh agent capabilities experiment.run
+bash scripts/bootstrap_openfoundry.sh
+bash scripts/openfoundry.sh bootstrap --plan
+bash scripts/openfoundry.sh bootstrap
+bash scripts/openfoundry.sh doctor
+bash scripts/openfoundry.sh agent context
+bash scripts/openfoundry.sh agent capabilities experiment.run
 ```
 
-`experiment-cellular-genomic-world.yaml` describes the exercised artifact replay
-and export. It also needs its separately prepared Linux readout-runtime ZIP;
-that environment artifact is not bundled into the biological-data release.
-Follow the runtime preparation recorded in the result ledger before running
-that historical OMF experiment. Standalone inference uses installed dependencies
-and does not need this ZIP or an OMF database.
+Setup accepts Python 3.11/3.12 on PATH, or an explicit interpreter through
+`OPENFOUNDRY_PYTHON`. For example, on this Mac:
 
-OMF replay verifies trained artifacts and performs zero optimization. The
-ordinary-script training commands above perform actual fitting. An OMF export
-is distinct from a production ModelPackage deployment. Keep `.omf/` generated
-and untracked; never edit runtime records by hand.
+```sh
+OPENFOUNDRY_PYTHON=/opt/homebrew/bin/python3.11 bash scripts/bootstrap_openfoundry.sh
+```
+
+The installer verifies the exact clean upstream checkout, installs its binary
+hash-locked runtime/build dependencies, and uses a separate ignored environment
+at `data/tooling/openfoundry-runtime`. The project manifest is
+[openfoundry.yaml](../openfoundry.yaml); new generated state lives in
+`.openfoundry/`. Keep state, signing keys and payloads out of Git.
+
+The previous `.omf/` state, `data/tooling/omf-2.0-75f002b` source and
+`data/tooling/omf2-runtime` environment remain intact. Use Git checkpoint
+`slp-1.2-0910` with that runtime to inspect historical runs. Do not rename the
+old state directory, rewrite signed manifests or replace `omf://` prefixes in
+recorded provenance. Upstream does not support cross-brand state restore.
+Current module adapters use `openfoundry.module/v1`, `openfoundry.sdk` and
+`OPENFOUNDRY_*` environment variables. Generic dataset URI validators accept
+both brands; exact historical corpus pins still require their original inputs.
+New admission creates new identities and requires matching verified contracts.
+
+Experiment metrics now declare ranking directions; removed `minimum` and
+`maximum` fields live in promotion policy. The default policy retains the
+original bounds for `experiment.yaml`, the historical response comparator.
+Other bounded experiments and EvaluationSpecs have complete policy profiles in
+`policies/profiles/<definition-name>/default.yaml`. Select the corresponding
+profile through `spec.extensions.policyDirectory` in `openfoundry.yaml` before
+promoting that model. For example, SLp-1.2 replay uses
+`policies/profiles/slp-1-2-joint-world-replay`, retaining the 0.0003 maximum
+portability error. Profiles preserve the same actor rules and passing-evaluation
+requirement. They are alternatives, not a union of unrelated model metrics;
+missing or failed required scores reject promotion. Running and recording an
+experiment does not itself promote a release.
+
+The retained experiments still default to `network: deny` and the exact local
+executor. Isolated replay therefore requires Linux with user namespaces.
+OpenFoundry now supports explicitly unisolated macOS stages, but this upgrade
+does not enable that mode in SLp's existing experiments. Controller commands,
+schema validation and protocol checks work on macOS. Search, checkpoint
+branching and cost/accelerator limits are available in the pinned upstream;
+this upgrade launches no training or GPU allocation.
+
+`experiment-cellular-genomic-world.yaml` describes the historical artifact
+replay and export. It also needs its separately prepared Linux readout-runtime
+ZIP, which is not bundled into the biological-data release. Follow the runtime
+preparation in the results ledger before replaying it. Standalone inference
+does not need this ZIP or a factory database. Artifact replay performs zero
+optimization; an experiment export is distinct from a ModelPackage deployment.
 
 ## Collaboration and Git ownership
 
@@ -638,7 +683,7 @@ update `artifacts.lock.json` only after verifying their remote contents.
 | Original source, focused tests, tiny synthetic fixtures | Real observations and prepared arrays |
 | Dependency locks and experiment/configuration files | Checkpoints, optimizer states and decoder payloads |
 | Source/rights descriptions and artifact revision pointers | Per-run reports, predictions and generated archives |
-| Maintained docs and the scientific results ledger | OMF state, ontology workspace, virtual environments and caches |
+| Maintained docs and the scientific results ledger | Factory state, ontology workspace, virtual environments and caches |
 
 Run `python scripts/audit_repository.py` to check tracked payloads and broken
 local Markdown links. Stage named source/config paths; inspect

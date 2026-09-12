@@ -1,20 +1,30 @@
-apiVersion: omf.dev/v1alpha1
+# Promotion policy for experiment.yaml.
+apiVersion: openfoundry.dev/v1alpha1
 kind: Policy
 metadata:
   name: default
 spec:
   rules:
-    - name: allow-slp-operator
-      effect: allow
-      match:
-        actor: slp-researcher
-        resource: abiome/slp
-    - name: deny-unapproved-network
-      effect: deny
-      match:
-        action: network.egress
-        purpose: unapproved
+  - name: allow-slp-operator
+    effect: allow
+    match:
+      actor: slp-researcher
+      resource: abiome/slp
+  - name: deny-unapproved-network
+    effect: deny
+    match:
+      action: network.egress
+      purpose: unapproved
   config:
     dirtyWorktree: archive
     promotion:
       requireEvaluationPass: true
+      thresholds:
+        k562_mse:
+          maximum: 0.0035
+        rpe1_mse:
+          maximum: 0.0083
+        k562_centered_pearson:
+          minimum: 0.1
+        rpe1_centered_pearson:
+          minimum: 0.1

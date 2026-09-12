@@ -30,8 +30,8 @@ evaluate:
 metrics:
   sl_auroc: {direction: maximize}
   sl_ap: {direction: maximize}
-  score_max_error: {direction: minimize, maximum: 0.00001}
-  feature_max_error: {direction: minimize, maximum: 0.0002}
+  score_max_error: {direction: minimize}
+  feature_max_error: {direction: minimize}
 primaryMetric: sl_auroc
 baseline: cellular-genomic-world
 candidates:

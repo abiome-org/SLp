@@ -184,7 +184,9 @@ class ExpectedCounts:
         if any(type(value) is not int or value < 0 for value in integer_fields):
             raise ProteomeObservationError("expected counts must be non-negative integers")
         if self.pretrain_records <= 0 or self.pretrain_genes <= 0 or self.protein_readouts <= 0:
-            raise ProteomeObservationError("pretrain records, genes, and readouts must be non-empty")
+            raise ProteomeObservationError(
+                "pretrain records, genes, and readouts must be non-empty"
+            )
         for value in (self.trajectory_genes_sha256, self.trajectory_gene_set_sha256):
             if SHA256.fullmatch(value) is None:
                 raise ProteomeObservationError("expected trajectory digest is invalid")
@@ -265,10 +267,26 @@ class PreparationProvenance:
 
 PRODUCTION_SOURCE_CONTRACT = SourceContract(
     raw_files=(
-        FileSpec("Detection_of_KO_proteins.csv", 30_260, "ca7c8f2ac33272df3763807add7b8982b8a8b52d4276bd929a61ecf19e0ae405"),
-        FileSpec("summary_fileupload.pdf", 65_558, "4078289dc86dd6b526d9b0c963e6df61d53acdfdf6260abdeae307588623f828"),
-        FileSpec("yeast5k_metadata.csv", 377_047, "48864282c82d516ae929dc87aff7fae9e05e9b922e316c001f3d29dce0ff878b"),
-        FileSpec("yeast5k_noimpute_wide.csv", 167_754_298, "69a9df05b6db011f595a4e0b3ce25c1cc247f22cbdd066c79e6da9a706aa1df9"),
+        FileSpec(
+            "Detection_of_KO_proteins.csv",
+            30_260,
+            "ca7c8f2ac33272df3763807add7b8982b8a8b52d4276bd929a61ecf19e0ae405",
+        ),
+        FileSpec(
+            "summary_fileupload.pdf",
+            65_558,
+            "4078289dc86dd6b526d9b0c963e6df61d53acdfdf6260abdeae307588623f828",
+        ),
+        FileSpec(
+            "yeast5k_metadata.csv",
+            377_047,
+            "48864282c82d516ae929dc87aff7fae9e05e9b922e316c001f3d29dce0ff878b",
+        ),
+        FileSpec(
+            "yeast5k_noimpute_wide.csv",
+            167_754_298,
+            "69a9df05b6db011f595a4e0b3ce25c1cc247f22cbdd066c79e6da9a706aa1df9",
+        ),
     ),
     intervention_manifest_sha256="dd683a2585a15377282e669f61dce38c44ea9d3d9d55be71b24842048c05f3e5",
     protein_manifest_sha256="8d559638f48ee4516f7e6fce9e0248e9a1762d58803fe2ed761eff8734f45f86",
@@ -356,7 +374,9 @@ PRODUCTION_ARTIFACTS = {
 
 
 def canonical_json(value: object) -> str:
-    return json.dumps(value, ensure_ascii=False, allow_nan=False, separators=(",", ":"), sort_keys=True)
+    return json.dumps(
+        value, ensure_ascii=False, allow_nan=False, separators=(",", ":"), sort_keys=True
+    )
 
 
 def canonical_json_bytes(value: object) -> bytes:
@@ -379,7 +399,11 @@ def _sha256(path: Path) -> str:
 
 
 def _prefixed_digest(value: object, label: str) -> str:
-    if not isinstance(value, str) or not value.startswith("sha256:") or SHA256.fullmatch(value[7:]) is None:
+    if (
+        not isinstance(value, str)
+        or not value.startswith("sha256:")
+        or SHA256.fullmatch(value[7:]) is None
+    ):
         raise ProteomeObservationError(f"{label} must be a lowercase sha256: digest")
     return value
 
@@ -392,9 +416,9 @@ def _nonempty(value: object, label: str) -> str:
 
 def _resource_parts(value: object, label: str) -> tuple[str, str]:
     resource = _nonempty(value, label)
-    if not resource.startswith("omf://"):
+    if not resource.startswith(("omf://", "openfoundry://")):
         raise ProteomeObservationError(f"{label} must be an OMF DatasetSnapshot URI")
-    identity, separator, revision = resource.removeprefix("omf://").rpartition("@")
+    identity, separator, revision = resource.split("://", 1)[1].rpartition("@")
     if not separator:
         raise ProteomeObservationError(f"{label} must contain an exact revision")
     _prefixed_digest(revision, f"{label} revision")
@@ -403,7 +427,10 @@ def _resource_parts(value: object, label: str) -> tuple[str, str]:
         len(parts) < 3
         or parts[-2] != "datasetsnapshot"
         or RESOURCE_NAME.fullmatch(parts[-1]) is None
-        or any(not part or part in {".", ".."} or any(char.isspace() for char in part) for part in parts)
+        or any(
+            not part or part in {".", ".."} or any(char.isspace() for char in part)
+            for part in parts
+        )
     ):
         raise ProteomeObservationError(f"{label} must identify a DatasetSnapshot")
     return parts[-1], revision
@@ -436,7 +463,11 @@ def resolve_pinned_dataset_input(
         raise ProteomeObservationError(f"{input_name} has a spoofed DatasetSnapshot shape")
     resource_name, revision = _resource_parts(value["resource"], f"{input_name}.resource")
     expected_resource = f"omf://abiome/slp/datasetsnapshot/{contract.name}@{contract.revision}"
-    if value["resource"] != expected_resource or resource_name != contract.name or revision != contract.revision:
+    if (
+        value["resource"] != expected_resource
+        or resource_name != contract.name
+        or revision != contract.revision
+    ):
         raise ProteomeObservationError(f"{input_name} is not the frozen DatasetSnapshot")
     if value["mode"] != "copy":
         raise ProteomeObservationError(f"{input_name} must be an immutable copy")
@@ -444,15 +475,26 @@ def resolve_pinned_dataset_input(
     if manifest_digest != contract.manifest_digest:
         raise ProteomeObservationError(f"{input_name} manifest digest drift")
     root = _resolved_path(value["path"], f"{input_name}.path", directory=True)
-    if root.name != resource_name or root.parent.name != input_name or root.parent.parent.name != "inputs":
-        raise ProteomeObservationError(f"{input_name}.path is inconsistent with OMF materialization")
+    if (
+        root.name != resource_name
+        or root.parent.name != input_name
+        or root.parent.parent.name != "inputs"
+    ):
+        raise ProteomeObservationError(
+            f"{input_name}.path is inconsistent with OMF materialization"
+        )
     return PinnedDataset(root, str(value["resource"]), revision, manifest_digest)
 
 
-def resolve_literal_artifact(value: object, input_name: str, expected_digest: str) -> LiteralArtifact:
+def resolve_literal_artifact(
+    value: object, input_name: str, expected_digest: str
+) -> LiteralArtifact:
     if INPUT_NAME.fullmatch(input_name) is None or not isinstance(value, dict):
         raise ProteomeObservationError(f"{input_name} must be a literal OMF artifact")
-    if set(value) != {"resource", "kind", "artifacts", "paths", "path"} or value["kind"] != "artifact":
+    if (
+        set(value) != {"resource", "kind", "artifacts", "paths", "path"}
+        or value["kind"] != "artifact"
+    ):
         raise ProteomeObservationError(f"{input_name} has a spoofed artifact shape")
     artifacts, paths = value["artifacts"], value["paths"]
     if not isinstance(artifacts, dict) or set(artifacts) != {"payload"}:
@@ -471,7 +513,9 @@ def resolve_literal_artifact(value: object, input_name: str, expected_digest: st
         or path.parent.parent.name != input_name
         or path.parent.parent.parent.name != "inputs"
     ):
-        raise ProteomeObservationError(f"{input_name}.path is inconsistent with OMF materialization")
+        raise ProteomeObservationError(
+            f"{input_name}.path is inconsistent with OMF materialization"
+        )
     return LiteralArtifact(path, digest)
 
 
@@ -494,7 +538,9 @@ def _relative_file(root: Path, relative: str) -> Path:
         resolved = cursor.resolve(strict=True)
         resolved.relative_to(root.resolve(strict=True))
     except (OSError, ValueError) as error:
-        raise ProteomeObservationError(f"file is missing or escapes its root: {relative}") from error
+        raise ProteomeObservationError(
+            f"file is missing or escapes its root: {relative}"
+        ) from error
     if not resolved.is_file():
         raise ProteomeObservationError(f"file is not regular: {relative}")
     return resolved
@@ -504,7 +550,9 @@ def _exact_files(root_value: str | Path, expected: set[str], label: str) -> Path
     root = _resolved_path(root_value, label, directory=True)
     actual = {item.name for item in root.iterdir()}
     if actual != expected:
-        raise ProteomeObservationError(f"{label} file set drift; expected={sorted(expected)}, actual={sorted(actual)}")
+        raise ProteomeObservationError(
+            f"{label} file set drift; expected={sorted(expected)}, actual={sorted(actual)}"
+        )
     for name in expected:
         _relative_file(root, name)
     return root
@@ -536,7 +584,9 @@ def _read_json(path: Path, label: str, maximum_bytes: int = 4 * 1024 * 1024) -> 
 def _expect_keys(value: object, expected: set[str], label: str) -> dict[str, Any]:
     if not isinstance(value, dict) or set(value) != expected:
         actual = sorted(value) if isinstance(value, dict) else type(value).__name__
-        raise ProteomeObservationError(f"{label} fields drift; expected={sorted(expected)}, actual={actual}")
+        raise ProteomeObservationError(
+            f"{label} fields drift; expected={sorted(expected)}, actual={actual}"
+        )
     return value
 
 
@@ -550,17 +600,25 @@ def _jsonl(path: Path, max_line_bytes: int) -> Iterator[tuple[int, dict[str, Any
                     break
                 line_number += 1
                 if len(raw) > max_line_bytes:
-                    raise ProteomeObservationError(f"{path.name}:{line_number} exceeds max line bytes")
+                    raise ProteomeObservationError(
+                        f"{path.name}:{line_number} exceeds max line bytes"
+                    )
                 if not raw.endswith(b"\n") or raw in {b"\n", b"\r\n"} or b"\r" in raw:
-                    raise ProteomeObservationError(f"{path.name}:{line_number} is not canonical JSONL")
+                    raise ProteomeObservationError(
+                        f"{path.name}:{line_number} is not canonical JSONL"
+                    )
                 try:
                     value = json.loads(raw)
                 except (UnicodeDecodeError, json.JSONDecodeError) as error:
-                    raise ProteomeObservationError(f"{path.name}:{line_number} is invalid JSON") from error
+                    raise ProteomeObservationError(
+                        f"{path.name}:{line_number} is invalid JSON"
+                    ) from error
                 if not isinstance(value, dict):
                     raise ProteomeObservationError(f"{path.name}:{line_number} must be an object")
                 if canonical_json_bytes(value) != raw:
-                    raise ProteomeObservationError(f"{path.name}:{line_number} is not canonical JSONL")
+                    raise ProteomeObservationError(
+                        f"{path.name}:{line_number} is not canonical JSONL"
+                    )
                 yield line_number, value, raw
     except OSError as error:
         raise ProteomeObservationError(f"could not read {path.name}") from error
@@ -600,21 +658,43 @@ def load_mapping(
     ):
         raise ProteomeObservationError("mapping manifest identity contract drift")
     basis = manifest.get("digestBasis")
-    if not isinstance(basis, dict) or hashlib.sha256(canonical_json_bytes(basis)).hexdigest() != contract.mapping_sha256:
-        raise ProteomeObservationError("mapping digest basis does not reproduce the frozen identity digest")
+    if (
+        not isinstance(basis, dict)
+        or hashlib.sha256(canonical_json_bytes(basis)).hexdigest() != contract.mapping_sha256
+    ):
+        raise ProteomeObservationError(
+            "mapping digest basis does not reproduce the frozen identity digest"
+        )
     outputs = basis.get("outputFiles")
-    matched = [item for item in outputs if isinstance(item, dict) and item.get("name") == "current-orfs.jsonl"] if isinstance(outputs, list) else []
+    matched = (
+        [
+            item
+            for item in outputs
+            if isinstance(item, dict) and item.get("name") == "current-orfs.jsonl"
+        ]
+        if isinstance(outputs, list)
+        else []
+    )
     if len(matched) != 1 or set(matched[0]) != {"name", "records", "bytes", "sha256"}:
         raise ProteomeObservationError("mapping manifest current-ORF output contract drift")
     output = matched[0]
-    if output["sha256"] != contract.current_orfs_sha256 or output["bytes"] != current_path.stat().st_size:
+    if (
+        output["sha256"] != contract.current_orfs_sha256
+        or output["bytes"] != current_path.stat().st_size
+    ):
         raise ProteomeObservationError("current ORF file is not bound by the mapping manifest")
     by_systematic: dict[str, set[str]] = defaultdict(set)
     seen_curies: set[str] = set()
     records = 0
     expected_keys = {
-        "schema", "canonicalSgdCurie", "systematicName", "featureQualifier",
-        "ncbiTaxon", "secondaryIdentifiers", "secondaryIdentifiersResolve", "displayMetadata",
+        "schema",
+        "canonicalSgdCurie",
+        "systematicName",
+        "featureQualifier",
+        "ncbiTaxon",
+        "secondaryIdentifiers",
+        "secondaryIdentifiersResolve",
+        "displayMetadata",
     }
     for line_number, record, _ in _jsonl(current_path, bounds.max_jsonl_line_bytes):
         records += 1
@@ -644,15 +724,24 @@ def load_intervention_inventory(
     contract: SourceContract,
     bounds: Bounds,
 ) -> Counter[str]:
-    root = _exact_files(root_value, {"inventory.json", "interventions.jsonl"}, "intervention inventory")
+    root = _exact_files(
+        root_value, {"inventory.json", "interventions.jsonl"}, "intervention inventory"
+    )
     manifest_path = _relative_file(root, "inventory.json")
     if _sha256(manifest_path) != contract.intervention_manifest_sha256:
         raise ProteomeObservationError("intervention inventory manifest content drift")
     manifest = _expect_keys(
         _read_json(manifest_path, "intervention inventory manifest"),
         {
-            "schema", "sourceId", "sourceRelease", "ncbiTaxon", "stableIdNamespace",
-            "identityMappingId", "identityMappingSha256", "inventoryFormat", "files",
+            "schema",
+            "sourceId",
+            "sourceRelease",
+            "ncbiTaxon",
+            "stableIdNamespace",
+            "identityMappingId",
+            "identityMappingSha256",
+            "inventoryFormat",
+            "files",
         },
         "intervention inventory manifest",
     )
@@ -669,11 +758,17 @@ def load_intervention_inventory(
         or len(manifest["files"]) != 1
     ):
         raise ProteomeObservationError("intervention inventory identity contract drift")
-    records_path, expected_records = _validate_file_reference(root, manifest["files"][0], "intervention inventory file")
+    records_path, expected_records = _validate_file_reference(
+        root, manifest["files"][0], "intervention inventory file"
+    )
     counts: Counter[str] = Counter()
     previous = ""
     for line_number, record, _ in _jsonl(records_path, bounds.max_jsonl_line_bytes):
-        _expect_keys(record, {"schema", "interventionId", "ncbiTaxon", "qcPassing"}, f"intervention line {line_number}")
+        _expect_keys(
+            record,
+            {"schema", "interventionId", "ncbiTaxon", "qcPassing"},
+            f"intervention line {line_number}",
+        )
         identifier = record["interventionId"]
         if (
             record["schema"] != INTERVENTION_RECORD_SCHEMA
@@ -697,15 +792,23 @@ def load_protein_relations(
     bounds: Bounds,
     current_curies: frozenset[str],
 ) -> tuple[bytes, tuple[dict[str, Any], ...], dict[str, int]]:
-    root = _exact_files(root_value, {"manifest.json", "relations.jsonl"}, "protein relation inventory")
+    root = _exact_files(
+        root_value, {"manifest.json", "relations.jsonl"}, "protein relation inventory"
+    )
     manifest_path = _relative_file(root, "manifest.json")
     if _sha256(manifest_path) != contract.protein_manifest_sha256:
         raise ProteomeObservationError("protein relation manifest content drift")
     manifest = _expect_keys(
         _read_json(manifest_path, "protein relation manifest"),
         {
-            "schema", "sourceId", "sourceRelease", "ncbiTaxon", "identityMappingId",
-            "identityMappingSha256", "relationFormat", "files",
+            "schema",
+            "sourceId",
+            "sourceRelease",
+            "ncbiTaxon",
+            "identityMappingId",
+            "identityMappingSha256",
+            "relationFormat",
+            "files",
         },
         "protein relation manifest",
     )
@@ -721,7 +824,9 @@ def load_protein_relations(
         or len(manifest["files"]) != 1
     ):
         raise ProteomeObservationError("protein relation identity contract drift")
-    records_path, expected_records = _validate_file_reference(root, manifest["files"][0], "protein relation file")
+    records_path, expected_records = _validate_file_reference(
+        root, manifest["files"][0], "protein relation file"
+    )
     if _sha256(records_path) != contract.protein_records_sha256:
         raise ProteomeObservationError("protein relation record content drift")
     rows: list[dict[str, Any]] = []
@@ -729,14 +834,24 @@ def load_protein_relations(
     previous = ""
     accessions: dict[str, int] = {}
     keys = {
-        "schema", "proteinId", "sourceAccession", "sourceAccessionType", "ncbiTaxon",
-        "currentOrfRelations", "currentOrfRelationCount", "chooseFirstAllowed",
+        "schema",
+        "proteinId",
+        "sourceAccession",
+        "sourceAccessionType",
+        "ncbiTaxon",
+        "currentOrfRelations",
+        "currentOrfRelationCount",
+        "chooseFirstAllowed",
     }
     for line_number, record, raw in _jsonl(records_path, bounds.max_jsonl_line_bytes):
         if len(rows) >= bounds.max_readouts:
             raise ProteomeObservationError("protein relations exceed maxReadouts")
         _expect_keys(record, keys, f"protein relation line {line_number}")
-        protein_id, accession, relations = record["proteinId"], record["sourceAccession"], record["currentOrfRelations"]
+        protein_id, accession, relations = (
+            record["proteinId"],
+            record["sourceAccession"],
+            record["currentOrfRelations"],
+        )
         if (
             record["schema"] != PROTEIN_RECORD_SCHEMA
             or record["ncbiTaxon"] != NCBI_TAXON
@@ -747,7 +862,8 @@ def load_protein_relations(
             or not isinstance(accession, str)
             or protein_id != f"UniProtKB:{accession}"
             or accession in accessions
-            or record["sourceAccessionType"] != {
+            or record["sourceAccessionType"]
+            != {
                 "source": "UniProtKB",
                 "type": "UniProtKB ID",
                 "namespaceInferred": False,
@@ -756,7 +872,9 @@ def load_protein_relations(
             or not isinstance(relations, list)
             or not relations
             or relations != sorted(set(relations))
-            or any(not isinstance(item, str) or SGD_CURIE.fullmatch(item) is None for item in relations)
+            or any(
+                not isinstance(item, str) or SGD_CURIE.fullmatch(item) is None for item in relations
+            )
             or any(item not in current_curies for item in relations)
             or record["currentOrfRelationCount"] != len(relations)
         ):
@@ -778,22 +896,35 @@ def _held_role(identifier: str) -> tuple[str, str]:
 
 
 def load_held_roster(root_value: str | Path, contract: SourceContract) -> dict[str, str]:
-    root = _exact_files(root_value, {"coverage.json", "held-intervention-roster.tsv"}, "held roster")
+    root = _exact_files(
+        root_value, {"coverage.json", "held-intervention-roster.tsv"}, "held roster"
+    )
     roster_path = _relative_file(root, "held-intervention-roster.tsv")
     coverage_path = _relative_file(root, "coverage.json")
-    if _sha256(roster_path) != contract.roster_sha256 or _sha256(coverage_path) != contract.coverage_sha256:
+    if (
+        _sha256(roster_path) != contract.roster_sha256
+        or _sha256(coverage_path) != contract.coverage_sha256
+    ):
         raise ProteomeObservationError("held roster content digest drift")
     roles: dict[str, str] = {}
     try:
-        for line_number, raw in enumerate(roster_path.read_bytes().splitlines(keepends=True), start=1):
+        for line_number, raw in enumerate(
+            roster_path.read_bytes().splitlines(keepends=True), start=1
+        ):
             if not raw.endswith(b"\n") or b"\r" in raw:
                 raise ProteomeObservationError("held roster is not canonical LF text")
             fields = raw[:-1].decode("ascii").split("\t")
             if len(fields) != 3:
                 raise ProteomeObservationError("held roster row shape drift")
             identifier, role, digest = fields
-            if identifier in roles or SGD_CURIE.fullmatch(identifier) is None or _held_role(identifier) != (role, digest):
-                raise ProteomeObservationError(f"held roster assignment drift at line {line_number}")
+            if (
+                identifier in roles
+                or SGD_CURIE.fullmatch(identifier) is None
+                or _held_role(identifier) != (role, digest)
+            ):
+                raise ProteomeObservationError(
+                    f"held roster assignment drift at line {line_number}"
+                )
             roles[identifier] = role
     except (OSError, UnicodeDecodeError) as error:
         raise ProteomeObservationError("could not parse held roster") from error
@@ -805,7 +936,8 @@ def load_held_roster(root_value: str | Path, contract: SourceContract) -> dict[s
         or coverage.get("rosterPath") != "held-intervention-roster.tsv"
         or coverage.get("rosterSha256") != contract.roster_sha256
         or coverage.get("intersectionSize") != len(roles)
-        or coverage.get("identityMapping") != {"id": contract.mapping_id, "sha256": contract.mapping_sha256}
+        or coverage.get("identityMapping")
+        != {"id": contract.mapping_id, "sha256": contract.mapping_sha256}
         or coverage.get("assignment", {}).get("domainHex") != ASSIGNMENT_DOMAIN_HEX
     ):
         raise ProteomeObservationError("held roster coverage contract drift")
@@ -833,11 +965,17 @@ def read_metadata(
             for index, row in enumerate(reader, start=0):
                 if index >= bounds.max_metadata_rows:
                     raise ProteomeObservationError("proteome metadata exceeds its row bound")
-                if set(row) != set(METADATA_COLUMNS) or any(value is None or value != value.strip() for value in row.values()):
-                    raise ProteomeObservationError("proteome metadata row shape or whitespace drift")
+                if set(row) != set(METADATA_COLUMNS) or any(
+                    value is None or value != value.strip() for value in row.values()
+                ):
+                    raise ProteomeObservationError(
+                        "proteome metadata row shape or whitespace drift"
+                    )
                 filename = row["Filename"]
                 if not filename or filename in filenames:
-                    raise ProteomeObservationError("proteome sample filenames must be non-empty and unique")
+                    raise ProteomeObservationError(
+                        "proteome sample filenames must be non-empty and unique"
+                    )
                 filenames.add(filename)
                 sample_type, raw_orf = row["sampletype"], row["ORF"]
                 if sample_type not in {"ko", "HIS3", "qc"}:
@@ -850,7 +988,9 @@ def read_metadata(
                     injection = int(row["Injection nr"])
                     well = int(row["Well nr (counted row-wise)"])
                 except ValueError as error:
-                    raise ProteomeObservationError("injection and well must be exact integers") from error
+                    raise ProteomeObservationError(
+                        "injection and well must be exact integers"
+                    ) from error
                 if injection < 0 or well < 0:
                     raise ProteomeObservationError("injection and well must be non-negative")
                 action_id: str | None = None
@@ -876,7 +1016,9 @@ def read_metadata(
     except OSError as error:
         raise ProteomeObservationError("could not parse proteome metadata") from error
     if mapped_counts != inventory_counts:
-        raise ProteomeObservationError("raw sample-to-SGD mapping does not exactly reproduce the admitted intervention inventory")
+        raise ProteomeObservationError(
+            "raw sample-to-SGD mapping does not exactly reproduce the admitted intervention inventory"
+        )
     return samples, sample_types
 
 
@@ -924,15 +1066,21 @@ def decode_matrix(
             header = next(reader, None)
             expected_header = ["Protein.Group", *(sample.filename for sample in samples)]
             if header != expected_header:
-                raise ProteomeObservationError("wide matrix header does not exactly match metadata filename order")
+                raise ProteomeObservationError(
+                    "wide matrix header does not exactly match metadata filename order"
+                )
             for source_row, row in enumerate(reader, start=2):
                 if source_row - 2 >= bounds.max_readouts:
                     raise ProteomeObservationError("wide matrix exceeds maxReadouts")
                 if len(row) != len(expected_header):
-                    raise ProteomeObservationError(f"wide matrix row shape drift at source row {source_row}")
+                    raise ProteomeObservationError(
+                        f"wide matrix row shape drift at source row {source_row}"
+                    )
                 accession = row[0]
                 if accession not in accession_to_index or accession in seen:
-                    raise ProteomeObservationError(f"wide matrix readout identity drift at source row {source_row}")
+                    raise ProteomeObservationError(
+                        f"wide matrix readout identity drift at source row {source_row}"
+                    )
                 seen.add(accession)
                 readout_index = accession_to_index[accession]
                 target_row = np.empty(len(selected_columns), dtype="<f4")
@@ -948,12 +1096,16 @@ def decode_matrix(
                 matrix[:, readout_index] = target_row
                 control_transformed: list[float] = []
                 for column in control_columns:
-                    decoded = _decode_observed(row[column], f"HIS3 cell row={source_row}, column={column + 1}")
+                    decoded = _decode_observed(
+                        row[column], f"HIS3 cell row={source_row}, column={column + 1}"
+                    )
                     if decoded is not None:
                         control_transformed.append(decoded)
                 basal_counts[readout_index] = len(control_transformed)
                 if control_transformed:
-                    basal_values[readout_index] = np.float32(math.fsum(control_transformed) / len(control_transformed))
+                    basal_values[readout_index] = np.float32(
+                        math.fsum(control_transformed) / len(control_transformed)
+                    )
     except (OSError, csv.Error) as error:
         raise ProteomeObservationError("could not parse the wide proteome matrix") from error
     finally:
@@ -962,8 +1114,15 @@ def decode_matrix(
         except UnboundLocalError:
             pass
     if seen != set(accession_to_index):
-        raise ProteomeObservationError("wide matrix does not exactly cover the admitted protein relations")
-    return target_values, len(selected) * len(accession_to_index) - target_values, basal_values, basal_counts
+        raise ProteomeObservationError(
+            "wide matrix does not exactly cover the admitted protein relations"
+        )
+    return (
+        target_values,
+        len(selected) * len(accession_to_index) - target_values,
+        basal_values,
+        basal_counts,
+    )
 
 
 def _fixed_strings(values: Sequence[str]) -> np.ndarray:
@@ -972,7 +1131,9 @@ def _fixed_strings(values: Sequence[str]) -> np.ndarray:
 
 
 def _write_deterministic_npz(path: Path, arrays: Mapping[str, np.ndarray]) -> None:
-    with zipfile.ZipFile(path, mode="w", compression=zipfile.ZIP_STORED, allowZip64=True) as archive:
+    with zipfile.ZipFile(
+        path, mode="w", compression=zipfile.ZIP_STORED, allowZip64=True
+    ) as archive:
         for name in sorted(arrays):
             array = np.ascontiguousarray(arrays[name])
             buffer = BytesIO()
@@ -1006,7 +1167,9 @@ def _write_tar(source: Path, destination: Path, prefix: str) -> None:
     partial.replace(destination)
 
 
-def _shard_arrays(samples: Sequence[Sample], matrix: np.memmap, plate_index: Mapping[str, int]) -> dict[str, np.ndarray]:
+def _shard_arrays(
+    samples: Sequence[Sample], matrix: np.memmap, plate_index: Mapping[str, int]
+) -> dict[str, np.ndarray]:
     indptr = [0]
     indices: list[np.ndarray] = []
     values: list[np.ndarray] = []
@@ -1022,11 +1185,28 @@ def _shard_arrays(samples: Sequence[Sample], matrix: np.memmap, plate_index: Map
         "injection_index": np.asarray([sample.injection for sample in samples], dtype="<i2"),
         "matrix_column": np.asarray([sample.matrix_column for sample in samples], dtype="<i4"),
         "metadata_row": np.asarray([sample.metadata_row for sample in samples], dtype="<i4"),
-        "observation_unit_id": _fixed_strings([f"slp-unit:mendeley-w8jtmnszd9.2:metadata-row-{sample.metadata_row:05d}" for sample in samples]),
-        "perturbation_id": _fixed_strings([f"slp-perturbation:{sample.action_id}" for sample in samples]),
+        "observation_unit_id": _fixed_strings(
+            [
+                f"slp-unit:mendeley-w8jtmnszd9.2:metadata-row-{sample.metadata_row:05d}"
+                for sample in samples
+            ]
+        ),
+        "perturbation_id": _fixed_strings(
+            [f"slp-perturbation:{sample.action_id}" for sample in samples]
+        ),
         "plate_index": np.asarray([plate_index[sample.plate] for sample in samples], dtype="<i2"),
-        "record_id": _fixed_strings([f"slp-record:mendeley-w8jtmnszd9.2:metadata-row-{sample.metadata_row:05d}" for sample in samples]),
-        "replicate_id": _fixed_strings([f"slp-replicate:mendeley-w8jtmnszd9.2:metadata-row-{sample.metadata_row:05d}" for sample in samples]),
+        "record_id": _fixed_strings(
+            [
+                f"slp-record:mendeley-w8jtmnszd9.2:metadata-row-{sample.metadata_row:05d}"
+                for sample in samples
+            ]
+        ),
+        "replicate_id": _fixed_strings(
+            [
+                f"slp-replicate:mendeley-w8jtmnszd9.2:metadata-row-{sample.metadata_row:05d}"
+                for sample in samples
+            ]
+        ),
         "species_taxon": np.full(len(samples), NCBI_TAXON, dtype="<i4"),
         "target_indptr": np.asarray(indptr, dtype="<i8"),
         "target_readout_index": np.concatenate(indices) if indices else np.empty(0, dtype="<i4"),
@@ -1055,11 +1235,18 @@ def _file_ref(
 
 
 def _dataset_identity(item: PinnedDataset) -> dict[str, str]:
-    return {"resource": item.resource, "revision": item.revision, "manifestDigest": item.manifest_digest}
+    return {
+        "resource": item.resource,
+        "revision": item.revision,
+        "manifestDigest": item.manifest_digest,
+    }
 
 
 def _artifact_identity(item: LiteralArtifact) -> dict[str, str]:
-    return {"resource": f"artifact:{item.artifact_manifest_digest}", "manifestDigest": item.artifact_manifest_digest}
+    return {
+        "resource": f"artifact:{item.artifact_manifest_digest}",
+        "manifestDigest": item.artifact_manifest_digest,
+    }
 
 
 def _runtime_identity() -> dict[str, str]:
@@ -1093,7 +1280,9 @@ def _identity_provenance(
     artifacts = (
         {}
         if provenance is None
-        else {name: _artifact_identity(value) for name, value in sorted(provenance.artifacts.items())}
+        else {
+            name: _artifact_identity(value) for name, value in sorted(provenance.artifacts.items())
+        }
     )
     return {
         "mappingId": contract.mapping_id,
@@ -1166,8 +1355,14 @@ def _validate_readout_dictionary(
     if len(records) != expected_records:
         raise ProteomeObservationError("readout dictionary record count drift")
     expected_fields = {
-        "schema", "proteinId", "sourceAccession", "sourceAccessionType", "ncbiTaxon",
-        "currentOrfRelations", "currentOrfRelationCount", "chooseFirstAllowed",
+        "schema",
+        "proteinId",
+        "sourceAccession",
+        "sourceAccessionType",
+        "ncbiTaxon",
+        "currentOrfRelations",
+        "currentOrfRelationCount",
+        "chooseFirstAllowed",
     }
     identifiers: list[str] = []
     for index, record in enumerate(records, start=1):
@@ -1182,7 +1377,8 @@ def _validate_readout_dictionary(
             or not isinstance(protein_id, str)
             or not isinstance(accession, str)
             or protein_id != f"UniProtKB:{accession}"
-            or record["sourceAccessionType"] != {
+            or record["sourceAccessionType"]
+            != {
                 "source": "UniProtKB",
                 "type": "UniProtKB ID",
                 "namespaceInferred": False,
@@ -1191,7 +1387,10 @@ def _validate_readout_dictionary(
             or not isinstance(relations, list)
             or not relations
             or relations != sorted(set(relations))
-            or any(not isinstance(value, str) or SGD_CURIE.fullmatch(value) is None for value in relations)
+            or any(
+                not isinstance(value, str) or SGD_CURIE.fullmatch(value) is None
+                for value in relations
+            )
             or record["currentOrfRelationCount"] != len(relations)
         ):
             raise ProteomeObservationError(f"readout dictionary identity drift at line {index}")
@@ -1225,9 +1424,21 @@ def _validate_shard_bytes(
     plate_count: int,
 ) -> dict[str, set[object]]:
     required = {
-        "action_id", "centering_group", "injection_index", "matrix_column", "metadata_row",
-        "observation_unit_id", "perturbation_id", "plate_index", "record_id", "replicate_id",
-        "species_taxon", "target_indptr", "target_readout_index", "target_value", "well_index",
+        "action_id",
+        "centering_group",
+        "injection_index",
+        "matrix_column",
+        "metadata_row",
+        "observation_unit_id",
+        "perturbation_id",
+        "plate_index",
+        "record_id",
+        "replicate_id",
+        "species_taxon",
+        "target_indptr",
+        "target_readout_index",
+        "target_value",
+        "well_index",
     }
     try:
         with np.load(BytesIO(payload), allow_pickle=False) as loaded:
@@ -1239,16 +1450,36 @@ def _validate_shard_bytes(
     row_arrays = required - {"target_indptr", "target_readout_index", "target_value"}
     if any(arrays[name].ndim != 1 or len(arrays[name]) != records for name in row_arrays):
         raise ProteomeObservationError("observation shard row-array shape drift")
-    if any(arrays[name].dtype.kind not in {"U"} for name in {"action_id", "centering_group", "observation_unit_id", "perturbation_id", "record_id", "replicate_id"}):
+    if any(
+        arrays[name].dtype.kind not in {"U"}
+        for name in {
+            "action_id",
+            "centering_group",
+            "observation_unit_id",
+            "perturbation_id",
+            "record_id",
+            "replicate_id",
+        }
+    ):
         raise ProteomeObservationError("observation shard identifiers must be fixed-width strings")
     expected_dtypes = {
-        "injection_index": np.dtype("<i2"), "well_index": np.dtype("<i2"), "plate_index": np.dtype("<i2"),
-        "matrix_column": np.dtype("<i4"), "metadata_row": np.dtype("<i4"), "species_taxon": np.dtype("<i4"),
-        "target_indptr": np.dtype("<i8"), "target_readout_index": np.dtype("<i4"), "target_value": np.dtype("<f4"),
+        "injection_index": np.dtype("<i2"),
+        "well_index": np.dtype("<i2"),
+        "plate_index": np.dtype("<i2"),
+        "matrix_column": np.dtype("<i4"),
+        "metadata_row": np.dtype("<i4"),
+        "species_taxon": np.dtype("<i4"),
+        "target_indptr": np.dtype("<i8"),
+        "target_readout_index": np.dtype("<i4"),
+        "target_value": np.dtype("<f4"),
     }
     if any(arrays[name].dtype != dtype for name, dtype in expected_dtypes.items()):
         raise ProteomeObservationError("observation shard dtype drift")
-    indptr, indices, values = arrays["target_indptr"], arrays["target_readout_index"], arrays["target_value"]
+    indptr, indices, values = (
+        arrays["target_indptr"],
+        arrays["target_readout_index"],
+        arrays["target_value"],
+    )
     if (
         indptr.ndim != 1
         or len(indptr) != records + 1
@@ -1338,8 +1569,15 @@ def validate_observation_archive(
         with tarfile.open(path, mode="r:") as archive:
             members = archive.getmembers()
             names = [member.name for member in members]
-            if not members or len(members) > 64 or names != sorted(names) or len(names) != len(set(names)):
-                raise ProteomeObservationError("observation archive members must be path-sorted and unique")
+            if (
+                not members
+                or len(members) > 64
+                or names != sorted(names)
+                or len(names) != len(set(names))
+            ):
+                raise ProteomeObservationError(
+                    "observation archive members must be path-sorted and unique"
+                )
             if any(
                 not member.isfile()
                 or member.mode != 0o644
@@ -1357,7 +1595,12 @@ def validate_observation_archive(
                 raise ProteomeObservationError("observation archive member contract drift")
             if sum(member.size for member in members) > bounds.max_archive_bytes:
                 raise ProteomeObservationError("observation archive payload exceeds its byte bound")
-            blobs = {member.name.removeprefix("proteome-observations/"): archive.extractfile(member).read() for member in members}
+            blobs = {
+                member.name.removeprefix("proteome-observations/"): archive.extractfile(
+                    member
+                ).read()
+                for member in members
+            }
     except (OSError, tarfile.TarError, AttributeError) as error:
         raise ProteomeObservationError("observation archive is invalid") from error
     if "manifest.json" not in blobs or len(blobs["manifest.json"]) > 4 * 1024 * 1024:
@@ -1367,10 +1610,28 @@ def validate_observation_archive(
     except (UnicodeDecodeError, json.JSONDecodeError) as error:
         raise ProteomeObservationError("observation manifest is invalid JSON") from error
     required_manifest = {
-        "schema", "archiveId", "version", "role", "labelClass", "benchmarkLabelsPresent",
-        "source", "identity", "partition", "speciesTaxa", "modalities", "context",
-        "measurement", "covariateDefinitions", "assayedPanel", "readoutDictionary",
-        "trajectoryGenes", "plateVocabulary", "bounds", "counts", "shards", "runtime",
+        "schema",
+        "archiveId",
+        "version",
+        "role",
+        "labelClass",
+        "benchmarkLabelsPresent",
+        "source",
+        "identity",
+        "partition",
+        "speciesTaxa",
+        "modalities",
+        "context",
+        "measurement",
+        "covariateDefinitions",
+        "assayedPanel",
+        "readoutDictionary",
+        "trajectoryGenes",
+        "plateVocabulary",
+        "bounds",
+        "counts",
+        "shards",
+        "runtime",
     }
     _expect_keys(manifest, required_manifest, "observation manifest")
     if (
@@ -1385,29 +1646,30 @@ def validate_observation_archive(
         or manifest["modalities"] != ["slp-modality:quantitative-proteome"]
         or manifest["source"] != _source_identity(source_contract)
         or manifest["identity"] != _identity_provenance(source_contract, provenance)
-        or manifest["partition"] != _partition_identity(
-            source_contract, expected.validation_genes, expected.final_genes
-        )
+        or manifest["partition"]
+        != _partition_identity(source_contract, expected.validation_genes, expected.final_genes)
         or manifest["context"] != {"id": CONTEXT_ID, "centeringGroup": CENTERING_GROUP}
         or manifest["measurement"] != _measurement_identity()
-        or manifest["covariateDefinitions"] != [
+        or manifest["covariateDefinitions"]
+        != [
             {"id": "slp-covariate:injection-index", "access": "audit"},
             {"id": "slp-covariate:well-index", "access": "audit"},
             {"id": "slp-covariate:plate-index", "access": "audit"},
         ]
-        or manifest["assayedPanel"] != {
-            "dictionary": "readouts.jsonl", "readouts": expected.protein_readouts
-        }
-        or manifest["bounds"] != {
-            "maxRecordsPerSourceShard": SHARD_RECORDS, "maxReadouts": bounds.max_readouts
-        }
+        or manifest["assayedPanel"]
+        != {"dictionary": "readouts.jsonl", "readouts": expected.protein_readouts}
+        or manifest["bounds"]
+        != {"maxRecordsPerSourceShard": SHARD_RECORDS, "maxReadouts": bounds.max_readouts}
     ):
         raise ProteomeObservationError("observation manifest top-level contract drift")
     runtime = manifest["runtime"]
     if (
         not isinstance(runtime, dict)
         or set(runtime) != {"pythonImplementation", "pythonVersion", "numpyVersion"}
-        or any(not isinstance(value, str) or not value or value != value.strip() for value in runtime.values())
+        or any(
+            not isinstance(value, str) or not value or value != value.strip()
+            for value in runtime.values()
+        )
         or (expected_runtime is not None and runtime != dict(expected_runtime))
     ):
         raise ProteomeObservationError("observation runtime provenance drift")
@@ -1430,7 +1692,9 @@ def validate_observation_archive(
         not isinstance(plates, list)
         or not plates
         or plates != sorted(set(plates))
-        or any(not isinstance(value, str) or not value or value != value.strip() for value in plates)
+        or any(
+            not isinstance(value, str) or not value or value != value.strip() for value in plates
+        )
     ):
         raise ProteomeObservationError("observation plate vocabulary drift")
     declared = {"manifest.json"}
@@ -1449,7 +1713,11 @@ def validate_observation_archive(
         ):
             raise ProteomeObservationError(f"observation manifest {key} reference drift")
         data = blobs.get(ref["path"])
-        if data is None or len(data) != ref["bytes"] or hashlib.sha256(data).hexdigest() != ref["sha256"]:
+        if (
+            data is None
+            or len(data) != ref["bytes"]
+            or hashlib.sha256(data).hexdigest() != ref["sha256"]
+        ):
             raise ProteomeObservationError(f"observation manifest {key} content drift")
         declared.add(ref["path"])
         referenced_payloads[key] = data
@@ -1472,8 +1740,7 @@ def validate_observation_archive(
     if (
         hashlib.sha256(referenced_payloads["trajectoryGenes"]).hexdigest()
         != governed_role.trajectory_genes_sha256
-        or canonical_sha256(sorted(trajectory_genes))
-        != governed_role.trajectory_gene_set_sha256
+        or canonical_sha256(sorted(trajectory_genes)) != governed_role.trajectory_gene_set_sha256
     ):
         raise ProteomeObservationError("trajectory gene digest drift")
     total_records = total_values = 0
@@ -1483,8 +1750,11 @@ def validate_observation_archive(
     paths: list[str] = []
     all_actions: set[object] = set()
     unique_fields = {
-        "recordIds": set(), "observationIds": set(), "replicateIds": set(),
-        "metadataRows": set(), "matrixColumns": set(),
+        "recordIds": set(),
+        "observationIds": set(),
+        "replicateIds": set(),
+        "metadataRows": set(),
+        "matrixColumns": set(),
     }
     expected_shards = math.ceil(governed_role.records / SHARD_RECORDS)
     if len(shards) != expected_shards:
@@ -1505,13 +1775,15 @@ def validate_observation_archive(
             or SHA256.fullmatch(ref["sha256"]) is None
         ):
             raise ProteomeObservationError("observation shard reference drift")
-        expected_records = min(
-            SHARD_RECORDS, governed_role.records - shard_index * SHARD_RECORDS
-        )
+        expected_records = min(SHARD_RECORDS, governed_role.records - shard_index * SHARD_RECORDS)
         if ref["records"] != expected_records:
             raise ProteomeObservationError("observation shard record partition drift")
         data = blobs.get(ref["path"])
-        if data is None or len(data) != ref["bytes"] or hashlib.sha256(data).hexdigest() != ref["sha256"]:
+        if (
+            data is None
+            or len(data) != ref["bytes"]
+            or hashlib.sha256(data).hexdigest() != ref["sha256"]
+        ):
             raise ProteomeObservationError("observation shard content drift")
         shard_identity = _validate_shard_bytes(
             data,
@@ -1532,10 +1804,15 @@ def validate_observation_archive(
         total_values += ref["values"]
     if paths != sorted(paths) or set(blobs) != declared:
         raise ProteomeObservationError("observation archive declared file set drift")
-    if total_records != manifest["counts"]["records"] or total_values != manifest["counts"]["observedValues"]:
+    if (
+        total_records != manifest["counts"]["records"]
+        or total_values != manifest["counts"]["observedValues"]
+    ):
         raise ProteomeObservationError("observation archive aggregate count drift")
     if all_actions != trajectory_genes:
-        raise ProteomeObservationError("observation action identities do not equal trajectory genes")
+        raise ProteomeObservationError(
+            "observation action identities do not equal trajectory genes"
+        )
     return manifest
 
 
@@ -1555,7 +1832,10 @@ def validate_basal_archive(
     try:
         with tarfile.open(path, mode="r:") as archive:
             members = archive.getmembers()
-            if [member.name for member in members] != ["basal-control/basal.json", "basal-control/basal.npz"]:
+            if [member.name for member in members] != [
+                "basal-control/basal.json",
+                "basal-control/basal.npz",
+            ]:
                 raise ProteomeObservationError("basal archive file set/order drift")
             if any(
                 not member.isfile()
@@ -1579,9 +1859,19 @@ def validate_basal_archive(
     except (UnicodeDecodeError, json.JSONDecodeError) as error:
         raise ProteomeObservationError("basal manifest is invalid JSON") from error
     required_fields = {
-        "schema", "profileId", "source", "identity", "partition", "runtime",
-        "speciesTaxon", "contextId", "measurement", "controlPopulation",
-        "readoutDictionarySha256", "profileFile", "counts",
+        "schema",
+        "profileId",
+        "source",
+        "identity",
+        "partition",
+        "runtime",
+        "speciesTaxon",
+        "contextId",
+        "measurement",
+        "controlPopulation",
+        "readoutDictionarySha256",
+        "profileFile",
+        "counts",
     }
     if not isinstance(manifest, dict) or set(manifest) != required_fields:
         raise ProteomeObservationError("basal manifest provenance or identity fields drift")
@@ -1607,15 +1897,17 @@ def validate_basal_archive(
         or manifest["profileId"] != "slp-basal:mendeley-w8jtmnszd9-v2-his3-controls-v1"
         or manifest["source"] != _source_identity(source_contract)
         or manifest["identity"] != _identity_provenance(source_contract, provenance)
-        or manifest["partition"] != _partition_identity(
-            source_contract, expected.validation_genes, expected.final_genes
-        )
+        or manifest["partition"]
+        != _partition_identity(source_contract, expected.validation_genes, expected.final_genes)
         or manifest["speciesTaxon"] != NCBI_TAXON
         or manifest["contextId"] != CONTEXT_ID
         or manifest["measurement"] != _measurement_identity()
         or not isinstance(runtime, dict)
         or set(runtime) != {"pythonImplementation", "pythonVersion", "numpyVersion"}
-        or any(not isinstance(value, str) or not value or value != value.strip() for value in runtime.values())
+        or any(
+            not isinstance(value, str) or not value or value != value.strip()
+            for value in runtime.values()
+        )
         or (expected_runtime is not None and runtime != dict(expected_runtime))
         or not isinstance(control, dict)
         or control != expected_control
@@ -1639,7 +1931,8 @@ def validate_basal_archive(
         or profile["bytes"] != len(npz_bytes)
         or type(profile["records"]) is not int
         or profile["records"] != expected.protein_readouts
-        or counts != {
+        or counts
+        != {
             "readouts": expected.protein_readouts,
             "supportedReadouts": expected.basal_supported_readouts,
             "observedControlValues": expected.basal_observed_values,
@@ -1721,9 +2014,7 @@ def build_protected_observations(
     if len(relation_rows) != expected.protein_readouts:
         raise ProteomeObservationError("protein readout count drift")
     eligible = [
-        sample
-        for sample in samples
-        if sample.sample_type == "ko" and sample.action_id is not None
+        sample for sample in samples if sample.sample_type == "ko" and sample.action_id is not None
     ]
     partitions = {
         ROLE_PRETRAIN: [
@@ -1732,22 +2023,16 @@ def build_protected_observations(
             if roster.get(str(sample.action_id)) not in {ROLE_VALIDATION, ROLE_FINAL}
         ],
         ROLE_VALIDATION: [
-            sample
-            for sample in eligible
-            if roster.get(str(sample.action_id)) == ROLE_VALIDATION
+            sample for sample in eligible if roster.get(str(sample.action_id)) == ROLE_VALIDATION
         ],
         ROLE_FINAL: [
-            sample
-            for sample in eligible
-            if roster.get(str(sample.action_id)) == ROLE_FINAL
+            sample for sample in eligible if roster.get(str(sample.action_id)) == ROLE_FINAL
         ],
     }
     controls = [sample for sample in samples if sample.sample_type == "HIS3"]
     qc = [sample for sample in samples if sample.sample_type == "qc"]
     quarantine = [
-        sample
-        for sample in samples
-        if sample.sample_type == "ko" and sample.action_id is None
+        sample for sample in samples if sample.sample_type == "ko" and sample.action_id is None
     ]
     partition_genes = {
         partition_role: sorted({str(sample.action_id) for sample in rows})
@@ -1790,9 +2075,7 @@ def build_protected_observations(
         raise ProteomeObservationError("quantitative intervention roles are not disjoint")
     selected = partitions[role]
     selected_genes = partition_genes[role]
-    action_sequence_sha256 = canonical_sha256(
-        [str(sample.action_id) for sample in selected]
-    )
+    action_sequence_sha256 = canonical_sha256([str(sample.action_id) for sample in selected])
     locator_sequence_sha256 = canonical_sha256(
         [
             {
@@ -1803,16 +2086,12 @@ def build_protected_observations(
             for sample in selected
         ]
     )
-    trajectory_bytes = "".join(identifier + "\n" for identifier in selected_genes).encode(
-        "ascii"
-    )
+    trajectory_bytes = "".join(identifier + "\n" for identifier in selected_genes).encode("ascii")
     if (
         len(selected) != role_contract.records
         or len(selected_genes) != role_contract.intervention_genes
-        or hashlib.sha256(trajectory_bytes).hexdigest()
-        != role_contract.trajectory_genes_sha256
-        or canonical_sha256(selected_genes)
-        != role_contract.trajectory_gene_set_sha256
+        or hashlib.sha256(trajectory_bytes).hexdigest() != role_contract.trajectory_genes_sha256
+        or canonical_sha256(selected_genes) != role_contract.trajectory_gene_set_sha256
         or action_sequence_sha256 != role_contract.action_sequence_sha256
         or locator_sequence_sha256 != role_contract.locator_sequence_sha256
         or role_contract.target_values + role_contract.missing_values
@@ -1820,7 +2099,9 @@ def build_protected_observations(
     ):
         raise ProteomeObservationError("protected role population or count contract drift")
     if any(roster.get(str(sample.action_id)) != role for sample in selected):
-        raise ProteomeObservationError("protected archive selected an intervention outside its role")
+        raise ProteomeObservationError(
+            "protected archive selected an intervention outside its role"
+        )
 
     destination_path.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(
@@ -1868,9 +2149,7 @@ def build_protected_observations(
                     stop = min(start + SHARD_RECORDS, len(selected))
                     relative = Path("shards") / f"shard-{len(shard_refs):05d}.npz"
                     path = observation_root / relative
-                    arrays = _shard_arrays(
-                        selected[start:stop], matrix[start:stop], plate_index
-                    )
+                    arrays = _shard_arrays(selected[start:stop], matrix[start:stop], plate_index)
                     _write_deterministic_npz(path, arrays)
                     shard_refs.append(
                         _file_ref(
@@ -2039,9 +2318,7 @@ def build_protected_observations(
             destination_path.rmdir()
         raise
     finally:
-        for item in sorted(
-            staging.rglob("*"), key=lambda value: len(value.parts), reverse=True
-        ):
+        for item in sorted(staging.rglob("*"), key=lambda value: len(value.parts), reverse=True):
             if item.is_file():
                 item.unlink()
             elif item.is_dir():
@@ -2077,17 +2354,33 @@ def build_pretrain_observations(
         protein_root, source_contract, bounds, current_curies
     )
     roster = load_held_roster(roster_root, source_contract)
-    samples, sample_types = read_metadata(raw_paths["yeast5k_metadata.csv"], mapping, inventory_counts, bounds)
-    if len(samples) != expected.metadata_rows or sum(inventory_counts.values()) != expected.eligible_rows or len(inventory_counts) != expected.eligible_genes:
+    samples, sample_types = read_metadata(
+        raw_paths["yeast5k_metadata.csv"], mapping, inventory_counts, bounds
+    )
+    if (
+        len(samples) != expected.metadata_rows
+        or sum(inventory_counts.values()) != expected.eligible_rows
+        or len(inventory_counts) != expected.eligible_genes
+    ):
         raise ProteomeObservationError("metadata or eligible intervention count drift")
     if len(relation_rows) != expected.protein_readouts:
         raise ProteomeObservationError("protein readout count drift")
-    eligible = [sample for sample in samples if sample.sample_type == "ko" and sample.action_id is not None]
-    selected = [sample for sample in eligible if roster.get(str(sample.action_id)) not in {ROLE_VALIDATION, ROLE_FINAL}]
+    eligible = [
+        sample for sample in samples if sample.sample_type == "ko" and sample.action_id is not None
+    ]
+    selected = [
+        sample
+        for sample in eligible
+        if roster.get(str(sample.action_id)) not in {ROLE_VALIDATION, ROLE_FINAL}
+    ]
     controls = [sample for sample in samples if sample.sample_type == "HIS3"]
     qc = [sample for sample in samples if sample.sample_type == "qc"]
-    quarantine = [sample for sample in samples if sample.sample_type == "ko" and sample.action_id is None]
-    validation = [sample for sample in eligible if roster.get(str(sample.action_id)) == ROLE_VALIDATION]
+    quarantine = [
+        sample for sample in samples if sample.sample_type == "ko" and sample.action_id is None
+    ]
+    validation = [
+        sample for sample in eligible if roster.get(str(sample.action_id)) == ROLE_VALIDATION
+    ]
     final = [sample for sample in eligible if roster.get(str(sample.action_id)) == ROLE_FINAL]
     selected_genes = sorted({str(sample.action_id) for sample in selected})
     validation_genes = {str(sample.action_id) for sample in validation}
@@ -2100,16 +2393,31 @@ def build_pretrain_observations(
     if set(selected_genes) & (validation_genes | final_genes):
         raise ProteomeObservationError("held validation/final intervention leaked into pretraining")
     count_tuple = (
-        len(selected), len(selected_genes), len(controls), len(validation_genes), len(validation),
-        len(final_genes), len(final), len(quarantine), len(qc),
+        len(selected),
+        len(selected_genes),
+        len(controls),
+        len(validation_genes),
+        len(validation),
+        len(final_genes),
+        len(final),
+        len(quarantine),
+        len(qc),
     )
     expected_tuple = (
-        expected.pretrain_records, expected.pretrain_genes, expected.basal_controls,
-        expected.validation_genes, expected.validation_rows, expected.final_genes,
-        expected.final_rows, expected.quarantine_rows, expected.qc_rows,
+        expected.pretrain_records,
+        expected.pretrain_genes,
+        expected.basal_controls,
+        expected.validation_genes,
+        expected.validation_rows,
+        expected.final_genes,
+        expected.final_rows,
+        expected.quarantine_rows,
+        expected.qc_rows,
     )
     if count_tuple != expected_tuple:
-        raise ProteomeObservationError(f"frozen role partition drift; observed={count_tuple}, expected={expected_tuple}")
+        raise ProteomeObservationError(
+            f"frozen role partition drift; observed={count_tuple}, expected={expected_tuple}"
+        )
     trajectory_bytes = "".join(identifier + "\n" for identifier in selected_genes).encode("ascii")
     if (
         hashlib.sha256(trajectory_bytes).hexdigest() != expected.trajectory_genes_sha256
@@ -2117,7 +2425,9 @@ def build_pretrain_observations(
     ):
         raise ProteomeObservationError("pretrain trajectory-gene population digest drift")
     destination_path.parent.mkdir(parents=True, exist_ok=True)
-    staging = Path(tempfile.mkdtemp(prefix=f".{destination_path.name}.", dir=destination_path.parent))
+    staging = Path(
+        tempfile.mkdtemp(prefix=f".{destination_path.name}.", dir=destination_path.parent)
+    )
     try:
         observation_root = staging / "observation-content"
         shard_root = observation_root / "shards"
@@ -2131,19 +2441,36 @@ def build_pretrain_observations(
         plate_index = {value: index for index, value in enumerate(plate_vocabulary)}
         with tempfile.TemporaryDirectory(prefix="slp-proteome-memmap-") as temporary:
             memmap_path = Path(temporary) / "targets.f32"
-            matrix = np.memmap(memmap_path, mode="w+", dtype="<f4", shape=(len(selected), len(relation_rows)))
+            matrix = np.memmap(
+                memmap_path, mode="w+", dtype="<f4", shape=(len(selected), len(relation_rows))
+            )
             try:
                 matrix[:] = np.nan
                 target_values, missing_values, basal_values, basal_counts = decode_matrix(
-                    raw_paths["yeast5k_noimpute_wide.csv"], samples, selected, controls,
-                    accession_to_index, matrix, bounds,
+                    raw_paths["yeast5k_noimpute_wide.csv"],
+                    samples,
+                    selected,
+                    controls,
+                    accession_to_index,
+                    matrix,
+                    bounds,
                 )
                 matrix.flush()
-                if target_values != expected.target_values or missing_values != expected.missing_values:
-                    raise ProteomeObservationError("frozen pretrain observed/missing value count drift")
-                minimum_controls = math.ceil(source_contract.minimum_control_fraction * len(controls))
+                if (
+                    target_values != expected.target_values
+                    or missing_values != expected.missing_values
+                ):
+                    raise ProteomeObservationError(
+                        "frozen pretrain observed/missing value count drift"
+                    )
+                minimum_controls = math.ceil(
+                    source_contract.minimum_control_fraction * len(controls)
+                )
                 basal_present = basal_counts >= minimum_controls
-                if int(basal_counts.sum()) != expected.basal_observed_values or int(basal_present.sum()) != expected.basal_supported_readouts:
+                if (
+                    int(basal_counts.sum()) != expected.basal_observed_values
+                    or int(basal_present.sum()) != expected.basal_supported_readouts
+                ):
                     raise ProteomeObservationError("frozen HIS3 basal count drift")
                 shard_refs: list[dict[str, object]] = []
                 for start in range(0, len(selected), SHARD_RECORDS):
@@ -2178,9 +2505,7 @@ def build_pretrain_observations(
         runtime = _runtime_identity()
         source = _source_identity(source_contract)
         identity = _identity_provenance(source_contract, provenance)
-        partition = _partition_identity(
-            source_contract, len(validation_genes), len(final_genes)
-        )
+        partition = _partition_identity(source_contract, len(validation_genes), len(final_genes))
         measurement = _measurement_identity()
         manifest = {
             "schema": SOURCE_SCHEMA,
@@ -2214,7 +2539,10 @@ def build_pretrain_observations(
                 records=len(selected_genes),
             ),
             "plateVocabulary": plate_vocabulary,
-            "bounds": {"maxRecordsPerSourceShard": SHARD_RECORDS, "maxReadouts": bounds.max_readouts},
+            "bounds": {
+                "maxRecordsPerSourceShard": SHARD_RECORDS,
+                "maxReadouts": bounds.max_readouts,
+            },
             "counts": {
                 "records": len(selected),
                 "interventionGenes": len(selected_genes),
@@ -2284,8 +2612,13 @@ def build_pretrain_observations(
             expected_control_locator_sha256=control_locator_sha256,
             expected_readout_dictionary_sha256=hashlib.sha256(readout_bytes).hexdigest(),
         )
-        if validated_manifest["counts"] != manifest["counts"] or validated_basal["counts"] != basal_manifest["counts"]:
-            raise ProteomeObservationError("post-write archive validation changed the content contract")
+        if (
+            validated_manifest["counts"] != manifest["counts"]
+            or validated_basal["counts"] != basal_manifest["counts"]
+        ):
+            raise ProteomeObservationError(
+                "post-write archive validation changed the content contract"
+            )
         audit = {
             "schema": AUDIT_SCHEMA,
             "role": ROLE_PRETRAIN,
@@ -2297,7 +2630,10 @@ def build_pretrain_observations(
                 "metadataColumnsParsed": list(METADATA_COLUMNS),
                 "matrixHeaderParsed": True,
                 "readoutIdentityColumnParsed": "Protein.Group",
-                "numericColumnsConverted": {"pretrain": len(selected), "HIS3-controls": len(controls)},
+                "numericColumnsConverted": {
+                    "pretrain": len(selected),
+                    "HIS3-controls": len(controls),
+                },
                 "numericColumnsNotConverted": {
                     "molecular-validation": len(validation),
                     "molecular-final": len(final),

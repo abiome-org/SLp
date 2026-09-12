@@ -1,4 +1,4 @@
-apiVersion: omf.dev/v1alpha1
+apiVersion: openfoundry.dev/v1alpha1
 kind: Module
 metadata:
   name: slp-1-1-world-sparse
@@ -23,7 +23,7 @@ spec:
             path: {type: string, minLength: 1}
             resource:
               type: string
-              pattern: "^omf://[^/\\s]+/[^/\\s]+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+              pattern: "^(?:omf|openfoundry)://[^/\\s]+/[^/\\s]+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
           additionalProperties: false
         molecularPredictionQuery:
           type: object
@@ -34,7 +34,7 @@ spec:
             path: {type: string, minLength: 1}
             resource:
               type: string
-              pattern: "^omf://[^/\\s]+/[^/\\s]+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+              pattern: "^(?:omf|openfoundry)://[^/\\s]+/[^/\\s]+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
           additionalProperties: false
         corpusAuditEvidence:
           type: object
@@ -64,7 +64,7 @@ spec:
             path: {type: string, minLength: 1}
             resource:
               type: string
-              pattern: "^omf://[^/\\s]+/[^/\\s]+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+              pattern: "^(?:omf|openfoundry)://[^/\\s]+/[^/\\s]+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
           additionalProperties: false
       additionalProperties: false
     output:

@@ -5,7 +5,7 @@
 # This workload does not reference the 5.9 GB quantitative atlas payload.
 # Held-roster consumption requires a later rights-bearing DatasetSnapshot admission
 # of the emitted inventory bytes because OMF 1.0 cannot pin a same-run artifact.
-apiVersion: omf.dev/v1alpha1
+apiVersion: openfoundry.dev/v1alpha1
 kind: WorkloadSpec
 metadata:
   name: slp-1-1-atlas-genotype-inventory

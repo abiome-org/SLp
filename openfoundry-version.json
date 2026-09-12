@@ -1,0 +1,23 @@
+{
+  "schema": "slp.openfoundry-toolchain-pin/v1",
+  "version": "2.0.0",
+  "source": {
+    "repository": "https://github.com/abiome-org/openfoundry.git",
+    "ref": "main",
+    "revision": "e29c12bc2ef74f836f919df4bc55e02a47bebc79",
+    "path": "data/tooling/openfoundry-e29c12b"
+  },
+  "runtime": {
+    "path": "data/tooling/openfoundry-runtime",
+    "python": ">=3.11,<3.13",
+    "preferredInterpreters": [
+      "python3.12",
+      "python3.11"
+    ]
+  },
+  "locks": [
+    "requirements.runtime.lock",
+    "requirements.build.lock"
+  ],
+  "note": "Unreleased OpenFoundry rename and action catalog v3; upstream package version remains 2.0.0. The exact commit distinguishes this build from the OMF v2.0.0 tag."
+}

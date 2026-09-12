@@ -31,46 +31,109 @@ ASSIGNMENT_DOMAIN_HEX = ASSIGNMENT_DOMAIN.hex()
 BUCKET_RULE = "int(first-16-lowercase-hex,16) mod 100"
 TRAINING_INPUT_NAME = "pretrain"
 CORPUS_FIELDS = {
-    "schema", "datasetId", "version", "role", "labelClass",
-    "benchmarkLabelsPresent", "rights", "modalities", "sources", "sampling",
-    "species", "featurePack", "entityTypes", "contextTypes", "actionTypes",
-    "covariates", "readoutTypes", "entityDictionary", "queryDictionary",
-    "queryPanels", "trajectoryGenes", "normalization", "bounds", "shards",
+    "schema",
+    "datasetId",
+    "version",
+    "role",
+    "labelClass",
+    "benchmarkLabelsPresent",
+    "rights",
+    "modalities",
+    "sources",
+    "sampling",
+    "species",
+    "featurePack",
+    "entityTypes",
+    "contextTypes",
+    "actionTypes",
+    "covariates",
+    "readoutTypes",
+    "entityDictionary",
+    "queryDictionary",
+    "queryPanels",
+    "trajectoryGenes",
+    "normalization",
+    "bounds",
+    "shards",
 }
 REFERENCE_FIELDS = {"path", "sha256", "count"}
 SHARD_FIELDS = {"path", "sha256", "records", "targetValues"}
 COVERAGE_FIELDS = {
-    "schema", "assignment", "sourceCount", "identityMapping",
-    "minimumIntersectionSize", "intersectionSize", "roleCounts",
-    "rejectionCounts", "rosterPath", "rosterSha256", "sources",
+    "schema",
+    "assignment",
+    "sourceCount",
+    "identityMapping",
+    "minimumIntersectionSize",
+    "intersectionSize",
+    "roleCounts",
+    "rejectionCounts",
+    "rosterPath",
+    "rosterSha256",
+    "sources",
 }
 SOURCE_COVERAGE_FIELDS = {
-    "sourceId", "sourceRelease", "identityMappingId", "identityMappingSha256",
-    "manifestSha256", "records", "duplicateRecords", "uniqueInterventions",
-    "qcPassing", "qcFailed", "intersectionCoverage", "exclusions",
+    "sourceId",
+    "sourceRelease",
+    "identityMappingId",
+    "identityMappingSha256",
+    "manifestSha256",
+    "records",
+    "duplicateRecords",
+    "uniqueInterventions",
+    "qcPassing",
+    "qcFailed",
+    "intersectionCoverage",
+    "exclusions",
 }
 INVENTORY_FIELDS = {
-    "schema", "sourceId", "sourceRelease", "ncbiTaxon", "stableIdNamespace",
-    "identityMappingId", "identityMappingSha256", "inventoryFormat", "files",
+    "schema",
+    "sourceId",
+    "sourceRelease",
+    "ncbiTaxon",
+    "stableIdNamespace",
+    "identityMappingId",
+    "identityMappingSha256",
+    "inventoryFormat",
+    "files",
 }
 INVENTORY_RECORD_FIELDS = {"schema", "interventionId", "ncbiTaxon", "qcPassing"}
 INVENTORY_FILE_FIELDS = {"path", "sha256", "records"}
 ENTITY_MEMBERS = {
-    "entity_id", "entity_type", "entity_species_taxon", "entity_feature_value",
+    "entity_id",
+    "entity_type",
+    "entity_species_taxon",
+    "entity_feature_value",
     "entity_feature_present",
 }
 QUERY_MEMBERS = {"query_id", "query_entity_index", "query_readout_index"}
 PANEL_MEMBERS = {"panel_id", "panel_indptr", "panel_query_index"}
 QUANTITATIVE_SHARD_MEMBERS = {
-    "record_id", "observation_unit_id", "source_index", "replicate_id",
-    "perturbation_id", "species_taxon", "species_feature_value",
-    "species_feature_present", "context_entity_index", "context_type",
-    "context_mask", "context_covariate_value", "context_covariate_present",
-    "record_covariate_value", "record_covariate_present", "action_entity_index",
-    "action_type", "action_mask", "action_covariate_value",
-    "action_covariate_present", "observation_covariate_value",
-    "observation_covariate_present", "query_panel_index", "target_indptr",
-    "target_query_index", "target_value",
+    "record_id",
+    "observation_unit_id",
+    "source_index",
+    "replicate_id",
+    "perturbation_id",
+    "species_taxon",
+    "species_feature_value",
+    "species_feature_present",
+    "context_entity_index",
+    "context_type",
+    "context_mask",
+    "context_covariate_value",
+    "context_covariate_present",
+    "record_covariate_value",
+    "record_covariate_present",
+    "action_entity_index",
+    "action_type",
+    "action_mask",
+    "action_covariate_value",
+    "action_covariate_present",
+    "observation_covariate_value",
+    "observation_covariate_present",
+    "query_panel_index",
+    "target_indptr",
+    "target_query_index",
+    "target_value",
 }
 CURIE = re.compile(r"^[A-Za-z][A-Za-z0-9._-]*:[^\s]+$")
 SGD_CURIE = re.compile(r"^SGD:S[0-9]{9}$")
@@ -125,12 +188,8 @@ class AuditBounds:
             "maxRosterRecords": (self.max_roster_records, 1, 20_000_000),
             "maxCoverageExclusions": (self.max_coverage_exclusions, 0, 100_000_000),
             "maxNpzMembers": (self.max_npz_members, 8, 4_096),
-            "maxInventoryFilesPerSource": (
-                self.max_inventory_files_per_source, 1, 256
-            ),
-            "maxInventoryRecordsPerSource": (
-                self.max_inventory_records_per_source, 1, 20_000_000
-            ),
+            "maxInventoryFilesPerSource": (self.max_inventory_files_per_source, 1, 256),
+            "maxInventoryRecordsPerSource": (self.max_inventory_records_per_source, 1, 20_000_000),
         }
         for name, (value, minimum, maximum) in limits.items():
             if type(value) is not int or not minimum <= value <= maximum:
@@ -256,9 +315,9 @@ def _nonnegative_int(value: object, label: str, maximum: int) -> int:
 
 def _dataset_resource(value: object, label: str) -> tuple[str, str]:
     resource = _string(value, label)
-    if not resource.startswith("omf://"):
+    if not resource.startswith(("omf://", "openfoundry://")):
         raise CorpusAuditError(f"{label} must be an OMF DatasetSnapshot resource URI")
-    identity, separator, revision = resource.removeprefix("omf://").rpartition("@")
+    identity, separator, revision = resource.split("://", 1)[1].rpartition("@")
     if not separator:
         raise CorpusAuditError(f"{label} must contain an exact resource revision")
     revision = _prefixed_sha(revision, f"{label} revision")
@@ -301,7 +360,11 @@ def resolve_dataset_input(value: object, input_name: str) -> DatasetInput:
         raise CorpusAuditError(f"{input_name}.path does not exist") from error
     if not root.is_dir():
         raise CorpusAuditError(f"{input_name}.path must materialize a directory")
-    if root.name != resource_name or root.parent.name != input_name or root.parent.parent.name != "inputs":
+    if (
+        root.name != resource_name
+        or root.parent.name != input_name
+        or root.parent.parent.name != "inputs"
+    ):
         raise CorpusAuditError(
             f"{input_name}.path is inconsistent with its input name and resource name"
         )
@@ -440,9 +503,7 @@ def _npy_item_size(descr: str) -> int:
     return width
 
 
-def _parse_npy_header(
-    stream: Any, member_size: int, label: str, bounds: AuditBounds
-) -> NpySpec:
+def _parse_npy_header(stream: Any, member_size: int, label: str, bounds: AuditBounds) -> NpySpec:
     if stream.read(6) != b"\x93NUMPY":
         raise CorpusAuditError(f"{label} is not an NPY array")
     version = stream.read(2)
@@ -459,14 +520,10 @@ def _parse_npy_header(
     if len(header) != header_length:
         raise CorpusAuditError(f"{label} has a truncated NPY header")
     try:
-        document = ast.literal_eval(
-            header.decode("latin1" if version[0] < 3 else "utf-8").strip()
-        )
+        document = ast.literal_eval(header.decode("latin1" if version[0] < 3 else "utf-8").strip())
     except (UnicodeDecodeError, SyntaxError, ValueError) as error:
         raise CorpusAuditError(f"{label} NPY header is invalid") from error
-    document = _strict_dict(
-        document, {"descr", "fortran_order", "shape"}, f"{label} NPY header"
-    )
+    document = _strict_dict(document, {"descr", "fortran_order", "shape"}, f"{label} NPY header")
     if document["fortran_order"] is not False:
         raise CorpusAuditError(f"{label} must use C-order storage")
     if not isinstance(document["descr"], str) or not isinstance(document["shape"], tuple):
@@ -551,9 +608,11 @@ def _iter_array_values(
             if kind == "U":
                 for offset in range(0, len(payload), actual.item_size):
                     try:
-                        yield payload[offset : offset + actual.item_size].decode(
-                            "utf-32-le"
-                        ).rstrip("\x00")
+                        yield (
+                            payload[offset : offset + actual.item_size]
+                            .decode("utf-32-le")
+                            .rstrip("\x00")
+                        )
                     except UnicodeDecodeError as error:
                         raise CorpusAuditError(f"{label} contains invalid Unicode") from error
             elif kind == "b":
@@ -564,9 +623,16 @@ def _iter_array_values(
             else:
                 prefix = "<" if endian in {"<", "|"} else ">"
                 codes = {
-                    ("i", 1): "b", ("u", 1): "B", ("i", 2): "h", ("u", 2): "H",
-                    ("i", 4): "i", ("u", 4): "I", ("i", 8): "q", ("u", 8): "Q",
-                    ("f", 4): "f", ("f", 8): "d",
+                    ("i", 1): "b",
+                    ("u", 1): "B",
+                    ("i", 2): "h",
+                    ("u", 2): "H",
+                    ("i", 4): "i",
+                    ("u", 4): "I",
+                    ("i", 8): "q",
+                    ("u", 8): "Q",
+                    ("f", 4): "f",
+                    ("f", 8): "d",
                 }
                 for (value,) in struct.iter_unpack(prefix + codes[(kind, width)], payload):
                     yield value
@@ -580,9 +646,7 @@ def _read_entity_dictionary(
 ) -> tuple[tuple[str, ...], tuple[int, ...]]:
     try:
         with zipfile.ZipFile(path) as archive:
-            members = _member_map(
-                archive, "entityDictionary", bounds, ENTITY_MEMBERS
-            )
+            members = _member_map(archive, "entityDictionary", bounds, ENTITY_MEMBERS)
             id_spec = _array_spec(archive, members, "entity_id", "entityDictionary", bounds)
             taxon_spec = _array_spec(
                 archive, members, "entity_species_taxon", "entityDictionary", bounds
@@ -593,14 +657,20 @@ def _read_entity_dictionary(
                 raise CorpusAuditError("entity dictionary identity arrays use invalid dtypes")
             identifiers = tuple(
                 _iter_array_values(
-                    archive, members["entity_id"], id_spec,
-                    "entityDictionary.entity_id", bounds,
+                    archive,
+                    members["entity_id"],
+                    id_spec,
+                    "entityDictionary.entity_id",
+                    bounds,
                 )
             )
             taxa = tuple(
                 _iter_array_values(
-                    archive, members["entity_species_taxon"], taxon_spec,
-                    "entityDictionary.entity_species_taxon", bounds,
+                    archive,
+                    members["entity_species_taxon"],
+                    taxon_spec,
+                    "entityDictionary.entity_species_taxon",
+                    bounds,
                 )
             )
     except zipfile.BadZipFile as error:
@@ -644,21 +714,27 @@ def _audit_shard(
 ) -> tuple[set[int], set[int], set[str], set[str]]:
     try:
         with zipfile.ZipFile(path) as archive:
-            members = _member_map(
-                archive, path.name, bounds, QUANTITATIVE_SHARD_MEMBERS
-            )
+            members = _member_map(archive, path.name, bounds, QUANTITATIVE_SHARD_MEMBERS)
             keys = (
-                "record_id", "source_index", "species_taxon", "action_entity_index",
-                "action_mask", "target_indptr", "target_query_index", "target_value",
+                "record_id",
+                "source_index",
+                "species_taxon",
+                "action_entity_index",
+                "action_mask",
+                "target_indptr",
+                "target_query_index",
+                "target_value",
             )
-            specs = {
-                key: _array_spec(archive, members, key, path.name, bounds) for key in keys
-            }
-            if specs["record_id"].shape != (records,) or not specs["record_id"].descr.startswith("<U"):
+            specs = {key: _array_spec(archive, members, key, path.name, bounds) for key in keys}
+            if specs["record_id"].shape != (records,) or not specs["record_id"].descr.startswith(
+                "<U"
+            ):
                 raise CorpusAuditError(f"{path.name} record_id does not match declared records")
             for key in ("source_index", "species_taxon"):
                 if specs[key].shape != (records,) or specs[key].descr != "<i8":
-                    raise CorpusAuditError(f"{path.name} {key} must be a record-aligned integer array")
+                    raise CorpusAuditError(
+                        f"{path.name} {key} must be a record-aligned integer array"
+                    )
             action_shape = specs["action_mask"].shape
             if (
                 len(action_shape) != 2
@@ -682,8 +758,11 @@ def _audit_shard(
             record_batch: list[tuple[str]] = []
             try:
                 for item in _iter_array_values(
-                    archive, members["record_id"], specs["record_id"],
-                    f"{path.name}.record_id", bounds,
+                    archive,
+                    members["record_id"],
+                    specs["record_id"],
+                    f"{path.name}.record_id",
+                    bounds,
                 ):
                     record_batch.append((_curie(item, "record_id"),))
                     if len(record_batch) == 8_192:
@@ -696,8 +775,11 @@ def _audit_shard(
 
             source_values: set[int] = set()
             for item in _iter_array_values(
-                    archive, members["source_index"], specs["source_index"],
-                    f"{path.name}.source_index", bounds,
+                archive,
+                members["source_index"],
+                specs["source_index"],
+                f"{path.name}.source_index",
+                bounds,
             ):
                 value = int(item)
                 if value < 0 or value >= source_count:
@@ -705,8 +787,11 @@ def _audit_shard(
                 source_values.add(value)
             species_values: set[int] = set()
             for item in _iter_array_values(
-                    archive, members["species_taxon"], specs["species_taxon"],
-                    f"{path.name}.species_taxon", bounds,
+                archive,
+                members["species_taxon"],
+                specs["species_taxon"],
+                f"{path.name}.species_taxon",
+                bounds,
             ):
                 value = int(item)
                 if value not in declared_species:
@@ -714,16 +799,25 @@ def _audit_shard(
                 species_values.add(value)
 
             indices = _iter_array_values(
-                archive, members["action_entity_index"], specs["action_entity_index"],
-                f"{path.name}.action_entity_index", bounds,
+                archive,
+                members["action_entity_index"],
+                specs["action_entity_index"],
+                f"{path.name}.action_entity_index",
+                bounds,
             )
             masks = _iter_array_values(
-                archive, members["action_mask"], specs["action_mask"],
-                f"{path.name}.action_mask", bounds,
+                archive,
+                members["action_mask"],
+                specs["action_mask"],
+                f"{path.name}.action_mask",
+                bounds,
             )
             row_taxa = _iter_array_values(
-                archive, members["species_taxon"], specs["species_taxon"],
-                f"{path.name}.species_taxon", bounds,
+                archive,
+                members["species_taxon"],
+                specs["species_taxon"],
+                f"{path.name}.species_taxon",
+                bounds,
             )
             genes: set[str] = set()
             active_actions: set[str] = set()
@@ -751,8 +845,11 @@ def _audit_shard(
                         genes.add(identifier)
 
             pointer_values = _iter_array_values(
-                archive, members["target_indptr"], specs["target_indptr"],
-                f"{path.name}.target_indptr", bounds,
+                archive,
+                members["target_indptr"],
+                specs["target_indptr"],
+                f"{path.name}.target_indptr",
+                bounds,
             )
             previous = int(next(pointer_values))
             if previous != 0:
@@ -767,15 +864,21 @@ def _audit_shard(
             if previous != target_values:
                 raise CorpusAuditError(f"{path.name} targetValues does not match target_indptr")
             for item in _iter_array_values(
-                archive, members["target_query_index"], specs["target_query_index"],
-                f"{path.name}.target_query_index", bounds,
+                archive,
+                members["target_query_index"],
+                specs["target_query_index"],
+                f"{path.name}.target_query_index",
+                bounds,
             ):
                 value = int(item)
                 if value < 0 or value >= query_count:
                     raise CorpusAuditError(f"{path.name} target query index is out of range")
             for item in _iter_array_values(
-                archive, members["target_value"], specs["target_value"],
-                f"{path.name}.target_value", bounds,
+                archive,
+                members["target_value"],
+                specs["target_value"],
+                f"{path.name}.target_value",
+                bounds,
             ):
                 if not math.isfinite(float(item)):
                     raise CorpusAuditError(f"{path.name} target values must be finite")
@@ -859,10 +962,7 @@ def _validate_manifest_semantics(
             or len(values) != species_feature_dim
             or len(present) != species_feature_dim
             or any(type(flag) is not bool for flag in present)
-            or any(
-                type(value) not in {int, float} or not math.isfinite(value)
-                for value in values
-            )
+            or any(type(value) not in {int, float} or not math.isfinite(value) for value in values)
         ):
             raise CorpusAuditError("species feature vectors must match speciesFeatureDim")
         if any(not flag and float(value) != 0.0 for value, flag in zip(values, present)):
@@ -883,9 +983,7 @@ def _validate_manifest_semantics(
             raise CorpusAuditError(f"covariates.{location} must be a list")
         seen: set[str] = set()
         for item in declarations:
-            item = _strict_dict(
-                item, {"id", "unit", "access"}, f"covariates.{location}"
-            )
+            item = _strict_dict(item, {"id", "unit", "access"}, f"covariates.{location}")
             identifier = _curie(item["id"], "covariate.id")
             _curie(item["unit"], "covariate.unit")
             if item["access"] not in {"world", "likelihood", "audit"} or identifier in seen:
@@ -896,9 +994,7 @@ def _validate_manifest_semantics(
         raise CorpusAuditError("readoutTypes must be non-empty")
     readout_ids: list[str] = []
     for item in readouts:
-        item = _strict_dict(
-            item, {"id", "likelihood", "unit", "implicitZero"}, "readoutType"
-        )
+        item = _strict_dict(item, {"id", "likelihood", "unit", "implicitZero"}, "readoutType")
         readout_ids.append(_curie(item["id"], "readoutType.id"))
         _curie(item["unit"], "readoutType.unit")
         if item["likelihood"] not in {"gaussian", "negative-binomial"}:
@@ -907,16 +1003,17 @@ def _validate_manifest_semantics(
             raise CorpusAuditError("readout implicitZero must be boolean")
     if len(readout_ids) != len(set(readout_ids)):
         raise CorpusAuditError("readout ids must be unique")
-    normalization = _strict_dict(
-        manifest["normalization"], {"id", "valueSpace"}, "normalization"
-    )
+    normalization = _strict_dict(manifest["normalization"], {"id", "valueSpace"}, "normalization")
     _curie(normalization["id"], "normalization.id")
     _curie(normalization["valueSpace"], "normalization.valueSpace")
     corpus_bounds = _strict_dict(
         manifest["bounds"],
         {
-            "maxRecordsPerShard", "maxContextTokens", "maxActionTokens",
-            "maxPanelQueries", "maxTargetsPerRecord",
+            "maxRecordsPerShard",
+            "maxContextTokens",
+            "maxActionTokens",
+            "maxPanelQueries",
+            "maxTargetsPerRecord",
         },
         "bounds",
     )
@@ -949,9 +1046,7 @@ def load_corpus(dataset: DatasetInput, expected_role: str, bounds: AuditBounds) 
         max_records_per_shard,
         max_action_tokens,
         max_targets_per_record,
-    ) = (
-        _validate_manifest_semantics(manifest, expected_role, bounds)
-    )
+    ) = _validate_manifest_semantics(manifest, expected_role, bounds)
     entity_ref = _file_reference(manifest["entityDictionary"], "entityDictionary", bounds)
     query_ref = _file_reference(manifest["queryDictionary"], "queryDictionary", bounds)
     panel_ref = _file_reference(manifest["queryPanels"], "queryPanels", bounds)
@@ -1018,9 +1113,7 @@ def load_corpus(dataset: DatasetInput, expected_role: str, bounds: AuditBounds) 
     total_bytes = manifest_path.stat().st_size
     materialized: dict[str, Path] = {}
     for reference in references:
-        path = _regular_file(
-            dataset.root, reference.path, reference.path, bounds.max_file_bytes
-        )
+        path = _regular_file(dataset.root, reference.path, reference.path, bounds.max_file_bytes)
         total_bytes += path.stat().st_size
         if total_bytes > bounds.max_total_bytes_per_corpus:
             raise CorpusAuditError("corpus exceeds maxTotalBytesPerCorpus")
@@ -1047,9 +1140,7 @@ def load_corpus(dataset: DatasetInput, expected_role: str, bounds: AuditBounds) 
                         f"trajectoryGenes line {line_number} exceeds maxLineBytes"
                     )
                 if not raw.endswith(b"\n") or raw.endswith(b"\r\n"):
-                    raise CorpusAuditError(
-                        "trajectoryGenes must use canonical LF-terminated lines"
-                    )
+                    raise CorpusAuditError("trajectoryGenes must use canonical LF-terminated lines")
                 try:
                     gene = _curie(raw[:-1].decode("utf-8"), "trajectory gene")
                 except UnicodeDecodeError as error:
@@ -1074,12 +1165,8 @@ def load_corpus(dataset: DatasetInput, expected_role: str, bounds: AuditBounds) 
     entity_ids, entity_taxa = _read_entity_dictionary(
         materialized[entity_ref.path], entity_ref.count, frozenset(taxa), bounds
     )
-    _validate_npz_member_set(
-        materialized[query_ref.path], "queryDictionary", QUERY_MEMBERS, bounds
-    )
-    _validate_npz_member_set(
-        materialized[panel_ref.path], "queryPanels", PANEL_MEMBERS, bounds
-    )
+    _validate_npz_member_set(materialized[query_ref.path], "queryDictionary", QUERY_MEMBERS, bounds)
+    _validate_npz_member_set(materialized[panel_ref.path], "queryPanels", PANEL_MEMBERS, bounds)
     if not genes.issubset(set(entity_ids)):
         raise CorpusAuditError("trajectoryGenes contains an identifier outside entityDictionary")
     seen_sources: set[int] = set()
@@ -1112,7 +1199,9 @@ def load_corpus(dataset: DatasetInput, expected_role: str, bounds: AuditBounds) 
         finally:
             record_db.close()
     if seen_sources != set(range(len(sources))):
-        raise CorpusAuditError("source inventory does not exactly match record-level source indices")
+        raise CorpusAuditError(
+            "source inventory does not exactly match record-level source indices"
+        )
     if seen_species != set(taxa):
         raise CorpusAuditError("species inventory does not exactly match record-level taxa")
     if record_genes != genes:
@@ -1127,8 +1216,7 @@ def load_corpus(dataset: DatasetInput, expected_role: str, bounds: AuditBounds) 
         {
             "manifestSha256": manifest_sha,
             "files": [
-                {"path": reference.path, "sha256": reference.sha256}
-                for reference in references
+                {"path": reference.path, "sha256": reference.sha256} for reference in references
             ],
         }
     )
@@ -1178,9 +1266,7 @@ def assign_intervention(identifier: str) -> tuple[str, str, int]:
     return role, digest, bucket
 
 
-def load_protected_inventory(
-    dataset: DatasetInput, bounds: AuditBounds
-) -> ProtectedInventory:
+def load_protected_inventory(dataset: DatasetInput, bounds: AuditBounds) -> ProtectedInventory:
     manifest_path = _regular_file(
         dataset.root,
         "inventory.json",
@@ -1199,17 +1285,13 @@ def load_protected_inventory(
     source_id = _string(manifest["sourceId"], "protected inventory sourceId")
     if SOURCE_ID.fullmatch(source_id) is None:
         raise CorpusAuditError("protected inventory sourceId is ambiguous")
-    source_release = _string(
-        manifest["sourceRelease"], "protected inventory sourceRelease"
-    )
+    source_release = _string(manifest["sourceRelease"], "protected inventory sourceRelease")
     if MUTABLE_VERSION.search(source_release):
         raise CorpusAuditError("protected inventory sourceRelease must be immutable")
     if manifest["ncbiTaxon"] != 4932 or manifest["stableIdNamespace"] != "SGD":
         raise CorpusAuditError("protected inventory must retain taxon 4932 and SGD identity")
     mapping_id = _curie(manifest["identityMappingId"], "identityMappingId")
-    mapping_sha = _raw_sha(
-        manifest["identityMappingSha256"], "identityMappingSha256"
-    )
+    mapping_sha = _raw_sha(manifest["identityMappingSha256"], "identityMappingSha256")
     files = manifest["files"]
     if (
         not isinstance(files, list)
@@ -1219,9 +1301,7 @@ def load_protected_inventory(
         raise CorpusAuditError("protected inventory files are outside bounds")
     parsed_files: list[tuple[str, str, int]] = []
     for index, item in enumerate(files):
-        item = _strict_dict(
-            item, INVENTORY_FILE_FIELDS, f"protected inventory files[{index}]"
-        )
+        item = _strict_dict(item, INVENTORY_FILE_FIELDS, f"protected inventory files[{index}]")
         relative = _relative_path(item["path"], f"protected inventory files[{index}].path")
         if not relative.endswith(".jsonl"):
             raise CorpusAuditError("protected inventory records must use JSONL files")
@@ -1240,9 +1320,7 @@ def load_protected_inventory(
     seen: dict[str, bool] = {}
     total_records = 0
     for relative, expected_sha, expected_records in parsed_files:
-        path = _regular_file(
-            dataset.root, relative, relative, bounds.max_file_bytes
-        )
+        path = _regular_file(dataset.root, relative, relative, bounds.max_file_bytes)
         if _sha256(path) != expected_sha:
             raise CorpusAuditError(f"protected inventory digest drift: {relative}")
         actual_records = 0
@@ -1264,14 +1342,13 @@ def load_protected_inventory(
                     try:
                         record = json.loads(raw.decode("utf-8"))
                     except (UnicodeDecodeError, json.JSONDecodeError) as error:
-                        raise CorpusAuditError("protected inventory record is invalid JSON") from error
+                        raise CorpusAuditError(
+                            "protected inventory record is invalid JSON"
+                        ) from error
                     record = _strict_dict(
                         record, INVENTORY_RECORD_FIELDS, "protected inventory record"
                     )
-                    if (
-                        record["schema"] != INVENTORY_RECORD_SCHEMA
-                        or record["ncbiTaxon"] != 4932
-                    ):
+                    if record["schema"] != INVENTORY_RECORD_SCHEMA or record["ncbiTaxon"] != 4932:
                         raise CorpusAuditError("protected inventory record schema/taxon drift")
                     identifier = record["interventionId"]
                     if not isinstance(identifier, str) or SGD_CURIE.fullmatch(identifier) is None:
@@ -1281,7 +1358,9 @@ def load_protected_inventory(
                         raise CorpusAuditError("protected inventory qcPassing must be boolean")
                     previous = seen.get(identifier)
                     if previous is not None and previous != passes:
-                        raise CorpusAuditError("protected inventory contains a conflicting duplicate")
+                        raise CorpusAuditError(
+                            "protected inventory contains a conflicting duplicate"
+                        )
                     seen.setdefault(identifier, passes)
         except OSError as error:
             raise CorpusAuditError("could not read protected inventory") from error
@@ -1350,12 +1429,8 @@ def _validate_coverage_source(
     mapping_id = _curie(source["identityMappingId"], "identityMappingId")
     mapping_sha = _raw_sha(source["identityMappingSha256"], "identityMappingSha256")
     manifest_sha = _raw_sha(source["manifestSha256"], "source manifestSha256")
-    records = _nonnegative_int(
-        source["records"], "source.records", bounds.max_records_per_corpus
-    )
-    duplicates = _nonnegative_int(
-        source["duplicateRecords"], "source.duplicateRecords", records
-    )
+    records = _nonnegative_int(source["records"], "source.records", bounds.max_records_per_corpus)
+    duplicates = _nonnegative_int(source["duplicateRecords"], "source.duplicateRecords", records)
     unique = _nonnegative_int(
         source["uniqueInterventions"], "source.uniqueInterventions", bounds.max_roster_records
     )
@@ -1364,7 +1439,11 @@ def _validate_coverage_source(
     coverage = _nonnegative_int(
         source["intersectionCoverage"], "source.intersectionCoverage", unique
     )
-    if unique != passing + failed or records != unique + duplicates or coverage != intersection_size:
+    if (
+        unique != passing + failed
+        or records != unique + duplicates
+        or coverage != intersection_size
+    ):
         raise CorpusAuditError("coverage source counts are internally inconsistent")
     exclusions = source["exclusions"]
     if not isinstance(exclusions, list) or len(exclusions) > bounds.max_coverage_exclusions:
@@ -1384,12 +1463,13 @@ def _validate_coverage_source(
     if parsed_exclusions != sorted(set(parsed_exclusions)):
         raise CorpusAuditError("coverage exclusions must be unique and deterministically sorted")
     if len(parsed_exclusions) != unique - intersection_size:
-        raise CorpusAuditError("coverage exclusion count does not explain non-intersection identities")
+        raise CorpusAuditError(
+            "coverage exclusion count does not explain non-intersection identities"
+        )
     counts = {
         "qcFailed": sum(reason == "qc-failed" for _, reason in parsed_exclusions),
         "notPassingAllProtectedSources": sum(
-            reason == "not-qc-passing-in-all-protected-sources"
-            for _, reason in parsed_exclusions
+            reason == "not-qc-passing-in-all-protected-sources" for _, reason in parsed_exclusions
         ),
         "identicalDuplicatesCollapsed": duplicates,
     }
@@ -1420,8 +1500,7 @@ def load_held_roster(
     if source_ids_from_inputs != sorted(set(source_ids_from_inputs)):
         raise CorpusAuditError("protected source inventories must be unique and source-sorted")
     input_mappings = {
-        (item.identity_mapping_id, item.identity_mapping_sha256)
-        for item in protected_inventories
+        (item.identity_mapping_id, item.identity_mapping_sha256) for item in protected_inventories
     }
     if len(input_mappings) != 1:
         raise CorpusAuditError("protected source inventories must share one identity mapping")
@@ -1455,9 +1534,7 @@ def load_held_roster(
                     or not raw.endswith(b"\n")
                     or raw.endswith(b"\r\n")
                 ):
-                    raise CorpusAuditError(
-                        "held roster lines must be bounded canonical LF records"
-                    )
+                    raise CorpusAuditError("held roster lines must be bounded canonical LF records")
                 try:
                     fields = raw[:-1].decode("ascii").split("\t")
                 except UnicodeDecodeError as error:
@@ -1480,9 +1557,7 @@ def load_held_roster(
             "held roster is not the exact QC-passing protected-source intersection"
         )
 
-    coverage = _strict_dict(
-        _read_json(coverage_path, "coverage.json"), COVERAGE_FIELDS, "coverage"
-    )
+    coverage = _strict_dict(_read_json(coverage_path, "coverage.json"), COVERAGE_FIELDS, "coverage")
     if coverage["schema"] != ROSTER_SCHEMA:
         raise CorpusAuditError("held roster coverage schema is unsupported")
     assignment_contract = _strict_dict(
@@ -1504,7 +1579,9 @@ def load_held_roster(
         raise CorpusAuditError("held roster assignment contract has drifted")
     source_count = _positive_int(coverage["sourceCount"], "sourceCount", bounds.max_sources)
     if source_count < 2 or source_count != len(protected_inventories):
-        raise CorpusAuditError("coverage must bind every protected inventory and at least two sources")
+        raise CorpusAuditError(
+            "coverage must bind every protected inventory and at least two sources"
+        )
     minimum = _positive_int(
         coverage["minimumIntersectionSize"],
         "minimumIntersectionSize",
@@ -1529,16 +1606,11 @@ def load_held_roster(
         role: sum(value == role for value in assignments.values())
         for role in ("pretrain", "molecular-validation", "molecular-final")
     }
-    if (
-        actual_role_counts["molecular-validation"] < 1
-        or actual_role_counts["molecular-final"] < 1
-    ):
+    if actual_role_counts["molecular-validation"] < 1 or actual_role_counts["molecular-final"] < 1:
         raise CorpusAuditError("held roster requires non-empty validation and final roles")
     if role_counts != actual_role_counts:
         raise CorpusAuditError("held roster role counts have drifted")
-    mapping = _strict_dict(
-        coverage["identityMapping"], {"id", "sha256"}, "identityMapping"
-    )
+    mapping = _strict_dict(coverage["identityMapping"], {"id", "sha256"}, "identityMapping")
     mapping_id = _curie(mapping["id"], "identityMapping.id")
     mapping_sha = _raw_sha(mapping["sha256"], "identityMapping.sha256")
     if (mapping_id, mapping_sha) != next(iter(input_mappings)):
@@ -1554,24 +1626,19 @@ def load_held_roster(
     }
     roster_ids = frozenset(assignments)
     expected_sources = [
-        _expected_coverage_source(item, protected_intersection)
-        for item in protected_inventories
+        _expected_coverage_source(item, protected_intersection) for item in protected_inventories
     ]
     if sources != expected_sources:
         raise CorpusAuditError(
             "coverage sources do not exactly reproduce protected inventory contents"
         )
     for source, protected in zip(sources, protected_inventories, strict=True):
-        compact, rejected = _validate_coverage_source(
-            source, roster_ids, intersection, bounds
-        )
+        compact, rejected = _validate_coverage_source(source, roster_ids, intersection, bounds)
         if (
             compact["identityMappingId"] != mapping_id
             or compact["identityMappingSha256"] != mapping_sha
         ):
-            raise CorpusAuditError(
-                "coverage sources do not share the declared identity mapping"
-            )
+            raise CorpusAuditError("coverage sources do not share the declared identity mapping")
         compact_sources.append(
             {
                 "resource": protected.input.resource,
@@ -1592,8 +1659,7 @@ def load_held_roster(
         raise CorpusAuditError("coverage rejection counts have drifted")
 
     validation = sorted(
-        identifier for identifier, role in assignments.items()
-        if role == "molecular-validation"
+        identifier for identifier, role in assignments.items() if role == "molecular-validation"
     )
     final = sorted(
         identifier for identifier, role in assignments.items() if role == "molecular-final"
@@ -1661,17 +1727,13 @@ def audit_training_corpus(
         not isinstance(protected_inventory_inputs, Mapping)
         or not 2 <= len(protected_inventory_inputs) <= 64
     ):
-        raise CorpusAuditError(
-            "between two and 64 protectedInventory* inputs are required"
-        )
+        raise CorpusAuditError("between two and 64 protectedInventory* inputs are required")
     protected_names = sorted(protected_inventory_inputs)
-    if (
-        any(
-            INPUT_NAME.fullmatch(name) is None
-            or not name.startswith("protectedInventory")
-            or len(name) == len("protectedInventory")
-            for name in protected_names
-        )
+    if any(
+        INPUT_NAME.fullmatch(name) is None
+        or not name.startswith("protectedInventory")
+        or len(name) == len("protectedInventory")
+        for name in protected_names
     ):
         raise CorpusAuditError(
             "protected inventory input names must be sorted unique protectedInventory* names"
@@ -1709,17 +1771,13 @@ def audit_training_corpus(
         sorted(protected_by_name.values(), key=lambda item: item.source_id)
     )
     pretrain = load_corpus(pretrain_dataset, "pretrain", bounds)
-    held_identity, assignments = load_held_roster(
-        held_dataset, protected_inventories, bounds
-    )
+    held_identity, assignments = load_held_roster(held_dataset, protected_inventories, bounds)
     held_union = {
         gene
         for gene, role in assignments.items()
         if role in {"molecular-validation", "molecular-final"}
     }
-    leaked = sorted(
-        (pretrain.trajectory_genes | pretrain.active_actions) & held_union
-    )
+    leaked = sorted((pretrain.trajectory_genes | pretrain.active_actions) & held_union)
     if leaked:
         raise CorpusAuditError(
             "held validation/final interventions occur in quantitative fitting "
@@ -1727,8 +1785,7 @@ def audit_training_corpus(
         )
 
     inventory_identities = {
-        name: _protected_inventory_identity(protected_by_name[name])
-        for name in protected_names
+        name: _protected_inventory_identity(protected_by_name[name]) for name in protected_names
     }
     assert_authorized_content(
         authorization,
@@ -1786,11 +1843,7 @@ def write_training_audit_artifact(
     ) as temporary:
         staging = Path(temporary) / destination.name
         staging.mkdir()
-        (staging / "corpus-audit.json").write_bytes(
-            canonical_json_bytes(audit, newline=True)
-        )
+        (staging / "corpus-audit.json").write_bytes(canonical_json_bytes(audit, newline=True))
         os.replace(staging, destination)
-    _exact_file_set(
-        destination, {"corpus-audit.json"}, "training corpus audit output"
-    )
+    _exact_file_set(destination, {"corpus-audit.json"}, "training corpus audit output")
     return audit, _sha256(destination / "corpus-audit.json")

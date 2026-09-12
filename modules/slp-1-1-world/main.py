@@ -5,7 +5,7 @@ import json
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _sha256(path: Path) -> str:
@@ -47,7 +47,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     import torch
 
     model, report, baselines = train_world(roots, request.config, audit)
-    output_dir = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_dir = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     checkpoint = output_dir / "slp-1-1-world.pt"
     torch.save(
         {

@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from omf.sdk import ProtocolRequest, ProtocolResult, main
+from openfoundry.sdk import ProtocolRequest, ProtocolResult, main
 
 
 def _validation_outputs() -> dict[str, object]:
@@ -51,7 +51,9 @@ def run(request: ProtocolRequest) -> ProtocolResult:
 
     expected_inputs = {*PRODUCTION_DATASETS, *PRODUCTION_ARTIFACTS}
     if set(request.inputs) != expected_inputs:
-        raise ValueError("proteome observation preparation requires exactly four datasets and two SGD artifacts")
+        raise ValueError(
+            "proteome observation preparation requires exactly four datasets and two SGD artifacts"
+        )
     datasets = {
         name: resolve_pinned_dataset_input(request.inputs[name], name, contract)
         for name, contract in sorted(PRODUCTION_DATASETS.items())
@@ -86,7 +88,7 @@ def run(request: ProtocolRequest) -> ProtocolResult:
     )
     if expected != PRODUCTION_EXPECTED_COUNTS:
         raise ValueError("frozen production counts or digests were loosened")
-    output_root = Path(os.environ["OMF_RESULT_FILE"]).parent
+    output_root = Path(os.environ["OPENFOUNDRY_RESULT_FILE"]).parent
     result = build_pretrain_observations(
         datasets["rawProteome"].path,
         datasets["interventionInventory"].path,
@@ -110,7 +112,8 @@ def run(request: ProtocolRequest) -> ProtocolResult:
             "pretrain_records": outputs["records"],
             "pretrain_intervention_genes": outputs["interventionGenes"],
             "pretrain_observed_values": outputs["targetValues"],
-            "protected_rows_not_decoded": outputs["excludedValidationRows"] + outputs["excludedFinalRows"],
+            "protected_rows_not_decoded": outputs["excludedValidationRows"]
+            + outputs["excludedFinalRows"],
             "basal_supported_readouts": outputs["basalSupportedReadouts"],
         },
         artifacts=[

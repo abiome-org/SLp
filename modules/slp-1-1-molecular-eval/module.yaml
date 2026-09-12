@@ -1,4 +1,4 @@
-apiVersion: omf.dev/v1alpha1
+apiVersion: openfoundry.dev/v1alpha1
 kind: Module
 metadata:
   name: slp-1-1-molecular-eval-v2
@@ -76,7 +76,7 @@ spec:
         maximumAbsoluteLogScale: {type: number, exclusiveMinimum: 0}
         expectedQueryResource:
           type: string
-          pattern: "^omf://.+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
+          pattern: "^(?:omf|openfoundry)://.+/datasetsnapshot/[A-Za-z0-9][A-Za-z0-9._-]{0,127}@sha256:[0-9a-f]{64}$"
         expectedQueryDatasetManifestDigest:
           type: string
           pattern: "^sha256:[0-9a-f]{64}$"
