@@ -6,6 +6,81 @@ The [README](../README.md) covers installation and inference. The
 are consolidated in [module-reference.md](module-reference.md). Frozen SLp-1
 source and its card remain in `model/v1/`.
 
+## Cloud dataset storage
+
+The user requested cloud storage on September 11, 2026, to keep large source
+downloads off the Mac. Use the existing **private** Cloudflare R2 bucket
+`abiome-artifacts` in account `5b7019b38a2b1c0ce119ecf64e92fd92`, prefix `slp/`.
+The R2 location is WNAM and the storage class is Standard. Public `r2.dev` access
+is disabled and no custom domains are attached. The previous SLp RunPod volumes
+were temporary campaign resources and have been deleted.
+
+`storage/wrangler.jsonc` binds the `slp-corpus-ingest` Worker to this bucket.
+`storage/source-objects.json` identifies immutable objects by source, upstream
+URL, exact size and checksum. The first manifest contains 20 objects totaling
+1,251,792,309 bytes: full Costanzo pairwise archive, SLKB dump, Harle counts and
+metadata, In4mer tables and SPIDR scores. These are source-preservation copies,
+not a processed/admitted training release. Large RNA atlases are subsequent
+manifest additions, not implicitly included in this first manifest.
+
+```text
+Publisher -> authenticated Cloudflare transfer Worker -> private R2
+                                                       |
+                                                  cloud CPU/GPU host
+                                                       |
+                                                local training cache
+```
+
+The client on the Mac sends only source IDs and receives small JSON reports.
+Cloudflare fetches the source and streams it into R2, which validates the
+pinned checksum. The service only imports URLs compiled into the source
+manifest; it accepts no arbitrary fetch URL, overwrite or deletion command.
+Existing objects must match their pinned size/checksum. Each completed object
+retains source and license metadata. The service supports objects up to 5 GiB;
+larger individual H5ADs require a cloud CPU multipart transfer or a shard-format
+source release. It never buffers a complete dataset on the caller or Worker.
+Keep the calling connection open until each transfer finishes; retry the same
+ID after interruption and inspect status. There is no scheduled background job.
+
+```sh
+# Safe on the Mac: plan, initiate cloud-to-cloud transfers, inspect remote status.
+python scripts/cloud_data.py plan
+python scripts/cloud_data.py ingest spidr-2025-scores
+python scripts/cloud_data.py ingest
+python scripts/cloud_data.py status
+
+# Deploy changes to the pinned source list/service using the existing login.
+node --test storage/worker.test.mjs
+wrangler deploy --config storage/wrangler.jsonc
+```
+
+`SLP_STORAGE_URL` and `SLP_STORAGE_TOKEN` belong in ignored `.env` or the process
+environment; `.env.example` lists the names. The service token is a Wrangler
+secret named `ACCESS_TOKEN`. Do not place the account-wide Cloudflare OAuth or
+RunPod credentials on a data worker. An authenticated `GET /objects/<source-id>`
+streams a verified imported file to a cloud training host; `HEAD` returns its
+size. No payload is publicly served. For native S3 clients, use bucket-scoped R2
+object credentials with endpoint
+`https://5b7019b38a2b1c0ce119ecf64e92fd92.r2.cloudflarestorage.com` and region
+`auto`; Wrangler OAuth credentials are not S3 credentials.
+
+Retain `slp/raw/<source>/<checksum>/<filename>` as the immutable upstream copy.
+Put subsequent preparation manifests and CV3 exclusions under `slp/manifests/`,
+processed shards under `slp/derived/` and model checkpoints under
+`slp/checkpoints/`, using unique run/version paths. The initial transfer service
+serves the pinned raw objects; native S3 credentials are needed for arbitrary
+derived/checkpoint writes. Do not change bucket-wide expiry or public access
+settings in this shared bucket. Cloud training may materialize a bounded disk
+cache; do not train against a FUSE object-store mount as if it were a fast disk.
+
+[R2 Standard pricing](https://developers.cloudflare.com/r2/pricing/), checked
+September 11, is $0.015/GB-month with no egress fees. The first manifest costs
+about $0.019/month in storage before the account's shared allowance. At 300 GB
+the storage component is $4.50/month; at 1 TB it is $15/month. Object operations
+and Worker requests/CPU are separate usage categories. No GPU is required for
+these source transfers. Do not duplicate the same atlas in both H5AD and Parquet
+without a concrete need, or silently expand an import into a multi-terabyte copy.
+
 ## Next-model design derived from strict CV3
 
 This September 9, 2026 proposal follows the user's explicit objective: obtain

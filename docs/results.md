@@ -8246,3 +8246,33 @@ The checked comparison and its reproducible analysis script are in
 `d29fc7b02c6cb43d1238e37b2ed75fcd4b573f9c25a95b2781cface3a6a8725b`.
 The original 142M report remains unchanged in
 `results/slp12-base-evaluation-v1/report.json`.
+
+
+## 2026-09-11 — Durable cloud source storage and development checkpoint
+
+Reused the existing private Cloudflare R2 bucket `abiome-artifacts`, prefix
+`slp/`, in account `5b7019b38a2b1c0ce119ecf64e92fd92`. Verified that public
+r2.dev access is disabled and no custom domains are attached. Deployed the
+authenticated `slp-corpus-ingest` Worker, which streams checksum-pinned publisher
+objects directly into R2. Its client on the Mac sends only control requests.
+
+All **20 objects, totaling 1,251,792,309 bytes**, in
+`storage/source-objects.json` were imported and independently checked with R2
+object size and checksum metadata. They include full Costanzo pairwise data,
+SLKB, Harle data/metadata, In4mer tables and SPIDR scores. The manifest and
+completion receipt are stored in
+`slp/manifests/2026-09-11-fitness-v1/` in the same bucket. A small local receipt
+is retained at `results/cloud-storage-20260911/verified-status.json`. No dataset
+payload passed through the Mac during this import, and no GPU was allocated.
+This is private source preservation, not preparation, CV3 admission or model
+fitting. The large molecular atlases are not part of this initial import.
+
+Unauthorized live access returned 401; authenticated object HEAD returned the
+expected size. Repeated imports of completed objects were checksum-verified
+without replacement. Seven focused Worker tests pass, covering authorization,
+manifest-only source selection, size/checksum contracts and no-overwrite retry
+behavior. Wrangler's deployment build passed. For the requested
+`slp-1.2-0910` checkpoint, the four focused SLp-1.2 Python test files also passed:
+**27 tests in 5.85 seconds**. Historical trained model artifacts remain in their
+existing artifact locations; the Git checkpoint captures source, architecture,
+configuration and recorded results rather than weight binaries.

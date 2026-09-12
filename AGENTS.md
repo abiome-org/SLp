@@ -97,6 +97,14 @@ reconcile` or `omf operation cancel`; do not edit runtime records by hand.
 
 ## Artifacts and release
 
+Keep new large datasets off the user's Mac. Durable source storage is private
+Cloudflare R2 at `s3://abiome-artifacts/slp/`; its binding and checksum-pinned
+source inventory are in `storage/`. Use `scripts/cloud_data.py` to request
+publisher-to-Cloudflare transfers. Local calls carry only metadata. Prepare and
+cache training data on cloud compute disks; a RunPod volume is a working cache,
+not the sole durable copy. Preserve other prefixes in the shared Abiome bucket.
+Bucket presence does not establish training admission or CV3 eligibility.
+
 Git holds source and configuration. Artifact stores hold datasets, checkpoints
 and model bundles. `.omf/` is generated, untracked state: use OMF commands for
 migration, backup and recovery; never manually edit or commit it. Keep real

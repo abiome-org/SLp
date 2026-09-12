@@ -1,0 +1,227 @@
+{
+  "schema": "slp.cloud-source-manifest/v1",
+  "version": "2026-09-11-fitness-v1",
+  "purpose": "Private source preservation; storage does not imply training admission or CV3 eligibility.",
+  "objects": [
+    {
+      "id": "slkb-2023-41055392",
+      "key": "slp/raw/slkb-2023/md5-7086d54b802d3a331381c80a524fb29f/SQL_Dumps.zip",
+      "url": "https://ndownloader.figshare.com/files/41055392",
+      "bytes": 240825452,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "7086d54b802d3a331381c80a524fb29f"
+      },
+      "license": "GPL 3.0+"
+    },
+    {
+      "id": "harle-2025-46763992",
+      "key": "slp/raw/harle-2025/md5-c6852831c477ca7d0a6d83a56e6c4ad8/METADATA.tar.gz",
+      "url": "https://ndownloader.figshare.com/files/46763992",
+      "bytes": 1141797,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "c6852831c477ca7d0a6d83a56e6c4ad8"
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "harle-2025-46763995",
+      "key": "slp/raw/harle-2025/md5-9ab69e60afe229028dafe17d7ce6a833/DATA.tar.gz",
+      "url": "https://ndownloader.figshare.com/files/46763995",
+      "bytes": 438415220,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "9ab69e60afe229028dafe17d7ce6a833"
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "in4mer-2024-44435633",
+      "key": "slp/raw/in4mer-2024/md5-9394e824fc99043d18550d48c97929b3/Supp_table1.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44435633",
+      "bytes": 2761994,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "9394e824fc99043d18550d48c97929b3"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435630",
+      "key": "slp/raw/in4mer-2024/md5-f99df4e474f130756b00caf653132d60/Supp_table2.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44435630",
+      "bytes": 19235,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "f99df4e474f130756b00caf653132d60"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435636",
+      "key": "slp/raw/in4mer-2024/md5-449b6ff5e88ffdf809c6c3c1eca6a5ef/Supp_table3.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44435636",
+      "bytes": 60282,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "449b6ff5e88ffdf809c6c3c1eca6a5ef"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435645",
+      "key": "slp/raw/in4mer-2024/md5-838d5114310890c0fb8cd6cce74c7cb5/Supp_table4.txt",
+      "url": "https://ndownloader.figshare.com/files/44435645",
+      "bytes": 6934060,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "838d5114310890c0fb8cd6cce74c7cb5"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435651",
+      "key": "slp/raw/in4mer-2024/md5-f3ab5349cef5618b6b609ed8c8c552fd/Supp_table5.txt",
+      "url": "https://ndownloader.figshare.com/files/44435651",
+      "bytes": 7940340,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "f3ab5349cef5618b6b609ed8c8c552fd"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435639",
+      "key": "slp/raw/in4mer-2024/md5-f3a183863cfa5d326bea4ccb26e89858/Supp_table7.txt",
+      "url": "https://ndownloader.figshare.com/files/44435639",
+      "bytes": 794928,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "f3a183863cfa5d326bea4ccb26e89858"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435648",
+      "key": "slp/raw/in4mer-2024/md5-862b12b27d1d78306b666a758b5197ad/Supp_table8.txt",
+      "url": "https://ndownloader.figshare.com/files/44435648",
+      "bytes": 1377253,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "862b12b27d1d78306b666a758b5197ad"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435654",
+      "key": "slp/raw/in4mer-2024/md5-111948840d0826e8604c8b75aac5c196/Supp_table9.txt",
+      "url": "https://ndownloader.figshare.com/files/44435654",
+      "bytes": 308842,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "111948840d0826e8604c8b75aac5c196"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435657",
+      "key": "slp/raw/in4mer-2024/md5-1fc27c77702379e5f74b2d90fbe3c0de/Data_for_Figure_01.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44435657",
+      "bytes": 145178,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "1fc27c77702379e5f74b2d90fbe3c0de"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435660",
+      "key": "slp/raw/in4mer-2024/md5-bdb7262771aff71a8772ff6eb94d3bb5/Data_for_Figure_02.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44435660",
+      "bytes": 53014,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "bdb7262771aff71a8772ff6eb94d3bb5"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435672",
+      "key": "slp/raw/in4mer-2024/md5-7a6116046422b84687a127f4918bce75/Data_for_Figure_03.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44435672",
+      "bytes": 18406756,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "7a6116046422b84687a127f4918bce75"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435663",
+      "key": "slp/raw/in4mer-2024/md5-69ae63b54efa8255ffea76679197d0f4/Data_for_Figure_04.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44435663",
+      "bytes": 236395,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "69ae63b54efa8255ffea76679197d0f4"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44435666",
+      "key": "slp/raw/in4mer-2024/md5-e86959fe257efb1a02d1f8309453cf23/Data_for_Figure_05.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44435666",
+      "bytes": 1346316,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "e86959fe257efb1a02d1f8309453cf23"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44436191",
+      "key": "slp/raw/in4mer-2024/md5-77581f55fd4911f1118cc5f308a7c796/Supp_table6.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44436191",
+      "bytes": 5197010,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "77581f55fd4911f1118cc5f308a7c796"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "in4mer-2024-44436203",
+      "key": "slp/raw/in4mer-2024/md5-0e1f6f77ae15baff8acf741f4383530d/Data_for_Figure_06.xlsx",
+      "url": "https://ndownloader.figshare.com/files/44436203",
+      "bytes": 11006,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "0e1f6f77ae15baff8acf741f4383530d"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "spidr-2025-scores",
+      "key": "slp/raw/spidr-2025/sha256-341e2625e3383c8ba7e446bd230eae7502c066da95a91563311cda16dcd34d13/scores.csv",
+      "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41586-025-08815-4/MediaObjects/41586_2025_8815_MOESM5_ESM.csv",
+      "bytes": 4245602,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "341e2625e3383c8ba7e446bd230eae7502c066da95a91563311cda16dcd34d13"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "costanzo-2016-pairwise",
+      "key": "slp/raw/costanzo-2016/sha256-05adf2aa309e5336cd1c3045eb033a2bc7b24e6f249d57a0cc25549ec6772522/pairwise.zip",
+      "url": "https://thecellmap.org/costanzo2016/data_files/Raw%20genetic%20interaction%20datasets:%20Pair-wise%20interaction%20format.zip",
+      "bytes": 521571629,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "05adf2aa309e5336cd1c3045eb033a2bc7b24e6f249d57a0cc25549ec6772522"
+      },
+      "license": "Source terms; reconcile existing rights record before fitting"
+    }
+  ]
+}
