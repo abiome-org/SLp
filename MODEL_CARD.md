@@ -1,4 +1,109 @@
-# SLp-1.1 cellular and genomic world model
+# SLp molecular world models
+
+The current development target is above-SOTA human SL prediction across the
+combined benchmark suite under CV3: both test genes are withheld from SL-label
+fitting and all human perturbation fitting in each fold. Human/nonhuman
+perturbation prediction with one general conditional model is the proposed
+route, followed by human-only end-to-end SL-query post-training. The
+[next-model design](docs/development.md#next-model-design-derived-from-strict-cv3)
+is a proposal; the artifacts and measured capabilities below remain unchanged.
+
+## SLp-1.2 pretrained base
+
+A **344,953,859-parameter SLp-1.2-XL** base trained for **54,971 of the planned
+60,000 updates**, stopping at its allocated time limit. Repeated development
+evaluation selected update **26,000** for inference; the final optimizer
+checkpoint is retained for continuation. It uses the same admitted mixed-species
+corpus as the 142M artifact described below. The recovered local bundle is
+`results/slp12-xl-345m-r1-bundle-recovered`, and its complete manifest matches
+the native B200 export. macOS CPU replay and isolated Linux OMF replay/export
+passed against the exported CUDA example.
+Human post-training and external SL benchmarking remain deferred. A matched
+evaluation on frozen development panels found lower XL error in **3 of 12
+source/modality scores**. Human fitness MSE increased from **0.124835 to
+0.137873** (+10.4%); Norman MSE decreased from **0.674013 to 0.585321**
+(-13.2%) but still exceeded the fitting-mean baseline (**0.563122**).
+XL also improved K562 and HepG2 population prediction; the remaining scores
+worsened. Wrong-gene substitutions barely affected single-cell predictions.
+This run did not produce a general scaling gain; the 142M artifact remains the
+recommended default base. These are selected checkpoints on retrospective
+development data, not an independent test or a controlled scaling curve.
+The [results ledger](docs/results.md) records the matched comparison, execution,
+recovery and costs. All SLp RunPod resources have been deleted after local
+artifact verification.
+
+SLp-1.2 is a trained **142,311,171-parameter** shared set transformer for
+molecular endpoint and quantitative fitness prediction. Individual intervention
+tokens, molecular observations and RNA/protein/fitness queries use one backbone.
+Static descriptors support unknown genes; optional learned entity indices use
+25% dropout during training. There is no frozen 1.1 simulation bridge or fitted
+SL classifier. The implementation and inference contract are in
+[`modules/slp-1-2`](modules/slp-1-2/CONTRACT.md).
+
+This artifact is a **mixed-species pretrained base**. The completed schedule
+mixed human and yeast quantitative data throughout; it did not contain a
+separate post-training stage. Yeast supplies pretraining data and diagnostic
+evaluations. The intended post-training stage and final application selection
+use human data only. That stage has not been run.
+
+The first campaign completed 40,000 AdamW updates on one RTX 4090; repeated
+development evaluation selected update 27,000. It used the pinned 1.1 data
+release, with 2,806 human and 1,070 yeast intervention genes excluded jointly
+from fitting across sources. The existing sequence descriptors were retained.
+After update 1,573, training added 10% measured-control/reference examples in
+a captured continuation. No human SL benchmark labels entered fitting.
+
+The final evaluation used 128 batches per source on retrospective development
+data. Mean predictions improved over the unchanged-control comparator and
+the same model with masked intervention tokens in all eleven measured sources.
+Human fitness MSE was **0.136761 versus 0.261167** for the neutral comparator;
+yeast fitness MSE was **0.059122 versus 0.066956**. We did not compare 1.2 with
+1.1 on matched panels or evaluate an independent benchmark.
+
+A subsequent frozen-base evaluation adds fitting-only means and wrong-gene
+swaps on fixed development panels. Human fitness MSE is **0.124835 versus
+0.219549** for the fitting-context mean and **0.334593** with wrong genes.
+Human K562, RPE1 and HepG2 population predictions also beat their fitting means.
+K562 single-cell RNA ties its fitting mean, Norman is worse, and yeast molecular
+accuracy barely changes after swapping interventions. Beating an unchanged or
+masked-action comparator alone therefore does not establish intervention-specific
+accuracy across sources.
+
+The human-only frozen-representation probe provides stronger evidence for the
+base's usefulness. With **128 human adaptation labels**, its ridge readout
+scores **0.115334 MSE**, beating a descriptor/context readout given **8,192
+labels** (0.164430). At 8,192 labels, pretrained features score **0.111505**
+versus **0.178959** for a matched random frozen backbone. Adaptation and
+evaluation interventions are disjoint and excluded from base fitting. This is
+one retrospective development partition within human quantitative fitness;
+it does not measure human SL transfer or isolate the contribution of yeast.
+The base weights stayed frozen. The [evaluation workflow](docs/development.md)
+preserves fixed panels, baselines and readout budgets for future comparisons.
+
+The limitations matter for use. On 32,768 held-gene yeast double-deletion draws,
+predicted interaction residuals had correlation **-0.0014** with observations
+and MSE **0.006056**, worse than the measured-single additive comparator's
+**0.003710**. The latter uses observed single-mutant fitness. In finite sampled
+single-cell panels, generated endpoint energy distance improved over sampled
+controls only for RPE1 RNA; K562 RNA and Frangieh RNA/protein were worse. The
+model supports endpoint-prediction research; this campaign did not demonstrate
+useful yeast nonadditivity or broad gains in generated cell distributions.
+Human combination-fitness outputs remain extrapolations because this corpus
+contains no human double-knockout fitness supervision.
+
+The local candidate bundle is `results/slp12-joint-142m-r1-bundle`; selected
+weights have SHA-256
+`78becf7fb4b6d1b60d0fdd5ed80c39e5739ab11bb2c9ddf0a146880344bdaca0`.
+Training/evaluation source and configuration receipts travel with the artifact.
+The final weights passed native CUDA replay, macOS CPU replay and isolated
+Linux CPU OMF replay/export. Maximum CUDA-to-CPU error was below 7e-6 in the
+shipped real molecular example, including an eight-step generated sample.
+Full source metrics, distribution checks, runtime evidence and costs are in
+[the results ledger](docs/results.md). Public artifact pointers continue to name
+the released 1.1 model. Original code/weights use MIT; data and descriptors retain
+their source terms.
+
+## SLp-1.1 published release
 
 SLp-1.1 learns molecular state, genetic-intervention dynamics, RNA/protein
 observation distributions, and a nonlinear functional viability landscape.

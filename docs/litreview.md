@@ -4,12 +4,127 @@
 
 Scope and central conclusion  
 
-Current scientific scope (September4,2026): the active SLp-1.1 objective is
-held-intervention molecular-state prediction, with SL as a downstream test.
-Earlier benchmark-first positioning below records a proposed publication
-direction and is not a training or selection instruction. The implemented
-models and completed failures are described in `MODEL_CARD.md` and
-`docs/results.md`; literature ambitions are not empirical results.
+Current scientific scope (September 9, 2026): the user specifies above-SOTA
+human SL prediction across the combined benchmark suite as the objective, with
+CV3 both genes withheld from SL-label fitting and all human perturbation
+fitting. Human/nonhuman perturbation world modeling is the proposed means;
+post-training and application selection are human-only. This supersedes the
+September 4 molecular-first selection priority. The subsequent Bitter Lesson
+instruction favors a general conditional experimental predictor, with human SL
+as an end-to-end post-training query rather than a compulsory four-simulation
+readout. The next-model derivation is in `docs/development.md`; earlier
+architectural proposals below are historical context. Implemented models and completed failures remain in
+`MODEL_CARD.md` and `docs/results.md`; literature ambitions are not results.
+
+## September 9, 2026: perturbation coverage and downloadable sources
+
+The next corpus should expand distinct intervention targets, combinations,
+contexts, species and measured outcomes. More cells per existing intervention
+improve measurement precision and population coverage, but do not add a new
+intervention. Dataset totals below are source-level counts, not additive totals
+or counts remaining after SLp's strict CV3 exclusions.
+
+### What the completed 1.2 corpus actually contains
+
+The recovered XL `corpus.json` and the species-native fitness manifest
+(`data/derived/slp11-genomic-fitness-world-v1/manifest.json`) show:
+
+- Human fitness fitting covers 5,034 genes and 843 contexts, using single-gene
+  CRISPR effects. **There is no human double-perturbation fitness supervision in
+  this corpus.** Human molecular combination data such as Norman are a different
+  readout and do not fill that gap.
+- Yeast fitness fitting contains 1,818,947 rows. The importer considered
+  12,698,939 source rows from nonessential deletion pairs at 30 C, sampled 25%
+  (3,174,022), then applied mapping, validity and partition filters. It did not
+  use the complete Costanzo release, essential-allele strata or native epsilon
+  scores. Removing the sampling cap does not imply all 23 million published
+  experiments become unique, valid training pairs.
+- Existing Replogle/K562/RPE1, Norman, GWPS, HepG2, MCF10A, Frangieh and yeast
+  molecular inputs should be retained and deduplicated. Rediscovering these in
+  an atlas is not additional experimental coverage.
+
+Small source manifests and rosters were retrieved for this review, without
+large expression downloads or model fitting. Local receipts and SHA-256 hashes
+are in `data/slp12-coverage-research-20260909/roster-summary.json` (untracked data).
+Direct CSV inspection found 11,522 distinct Ensembl targets in the CD4 release's
+33,983 gene-condition records and 18,330 distinct Ensembl targets in Orion's
+current guide library. These overlap the historical 7,683-gene model roster by
+6,031 and 7,611 genes respectively. Retaining that roster as an import filter
+would discard 47.7% and 58.5% of these sources' target coverage before CV3
+filtering. Library membership is not proof of a successful observed perturbation.
+
+### Priority sources
+
+| Source | Experimental coverage and value | Actual access checked; relationship to 1.2 |
+| --- | --- | --- |
+| **Costanzo 2016, complete budding-yeast SGA** | About 23M double-mutant experiments spanning about 90% of yeast genes. Includes nonessential deletions, essential temperature-sensitive alleles and DAmP alleles; single and double fitness, native interaction scores and uncertainty. | [Author downloads](https://thecellmap.org/yeast/costanzo2016/) list a 521 MB pairwise archive and 35 MB score matrices. Expand the already partly used source. Preserve allele/mechanism/temperature distinctions. Human holdouts do not remove species-native yeast targets. |
+| **Ryan et al. 2012, fission-yeast E-MAP** | About 1.6M pairwise measurements; 953 query alleles representing 876 genes crossed against more than 2,000 deletions. Adds an independent species and genetic interaction measurements. | [Molecular Cell paper and supplements](https://pmc.ncbi.nlm.nih.gov/articles/PMC3380636/) list text datasets, including 14.3 and 16.9 MB files. Supplement listings verified; complete payload/schema inspection remains. Use the S. pombe measurements, not the accompanying integrated budding-yeast compendium as if it were all new data. |
+| **SLKB original combinatorial screens** | Eleven human CDKO studies, 22 cell lines, 280,483 reported pair records; ten studies have raw counts. Broadest convenient starting point for heterogeneous human combination fitness. | [Paper](https://academic.oup.com/nar/article/52/D1/D1418/7331024), [deposited database](https://doi.org/10.6084/m9.figshare.22902839). Figshare API confirms `SQL_Dumps.zip`, 240.8 MB. Known in earlier SLp work, absent from 1.2 double-fitness fitting. Horlbeck and other constituent studies are not additional independent datasets when also loaded separately. |
+| **SPIDR / Fielden et al. 2025** | Dense human DDR combination map in RPE1; actual downloaded score CSV contains **149,787 distinct unordered pairs of 548 genes**, with no self-pairs. Focused K562/HeLa S3 follow-ups add some context coverage. | [Paper and supplements](https://www.nature.com/articles/s41586-025-08815-4), [browser](https://spidrweb.org/). Table 3 is a 4.25 MB score CSV; Table 8 provides about 100 MB normalized guide counts. Not in 1.2 fitting. Keep CRISPRi dose/mismatch semantics; native GEMINI scores are not direct viability probabilities. |
+| **Harle et al. 2025 pan-cancer dual CRISPR** | 472 candidate pairs across 27 melanoma, lung and pancreatic cancer lines. Especially useful for learning when the same pair changes effect across backgrounds. | [Paper](https://doi.org/10.1186/s13059-025-03737-w), [data](https://doi.org/10.6084/m9.figshare.25954027.v4), ENA `PRJEB60853`. API confirms `DATA.tar.gz` (438.4 MB) and `METADATA.tar.gz` (1.14 MB). Of the 472 pairs, 272 also occur in SLKB: additional contexts/experiments are valuable but are not new gene pairs. |
+| **In4mer / Inzolia 2024** | Library targets 19,687 single genes plus 4,435 paralog pairs, 376 triples and 100 quadruples. Adds measured higher-order knockout outcomes and paralog buffering; these are design counts, not post-QC retained counts. | [Paper](https://www.nature.com/articles/s41467-024-47795-3), [Figshare data and code](https://doi.org/10.6084/m9.figshare.24243832.v1). API confirms supplementary tables and figure data, including a 5.20 MB `Supp_table6.xlsx`. Keep original experiments distinct from the paper's reanalysis of five earlier screens. Not in 1.2 fitting. |
+| **X-Atlas/Orion** | Authors report 8M cells and genome-wide targeting in HCT116 and HEK293T. Current guide CSV has 18,330 unique Ensembl target IDs. Adds two large human response contexts and knockdown-depth variation. | [Author HF release](https://huggingface.co/datasets/Xaira-Therapeutics/X-Atlas-Orion), [H5ADs and guides](https://doi.org/10.25452/figshare.plus.29190726). Approximately 126 GB Parquet; alternative H5ADs total 559.5 GB. Do not download both encodings or equate HF preview estimates with the paper's cell count. CC-BY-NC-SA 4.0. Not in 1.2. |
+| **Zhu, Dann et al., primary human CD4 T-cell Perturb-seq** | Published study reports about 22M cells, four donors, and resting/8-hour/48-hour stimulation conditions. Downloaded DE roster has 33,983 gene-condition records spanning 11,522 targets. Adds repeated genetic interventions across primary-cell states. | [Cell paper](https://doi.org/10.1016/j.cell.2026.08.002), [author data guide](https://github.com/emdann/GWT_perturbseq_analysis_2025/blob/master/metadata/data_sharing_readme.md). Public S3 prefix `s3://genome-scale-tcell-perturb-seq/marson2025_data/` verified: 12 cell H5ADs total 1.736 TB; pseudobulk is 44.57 GB; DE estimates 16.79 GB. Prefer counts/pseudobulk before the full single-cell download. Not in 1.2. |
+| **Whole-brain mouse CRISPR atlas, 2026 preprint** | About 7.7M cells and 1,947 target genes across mouse brain cell populations. Adds mammalian intervention data that survives the human gene exclusions. Brain responses are a transfer source, not cancer-fitness measurements. | [Study](https://pmc.ncbi.nlm.nih.gov/articles/PMC13108593/), [author dataset](https://huggingface.co/datasets/perturbai/wholebrain_crispr_atlas). Actual Parquet/H5AD directories present; repository total about 205 GB across formats, CC-BY 4.0. Apply guide-assignment and QC filters before counting usable cells. Not in 1.2. |
+| **Tahoe-100M** | Roughly 100M cells across drug treatments in 50 cancer cell lines. Useful chemical/context response coverage, with lower immediate priority than genetic combination fitness. | [Author release](https://huggingface.co/datasets/tahoebio/Tahoe-100M) has actual Parquet data and CC0 terms. Existing SLp metadata is not evidence of completed training on this source. Chemical exposures retain their own identities; they are not relabeled as gene knockouts. Their treatment-target exposure policy must satisfy the human withholding rule. |
+
+### Attractive announcements that cannot yet be counted as an available corpus
+
+- [X-Atlas/Pisces](https://huggingface.co/datasets/Xaira-Therapeutics/X-Atlas-Pisces)
+  advertises 25.6M cells across 16 contexts. At inspection its repository has
+  only 24.3 KB and explicitly says measurement uploads are coming soon. Do not
+  budget the complete advertised atlas as downloadable training data. The
+  announced upload includes Orion, so the releases must not be summed.
+- [Lin et al., functional modules / In4mer preprint](https://doi.org/10.64898/2025.12.18.695201)
+  describes all-pair screens within 199-gene RTK and 167-gene DDR panels, plus
+  paralogs, across eight selected cancer lines. This is highly relevant, but the
+  paper's named GitHub repository returned 404 and was absent from the public
+  Hart-lab repository listing. The related `genetic_interactions` repository
+  exists; equivalence and complete experimental payloads were not established.
+  Keep this as a retrieval candidate rather than claiming it is already available.
+
+### How to turn these sources into useful coverage
+
+Start with the complete yeast fitness source and available human combination
+screens, then add Orion, the primary T-cell response matrices and mouse atlas.
+Add fission yeast once the supplement schema is resolved. Expand gene encoding
+to sequence-backed species-native identities rather than the old benchmark
+roster. Retain controls, non-hits, quantitative responses, assay IDs and
+intervention mechanisms. Do not reduce every source to a binary SL edge.
+
+For each outer and inner CV3 split, remove every human fitting record whose
+intervention set contains a held gene, including singles, combinations and
+perturbation-derived teachers/features. A dual guide aimed at one gene is still
+one target; a human tumor xenograft is still a human perturbation. Fit learned
+preprocessing on admissible data. Basal/static observations and nonhuman
+homolog perturbations have different admissibility from human interventions.
+The present review has **not computed retained counts for the complete strict
+folds**; roster overlap above is only a representation-coverage calculation.
+
+Track measured coverage as unique species/target-set/context/mechanism/time/
+readout records, then report cells and replicates separately. Deduplicate by
+original screen and lineage, including benchmark-source overlap. Neither
+format conversions nor atlas republications are new experiments. Keep native
+fitness/GI/RNA targets separate in the shared conditional predictor, and sample
+across sources and intervention groups so millions of repeated RNA cells do not
+erase the combination-fitness training signal. This is a training-mixture
+choice to select by human inner-CV3 transfer, not another biological module.
+
+No surveyed source provides an exhaustive, unbiased human genome-wide
+double-perturbation fitness map with matched molecular readouts across many
+contexts. The proposed corpus is substantially broader, but still relies on
+learned cross-assay and cross-species transfer. Performance gains remain an
+empirical question; corpus size alone does not demonstrate that transfer.
+
+Access and rights are source-specific. Figshare metadata reports GPL 3.0+ for
+the SLKB deposit, MIT for Harle and CC-BY 4.0 for In4mer. Source terms do not
+automatically become the model's MIT license. The historical Costanzo rights
+record says quarantine while completed fitness artifacts show it was used;
+reconcile that provenance before another import. This research inventory does
+not mutate source admission records or start training.
+
+The review sections below retain the earlier literature discussion; this dated
+section and the opening scope statement govern the next-model proposal.
   
 Synthetic lethality (SL) is a context-dependent interaction in which each single perturbation is compatible with viability but their combination is lethal. More general negative genetic interactions or synergistic fitness defects should not be called SL unless the single-perturbation tolerance and lethality criteria are met. Most computational SL systems treat SL as supervised link prediction: encode two genes, optionally add a cancer or cell-line context, and learn a binary or ranking score from known SL pairs. The SL-Predict formulation would be different. It would learn an intervention-conditioned cellular transition, then decode the predicted state into molecular measurements and viability. SL would be measured as a non-additive viability consequence of the predicted double perturbation rather than as the direct training target of the transition model.  
   
@@ -911,3 +1026,17 @@ Neither validates simultaneous genetic doubles as temporal trajectories. V3's
 detached predicted-parent schedule addresses inference exposure bias and tests order
 consistency; it is not a measured biological rollout. Evidence for unseen-combination
 emergence must rest on held-pair nonadditive response, not endpoint reconstruction.
+
+### Base-model evaluation and simple controls
+
+Ahlmann-Eltze, Huber and Anders, *Deep-learning-based gene perturbation effect
+prediction does not yet outperform simple linear baselines*, Nature Methods
+(2025), [article](https://www.nature.com/articles/s41592-025-02772-6), compares
+perturbation models with training means, additive predictions and linear
+readouts. Its representation-decoder comparisons motivate evaluating a frozen
+base separately from its shipped prediction head. SLp-1.2 consequently records
+fitting-only mean baselines, wrong-intervention controls and a matched human
+ridge probe against random-backbone and descriptor/context features. This is
+our evaluation design informed by that work; its findings do not determine
+SLp's results. Source-specific metrics remain necessary because shared response
+patterns can dominate aggregate endpoint accuracy.

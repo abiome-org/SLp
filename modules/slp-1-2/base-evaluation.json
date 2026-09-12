@@ -1,0 +1,16 @@
+{
+  "schema": "slp.base-evaluation/v1",
+  "seed": 120908,
+  "panels_per_source": 12,
+  "batch_size": 8,
+  "observations": 128,
+  "queries": 128,
+  "baseline_draws": 128,
+  "baseline_batch_size": 16,
+  "baseline_queries": 512,
+  "fitness_rows": 4096,
+  "probe_budgets": [128, 512, 2048, 8192],
+  "probe_evaluation_rows": 4096,
+  "probe_ridge": 0.01,
+  "random_seed": 731
+}

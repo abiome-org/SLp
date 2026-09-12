@@ -2,10 +2,26 @@
 
 ## Objective and working style
 
-Build a useful, species-aware molecular world model for intervention research.
-The intended capability is to represent observed molecular state, apply genetic
-interventions, and predict their consequences across genes, contexts and
-combinations. Synthetic lethality is an application of that model.
+Build an SL predictor targeting above-SOTA scores across the combined benchmark
+suite, with CV3 (both genes withheld) as the primary objective. Achieve this by
+learning perturbation consequences in human and nonhuman cells. World-model
+quality must contribute to human SL generalization; generic molecular loss is
+not the final selection target.
+
+The user explicitly requires both outer-test genes to be absent from all SL
+label fitting and all human perturbation fitting, across sources, in that fold.
+Human observational/static features remain available subject to provenance;
+nonhuman perturbations remain species-native pretraining data. Post-training
+and application selection use human data only. Use fold-specific exposure
+masks; withholding SL edges alone is insufficient. Architecture and selection
+for the next model are derived in `docs/development.md`.
+
+The user explicitly requests a Bitter Lesson design: prefer one general
+conditional experimental predictor and end-to-end human SL adaptation. Treat
+biological knowledge as admissible data rather than mandatory biological
+modules. Four-condition simulations and interaction equations are useful
+diagnostics, not a required bottleneck for SL prediction. Scale data coverage,
+representation learning and compute based on human inner-CV3 transfer.
 
 User intent and host instructions take precedence over this guide. Carry
 already authorized work through implementation, training and verification.
@@ -57,11 +73,11 @@ reconcile` or `omf operation cancel`; do not edit runtime records by hand.
 
 ## Model and data design
 
-- Consolidate reusable observation encoding, action/state transitions and
-  molecular decoding. Keep application scores and supervised SL readouts
-  separate from the world module.
-- Use static sequence/annotation descriptors without learned gene-ID lookup
-  requirements. Represent intervention mechanism explicitly, including CRISPRi
+- Share observation, intervention and measurement learning in a general
+  backbone. Keep quantitative and SL target semantics and evaluation distinct;
+  permit end-to-end SL gradients during human-only post-training.
+- Use inductive sequence/annotation representations without learned gene-ID
+  lookup requirements. Represent intervention mechanism explicitly, including CRISPRi
   versus CRISPRa. Respect assay-specific measurement and normalization semantics.
 - Treat unpaired single-cell observations as populations; do not fabricate paired
   cellular trajectories. Simultaneous endpoint combinations are not time courses.
@@ -80,6 +96,14 @@ reconcile` or `omf operation cancel`; do not edit runtime records by hand.
   correlation. Report meaningful regressions and source/species differences.
 
 ## Artifacts and release
+
+Keep new large datasets off the user's Mac. Durable source storage is private
+Cloudflare R2 at `s3://abiome-artifacts/slp/`; its binding and checksum-pinned
+source inventory are in `storage/`. Use `scripts/cloud_data.py` to request
+publisher-to-Cloudflare transfers. Local calls carry only metadata. Prepare and
+cache training data on cloud compute disks; a RunPod volume is a working cache,
+not the sole durable copy. Preserve other prefixes in the shared Abiome bucket.
+Bucket presence does not establish training admission or CV3 eligibility.
 
 Git holds source and configuration. Artifact stores hold datasets, checkpoints
 and model bundles. `.omf/` is generated, untracked state: use OMF commands for

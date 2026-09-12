@@ -1,0 +1,30 @@
+name: slp-1-2-joint-world-replay
+objective: Verify and export the already-trained SLp-1.2 shared world model through OMF 2. Native RunPod training is recorded separately; this workflow performs zero optimization.
+modelCard: MODEL_CARD.md
+data:
+  candidate:
+    source: results/slp12-joint-142m-r1-bundle
+    rights: {license: project-trained research model with source-specific descriptor and example terms in THIRD_PARTY_NOTICES.md, trainingAllowed: true}
+train:
+  source: modules/slp-1-2
+  inputs: [candidate]
+  dependencies: requirements-linux-cpu.lock
+  command: [python3, materialize.py, --bundle, '{inputs[candidate]}', --output, '{output}/model']
+  artifacts: {model: model}
+evaluate:
+  source: modules/slp-1-2
+  inputs: [model]
+  dependencies: requirements-linux-cpu.lock
+  command: [python3, omf_replay.py, --bundle, '{inputs[model]}', --output, '{output}/replay']
+  metrics: replay/metrics.json
+  artifacts: {report: replay/report.json}
+metrics:
+  portability_max_error: {direction: minimize, maximum: 0.0003}
+primaryMetric: portability_max_error
+baseline: joint-world
+candidates:
+  joint-world:
+    rationale: Replay the actual trained shared molecular and fitness transformer on isolated Linux CPU Python.
+    parameters: {}
+limits: {timeoutSeconds: 600, cpuSeconds: 600}
+executor: local

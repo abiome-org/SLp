@@ -1,0 +1,9 @@
+{
+  "name": "slp-corpus-ingest",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-09-11",
+  "account_id": "5b7019b38a2b1c0ce119ecf64e92fd92",
+  "workers_dev": true,
+  "preview_urls": false,
+  "r2_buckets": [{"binding": "CORPUS", "bucket_name": "abiome-artifacts"}]
+}

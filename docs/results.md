@@ -7577,3 +7577,702 @@ model behavior or benchmark decisions changed during publication.
 The dataset download command also completed successfully: 198 payload and
 metadata files verified against the pinned inventory, reusing matching local
 files and keeping the dataset overview separate from the repository README.
+
+## 2026-09-07 — SLp-1.2 joint world implementation and training launch
+
+The 1.2 candidate replaces the staged molecular/fitness bridge with one shared
+set transformer: 16 layers, width 768, 12 attention heads and 142,311,171 learned
+parameters. Each intervention is an individual token. RNA, protein and fitness
+queries use the same backbone and trainable descriptor encoder. Entity indices
+are optional, with 25% ID dropout and a descriptor fallback. No 1.1 weights,
+frozen molecular simulation signatures or SL benchmark labels enter fitting.
+Conditional means and observation variances train jointly; computational flow
+matching additionally trains the single-cell endpoint distribution.
+
+The bootstrap corpus is the existing data release pinned at
+`3766b6cf98a9100e4e04cdfc3da4b338020b5a81`; all 198 files were verified on both
+the local host and the training pod. The shared exclusion roster contains
+2,806 human intervention genes and 1,070 yeast genes. Human quantitative fitting
+retains 5,034 genes in 843 contexts; yeast fitting contains 1,818,947 measured
+double-deletion rows and their single-mutant fitness. Twelve molecular sources
+participate in fitting. Nine have eligible intervention-held development rows;
+the three MCF10A sources have no eligible rows in this bootstrap development
+partition. Population normalization is refitted after the shared exclusions.
+The source readers retain native species, assays and measurement transforms.
+
+The main schedule is 40,000 AdamW updates, molecular micro-batches of 16,
+fitness micro-batches of 256, eight accumulation steps, bf16, peak learning rate
+2e-4 and 500 warmup updates. Checkpoints retain optimizer and per-rank RNG and
+sampler state. After update 1,573, a captured continuation adds 10% explicit
+control examples: measured molecular controls and the neutral fitness reference.
+For single-cell controls, observation and target coordinates come from the same
+real control cell, with overlapping observations masked and population controls
+used as query anchors. This does not fabricate a paired perturbation trajectory.
+The opening weights and optimizer are retained; the recipe change is recorded
+in the continuation source/configuration receipts.
+
+Native training runs on one secure RunPod RTX 4090 under a $50 total campaign
+ceiling. The initial 26-hour allocation has a conservative $19.60 estimate,
+including storage; observed steady throughput is approximately one optimizer
+update per second, so the requested schedule is expected to use substantially
+less. The pod's fixed deadline is 2026-09-09 01:30:23 UTC. A separate trainer
+time limit, local termination guard, pod-scoped termination guard and local
+artifact collector bound the run. Checkpoints reside on a 50 GB network volume.
+The collector verifies local artifacts and CPU replay before deleting that
+volume. Account credentials remain local and outside Git.
+
+Full-architecture CUDA checks measured 6.21 GiB peak memory and 83.9 ms per
+eight-example, 1,067-token update without activation recomputation. A padded
+16-example batch used 10.56 GiB and 186.9 ms. Actual mixed-source training peaks
+near 11.1 GiB. These synthetic-shape checks measure execution cost, not biology.
+Twelve focused numerical/routing tests pass. Real-data checks cover all source
+types, global split routing, source-specific evaluation, exact checkpoint
+resumption, paired-shard sampler resumption, and control-target isolation.
+
+An actual full-size opening checkpoint was exported and replayed from CUDA on
+macOS CPU. Maximum absolute differences were 4.77e-7 for means, 3.28e-7 for log
+variances and 9.54e-7 for eight-step generated samples. This verifies the
+standalone inference path; the final selected weights still require their own
+replay. `experiment-slp12-replay.yaml` prepares the separate OMF 2 CPU artifact
+workflow. The opening bundle also passed actual isolated OMF 2 replay and export
+on the existing local ARM Linux VM, run
+`01a07e8b-da02-77e7-a35f-72df796a85ed`, with maximum error 9.54e-7 and zero
+optimization steps. The helper selected the hash-pinned ARM CPU dependencies.
+The RunPod container lacks OMF's required network-namespace capability; no
+successful OMF execution is claimed on that container. Native CUDA training,
+macOS CPU replay and local Linux OMF replay are recorded separately.
+
+At update 1,000, the fixed retrospective development panel improved over its
+unchanged-control comparator on all eleven measured molecular/fitness sources.
+Human fitness MSE was .130698 versus .259126; paired RNA/protein MSE was .936331
+versus 1.433405. Yeast interaction-residual MSE remained worse than the measured
+single additive comparator (.007131 versus .004654; correlation -.0170).
+These are early development observations, not final results, an independent
+benchmark, or a matched comparison with SLp-1.1. Training is ongoing. The first
+campaign retains the existing sequence descriptors and corpus; it does not yet
+add human double-knockout fitness supervision or a new supervised SL readout.
+
+
+## 2026-09-08 — SLp-1.2 first campaign completed
+
+The 142,311,171-parameter joint model completed all 40,000 updates. The native
+training clock across captured segments is 40,626 seconds (11.29 hours), including
+in-loop development evaluation and checkpointing. The fixed 32-batch-per-source
+selection panel chose update 27,000 at selection MSE 0.256451. The expanded final
+128-batch-per-source panel scores those same selected weights at 0.272018; its
+sampled rows differ, so the two aggregate values are not directly comparable.
+Both panels are retrospective development evidence, reused for training choices.
+No independent test set or human SL benchmark was evaluated in this campaign.
+The selected weights have SHA-256
+`78becf7fb4b6d1b60d0fdd5ed80c39e5739ab11bb2c9ddf0a146880344bdaca0`.
+
+The final source metrics below use normalized source-native assay units. RNA
+and protein receive equal modality weight within the paired assay. The neutral
+fitness/control-reference prediction is the unchanged comparator; action ablation
+masks all intervention tokens in the same trained model. Lower MSE is better.
+All eleven source point estimates improve over both comparators, which supports
+use of intervention information in the mean predictions. This is not a matched
+comparison with the published 1.1 model.
+
+| Source | Model MSE | Unchanged MSE | Action-ablated MSE | Reduction vs unchanged |
+| --- | ---: | ---: | ---: | ---: |
+| frangieh_cells | 1.082212 | 2.003325 | 1.346635 | 46.0% |
+| gwps | 0.909474 | 0.956370 | 0.956533 | 4.9% |
+| hepg2 | 0.829019 | 1.081953 | 1.081891 | 23.4% |
+| human_fitness | 0.136761 | 0.261167 | 0.263250 | 47.6% |
+| k562 | 0.842007 | 1.115728 | 1.114762 | 24.5% |
+| k562_cells | 0.131922 | 0.250081 | 0.190290 | 47.2% |
+| norman | 0.637431 | 0.685808 | 0.682974 | 7.1% |
+| rpe1 | 0.641624 | 0.968541 | 0.968328 | 33.8% |
+| rpe1_cells | 0.135580 | 0.269758 | 0.203266 | 49.7% |
+| yeast | 0.372258 | 0.447879 | 0.447211 | 16.9% |
+| yeast_fitness | 0.059122 | 0.066956 | 0.067635 | 11.7% |
+
+Combination interaction prediction remains weak. On 32,768 held-gene yeast
+double-deletion draws, the predicted residual f(AB)-f(A)-f(B) has correlation
+-0.001404 with the measured log-fitness interaction. Residual MSE is 0.006056
+versus 0.003710 for the zero-interaction comparator, a 63.2% increase in error.
+That comparator uses measured single-mutant fitness, so it isolates nonadditivity
+and is not a deployable intervention-cold predictor of total double fitness.
+These results do not establish useful yeast nonadditive prediction. There is no
+human double-knockout fitness supervision or fitted human SL readout in 1.2.
+
+Flow sampling was evaluated on 32 unpaired endpoint panels per single-cell
+source, 16 cells per panel, using 32 Euler steps. Energy distances are divided
+by the square root of the number of coordinates. These are finite-sample
+retrospective estimates, without confidence intervals or paired cellular
+counterfactual claims. Lower energy distance is better.
+
+| Assay | Generated energy distance | Control energy distance | Generated variance MSE | Control variance MSE |
+| --- | ---: | ---: | ---: | ---: |
+| frangieh_cells:protein | 0.753918 | 0.641175 | 1.719883 | 3.935911 |
+| frangieh_cells:rna | 0.133479 | 0.129529 | 0.010477 | 0.015861 |
+| k562_cells:rna | 0.069699 | 0.068329 | 0.005577 | 0.005290 |
+| rpe1_cells:rna | 0.083522 | 0.091571 | 0.007256 | 0.007881 |
+
+Only RPE1 RNA improves energy distance over the sampled-control comparator.
+Frangieh RNA/protein variance estimates improve, but their energy distances do
+not. Mean-prediction improvements therefore do not establish broad distributional
+improvements. The first 1.2 artifact is retained as an endpoint-prediction
+research candidate. A new sequence representation, human combination screens,
+stronger interaction learning and matched 1.1 comparisons remain future work;
+no public release pointer or historical result was replaced.
+
+The standalone bundle contains 35 hashed payload files (635,749,876 bytes),
+including actual weights, context/entity metadata, captured training and
+evaluation source, normalization receipts, dependency locks and a real molecular
+inference example. Manifest SHA-256 is
+`7c6e7078f9644ac72b80ce2267462b2ed3147e83b2c576f9388c773009e16bb4`.
+The collector verified every retained local checkpoint and the completed bundle
+before resource deletion. Final macOS CPU replay differed from CUDA by at most
+2.15e-6 in means, 4.77e-6 in log variances and 2.86e-6 in generated samples.
+
+The pinned OMF 2 runtime then completed genuine isolated Linux ARM CPU replay
+and export, run `01a080d1-8046-73d7-89eb-88042e2d1614`, with maximum absolute
+error 6.68e-6. It performed zero optimization. Its exported model artifact
+`sha256:8bf65fc56cf19116bc413074e8f37792a82d9bc104466fc84198bc025a9b45f9`
+has the identical standalone manifest; all 35 exported payload hashes were
+independently checked against it. Evidence is retained under
+`results/slp12-joint-142m-r1-omf/export`. This exercises ordinary-script artifact
+replay/export, not the OMF ModelPackage service adapter. The local verification
+VM was restored to its prior stopped state and the Docker context stayed
+`default`. The twelve focused numerical/routing tests and exact control-mixture
+checkpoint-resume check passed during implementation; no numerical source
+changed after those checks.
+
+Paid-resource cleanup completed at 2026-09-08 11:40 UTC. Follow-up API reads
+confirmed both campaign pod `fsve4k4zth1yeo` and volume `3f81ooxbnu` absent.
+Total allocation, including setup, evaluation and collection, was 12.160 hours.
+GPU time is estimated at $8.999; the original conservative storage allowance
+adds $0.169, for approximately **$9.17 total**, within the authorized $50 ceiling.
+The provider had posted $8.309 in pod charges when checked, with later billing
+still pending; volume billing omits resource IDs, so it cannot be attributed
+directly. The $9.17 figure is an allocation-based estimate, not a settled invoice.
+The exact cleanup, billing and CPU replay receipts are retained in
+`data/slp12-campaign/`. Final inference weights and the step-40,000 resumable
+checkpoint remain local; no dataset, checkpoint, credential or generated OMF
+state was committed to Git.
+
+## 2026-09-08 — Frozen-base evaluation and human transfer probe
+
+The first 1.2 run is a mixed-species pretrained base. There was no separate
+post-training stage: the completed schedule mixed human and yeast outcomes
+from start to finish. The intended next stage uses human data only, and its
+final selection uses human performance. The evaluation below measures the
+frozen base and temporary human readouts; no production post-training ran.
+
+Added `modules/slp-1-2/base_evaluation.py`, `base-evaluation.json` and
+`transfer_probe.py`. Preparation fixes observations, outcomes, fitting-only
+baselines and genuinely different intervention swaps in a checksummed panel.
+Scoring reuses those exact arrays across compatible base checkpoints. RNA,
+protein and fitness remain separate; there is no pooled human/yeast score or
+automatic promotion threshold. The model card and development guide now
+explicitly distinguish mixed-species pretraining from human-only post-training.
+
+This is retrospective development data, previously used to select checkpoints.
+A new sampling seed does not turn it into an independent test. Both human
+probe groups were excluded as interventions during base fitting; descriptors
+and appearances as query/observed genes can be known. Contexts are known.
+
+### Fixed-panel frozen-head results
+
+The configured panel contains twelve batches per molecular source, eight
+examples per batch, and requests 128 observation and 128 output coordinates.
+The paired assay reader also includes its protein channels. Each molecular
+baseline uses 128 fitting-only draws of sixteen examples and up to 512 output
+coordinates. Human and yeast fitness have 4,096 scored rows each. These are
+new panels with different dimensions from the historical 128-batch final
+report; absolute values across those two reports are not matched comparisons.
+
+Molecular training-mean baselines pool by source and query coordinate; they
+are not context-matched baselines. Empirical control means use transformed
+individual observations rather than transforming their mean. Uncovered query
+coordinates fall back to the provided source control reference. Coverage is
+98.31% for Frangieh RNA, 99.80% for K562 cells, 99.93% for K562 populations and
+RPE1 cells, and 100% elsewhere. Human fitness uses the exact fitting-context
+mean. Yeast fitness uses the fitting mixture mean with the same 20/20/60
+single-A/single-B/double proportions as its sampler.
+
+Wrong-intervention controls preserve source, mechanism, cardinality, context
+and query inputs, changing only active action identities/descriptors. All
+scored rows had a genuinely different donor. Lower MSE is better:
+
+| Source / modality | Base MSE | Training mean MSE | Wrong-intervention MSE |
+| --- | ---: | ---: | ---: |
+| frangieh_cells:protein | 1.546029 | 1.944528 | 1.557593 |
+| frangieh_cells:rna | 0.068827 | 0.072526 | 0.068904 |
+| gwps:rna | 0.840586 | 0.861600 | 0.872014 |
+| hepg2:rna | 1.035093 | 1.189540 | 1.497870 |
+| human_fitness:fitness | 0.124835 | 0.219549 | 0.334593 |
+| k562:rna | 0.908667 | 1.092016 | 1.336482 |
+| k562_cells:rna | 0.130753 | 0.130679 | 0.131849 |
+| norman:rna | 0.674013 | 0.563122 | 0.678511 |
+| rpe1:rna | 0.654243 | 0.763077 | 0.894085 |
+| rpe1_cells:rna | 0.149687 | 0.151276 | 0.151943 |
+| yeast:rna | 0.341049 | 0.410667 | 0.340447 |
+| yeast_fitness:fitness | 0.069174 | 0.062874 | 0.079268 |
+
+Human fitness beats the context mean by 43.1%, with a large wrong-intervention
+penalty. Human population K562, RPE1 and HepG2 also improve over the fitting
+mean and depend strongly on the correct intervention. GWPS gains are smaller.
+K562 single-cell RNA is essentially tied with the training mean; RPE1 cells
+improve by only 1.1%. Norman is 19.7% worse than its fitting mean. Frangieh
+beats its pooled mean, but RNA wrong-intervention error barely changes; pooled
+context differences can contribute to its baseline gap. Yeast molecular error
+also barely changes after swapping interventions, while yeast fitness is 10.0%
+worse than the fitting-mixture mean. The older improvement over masked actions
+did not by itself establish discrimination between different interventions.
+
+Within-panel pseudobulks average eight cells sharing intervention and source
+context; they do not average unrelated interventions or create paired cellular
+counterfactuals. Mean MSEs are:
+
+| Source / modality | Base pseudobulk MSE | Training mean MSE | Wrong-intervention MSE |
+| --- | ---: | ---: | ---: |
+| frangieh_cells:protein_pseudobulk | 0.389875 | 0.821308 | 0.400385 |
+| frangieh_cells:rna_pseudobulk | 0.014517 | 0.021126 | 0.014444 |
+| k562_cells:rna_pseudobulk | 0.020240 | 0.020407 | 0.020726 |
+| rpe1_cells:rna_pseudobulk | 0.029723 | 0.031483 | 0.029449 |
+
+Each cell source has only twelve sampled panels (nine distinct Frangieh
+interventions; twelve each for K562 and RPE1 cells). Norman has six distinct
+action sets in this panel. These are point estimates; cells, contexts and
+intervention sets can share genes. No independent row-wise uncertainty or
+broad distributional gain is claimed. Generation and yeast interaction failures
+from the earlier report remain relevant; this evaluation did not rerun them.
+
+### Human-only frozen-representation probe
+
+A deterministic split assigns the 1,300 eligible development fitness genes to
+650 adaptation and 650 evaluation genes. The 4,096 evaluation rows cover 644
+of those evaluation genes. Nested adaptation budgets contain unique gene/context
+labels. The temporary ridge readout uses the frozen query representation,
+compared with a randomly initialized frozen 142M backbone and static action
+descriptors plus context. All three use the same rows, adaptation-only feature
+standardization, intercept and fixed normalized ridge penalty (0.01). The
+baseline model weights and their parameter digest remain unchanged.
+
+| Human adaptation labels | Pretrained features MSE | Random features MSE | Descriptors + context MSE |
+| ---: | ---: | ---: | ---: |
+| 128 | 0.115334 | 0.203092 | 0.196180 |
+| 512 | 0.112279 | 0.188159 | 0.175488 |
+| 2,048 | 0.112494 | 0.183593 | 0.168700 |
+| 8,192 | 0.111505 | 0.178959 | 0.164430 |
+
+The pretrained readout with 128 labels beats the descriptor/context readout
+with 8,192 labels. At 8,192 labels, pretrained features reduce error by 37.7%
+versus the matched random backbone and 32.2% versus descriptors/context. The
+original frozen head scores 0.124835 on these same evaluation rows; the
+8,192-label readout improves it by 10.7%. This shows useful human representation
+learning in this development protocol. It measures new-intervention adaptation
+within the quantitative pretraining task, not human SL transfer. One partition
+and one random initialization do not establish a scaling law. No experiment
+here isolates whether yeast pretraining caused the human improvement.
+
+### Artifacts, runtime and validation
+
+- Fixed panels: `results/slp12-base-panels-v1`, manifest SHA-256
+  `4fb25cb67e077bdce06ec729d74e40ba10501af15748e639b7e201db01bdbef2`.
+- Base predictions/report: `results/slp12-base-evaluation-v1`, report SHA-256
+  `f43db9c49fc35c055bfaa32b4ef8319cc67809b58a03b1dae735383dc157385c`.
+- Probe features/predictions/report: `results/slp12-human-transfer-probe-v1`,
+  report SHA-256 `714a4fd7ad361b933c80a5540e67ee3bfdadfa923aae56c0e1252a43cc862e87`.
+
+The model is the existing selected 142,311,171-parameter base, weights SHA-256
+`78becf7fb4b6d1b60d0fdd5ed80c39e5739ab11bb2c9ddf0a146880344bdaca0`.
+Preparation took 37.5 seconds, scoring 92.2 seconds, and the probe 19.9 seconds
+on local macOS CPU with four Torch threads, Python 3.12.11, Torch 2.11.0 and
+NumPy 2.4.4. No GPU resources were allocated or cloud spend incurred. These
+are native evaluation runs, not new OMF training/export operations. Exact
+evaluation source snapshots travel with the reports; the source-capture helper
+was subsequently extended to include the three existing Linux dependency locks.
+This packaging-only extension does not change numerical evaluation.
+
+Five focused tests pass for fitting-only baselines, real identity swaps with
+preserved conditions, disjoint held-intervention probe genes, inductive ridge
+and frozen parameters, and incompatible input contracts/pseudobulk rejection.
+The real run additionally verifies panel and bundle hashes, baseline coverage,
+unique probe rows, finite predictions, all valid swaps, identical before/after
+full-model parameter digests and unchanged shipped weights. Repository audit
+passes. Historical training reports and the pretrained bundle are unchanged.
+
+## 2026-09-08 — SLp-1.2-XL capacity and execution profile
+
+The next pretraining configuration increases the shared model from 142,311,171
+to **344,953,859 parameters**, using 24 layers, width 1,024 and 16 attention
+heads. The target is 60,000 updates, compared with the first run's 40,000.
+The admitted corpus, descriptors, global held-intervention exclusions and
+60/20/20 molecular/human-fitness/yeast-fitness mixture stay the same. This scales
+capacity and training compute; it does not add new biological observations.
+Human post-training and external SL benchmarking are deferred.
+
+A full-model synthetic profile on one 32 GB RTX 5090 used Python 3.12,
+Torch 2.11.0+cu128, BF16 autocast and the captured Linux dependency lock.
+Each timing covers forward, backward and an AdamW update. Molecular inputs
+contain 1,067 tokens with mixed action padding; fitness inputs contain five.
+
+| Task | Microbatch | Seconds | Peak allocated GiB |
+| --- | ---: | ---: | ---: |
+| Molecular | 8 | 0.16494 | 13.090 |
+| Molecular | 16 | 0.31853 | 21.613 |
+| Fitness | 256 | 0.03445 | 5.882 |
+| Fitness | 512 | 0.05237 | 7.193 |
+
+Molecular microbatch 24 ran out of memory. Microbatch 16 and fitness batch
+256 fit without activation checkpointing. At eight accumulation microsteps
+and the configured task mixture, these measurements estimate 1.64 seconds
+per optimizer update, or 27.3 hours for 60,000 updates before data handling,
+evaluation and artifact work. This is a runtime estimate, not a measured
+training duration or evidence of better biological prediction. No synthetic
+profile weights are retained as a biological model.
+
+Profile logs, dependency inventory and exact source hashes are recorded under
+`data/slp12-xl-profile/`. The planned training output is
+`results/slp12-xl-345m-r1`, with a separate campaign receipt under
+`data/slp12-xl-campaign/`. The planned 32-hour allocation at $0.99/hour has a
+conservative GPU/storage ceiling of $32.124. Including the first campaign's
+$9.1674 estimate, the entire one-hour profiling allowance and a $5 reserve
+gives $47.30 under the original $50 authorization. The trainer limit is
+30.5 hours, leaving allocation time for setup, final evaluation and export.
+
+The account was topped up during preparation. Because the user expects the
+separate $1.59/hour job to finish soon, the credit calculation reserves twelve
+additional hours for that job. A five-minute local credit check stops only the
+SLp pod if account credit falls below $5. Independent local and scoped remote
+deadline guards retain the hard allocation limit; the persistent volume keeps
+resumable checkpoints. Local backups retain two verified snapshots to fit the
+host disk. Ten focused tests pass for campaign accounting, the shared-credit
+stop, invalid runtime rejection and verified checkpoint retention.
+
+The XL job launched at 2026-09-09 00:29:51 UTC (September 8 locally) on pod
+`imjr2m8ek6rrhs`, reusing verified volume `0u8e5qtjgb`. Both deadline guards
+were armed before launch; the hard deadline is 2026-09-10 08:26:29 UTC. The
+first optimizer update completed with finite loss and gradients. Its run
+receipt confirms 344,953,859 parameters, a fresh initialization and native
+PyTorch execution on the RTX 5090. Training is in progress; there are no XL
+biological comparison results yet. The local collector and hourly follow-up
+are active for checkpoint recovery, artifact verification and resource cleanup.
+
+The profiling pod was deleted after staging at 2026-09-09 00:26:16 UTC.
+Its measured allocation lasted 0.384 hours, with a conservative GPU/storage
+estimate of $0.3855. The XL budget retains the full $1.0039 profiling allowance
+as additional margin. Source and campaign tooling were committed locally as
+`0c56319`; no artifacts or source were published.
+
+## 2026-09-08 — XL continuation migrated to B200
+
+At the user's request, the active XL run moved from RTX 5090 to one B200.
+The trainer received a graceful stop request and saved update 377, including
+model weights, AdamW state, sampler state and random-generator states. The
+checkpoint passed its full SHA-256 manifest verification remotely and after
+local backup. Its model hash is
+`1ec7f96e08741d3d9a0604703692d6093c6dfb6ee448a868b9abe4cdd39dfad5`;
+optimizer/RNG payload hash is
+`b73ad50cd80b8416660fb42d358689fbfa18557173f4b764dd32b0954426639a`.
+
+B200 pod `6dvegx3gouhfnc` mounted the same volume, `0u8e5qtjgb`, in EU-RO-1.
+The native PyTorch continuation confirms 344,953,859 parameters and the exact
+update-377 checkpoint. All 26 captured source files matched the prior run.
+The data, model, task mixture, batches and optimization schedule were retained.
+The old 5090 pod was deleted at 2026-09-09 00:51:42 UTC after the B200 was
+successfully optimizing and the local checkpoint backup was verified. Its
+allocation lasted 0.4203 hours, costing a conservative $0.4219 including storage.
+
+The real B200 updates 400–730 took **0.63262 seconds per update**, about 2.6x
+faster than the 5090's early training speed. This projects roughly 10.4 hours
+for the remaining updates before evaluation and collection. The earlier
+compute-only hardware comparison was an optimistic scaling scenario; its
+10.74x peak BF16 ratio did not translate into the same training speedup.
+The observed B200 rate would exceed the current $50 campaign budget for the
+complete 60,000-update target. A $90 total-cap request is pending; no increase
+has been applied.
+
+The existing compiled-execution path was then enabled using
+`config-xl-b200.json` and `compile_mode: reduce-overhead`, resuming the verified
+update-1,001 checkpoint. Its launch at 2026-09-09 00:56:26 UTC retained the
+same model, objectives and batch settings. This is a continuation of real
+pretraining, not a separate synthetic benchmark. CUDA graph replay failed
+during backward at update 1,002, before an optimizer update; update 1,001
+remained intact. The failed attempt's source, runtime and error receipts are
+preserved under `failed-attempts/cudagraph-1001` within the run. The continuation
+was restarted with ordinary compiler fusion (`compile_mode: default`) and
+CUDA graph replay disabled. The first resumed optimizer update completed
+successfully. Updates 1,100–1,480 then took **0.49219 seconds per update**,
+excluding initial compilation, with finite losses and gradients. That is about
+3.3x the 5090 rate and 1.29x the eager B200 rate. The remaining updates alone
+project to eight hours; periodic evaluation, checkpoints and final artifact
+collection add time. This reduces the projected total campaign cost to roughly
+$70–80, still above the current $50 cap. These are early measured throughput
+projections, not a completed-run cost or a guarantee of model quality. The
+measurement receipt is `compiled-continuation-verified.json` in the B200 state
+directory. Three focused training-contract tests pass.
+
+The B200 allocation remains bounded to five hours at $6.79/hour, terminating
+at 2026-09-09 05:42:26 UTC. Its reserved total, including previous allocations
+and a $5 buffer, is $49.58. The compiled segment's time limit leaves 21 minutes
+inside that deadline for final evaluation and artifact transfer. State and
+receipts are in `data/slp12-xl-b200-campaign`; the resumed run remains
+`results/slp12-xl-345m-r1`. The old collector is stopped, and a B200 collector
+backs up verified checkpoints with two-snapshot retention. Automatic approval
+review rejected the broader recurring follow-up; the accepted app monitor is
+read-only and reports progress or failures. Existing detached training,
+collection and deadline guards retain their recorded scope.
+
+At 2026-09-09 01:47 UTC, the live account held **$62.5690** with only this
+B200 pod and its 50 GB volume present. The measured continuation through
+update 5,740 averaged 0.51885 seconds per update over updates 1,100–5,740,
+including intervening development evaluation and checkpoints. Remaining
+training projected to 7.82 hours, or approximately $53.21; allowing final
+evaluation and collection gave a roughly $55–57 remaining-cost estimate.
+These are estimates against the current account balance, not new credit.
+
+The user stated that the existing RunPod funds were all that was available.
+A proposed allowance of 8.45 hours from that balance check reserved $5 and
+set a prospective deadline of 10:14:24 UTC. Automatic approval review blocked
+the extension because the funding statement was not explicit approval to
+exceed the original $50 cap; it also flagged the proposed guard replacement
+sequence. The proposal was **not applied**. Preparation had gracefully saved
+update 6,042, whose full checkpoint manifest passed verification. Training was
+resumed from that checkpoint using the original deadline and $50 cap, with
+24 minutes reserved before the allocation deadline for finalization. The
+source, optimizer schedule, batches and 60,000-update target were retained.
+Receipts are `live-credit-check.json`, `credit-revision-blocked.json` and
+`limit-resume-launch.json` in the B200 campaign directory. Explicit approval
+to replace the $50 cap with the existing account balance is pending; the
+earlier $90 proposal has not been approved either.
+
+The user subsequently explicitly approved replacing the original cap with
+the existing RunPod balance while preserving $5. A fresh check at
+2026-09-09 02:12 UTC found **$59.7342** remaining and only the SLp B200 and
+its volume active. The approved continuation allows eight allocation hours
+from that check, costing at most **$54.4311** including conservatively priced
+storage. The fixed deadline is **2026-09-09 10:12:47 UTC** (04:12:47 Denver),
+and the local five-minute credit check still stops the pod below $5. No
+additional top-up, GPU or volume was assumed or created.
+
+The trainer saved update **8,468**, whose full checkpoint manifest passed
+verification. Its weights hash is
+`ba8e151864f22be4f6d811bb7867dc9bde8664598cf576df2be3a2e5e5decf8e`.
+The remote guard was stopped before its replacement was launched, with the
+original local guard protecting the handoff. After verifying the new scoped
+guard, the old local guard was stopped and replaced. Both use the same new
+deadline. The existing-credit continuation launched at 02:17:07 UTC from
+update 8,468 with the same compiled configuration and 60,000-update target.
+Its 7.5777-hour segment limit leaves 21 minutes before the allocation deadline
+for finalization, in addition to the trainer's three-minute stopping margin.
+Completion remains a target, not a guarantee within this narrow credit margin.
+The read-only app monitor now reads the approved allowance from the campaign
+receipt. Detailed records are `approved-credit-check.json`,
+`approved-checkpoint-and-guard.json`, `approved-remote-guard-verified.json`,
+`approved-local-guard-launch.json` and `approved-credit-launch.json` in the
+B200 campaign directory.
+
+The resumed job completed update 8,490 with finite loss and gradients. Its
+captured source hashes, corpus receipts and configuration match the previous
+segment exactly except for the runtime limit. The collector was restarted
+against the approved campaign receipt; both revised guards were verified and
+the superseded guards were stopped. This verifies the continuation is active,
+not that the 60,000-update target has finished.
+
+## 2026-09-09 — XL stopped at its allowance; exact local artifact recovery
+
+The 344,953,859-parameter run stopped at **54,971 of 60,000 updates** with
+`checkpointed_at_time_limit`. It did not complete the planned schedule.
+Repeated development evaluation selected **update 26,000** for the exported
+inference weights. The final checkpoint remains independently resumable.
+No human post-training or external SL benchmark fitting was performed.
+
+The B200 allocation lasted 9.4909 hours. Its GPU cost estimated from elapsed
+time and the recorded $6.79/hour rate is **$64.4431**; adding conservative
+allocation storage gives **$64.5749**, and the recorded prior allocations bring
+the campaign estimate to **$74.5497**. These are elapsed-time estimates, not a
+provider invoice; retained-volume storage after termination is additional.
+The credit guard reported **$4.5515** remaining before deleting the B200 at
+10:11:53 UTC. Its five-minute polling interval did not preserve an exact $5
+balance. The GPU was terminated and no replacement was allocated.
+
+Native CUDA evaluation and export completed before termination. The collector
+verified and backed up checkpoint 54,971 and copied the run directory, but the
+GPU shut down during the inference-bundle transfer. The selected weights file
+was truncated locally and later bundle files were missing. The complete
+selected weights, source and metadata were already present in the copied run;
+the exported example inputs, CUDA outputs and manifest had also arrived.
+
+All **37** files in the original export manifest were recovered from existing
+local files into a new directory, `results/slp12-xl-345m-r1-bundle-recovered`.
+Every file passed its original SHA-256 hash, and the manifest matches the
+remote export receipt exactly:
+`b21604151a006fa64f672ba99a37cb020bfc3988bfa69c73387af5a8c5f30b5b`.
+Selected inference weights hash:
+`523c287c6271f7ab0fd4bb2d7097158b9a5f400a44cc209352d0e59525dec659`.
+The final checkpoint's weights hash is
+`2bae2c7e7742230a9e83a5061f44941ce2fe3cba9f8908903bcb1a11979a5d88`;
+its optimizer/RNG payload hash is
+`343cebd4a647369421c122669eae61941968e2cf61e8f79f6c86d26a3897957d`.
+Both the selected bundle and final checkpoint were verified locally. macOS CPU
+replay passed the real CUDA-generated molecular example, including eight-step
+sampling; maximum absolute errors were 9.54e-7 for the mean, 3.34e-6 for log
+variance and 1.91e-6 for the sample. Recovery required no cloud compute.
+
+The selected model's final retrospective evaluation used 128 batches per
+source. These are development metrics; selection reused development outcomes.
+
+| Source | XL MSE | Unchanged comparator | Masked-action MSE |
+| --- | ---: | ---: | ---: |
+| K562 population | 0.854197 | 1.115728 | 1.114660 |
+| RPE1 population | 0.629091 | 0.968541 | 0.972755 |
+| Norman | 0.550644 | 0.685808 | 0.689294 |
+| GWPS | 0.905605 | 0.956370 | 0.955026 |
+| HepG2 | 0.829324 | 1.081953 | 1.081773 |
+| K562 cells | 0.132898 | 0.250081 | 0.135058 |
+| RPE1 cells | 0.136225 | 0.269758 | 0.140768 |
+| Frangieh cells | 1.147500 | 2.003325 | 1.146653 |
+| Yeast molecular | 0.374629 | 0.447879 | 0.447432 |
+| Human fitness | 0.141466 | 0.261167 | 0.264700 |
+| Yeast fitness | 0.063008 | 0.066956 | 0.068002 |
+
+Yeast interaction-residual correlation was **-0.00301** on 32,768 draws.
+Residual MSE was **0.005570**, worse than **0.003710** for measured-single
+additivity. Generated-cell energy distance beat sampled controls only for
+RPE1 RNA; K562 RNA and Frangieh RNA/protein were worse. These results do not
+show useful yeast nonadditivity or broad distributional gains. The separate
+frozen-panel base comparison with the 142M model remains unrun.
+
+The retained 50 GB network volume is `0u8e5qtjgb`. Automatic approval review
+blocked its deletion because explicit authorization to discard the volume was
+required. It remains available while cleanup awaits confirmation. Artifact
+recovery and local CPU validation are complete; the collection receipt records
+cleanup separately as pending. The recovery plan, original interrupted
+collection receipt, verified manifest and CPU replay are preserved under
+`data/slp12-xl-b200-campaign/`.
+
+Isolated Linux ARM64 CPU replay and export subsequently passed through pinned
+OMF 2.0.0 in the existing local `omf-tests` VM, with **zero optimization**.
+Run `01a08699-b9d2-70fd-a796-780237334521` succeeded; maximum portability error
+was **4.2915e-6**. The exported model artifact digest is
+`sha256:8e457ecc29a63af527770d6b8aecc615fe980d050415fc1535ca57e069fef28e`,
+with receipts and export under `results/slp12-xl-345m-r1-omf-linux/`.
+An initial unprivileged preflight correctly rejected the missing network-deny
+capability before execution. The successful run used the VM's administrator
+capability to provide real network namespaces, retaining the project's existing
+identity and policies. This verifies standalone artifact portability; it does
+not claim OMF ModelPackage service deployment. The local VM was returned to
+its stopped state after verification.
+
+The user then approved deleting the retained volume. RunPod confirmed deletion
+of `0u8e5qtjgb`, and a subsequent resource listing verified its absence. No SLp
+pods or volumes remain. The cleanup receipt is
+`data/slp12-xl-b200-campaign/volume-cleanup.json`; collection status is now
+complete. This resolves the cleanup block above and does not change the
+training outcome of 54,971 updates.
+
+## 2026-09-09 — Matched frozen-base comparison: 142M versus XL
+
+The recovered XL bundle was scored locally on the existing immutable
+`results/slp12-base-panels-v1` panels. No data were resampled, no parameters
+were fitted, and no cloud compute was used. CPU scoring took **228.65 seconds**.
+The comparison uses the selected 142M update 27,000 and XL update 26,000
+checkpoints, following training runs of 40,000 and 54,971 updates respectively.
+It measures these two artifacts, not a capacity-only scaling law. Development
+outcomes had already been reused for checkpoint selection; these remain
+retrospective development results. Human post-training and external SL
+benchmarking were not run.
+
+The 110 cases contain 12 panels of eight rows per molecular source, plus
+4,096 rows each for human and yeast fitness. Human fitness spans 644 distinct
+interventions. Molecular action coverage is smaller: Norman has six distinct
+action sets, Frangieh nine, and K562/RPE1 single-cell panels twelve each.
+Rows within these panels are not independent intervention replicates.
+
+The panel manifest SHA-256 is
+`4fb25cb67e077bdce06ec729d74e40ba10501af15748e639b7e201db01bdbef2`.
+All prediction/source file hashes in both reports passed verification. Their
+row identities, fitting-only baselines, wrong-action availability, device and
+package versions match. Scoring, model and data code also match; the only
+scorer source change captures all dependency locks in the output. Swaps retain
+source, intervention mechanisms, cardinality and conditions while replacing
+gene identities.
+
+Lower MSE is better. Each row uses source-native normalized units; MSE must
+not be pooled across these modalities. Percentage change is XL relative to
+142M, so a positive value is a regression.
+
+| Source/modality | 142M MSE | XL MSE | Change | Fitting-mean MSE | XL wrong-gene MSE |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Human fitness | 0.124835 | 0.137873 | +10.44% | 0.219549 | 0.331206 |
+| K562 population RNA | 0.908667 | 0.895927 | -1.40% | 1.092016 | 1.245977 |
+| RPE1 population RNA | 0.654243 | 0.691846 | +5.75% | 0.763077 | 0.889017 |
+| HepG2 RNA | 1.035093 | 1.012558 | -2.18% | 1.189540 | 1.428855 |
+| GWPS RNA | 0.840586 | 0.841842 | +0.15% | 0.861600 | 0.863521 |
+| Norman RNA | 0.674013 | 0.585321 | -13.16% | 0.563122 | 0.636245 |
+| K562 single-cell RNA | 0.130753 | 0.131149 | +0.30% | 0.130679 | 0.132110 |
+| RPE1 single-cell RNA | 0.149687 | 0.152882 | +2.13% | 0.151276 | 0.153907 |
+| Frangieh single-cell RNA | 0.068827 | 0.072142 | +4.82% | 0.072526 | 0.072029 |
+| Frangieh single-cell protein | 1.546029 | 1.567289 | +1.38% | 1.944528 | 1.582329 |
+| Yeast molecular RNA | 0.341049 | 0.344195 | +0.92% | 0.410667 | 0.343893 |
+| Yeast fitness | 0.069174 | 0.071652 | +3.58% | 0.062874 | 0.078239 |
+
+XL improves **3 of 12** source/modality scores (3 of 10 human scores). This
+counts observed directions, not statistically significant wins. The 142M
+artifact remains the recommended default base: this XL run did not deliver a
+general improvement. Norman has the largest gain, but XL still loses to its
+fitting-only mean. Both models beat the human fitness fitting mean and incur
+substantially larger error with wrong genes; XL nevertheless regresses by
+10.4% against 142M on that same human panel.
+
+Single-cell intervention specificity remains weak. Replacing XL's genes
+increases cell-level error by less than 1% in K562 RNA, RPE1 RNA and Frangieh
+protein; it slightly improves Frangieh RNA. K562 and RPE1 cell-level predictions
+also lose to their fitting means. With interventions completely masked, XL MSE
+is 0.132644 for K562 RNA, 0.157296 for RPE1 RNA, 0.072575 for Frangieh RNA and
+1.586941 for Frangieh protein, close to its intact predictions. The 142M
+masked-action penalties were much larger, but its wrong-gene penalties were
+already small: a large mask penalty alone was not evidence of strong gene
+specificity.
+
+Within-panel pseudobulk aggregation does not reverse the overall result.
+K562 RNA improves by 1.10%, while RPE1 RNA worsens by 7.98%, Frangieh RNA by
+7.67% and Frangieh protein by 3.27%. These are means of unpaired cell samples,
+not reconstructed paired trajectories. Yeast remains diagnostic pretraining
+evidence: both bases lose to the fitting-mixture mean on the frozen fitness
+panel, and wrong genes slightly improve yeast molecular error. The separate
+larger development evaluation above likewise found no useful nonadditivity.
+
+The complete XL predictions, source capture and report are in
+`results/slp12-xl-base-evaluation-v1/`; report SHA-256 is
+`8411ba0bdac423259b6a29341edbee381d1db3aec7c28446f7933c0217833319`.
+The checked comparison and its reproducible analysis script are in
+`results/slp12-xl-base-comparison-v1/`; comparison report SHA-256 is
+`d29fc7b02c6cb43d1238e37b2ed75fcd4b573f9c25a95b2781cface3a6a8725b`.
+The original 142M report remains unchanged in
+`results/slp12-base-evaluation-v1/report.json`.
+
+
+## 2026-09-11 — Durable cloud source storage and development checkpoint
+
+Reused the existing private Cloudflare R2 bucket `abiome-artifacts`, prefix
+`slp/`, in account `5b7019b38a2b1c0ce119ecf64e92fd92`. Verified that public
+r2.dev access is disabled and no custom domains are attached. Deployed the
+authenticated `slp-corpus-ingest` Worker, which streams checksum-pinned publisher
+objects directly into R2. Its client on the Mac sends only control requests.
+
+All **20 objects, totaling 1,251,792,309 bytes**, in
+`storage/source-objects.json` were imported and independently checked with R2
+object size and checksum metadata. They include full Costanzo pairwise data,
+SLKB, Harle data/metadata, In4mer tables and SPIDR scores. The manifest and
+completion receipt are stored in
+`slp/manifests/2026-09-11-fitness-v1/` in the same bucket. A small local receipt
+is retained at `results/cloud-storage-20260911/verified-status.json`. No dataset
+payload passed through the Mac during this import, and no GPU was allocated.
+This is private source preservation, not preparation, CV3 admission or model
+fitting. The large molecular atlases are not part of this initial import.
+
+Unauthorized live access returned 401; authenticated object HEAD returned the
+expected size. Repeated imports of completed objects were checksum-verified
+without replacement. Seven focused Worker tests pass, covering authorization,
+manifest-only source selection, size/checksum contracts and no-overwrite retry
+behavior. Wrangler's deployment build passed. For the requested
+`slp-1.2-0910` checkpoint, the four focused SLp-1.2 Python test files also passed:
+**27 tests in 5.85 seconds**. Historical trained model artifacts remain in their
+existing artifact locations; the Git checkpoint captures source, architecture,
+configuration and recorded results rather than weight binaries.

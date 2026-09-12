@@ -9,6 +9,17 @@ application of the learned state.
 [Prepared data](https://huggingface.co/datasets/potteryrage/SLp-1.1-data) ·
 [Model card](MODEL_CARD.md) · [Development guide](docs/development.md)
 
+## SLp-1.2 development checkpoint
+
+The [1.2 implementation](modules/slp-1-2/CONTRACT.md) uses a shared transformer
+for molecular and quantitative fitness queries, with 142M and 345M parameter
+configurations. Completed pretraining and matched evaluations are recorded in
+the [model card](MODEL_CARD.md); the 142M base remains the default. Human SL
+post-training has not been run for 1.2. The [next-model architecture](docs/development.md#next-model-design-derived-from-strict-cv3)
+targets strict both-gene-withheld CV3 with broader experimental coverage and
+end-to-end human adaptation. It is the next development design, not a claim
+that the completed base already implements or achieves that objective.
+
 ## SLp-1.1
 
 The release combines a 14.12M-parameter generative molecular world with a
@@ -70,8 +81,14 @@ exposes continuous viability and conditional fitness. Joint `encode`,
 ## Work on the model
 
 Published artifact revisions are listed in [artifacts.lock.json](artifacts.lock.json).
-Run `python scripts/fetch_artifacts.py data` to download the prepared inputs for
-the [training and evaluation commands](docs/development.md).
+New source datasets live in private Cloudflare R2 under
+`s3://abiome-artifacts/slp/`; [storage configuration](storage/wrangler.jsonc) and
+the [checksum-pinned source manifest](storage/source-objects.json) are in this
+repo. `python scripts/cloud_data.py ingest` asks Cloudflare to copy the pinned
+sources directly from their publishers. Only small JSON responses reach the
+Mac. See the [cloud storage workflow](docs/development.md#cloud-dataset-storage).
+On a cloud training host, `python scripts/fetch_artifacts.py data` still obtains
+the historical prepared inputs for the [training commands](docs/development.md).
 Open Model Factory 2 records experiments and artifact replay; its exact runtime
 is pinned in [omf-version.json](omf-version.json).
 
@@ -80,6 +97,7 @@ is pinned in [omf-version.json](omf-version.json).
 | `modules/`, `src/`, `scripts/`, `tests/` | Source, self-contained model modules and verification |
 | `experiment*.yaml`, `workloads/`, `evaluations/`, `bindings/`, `policies/` | Versioned experiment and execution configuration |
 | `sources/`, `rights/`, `schemas/` | Source descriptions, rights receipts and data schemas |
+| `storage/` | Private R2 destination, source inventory and cloud ingestion service |
 | `MODEL_CARD.md` | Maintained scientific description of SLp-1.1 |
 | `docs/` | Development guide, module reference, literature and results ledger |
 | `model/v1/` | Frozen SLp-1 source and model card |
