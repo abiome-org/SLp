@@ -23,7 +23,7 @@ def check_file(root, spec):
     return path
 
 
-def views(data_path, features, fold, stage, cache, taxa=None):
+def views(data_path, features, fold, stage, cache, taxa=None, center_rna_queries=False):
     data_path = Path(data_path)
     spec = json.loads(data_path.read_text())
     root = data_path.parent
@@ -51,7 +51,12 @@ def views(data_path, features, fold, stage, cache, taxa=None):
             )
             continue
         try:
-            result.append(population.View(path, genes, fold, stage, taxa=taxa))
+            result.append(
+                population.View(
+                    path, genes, fold, stage, taxa=taxa,
+                    center_queries=center_rna_queries,
+                )
+            )
         except ValueError as exc:
             if str(exc) != "No admitted molecular fitting populations":
                 raise
@@ -136,6 +141,7 @@ def main(args):
         args.stage,
         Path(args.cache) if args.cache else output.parent / "packed-cache",
         taxa=phase.get("taxa"),
+        center_rna_queries=phase.get("center_rna_queries", False),
     )
     config = Config(**recipe["model"])
     baseline = recipe.get("baseline")
@@ -296,6 +302,11 @@ def main(args):
         if quantitative
         else [],
     }
+    output_transforms = [
+        v.output_transform for v in data_views if hasattr(v, "output_transform")
+    ]
+    if output_transforms:
+        identity["numeric_output_transforms"] = output_transforms
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=phase["learning_rate"],

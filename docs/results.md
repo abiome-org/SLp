@@ -8828,3 +8828,63 @@ therefore cannot outrun the model-quality decision.
 An analytic gradient test covers the new MSE path, unequal query counts,
 unchanged BCE, and zero uncertainty-head gradient; the existing exact
 checkpoint-continuation test and two specificity tests also pass.
+
+### 2026-09-13 — MSE results and centered-response continuation
+
+The MSE comparison completed at **22:08:23 UTC**. Its first-inner-fold SL
+results remain below the direct MLP's AP 0.577127:
+
+| MSE initializer | AP | AUROC |
+|---|---:|---:|
+| Human, update 2,000 | 0.485325 | 0.568370 |
+| Human, update 8,000 | 0.538450 | 0.633742 |
+| Human/yeast, update 2,000 | 0.548537 | 0.622502 |
+| Human/yeast, update 8,000 | 0.563711 | 0.654136 |
+
+MSE improves numerical fitting. At update 8,000, human and mixed DepMap MSE
+are **0.677211** and **0.627223**, respectively, versus the fitting mean's
+0.766749. Wrong-gene substitutions increase MSE by 0.296858 and 0.307765.
+The mixed model's K562 RNA MSE is 0.373312 versus 0.016301 for the per-query
+mean; GWPS is 1.287266 versus 1.274388; yeast is 0.487566 versus 0.429364.
+RNA substitution penalties remain near zero. This is improved fitness fitting
+with persistent RNA failure, not a demonstrated strong SL model.
+
+Both update-8,000 MSE base checkpoints and their fitting metadata are verified
+in R2 at `campaign-r2-research-20260913-mse-pretrained8k`, totaling
+**2,961,058,502 bytes**. The earlier best SL-only human adaptation checkpoint
+is verified under `campaign-r2-research-20260913-sl-only-human8k`.
+All paths are below `slp/runs/slp-1.2-r2/`. Complete MSE metrics and specificity
+reports are retained locally as small metadata under the campaign state directory.
+
+A separate read-only SL fitting diagnostic confirms a large generalization gap.
+It uses 24,158 permitted fitting pairs and the same 1,291 inner-validation pairs;
+its validation values exactly reproduce the saved score reports.
+
+| Candidate | Fitting AUROC | Inner-validation AUROC |
+|---|---:|---:|
+| Feature MLP | 0.888412 | 0.651552 |
+| Human Student-t update 8,000, SL-only adaptation | 0.835906 | 0.645533 |
+| No pretraining, SL-only adaptation | 0.812186 | 0.652774 |
+
+The next comparison started at **22:09:43 UTC** in the separately captured
+directory `/workspace/slp-r2-centered`. It keeps MSE, source sampling, fresh
+initialization, 8,000 pretraining updates and 1,000 SL-only adaptation updates.
+Only RNA response centering and residual standardization are added. Statistics
+are fitted after the intervention mask, include only observed coordinates,
+and are carried in checkpoint identity. Diagnostics restore original metric
+coordinates and compare with conditional fitting means so nuisance-statistic
+gains cannot be mistaken for learned prediction skill.
+
+Source and recipes are verified under
+`campaign-r2-research-20260913-centered-source`. Driver SHA-256 is
+`fb66cc313f0c88792db1e434f298159e1bfdfe983deec22c4039979c151e7f4d`;
+diagnostic SHA-256 is
+`e1514f524013ef9b6bf8de0431f083b258db17f311fcd9157475f820049b7e95`.
+Three targeted core/CLI tests and three diagnostic tests pass, including
+held/absent-outcome exclusion, exact inverse normalization, changed-transform
+resume rejection, and ordinary fitting/scoring initialization contracts.
+The new process deadline is **23:23:13 UTC**, followed by the controller hold
+guard at **23:24:43 UTC**. The original campaign controller remains paused,
+official outer test data remain unopened, and financial guards and the total
+$50 cap are unchanged. Further choices using this inner partition are
+development feedback; no independent SOTA conclusion follows from them.

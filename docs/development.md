@@ -1059,3 +1059,31 @@ waits on a one-byte start gate until its process group is recorded, so its
 eventual termination receipt retains the correct guard identity. Resume the
 trainer from a verified checkpoint with time reserved for finalization; restart
 the collector so it reads the updated allocation receipt.
+## RNA response centering during r2 development
+
+The first research run learned little RNA intervention specificity. Its K562
+fitting error was far above a fitting per-query mean, and removing quantitative
+replay during human SL adaptation helped some checkpoints. A subsequent MSE
+comparison keeps the architecture fixed. The next prepared comparison centers
+RNA outputs by query and experimental template using only permitted fitting
+interventions and observed coordinates, then fits one residual scale per assay.
+The means are nuisance statistics estimated from perturbed populations, not
+measured controls. They do not enter action representations or SL inference.
+
+`pretrain.center_rna_queries` and `adapt.center_rna_queries` select this explicit
+transform. Its means, fitting counts, query identities and inverse scales are
+included in checkpoint identity. Exact resume rejects changed transforms. The
+default remains the original processed-score objective and representation;
+separate source directories preserve original experiments during repairs.
+Diagnostics undo centering before comparing predictions in the original assay
+standardization and report a conditional fitting-mean comparator separately.
+Gains from fitting the baseline must not be presented as neural world-model
+skill. Inference bundles currently expose human SL prediction; a numeric output
+requires the recorded source/query normalization to recover native units.
+
+Static feature coverage and informativeness are different. Approximately
+95–99% of prepared RNA query genes have frozen ESM2 protein features. The
+current 64-dimensional annotation input contains species and locus-group flags,
+not functional GO or interaction-network annotations. High coverage therefore
+does not imply rich functional annotation. The strict fitting-data contract
+allows provenance-bearing observational/static data for withheld genes.

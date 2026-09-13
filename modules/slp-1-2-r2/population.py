@@ -49,7 +49,9 @@ def fetch(job, directory):
 
 
 class View:
-    def __init__(self, path, genes, fold, stage, *, verify=True, taxa=None):
+    def __init__(
+        self, path, genes, fold, stage, *, verify=True, taxa=None, center_queries=False
+    ):
         if stage not in ("pretrain", "adapt"):
             raise ValueError("Unknown fitting stage")
         self.root = Path(path).parent
@@ -159,8 +161,47 @@ class View:
                 for f in self.families
             ],
         }
-        self.signature = hashlib.sha256(encode(self.receipt).encode()).hexdigest()
+        self.query_offsets = None
         self.scales = self._scales(eligible)
+        self.native_scales = self.scales.copy()
+        if center_queries:
+            self.query_offsets, counts = self._query_offsets(eligible)
+            self.scales = self._scales(eligible)
+            # All fitted nuisance statistics enter the checkpoint identity.
+            # They are not learned gene embeddings or intervention features.
+            self.output_transform = {
+                "schema": "slp.rna-query-centering/v1",
+                "manifest_sha256": digest(path),
+                "queries": [genes[int(i)] for i in self.query],
+                "templates": self.templates,
+                "offsets": self.query_offsets.tolist(),
+                "fitting_counts": counts.tolist(),
+                "scales": [
+                    s.tolist() if np.isfinite(s).all() else None for s in self.scales
+                ],
+                "meaning": "fitting-population query means; not measured controls",
+            }
+            self.receipt["query_centering_sha256"] = hashlib.sha256(
+                encode(self.output_transform).encode()
+            ).hexdigest()
+        self.signature = hashlib.sha256(encode(self.receipt).encode()).hexdigest()
+
+    def _query_offsets(self, eligible):
+        total = np.zeros((len(self.templates), len(self.query)), np.float64)
+        count = np.zeros_like(total, dtype=np.int64)
+        for lo in range(0, len(eligible), 256):
+            selected = eligible[lo : lo + 256]
+            tid = self.rows["template"][selected]
+            values = np.asarray(self.targets[selected], np.float64)
+            mask = np.asarray(self.observed[selected], bool)
+            for t in np.unique(tid):
+                at = tid == t
+                total[t] += np.where(mask[at], values[at], 0).sum(0)
+                count[t] += mask[at].sum(0)
+        return (
+            np.divide(total, count, out=np.zeros_like(total), where=count > 0),
+            count,
+        )
 
     def _scales(self, eligible):
         groups = {}
@@ -168,6 +209,8 @@ class View:
             selected = eligible[lo : lo + 256]
             tid = self.rows["template"][selected]
             values = np.asarray(self.targets[selected], np.float64)
+            if self.query_offsets is not None:
+                values -= self.query_offsets[tid]
             observed = self.observed[selected]
             for t in np.unique(tid):
                 spec = self.templates[int(t)]
@@ -210,6 +253,8 @@ class View:
         rows = np.repeat(self.rows[[i]], len(selected))
         rows["query"] = self.query[selected]
         rows["value"] = self.targets[i, selected]
+        if self.query_offsets is not None:
+            rows["value"] -= self.query_offsets[int(self.rows["template"][i]), selected]
         return rows
 
 

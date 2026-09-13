@@ -385,6 +385,25 @@ def test_dense_populations_filter_before_scaling_and_resume_mixture(
     with pytest.raises(StopIteration):
         mixture.draw()
 
+    centered = population.View(
+        path, genes, records.Fold("fixture", frozenset({"9606:A"})), "pretrain",
+        center_queries=True,
+    )
+    # The excluded 1e9 row and unobserved final value enter neither statistic.
+    np.testing.assert_allclose(centered.query_offsets, [[2.5, 3.5, 3.0]])
+    np.testing.assert_allclose(centered.scales, [[0.0, 1.5]])
+    transform = json.loads(json.dumps(centered.output_transform, allow_nan=False))
+    assert transform["fitting_counts"] == [[2, 2, 1]]
+    centered_mix = population.Mixture([centered], {"rna": 1.0}, max_cycles=1)
+    with pytest.raises(ValueError, match="Changed molecular/corpus mixture"):
+        centered_mix.load_state_dict(state)
+    for _ in range(2):
+        rows = centered_mix.draw()
+        unit = int(np.flatnonzero(arrays["units.npy"]["unit"] == rows["unit"][0])[0])
+        query = rows["query"]
+        offset = np.asarray(transform["offsets"])[rows["template"], query]
+        np.testing.assert_allclose(rows["value"] + offset, arrays["targets.npy"][unit, query])
+
 
 def fixture():
     torch.manual_seed(29)

@@ -6,7 +6,7 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from slp12_r2_specificity import query_mean, wrong_identity
+from slp12_r2_specificity import original_coordinates, query_mean, wrong_identity
 
 
 def test_wrong_identity_preserves_targets_context_and_action_semantics():
@@ -34,3 +34,19 @@ def test_query_mean_uses_only_admitted_observed_fitting_coordinates():
         observed=np.array([[True, False], [True, True], [True, True]]),
     )
     assert query_mean(view) == {14: 2.0, 18: 8.0}
+
+
+def test_centered_diagnostic_restores_original_metric_coordinates():
+    view = SimpleNamespace(
+        query=np.array([7, 3]),
+        query_offsets=np.array([[10.0, 20.0]]),
+        scales=np.array([[0.0, 2.0]]),
+        native_scales=np.array([[12.0, 4.0]]),
+    )
+    gain, shift = original_coordinates(view, 0, np.array([3, 7]))
+    # Centered predictions [1, -2] mean native measurements [22, 6].
+    np.testing.assert_allclose(np.array([1.0, -2.0]) * gain + shift, [2.5, -1.5])
+    raw = SimpleNamespace()
+    gain, shift = original_coordinates(raw, 0, np.array([3, 7]))
+    np.testing.assert_array_equal(gain, [1.0, 1.0])
+    np.testing.assert_array_equal(shift, [0.0, 0.0])

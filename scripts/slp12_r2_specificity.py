@@ -40,6 +40,20 @@ def query_mean(view):
     return {int(g): float(v) for g, v in zip(view.query, mean)}
 
 
+def original_coordinates(view, template, query):
+    """Undo fitted query centering into the original assay-standardized space."""
+    if getattr(view, "query_offsets", None) is None:
+        return np.ones(len(query)), np.zeros(len(query))
+    position = {int(g): i for i, g in enumerate(view.query)}
+    offset = view.query_offsets[template, [position[int(g)] for g in query]]
+    native_mean, native_std = view.native_scales[template]
+    mean, std = view.scales[template]
+    return (
+        np.full(len(query), std / native_std),
+        (offset + mean - native_mean) / native_std,
+    )
+
+
 def main(args):
     sys.path.insert(0, str(args.root))
     from benchmarks import Benchmark
@@ -58,14 +72,15 @@ def main(args):
     fold = Benchmark(args.root / "protocols/musl-s42-f0-fold.json", features).fold(
         "inner"
     )
+    recipe = json.loads((args.root / "campaign/mixed_pretraining.json").read_text())
     data_views, _, basal = views(
         args.root / "mixed-corpus.json",
         features,
         fold,
         "pretrain",
         args.root / "packed-cache",
+        center_rna_queries=recipe["pretrain"].get("center_rna_queries", False),
     )
-    recipe = json.loads((args.root / "campaign/mixed_pretraining.json").read_text())
     mixture = population.Mixture(
         data_views, recipe["pretrain"]["quantitative_weights"], seed=90217
     )
@@ -76,9 +91,9 @@ def main(args):
         if family["source"] not in wanted:
             continue
         mean = query_mean(view)
-        units, baselines = [], []
+        units, baselines, transforms = [], [], []
         for _ in range(8):
-            group, baseline, seen = [], [], set()
+            group, baseline, transform, seen = [], [], [], set()
             for attempt in range(20000):
                 rows = mixture.children[i].draw_family(j, 128)
                 ids = rows["targets"][0]
@@ -91,13 +106,15 @@ def main(args):
                     assert genes[int(ids[0])] not in fold.forbidden
                 values = np.zeros(len(rows), np.float32)
                 if mean is not None:
+                    scale = getattr(view, "native_scales", view.scales)[tid]
                     values = np.array(
                         [
-                            (mean[int(g)] - view.scales[tid, 0]) / view.scales[tid, 1]
+                            (mean[int(g)] - scale[0]) / scale[1]
                             for g in rows["query"]
                         ],
                         np.float32,
                     )
+                transform.append(original_coordinates(view, tid, rows["query"]))
                 rows["template"] += mixture.offsets[i]
                 group.append(rows)
                 baseline.append(values)
@@ -107,7 +124,8 @@ def main(args):
                 raise ValueError("Insufficient distinct single-action units")
             units.append(group)
             baselines.append(baseline)
-        panels.append((family["source"], units, baselines, mean is not None))
+            transforms.append(transform)
+        panels.append((family["source"], units, baselines, mean is not None, transforms))
     if {x[0] for x in panels} != wanted:
         raise ValueError("Diagnostic source coverage incomplete")
     report = {
@@ -119,6 +137,9 @@ def main(args):
         "interventions_per_source": 128,
         "forbidden_human_exposures": 0,
         "models": {},
+        "numeric_loss": recipe["pretrain"].get("numeric_loss", "student_t"),
+        "center_rna_queries": recipe["pretrain"].get("center_rna_queries", False),
+        "metric_units": "original fitting-assay standardization, centering undone",
     }
     for variant in ("human_pretraining", "mixed_pretraining"):
         for update in (2000, 8000):
@@ -139,9 +160,10 @@ def main(args):
                 basal,
             )
             result = {"checkpoint_sha256": digest(file), "sources": {}}
-            for source, groups, baselines, per_query in panels:
+            for source, groups, baselines, per_query, transforms in panels:
                 truth, correct, wrong, reference, scales = [], [], [], [], []
-                for units, baseline in zip(groups, baselines):
+                conditional_means = []
+                for units, baseline, transform in zip(groups, baselines, transforms):
                     batch = {k: v.cuda() for k, v in builder(units).items()}
                     assert batch["action_mask"].sum(1).eq(1).all()
                     with (
@@ -151,9 +173,12 @@ def main(args):
                         output = model(batch)
                         swapped = model(wrong_identity(batch))
                     mask = batch["query_mask"]
-                    truth.append(batch["target"][mask].float().cpu().numpy())
-                    correct.append(output["location"][mask].float().cpu().numpy())
-                    wrong.append(swapped["location"][mask].float().cpu().numpy())
+                    gain = np.concatenate([t[0] for t in transform])
+                    shift = np.concatenate([t[1] for t in transform])
+                    truth.append(batch["target"][mask].float().cpu().numpy() * gain + shift)
+                    correct.append(output["location"][mask].float().cpu().numpy() * gain + shift)
+                    wrong.append(swapped["location"][mask].float().cpu().numpy() * gain + shift)
+                    conditional_means.append(shift)
                     scales.append(output["log_scale"][mask].float().cpu().numpy())
                     reference.append(np.concatenate(baseline))
                 y, p, w, b, scale = (
@@ -161,6 +186,12 @@ def main(args):
                     for v in (truth, correct, wrong, reference, scales)
                 )
                 metrics = numeric_metrics(y, p, fitting_mean=b, wrong_gene_prediction=w)
+                if per_query and report["center_rna_queries"]:
+                    mean_mse = float(np.square(y - np.concatenate(conditional_means)).mean())
+                    metrics["conditional_fitting_mean_mse"] = mean_mse
+                    metrics["skill_over_conditional_fitting_mean"] = (
+                        1 - metrics["mse"] / mean_mse if mean_mse else None
+                    )
                 metrics.update(
                     baseline="fitting per-query mean"
                     if per_query

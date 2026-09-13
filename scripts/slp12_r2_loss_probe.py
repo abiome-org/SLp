@@ -20,7 +20,7 @@ def main(args):
     report = {
         "schema": "slp.r2-numeric-loss-probe/v1",
         "scope": "musl-s42-f0 inner only; development selection",
-        "change": "fresh MSE quantitative pretraining, SL-only adaptation",
+        "change": args.tag + " fresh quantitative pretraining, SL-only adaptation",
         "started_at": time.time(),
         "deadline": args.deadline,
         "source": {
@@ -78,7 +78,7 @@ def main(args):
             complete = json.loads((run / "complete.json").read_text())
             if complete["result"]["completed_update"] != 1000:
                 raise ValueError("Incomplete SL adaptation comparison")
-            name = f"{variant}-mse-u{update:06d}"
+            name = f"{variant}-{args.tag}-u{update:06d}"
             command(
                 [root / "score.py", "--checkpoint", run / "checkpoint.pt",
                  "--features", data_root / "features", "--fold",
@@ -107,4 +107,5 @@ if __name__ == "__main__":
     parser.add_argument("--specificity", type=Path, required=True)
     parser.add_argument("--deadline", type=float, required=True)
     parser.add_argument("--allocation-deadline", type=float, required=True)
+    parser.add_argument("--tag", default="mse")
     main(parser.parse_args())
