@@ -26,13 +26,9 @@ POPULATIONS = [
 ]
 
 
-def main(args):
-    start = time.monotonic()
-    root = Path(args.root)
-    output = root / "mixed-readiness"
-    output.mkdir(exist_ok=True)
-    if args.deadline - time.time() < 1200:
-        raise ValueError("Insufficient guarded mixed-corpus readiness window")
+def prepare(root):
+    """Materialize the already admitted corpus on cloud disk, without fitting."""
+    root = Path(root)
     packed = [
         fetch_shards(
             "pack-human-r2-20260912-v1",
@@ -71,6 +67,17 @@ def main(args):
     }
     data_path = root / "mixed-corpus.json"
     data_path.write_text(json.dumps(data, sort_keys=True))
+    return data_path, data, receipt
+
+
+def main(args):
+    start = time.monotonic()
+    root = Path(args.root)
+    output = root / "mixed-readiness"
+    output.mkdir(exist_ok=True)
+    if args.deadline - time.time() < 1200:
+        raise ValueError("Insufficient guarded mixed-corpus readiness window")
+    data_path, data, receipt = prepare(root)
     phase = {
         "quantitative_weights": {"rna": 0.5, "fitness": 0.25, "interaction": 0.25},
         "temperature": 0.7,

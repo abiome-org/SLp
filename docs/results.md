@@ -8574,3 +8574,71 @@ was on the deleted pod, so completing that separate remote persistence check
 after authorization requires recreating a short disposable run. The saved
 inference bundles are not resumable optimizer checkpoints. Research training
 and official outer-test scoring remain unlaunched.
+
+### Readiness completed — 2026-09-13
+
+The remaining engineering work was completed against the admitted corpus.
+Costanzo is explicitly excluded from this campaign, so its unresolved source
+permission is no longer treated as a prerequisite for launching that corpus.
+Research training and official real-data SL scoring remain unlaunched.
+
+A second bounded preparation allocation used one 4090 (`pybdl2g8trwozp`) with
+independent local and in-pod guards, a 90-minute deadline, and a $1.14288 maximum
+GPU/disposable-disk estimate. Together with the prior $2.133 preparation estimate,
+the maximum was $3.27588 before Cloudflare charges. The admitted corpus and
+verified frozen features were materialized directly from R2 in 135.14 seconds.
+
+The full model ran eight disposable pretraining updates, retaining update four.
+Its **1,424,919,131-byte** optimizer/RNG/sampler checkpoint was published to
+`slp/prepared/optimizer-readiness-r2-20260912-v1/`, SHA-256
+`56e055f755ad8c78a183e907153efdc0df268cd9d90569a16ff49faed44d58b5`.
+Automatic approval review initially rejected this exact payload again. A read-only
+schema/provenance audit found only the admitted public sources, zero forbidden
+human intervention overlap, and zero credential-marker matches among 46,998
+strings. Re-review then accepted the same explicit upload operation. No alternate
+export route or reusable credential transfer was used.
+
+The checkpoint was restored from R2, resumed from update four through update
+eight, and compared with uninterrupted execution. **Every value in the complete
+saved state matched bit for bit**, including weights, optimizer, sampler and RNG
+state. Eight subsequent human-only adaptation updates also passed. Verification
+and continuation took **193.97 seconds**, excluding the initial corpus preparation
+and first upload. Peak allocated GPU memory was approximately 2.46 GB. Two unused
+preinstalled multimedia packages with obsolete Torch constraints were removed;
+the application retains its pinned Torch 2.11.0/cu128 dependencies.
+
+The executable nested-campaign runner now handles inner comparisons, selection
+within each outer fold, fresh outer refitting, official scoring, stage publication,
+archive limits and recovery. An early-checkpoint refit preserves the original
+learning-rate schedule; a focused numerical test compares that prefix exactly.
+A synthetic end-to-end run exercises the ordinary fitting and scoring CLIs through
+selection, outer refitting and export, including the default execution hold.
+The real benchmark test labels remain untouched. Retained-checkpoint aliases are
+restored alongside their canonical files so cold recovery can still find each
+requested pretraining probe.
+
+**25 focused local tests** and **six preparation Worker tests** pass. The live
+campaign ticket broker also published a 94-byte synthetic receipt and verified
+its immutable R2 manifest under the campaign prefix. Numeric model/fitting code
+matches the final CUDA receipt; later campaign-control changes have focused local
+coverage. The source allowlist excludes runtime transfer-ticket files.
+
+The reviewed campaign proposal remains five comparisons across thirty outer
+folds. The revised estimate is **$49.89**, comprising $40.64 for GPU/disposable
+disk including a 25% reserve, and $9.25 for the first month of R2 storage and
+operations. This includes a conservative 600 GB archive allowance at
+[$0.015/GB-month](https://developers.cloudflare.com/r2/pricing/), with archive
+growth checked before new publications. This is an estimate, not a fixed quote;
+actual allocation is bounded by the authorized amount and fresh account credit.
+
+The live campaign restore also passed with read-only exact-file capabilities;
+the synthetic receipt's bytes and hash matched its published manifest. The final
+pod environment passed `pip check`. Preparation pod `pybdl2g8trwozp` was deleted
+at **2026-09-13 18:54:39 UTC**, its absence was verified, and its local guard was
+stopped. No RunPod pods remained. The combined elapsed GPU/disposable-disk estimate
+for both preparation allocations is **$2.7413**, before Cloudflare charges.
+The resumable checkpoint, corpus, frozen features and inference bundles remain
+in private R2. Engineering readiness is complete; research launch is the only
+remaining user-controlled step.
+All thirty Cloudflare preparation container instances were confirmed inactive
+after cleanup. The local build VM remained stopped throughout this final pass.

@@ -761,7 +761,7 @@ def test_ordinary_fit_pretrain_then_human_adaptation_and_initializer_exclusion(
         updates=2,
         batch_size=4,
         max_seconds=30,
-        checkpoint_every=2,
+        checkpoint_every=1,
         learning_rate=0.001,
         weight_decay=0.01,
         warmup=1,
@@ -816,6 +816,27 @@ def test_ordinary_fit_pretrain_then_human_adaptation_and_initializer_exclusion(
 
     result = run("pretrain")
     assert result.returncode == 0, result.stderr
+    prefix_recipe = copy.deepcopy(recipe)
+    prefix_recipe["pretrain"]["stop_at_update"] = 1
+    (tmp_path / "prefix-recipe.json").write_text(json.dumps(prefix_recipe))
+    prefix_result = run(
+        "pretrain",
+        [
+            "--recipe",
+            str(tmp_path / "prefix-recipe.json"),
+            "--output",
+            str(tmp_path / "prefix"),
+        ],
+    )
+    assert prefix_result.returncode == 0, prefix_result.stderr
+    retained = torch.load(
+        tmp_path / "pretrain/checkpoint-u000001.pt", weights_only=True
+    )
+    refitted_prefix = torch.load(tmp_path / "prefix/checkpoint.pt", weights_only=True)
+    for name, tensor in retained["model"].items():
+        torch.testing.assert_close(
+            tensor, refitted_prefix["model"][name], rtol=0, atol=0
+        )
     assert (
         torch.load(tmp_path / "pretrain/checkpoint-u000002.pt", weights_only=True)[
             "update"
@@ -868,6 +889,170 @@ def test_ordinary_fit_pretrain_then_human_adaptation_and_initializer_exclusion(
         ],
     )
     assert result.returncode != 0 and "exposure contract" in result.stderr
+    exercise_nested_campaign(tmp_path, monkeypatch, recipe, fold, b)
+
+
+def exercise_nested_campaign(root, monkeypatch, recipe, fold, benchmark):
+    """Real fitting/scoring CLIs; synthetic biology and an in-memory publisher."""
+    import gzip
+    import shutil
+    import time
+    from types import SimpleNamespace
+
+    monkeypatch.syspath_prepend(str(ROOT / "modules/slp-1-2-r2"))
+    campaign = module("campaign")
+    protocols = root / "protocols"
+    shutil.copytree(benchmark, protocols)
+    rows = [
+        dict(row=i, targets=["9606:A", "9606:B"], label=i, context="pan-cancer")
+        for i in (0, 1)
+    ]
+    payload = gzip.compress(b"\n".join(json.dumps(r).encode() for r in rows))
+    (protocols / "test.jsonl.gz").write_bytes(payload)
+    test_manifest = dict(
+        rows=2,
+        shards=[
+            dict(
+                name="test.jsonl.gz",
+                bytes=len(payload),
+                sha256=data.digest(protocols / "test.jsonl.gz"),
+            )
+        ],
+    )
+    (protocols / "test.json").write_text(json.dumps(test_manifest))
+    fold = copy.deepcopy(fold)
+    fold["partitions"]["test"] = "test.json"
+    (protocols / "fold.json").write_text(json.dumps(fold))
+    shutil.copyfile(root / "data.json", root / "mixed-corpus.json")
+    packet = root / "campaign"
+    packet.mkdir()
+    (packet / "mixed.json").write_text(json.dumps(recipe))
+    run = root / "runs/fixture/mixed_pretraining"
+    fitting = [
+        sys.executable,
+        "fit.py",
+        "--features",
+        str(root / "features"),
+        "--data",
+        str(root / "mixed-corpus.json"),
+        "--fold",
+        str(protocols / "fold.json"),
+        "--recipe",
+        str(packet / "mixed.json"),
+        "--scope",
+        "inner",
+        "--stage",
+        "pretrain",
+        "--deadline",
+        str(time.time() + 1200),
+        "--device",
+        "cpu",
+        "--output",
+        str(run / "pretrain"),
+    ]
+    probes = []
+    for point in (1, 2):
+        adapted = run / f"adapt-u{point:06d}"
+        command = list(fitting)
+        command[command.index("--stage") + 1] = "adapt"
+        command[command.index("--output") + 1] = str(adapted)
+        command += [
+            "--initialize",
+            str(run / "pretrain" / f"checkpoint-u{point:06d}.pt"),
+        ]
+        score = [
+            sys.executable,
+            "score.py",
+            "--checkpoint",
+            str(adapted / "checkpoint.pt"),
+            "--features",
+            str(root / "features"),
+            "--fold",
+            str(protocols / "fold.json"),
+            "--basal",
+            str(adapted / "basal.json"),
+            "--output",
+            str(adapted / "inner-scores"),
+            "--candidate",
+            f"mixed_pretraining-u{point:06d}",
+            "--scope",
+            "inner",
+            "--device",
+            "cpu",
+        ]
+        probes.append(
+            dict(
+                checkpoint_update=point,
+                adaptation_command=command,
+                scoring_command=score,
+            )
+        )
+    protocol = dict(
+        name="fixture",
+        benchmark="fixture",
+        file="fold.json",
+        job="synthetic",
+        partition_manifests={
+            k: dict(name=v, manifest=json.loads((protocols / v).read_text()))
+            for k, v in fold["partitions"].items()
+        },
+    )
+    plan = dict(
+        schema="slp.r2-training-packet/v1",
+        protocols=[protocol],
+        variants={"mixed_pretraining": {"recipe": "mixed.json"}},
+        inner_jobs=[
+            dict(
+                fold="fixture",
+                candidate="mixed_pretraining",
+                pretraining_updates=2,
+                fitting_command=fitting,
+                probes=probes,
+            )
+        ],
+    )
+    (packet / "plan.json").write_text(json.dumps(plan))
+    args = SimpleNamespace(
+        root=str(root),
+        plan=str(packet / "plan.json"),
+        run_id="synthetic",
+        deadline=time.time() + 1200,
+        execute_research=False,
+        allow_outer_test=True,
+    )
+    runner = campaign.Runner(args)
+    # Suite-size/source validation is separate; this fixture executes one tiny
+    # fold through the exact production control flow and numerical CLIs.
+    monkeypatch.setattr(runner, "validate", lambda: None)
+    assert runner.run()["training_launched"] is False
+    assert not (root / "runs").exists()
+    published = []
+
+    def publish(directory, label):
+        assert directory.exists()
+        published.append(label)
+        return {
+            "job": label,
+            "files": {
+                p.name: data.digest(p) for p in directory.iterdir() if p.is_file()
+            },
+        }
+
+    monkeypatch.setattr(runner, "publish", publish)
+    original_inputs = runner.inputs
+
+    def inputs(spec, partition):
+        if partition == "test":
+            assert "fixture-outer-adapt" in runner.saved["stages"]
+        return original_inputs(spec, partition)
+
+    monkeypatch.setattr(runner, "inputs", inputs)
+    args.execute_research = True
+    assert runner.run() == {"state": "complete", "folds": 1}
+    assert runner.saved["folds"]["fixture"]["metrics"]["n"] == 2
+    assert runner.saved["folds"]["fixture"]["metrics"]["forbidden_human_exposures"] == 0
+    assert not (root / "runs/fixture").exists()
+    assert "fixture-outer-bundle" in published
 
 
 def test_direct_baselines_are_symmetric_inductive_and_trainable():
@@ -934,6 +1119,7 @@ def test_checkpoint_publication_captures_atomic_snapshot_without_credentials(
     tmp_path, monkeypatch
 ):
     from types import SimpleNamespace
+    import urllib.error
 
     net, b = fixture()
     optimizer = torch.optim.AdamW(net.parameters())
@@ -953,10 +1139,17 @@ def test_checkpoint_publication_captures_atomic_snapshot_without_credentials(
         assert data.digest(snapshot) == expected
         return {"files": {"checkpoint.pt": {"sha256": expected}}}
 
+    def absent(*args):
+        raise urllib.error.HTTPError(
+            "https://synthetic.invalid", 404, "missing", {}, None
+        )
+
     monkeypatch.setitem(
         sys.modules,
         "cloud_io",
-        SimpleNamespace(upload_directory=publish, download_directory=None),
+        SimpleNamespace(
+            upload_directory=publish, download_directory=None, get_json=absent
+        ),
     )
     monkeypatch.setitem(sys.modules, "data", data)
     monkeypatch.setitem(sys.modules, "train", train)
@@ -978,3 +1171,143 @@ def test_checkpoint_publication_captures_atomic_snapshot_without_credentials(
     finally:
         sys.path[:] = before
     assert path.read_bytes() == b"next atomic checkpoint"
+
+
+def test_campaign_selection_is_per_outer_fold_and_preserves_schedule(monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / "modules/slp-1-2-r2"))
+    campaign = module("campaign")
+    fold = {"name": "a", "benchmark": "musl"}
+    reports = [
+        dict(
+            partition="inner",
+            forbidden_human_exposures=0,
+            benchmark="musl",
+            fold="a",
+            checkpoint=k,
+            average_precision=v,
+        )
+        for k, v in [("direct", 0.4), ("mixed-u002000", 0.6)]
+    ]
+    assert (
+        campaign.choose(reports, fold, ["direct", "mixed-u002000"])["selected"]
+        == "mixed-u002000"
+    )
+    with pytest.raises(ValueError, match="Incomplete"):
+        campaign.choose(reports[:1], fold, ["direct", "mixed-u002000"])
+    reports[1]["fold"] = "different-outer-fold"
+    with pytest.raises(ValueError, match="Incomplete"):
+        campaign.choose(reports, fold, ["direct", "mixed-u002000"])
+    recipe = {"pretrain": {"updates": 8000, "retain_updates": [2000, 8000]}}
+    refit = campaign.outer_recipe(recipe, 2000)
+    assert refit["pretrain"]["updates"] == 8000
+    assert refit["pretrain"]["stop_at_update"] == 2000
+    assert "stop_at_update" not in recipe["pretrain"]
+
+
+def test_campaign_broker_restricts_publication_and_outer_label_access(monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    import slp12_r2_broker as broker
+
+    plan = {
+        "inner_jobs": [],
+        "protocols": [
+            {
+                "name": "fold0",
+                "job": "protocol-r2-20260912-v4",
+                "partition_manifests": {
+                    "test": {
+                        "name": "fold0-test-manifest.json",
+                        "manifest": {
+                            "shards": [
+                                {"name": "fold0-test-00000.jsonl.gz", "bytes": 32}
+                            ]
+                        },
+                    }
+                },
+            }
+        ],
+    }
+    request = {
+        "job": "campaign-r2-check-fold0-outer-adapt-u001000",
+        "files": {"checkpoint.pt": {"bytes": 1024, "sha256": "a" * 64}},
+    }
+    permissions = broker.permissions_for(request, plan, "check")
+    assert {p["job"] for p in permissions} == {request["job"]}
+    assert all(
+        p["method"] == "GET"
+        for p in broker.permissions_for({**request, "kind": "restore"}, plan, "check")
+    )
+    assert all(p["method"] in ("GET", "PUT") for p in permissions)
+    assert not any(
+        p["method"] == "GET" and "checkpoint" in p["name"] for p in permissions
+    )
+    with pytest.raises(ValueError, match="declared"):
+        broker.permissions_for(
+            {**request, "job": "campaign-r2-another-fold0-outer-adapt"}, plan, "check"
+        )
+    labels = {
+        "job": "campaign-r2-check-fold0-input-test",
+        "kind": "partition",
+        "fold": "fold0",
+        "partition": "test",
+    }
+    with pytest.raises(ValueError, match="not authorized"):
+        broker.permissions_for(labels, plan, "check")
+    assert all(
+        p["method"] == "GET"
+        for p in broker.permissions_for(labels, plan, "check", allow_outer_test=True)
+    )
+    with pytest.raises(ValueError, match="does not match"):
+        broker.permissions_for(
+            {**labels, "job": "campaign-r2-check-fold0-input-train"},
+            plan,
+            "check",
+            allow_outer_test=True,
+        )
+
+
+def test_campaign_restore_recreates_retained_checkpoint_alias(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    import time
+
+    monkeypatch.syspath_prepend(str(ROOT / "modules/slp-1-2-r2"))
+    campaign = module("campaign")
+    runner = object.__new__(campaign.Runner)
+    runner.queue = tmp_path / "queue"
+    runner.queue.mkdir()
+    runner.args = SimpleNamespace(deadline=time.time() + 900)
+    runner.saved = {"plan_sha256": "synthetic-plan"}
+    body = b"synthetic checkpoint bytes"
+    import hashlib
+
+    files = {
+        "checkpoint.pt": {
+            "bytes": len(body),
+            "sha256": hashlib.sha256(body).hexdigest(),
+        }
+    }
+    receipt = {
+        "job": "campaign-r2-fixture-pretrain-u008000",
+        "files": files,
+        "aliases": {"checkpoint-u008000.pt": "checkpoint.pt"},
+    }
+
+    def ticket(path, request):
+        path.write_text(json.dumps(request))
+        (runner.queue / (request["job"] + ".ready.json")).write_text(
+            json.dumps({"kind": "restore", "files": files})
+        )
+
+    def download(job, directory):
+        directory.mkdir()
+        (directory / "checkpoint.pt").write_bytes(body)
+        return {"files": files}
+
+    monkeypatch.setattr(campaign, "write_json", ticket)
+    monkeypatch.setattr(campaign, "download_directory", download)
+    destination = tmp_path / "restored"
+    runner.restore(destination, receipt)
+    assert (destination / "checkpoint-u008000.pt").read_bytes() == body
+    assert (destination / "checkpoint-u008000.pt").stat().st_ino == (
+        destination / "checkpoint.pt"
+    ).stat().st_ino

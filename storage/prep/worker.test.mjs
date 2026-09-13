@@ -54,3 +54,17 @@ test('mixed-corpus capabilities remain exact and never carry benchmark test labe
   assert.ok(manifest.tickets.some(t=>t.job==='population-yeast-r2-20260912-v4'));
   assert.ok(manifest.tickets.every(t=>t.max_bytes<=33554432));
 });
+
+test('campaign tickets isolate exact artifacts and cannot write benchmark inputs', async()=>{
+  const {mintCampaignTickets}=await import('./transfers.mjs');
+  const now=1700000000000, secret='synthetic-secret';
+  await assert.rejects(()=>mintCampaignTickets(secret,'https://example.test',[{job:'private-other-project',name:'weights-part00000.bin.gz',method:'GET',max_bytes:10}],now));
+  await assert.rejects(()=>mintCampaignTickets(secret,'https://example.test',[{job:'protocol-r2-20260912-v4',name:'musl-s42-f0-test-manifest.json',method:'PUT',max_bytes:10}],now));
+  const p={job:'campaign-r2-test-fold-adapt',name:'artifact.json',method:'GET',max_bytes:1000};
+  const tickets=await mintCampaignTickets(secret,'https://example.test',[p],now);
+  let key;
+  const env={ACCESS_TOKEN:secret,CORPUS:{get:async(k)=>{key=k;return {size:2,body:'{}'};}}};
+  assert.equal((await transfer(new Request(tickets.tickets[0].url),env,now)).status,200);
+  assert.equal(key,'slp/runs/slp-1.2-r2/campaign-r2-test-fold-adapt/artifact.json');
+  assert.equal((await transfer(new Request(tickets.tickets[0].url,{method:'DELETE'}),env,now)).status,403);
+});

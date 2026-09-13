@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,10 +24,40 @@ def build(output, *, budget_usd=50, pretrain_updates=8000, adapt_updates=1000):
     )
     if evidence["state"] != "complete" or evidence["research_training_launched"]:
         raise ValueError("Require disposable full-corpus readiness evidence")
+    final_path = ROOT / "results/optimizer-readiness-r2-20260912-v1/complete.json"
+    final = json.loads(final_path.read_text()) if final_path.exists() else {}
+    numerical = (
+        "model.py",
+        "records.py",
+        "data.py",
+        "packed.py",
+        "population.py",
+        "fit.py",
+        "train.py",
+        "adaptation.py",
+        "benchmarks.py",
+        "score.py",
+        "baselines.py",
+        "artifact.py",
+        "inference.py",
+    )
+    engineering_ready = (
+        final.get("state") == "complete"
+        and final.get("optimizer_r2_roundtrip_exact") is True
+        and final.get("continued_full_state_bitwise_exact") is True
+        and final.get("research_training_launched") is False
+        and all(
+            final.get("source", {}).get(name)
+            == digest(ROOT / "modules/slp-1-2-r2" / name)
+            for name in numerical
+        )
+    )
     protocols = []
+    (output / "protocols").mkdir()
     for job in ["protocol-r2-20260912-v4", "feng-folds-r2-20260912-v1"]:
         for path in sorted((ROOT / "results" / job).glob("*-fold.json")):
             fold = json.loads(path.read_text())
+            shutil.copyfile(path, output / "protocols" / path.name)
             protocols.append(
                 {
                     "job": job,
@@ -36,6 +67,13 @@ def build(output, *, budget_usd=50, pretrain_updates=8000, adapt_updates=1000):
                     "metadata_sha256": digest(path),
                     "outer_gene_count": len(fold["outer_held"]),
                     "inner_gene_count": len(fold["inner_held"]),
+                    "partition_manifests": {
+                        role: {
+                            "name": name,
+                            "manifest": json.loads((path.parent / name).read_text()),
+                        }
+                        for role, name in fold["partitions"].items()
+                    },
                 }
             )
     if len(protocols) != 30:
@@ -98,6 +136,11 @@ def build(output, *, budget_usd=50, pretrain_updates=8000, adapt_updates=1000):
     io_hours = n * 8 * 90 / 3600
     hourly = 0.74 + 80 * 0.20 / 730
     estimate = (compute_hours + io_hours) * hourly
+    storage_reserve = 9.25
+    if estimate * 1.25 + storage_reserve > budget_usd:
+        raise ValueError(
+            "The declared comparison packet exceeds its proposed total budget"
+        )
     stages = []
     for fold in protocols:
         for name, spec in variants.items():
@@ -184,6 +227,13 @@ def build(output, *, budget_usd=50, pretrain_updates=8000, adapt_updates=1000):
         "schema": "slp.r2-training-packet/v1",
         "created_at": time.time(),
         "launch_status": "HOLD",
+        "engineering_status": "READY" if engineering_ready else "PENDING",
+        "engineering_receipt": {
+            "path": str(final_path.relative_to(ROOT)),
+            "sha256": digest(final_path),
+        }
+        if engineering_ready
+        else None,
         "research_training_authorized": False,
         "purpose": "human strict-CV3 SL prediction through perturbation modeling",
         "proposed_spending_ceiling_usd": budget_usd,
@@ -203,6 +253,14 @@ def build(output, *, budget_usd=50, pretrain_updates=8000, adapt_updates=1000):
             "io_startup_allowance_hours": io_hours,
             "estimate_usd": estimate,
             "with_25_percent_reserve_usd": estimate * 1.25,
+            "r2_first_month_reserve_usd": storage_reserve,
+            "r2_first_month_storage_usd": 9.0,
+            "r2_operation_reserve_usd": 0.25,
+            "r2_retained_compressed_gb_ceiling": 600,
+            "r2_standard_usd_per_gb_month": 0.015,
+            "r2_price_source": "https://developers.cloudflare.com/r2/pricing/",
+            "total_with_compute_reserve_and_first_month_storage_usd": estimate * 1.25
+            + storage_reserve,
             "not_a_quote": "Derived from short numerical checks. Fresh pod pricing, credit, transfers, storage retention and the actual selected outer paths must be reconciled at launch.",
         },
         "source": {
@@ -211,6 +269,9 @@ def build(output, *, budget_usd=50, pretrain_updates=8000, adapt_updates=1000):
             if p.is_file()
         },
         "corpus": evidence["corpus"],
+        "corpus_sha256": hashlib.sha256(
+            json.dumps(evidence["corpus"], sort_keys=True).encode()
+        ).hexdigest(),
         "variants": variants,
         "protocols": protocols,
         "inner_jobs": stages,
@@ -222,7 +283,15 @@ def build(output, *, budget_usd=50, pretrain_updates=8000, adapt_updates=1000):
         },
         "outer_refits": "One selected recipe per outer fold, then the explicit score.py --scope outer --allow-outer-test path; preserve all original rows.",
         "checkpoint_policy": "Optimizer/RNG/sampler checkpoint every 2000 pretraining updates and every 500 adaptation updates; retain the 2000 and final pretraining points for matched probes. Publish each required checkpoint to a new exact R2 object prefix before deleting the pod.",
-        "storage_prefix": "s3://abiome-artifacts/slp/runs/slp-1.2-r2/<launch-id>/",
+        "storage_prefix": "s3://abiome-artifacts/slp/runs/slp-1.2-r2/campaign-r2-<launch-id>-<stage>/",
+        "execution": {
+            "runner": "modules/slp-1-2-r2/campaign.py",
+            "ticket_broker": "scripts/slp12_r2_broker.py",
+            "default": "Validate only; research execution requires --execute-research and final scoring requires --allow-outer-test",
+            "local_controller": "Run the broker against the owned pod allocation while the campaign is active. Keep the Mac awake for ticket delivery; no corpus or model payload is routed through the Mac.",
+            "outer_refit": "Preserve the full pretraining LR schedule and stop at the inner-selected update, then adapt from that fresh outer checkpoint.",
+            "publication": "Archive each stage under an immutable prefix. Verify R2 manifests before removing a completed fold's local cache; preserve partial-stage checkpoints on a bounded stage stop.",
+        },
         "shutdown_policy": "Both scoped in-pod and local owner guards; reserve 600 seconds for finalization, refuse stages that cannot fit, stop at the lesser of authorized budget or account credit with a $5 reserve.",
         "quarantine": [
             "Costanzo 2016: pending rights confirmation; no fitting",
@@ -231,13 +300,29 @@ def build(output, *, budget_usd=50, pretrain_updates=8000, adapt_updates=1000):
         ],
         "launch_requirements": [
             "Final engineering receipt complete",
-            "Resolve the intended inclusion of Costanzo before a mixed interaction campaign",
+            "Costanzo is excluded from this campaign; no source-permission decision is required to launch the admitted corpus",
             "Fresh budget/credit and explicit user launch instruction",
             "Freeze source/data packet, issue exact expiring transfer scopes for that launch, arm and verify both guards",
         ],
     }
     (output / "plan.json").write_text(json.dumps(plan, indent=2) + "\n")
     summary = {k: v for k, v in plan.items() if k != "inner_jobs"}
+    summary["protocols"] = [
+        {
+            **fold,
+            "partition_manifests": {
+                role: {
+                    "name": spec["name"],
+                    "rows": spec["manifest"]["rows"],
+                    "sha256": hashlib.sha256(
+                        json.dumps(spec["manifest"], sort_keys=True).encode()
+                    ).hexdigest(),
+                }
+                for role, spec in fold["partition_manifests"].items()
+            },
+        }
+        for fold in protocols
+    ]
     summary["inner_comparison_count"] = len(stages)
     summary["expanded_commands"] = (
         "Generate plan.json with scripts/slp12_r2_campaign.py; it includes each fitting, adaptation-probe and scoring argv."
@@ -248,9 +333,12 @@ def build(output, *, budget_usd=50, pretrain_updates=8000, adapt_updates=1000):
             {
                 "packet": str(output),
                 "status": "HOLD",
+                "engineering_status": "READY" if engineering_ready else "PENDING",
                 "folds": n,
                 "inner_comparisons": len(stages),
-                "estimated_usd_with_reserve": estimate * 1.25,
+                "estimated_gpu_disk_usd_with_reserve": estimate * 1.25,
+                "estimated_total_usd_with_first_month_storage": estimate * 1.25
+                + storage_reserve,
                 "training_launched": False,
             }
         )

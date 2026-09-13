@@ -11,12 +11,13 @@ import os
 from pathlib import Path
 import sys
 import tempfile
+import urllib.error
 
 
 def main(args):
     sys.path.insert(0, str(Path(args.module_directory).resolve()))
     import torch
-    from cloud_io import upload_directory, download_directory
+    from cloud_io import upload_directory, download_directory, get_json
     from data import digest
     from train import identity_digest
 
@@ -48,7 +49,20 @@ def main(args):
             snapshot = Path(temporary) / "checkpoint.pt"
             os.link(path, snapshot)
             receipt = verify(snapshot)
-            manifest = upload_directory(temporary, args.job)
+            try:
+                manifest = get_json(args.job, "artifact.json")
+            except urllib.error.HTTPError as error:
+                if error.code != 404:
+                    raise
+                manifest = upload_directory(temporary, args.job)
+            else:
+                if (
+                    manifest.get("schema") != "slp.artifact-parts/v1"
+                    or manifest.get("job") != args.job
+                    or set(manifest.get("files", {})) != {"checkpoint.pt"}
+                    or manifest["files"]["checkpoint.pt"]["bytes"] != receipt["bytes"]
+                ):
+                    raise ValueError("Existing remote checkpoint contract mismatch")
             if manifest["files"]["checkpoint.pt"]["sha256"] != receipt["sha256"]:
                 raise ValueError("Checkpoint changed during publication")
     else:

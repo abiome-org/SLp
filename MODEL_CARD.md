@@ -12,7 +12,9 @@ CUDA optimization, exact checkpoint continuation and Cloudflare artifact replay
 check. The prepared human/yeast RNA and human fitness corpus, both fitting phases,
 direct feature baselines and all 60 inner/outer exposure masks have now been
 exercised. No r2 research checkpoint or real SL benchmark score exists.
-The launch packet is held pending the remaining source/backup permissions; see the
+Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
+The full optimizer checkpoint has passed an R2 roundtrip and bitwise-exact
+continuation; the launch packet awaits only the research launch instruction. See the
 [preparation ledger](docs/results.md#2026-09-12--slp-12-r2-preparation-in-progress).
 
 ## SLp-1.2 pretrained base

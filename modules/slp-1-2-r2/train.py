@@ -111,12 +111,15 @@ def optimize(
     bf16=True,
     context_dropout=0.0,
     retain_updates=(),
+    stop_at_update=None,
 ):
+    stop_at = updates if stop_at_update is None else stop_at_update
     if (
         updates <= start_update
         or max_seconds <= 0
         or batch_size < 1
         or not 0 <= context_dropout < 1
+        or not start_update < stop_at <= updates
     ):
         raise ValueError("A finite positive fitting budget is required")
     start = time.monotonic()
@@ -135,7 +138,7 @@ def optimize(
                 os.link(path, retained)
 
     try:
-        for step in range(start_update + 1, updates + 1):
+        for step in range(start_update + 1, stop_at + 1):
             if time.monotonic() - start >= max_seconds:
                 step -= 1
                 break

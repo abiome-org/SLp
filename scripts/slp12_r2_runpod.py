@@ -23,7 +23,9 @@ def save(value):
     tmp.replace(RECORD)
 
 
-def create():
+def create(*, max_seconds=7200, prior_usd=0.0):
+    if not 900 <= max_seconds <= 7200 or not 0 <= prior_usd < 5:
+        raise ValueError("Require bounded preparation within the existing $5 ceiling")
     if RECORD.exists():
         raise ValueError("Preparation already recorded; inspect before retrying")
     pods = json.loads(run("pod", "list"))
@@ -38,17 +40,19 @@ def create():
         if g["gpuId"] == "NVIDIA GeForce RTX 4090"
     )
     rate = float(gpu["securePricePerHr"])
-    if rate > 0.80 or float(account["clientBalance"]) < 10:
+    upper = max_seconds / 3600 * (rate + 80 * 0.20 / 730)
+    if rate > 0.80 or float(account["clientBalance"]) < 10 or prior_usd + upper > 5:
         raise ValueError("Preparation price/credit bound exceeded")
     record = {
         "schema": "slp.r2-preparation-pod/v1",
         "purpose": "frozen features and disposable readiness checks only",
         "created_at": time.time(),
-        "terminate_at": time.time() + 7200,
-        "max_seconds": 7200,
+        "terminate_at": time.time() + max_seconds,
+        "max_seconds": max_seconds,
         "gpu_hourly_usd": rate,
         "container_disk_gb": 80,
-        "gpu_and_disk_upper_estimate_usd": 2 * (rate + 80 * 0.20 / 730),
+        "gpu_and_disk_upper_estimate_usd": upper,
+        "prior_preparation_usd": prior_usd,
         "initial_preparation_ceiling_usd": 5,
         "image": IMAGE,
         "credit_stop_usd": 5,
@@ -130,10 +134,22 @@ def status():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("create-features", "status", "terminate"))
+    parser.add_argument(
+        "action", choices=("create-features", "create-readiness", "status", "terminate")
+    )
+    parser.add_argument("--state", type=Path, default=STATE)
+    parser.add_argument("--max-seconds", type=int, default=7200)
+    parser.add_argument("--prior-preparation-usd", type=float, default=0.0)
     args = parser.parse_args()
-    if args.action == "create-features":
-        create()
+    STATE = args.state.resolve()
+    if not STATE.is_relative_to(ROOT / "data"):
+        raise ValueError(
+            "Preparation state must stay in this repository's data directory"
+        )
+    RECORD = STATE / "campaign.json"
+    NAME = "slp-r2-" + STATE.name.removeprefix("slp12-r2-")
+    if args.action in ("create-features", "create-readiness"):
+        create(max_seconds=args.max_seconds, prior_usd=args.prior_preparation_usd)
     elif args.action == "status":
         status()
     else:

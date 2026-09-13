@@ -10,6 +10,19 @@ async function signingKey(secret) {
   return crypto.subtle.importKey('raw',encoder.encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign','verify']);
 }
 
+export const isCampaignJob = job => /^campaign-r2-[a-zA-Z0-9_-]{1,150}$/.test(job || '');
+export function campaignPermission(p) {
+  const bounded = Number.isInteger(p.max_bytes) && p.max_bytes > 0 && p.max_bytes <= 17*1024*1024;
+  if(!bounded || !/^[a-zA-Z0-9_-]+\.(json|jsonl\.gz|bin\.gz)$/.test(p.name || '')) return false;
+  if(isCampaignJob(p.job)) return ['GET','PUT'].includes(p.method);
+  return p.method==='GET' && ['protocol-r2-20260912-v4','feng-folds-r2-20260912-v1'].includes(p.job)
+    && /-(train|valid|test)-(manifest\.json|\d{5}\.jsonl\.gz)$/.test(p.name);
+}
+export async function mintCampaignTickets(secret,origin,permissions,now=Date.now()) {
+  if(!Array.isArray(permissions) || !permissions.length || permissions.length>1024 || !permissions.every(campaignPermission)) throw Error('Invalid exact campaign scope');
+  return mint(secret,origin,permissions,'exact files for one declared campaign operation',now);
+}
+
 export function featurePermissions() {
   const input='identity-r2-20260912-v5', output='esm-r2-20260912-v1';
   const permissions=[{job:input,name:'sequence-inputs-manifest.json',method:'GET',max_bytes:1048576}];
@@ -68,8 +81,8 @@ export async function transfer(request,env,now=Date.now()) {
     const body=from64(match[1]), valid=await crypto.subtle.verify('HMAC',await signingKey(env.ACCESS_TOKEN),from64(match[2]),body);
     if(!valid) return json({error:'Invalid capability'},403);
     const p=JSON.parse(new TextDecoder().decode(body));
-    if(p.expires<Math.floor(now/1000) || request.method!==p.method || ![...featurePermissions(),...optimizerPermissions(),...readinessPermissions(),...readinessPermissions(true),...readinessPermissions(true,true)].some(v=>v.job===p.job&&v.name===p.name&&v.method===p.method&&v.max_bytes===p.max_bytes)) return json({error:'Expired or out-of-scope capability'},403);
-    const key=`slp/prepared/${p.job}/${p.name}`;
+    if(p.expires<Math.floor(now/1000) || request.method!==p.method || !(campaignPermission(p) || [...featurePermissions(),...optimizerPermissions(),...readinessPermissions(),...readinessPermissions(true),...readinessPermissions(true,true)].some(v=>v.job===p.job&&v.name===p.name&&v.method===p.method&&v.max_bytes===p.max_bytes))) return json({error:'Expired or out-of-scope capability'},403);
+    const key=isCampaignJob(p.job)?`slp/runs/slp-1.2-r2/${p.job}/${p.name}`:`slp/prepared/${p.job}/${p.name}`;
     if(p.method==='GET') {
       const object=await env.CORPUS.get(key);
       if(!object || object.size>p.max_bytes) return json({error:'Missing or oversized object'},404);

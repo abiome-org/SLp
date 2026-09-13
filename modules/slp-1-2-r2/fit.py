@@ -340,6 +340,7 @@ def main(args):
         max_queries=phase["max_queries"],
         context_dropout=phase.get("context_dropout", 0.0),
         retain_updates=phase.get("retain_updates", []),
+        stop_at_update=phase.get("stop_at_update"),
     )
     report = {
         "stage": args.stage,

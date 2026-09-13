@@ -2,7 +2,7 @@ import {Container} from '@cloudflare/containers';
 import manifest from '../source-objects.json' with {type: 'json'};
 import {JOB, JOBS, PREFIX, MAX_BYTES, ARTIFACT_JOBS, PREPARATION_JOBS, outputKey, json} from './routing.mjs';
 import build from './build-receipt.json' with {type: 'json'};
-import {mintFeatureTickets, mintReadinessTickets, mintOptimizerTickets, transfer} from './transfers.mjs';
+import {mintFeatureTickets, mintReadinessTickets, mintOptimizerTickets, mintCampaignTickets, transfer} from './transfers.mjs';
 
 export class CorpusPrep extends Container {
   defaultPort = 8080;
@@ -28,6 +28,11 @@ export default {
     if(request.method === 'POST' && path === '/tickets/readiness-r2-20260912-v2') return json(await mintReadinessTickets(env.ACCESS_TOKEN,new URL(request.url).origin,Date.now(),true));
     if(request.method === 'POST' && path === '/tickets/readiness-r2-20260912-v3') return json(await mintReadinessTickets(env.ACCESS_TOKEN,new URL(request.url).origin,Date.now(),true,true));
     if(request.method === 'POST' && path === '/tickets/optimizer-readiness-r2-20260912-v1') return json(await mintOptimizerTickets(env.ACCESS_TOKEN,new URL(request.url).origin));
+    if(request.method === 'POST' && path === '/tickets/campaign') {
+      if(Number(request.headers.get('Content-Length'))>262144) return json({error:'Scope too large'},400);
+      try { const body=await request.json(); return json(await mintCampaignTickets(env.ACCESS_TOKEN,new URL(request.url).origin,body.permissions)); }
+      catch { return json({error:'Invalid campaign file scope'},400); }
+    }
     if (request.method === 'GET' && path === '/manifest') return json(manifest);
     if (request.method === 'GET' && (path === '/status' || path.startsWith('/status/'))) {
       const job=path==='/status'?JOB:path.slice('/status/'.length);

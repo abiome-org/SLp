@@ -1,7 +1,12 @@
 {
   "schema": "slp.r2-training-packet/v1",
-  "created_at": 1789278346.981915,
+  "created_at": 1789326128.107668,
   "launch_status": "HOLD",
+  "engineering_status": "READY",
+  "engineering_receipt": {
+    "path": "results/optimizer-readiness-r2-20260912-v1/complete.json",
+    "sha256": "6cab8a18328bb063eeac29bb4a7f4afe2eef98aa65cc15611e463b39cbc80dd1"
+  },
   "research_training_authorized": false,
   "purpose": "human strict-CV3 SL prediction through perturbation modeling",
   "proposed_spending_ceiling_usd": 50,
@@ -21,15 +26,23 @@
     "io_startup_allowance_hours": 6.0,
     "estimate_usd": 32.50849315068493,
     "with_25_percent_reserve_usd": 40.63561643835616,
+    "r2_first_month_reserve_usd": 9.25,
+    "r2_first_month_storage_usd": 9.0,
+    "r2_operation_reserve_usd": 0.25,
+    "r2_retained_compressed_gb_ceiling": 600,
+    "r2_standard_usd_per_gb_month": 0.015,
+    "r2_price_source": "https://developers.cloudflare.com/r2/pricing/",
+    "total_with_compute_reserve_and_first_month_storage_usd": 49.88561643835616,
     "not_a_quote": "Derived from short numerical checks. Fresh pod pricing, credit, transfers, storage retention and the actual selected outer paths must be reconciled at launch."
   },
   "source": {
-    "modules/slp-1-2-r2/CONTRACT.md": "796476dc4f860df43e21e425bea4983eddef7c601a5e2952b35f2d2ab1a96ddd",
+    "modules/slp-1-2-r2/CONTRACT.md": "6ae96a2223d2ba13e399cece542bed4370e3c23ad6474f9cad2929b5735ad8be",
     "modules/slp-1-2-r2/adaptation.py": "326e40be8ade4b1f7c7c2e396709d0a31b389fd9f92afb9e1ab6077f058614fb",
     "modules/slp-1-2-r2/artifact.py": "a076dddc7dab0692493b6fc236a15dfcaca872fb15ad486ee2c9041eccfec848",
     "modules/slp-1-2-r2/audit_folds.py": "ba19873d81809454e5fa8483e06dd354ae15e005be951f15a6380cd2b4c800db",
     "modules/slp-1-2-r2/baselines.py": "e5f4120d7b3617be0ec8ed582c2cd3318dc99ea5af59d3dd6ac2f08d899f0082",
     "modules/slp-1-2-r2/benchmarks.py": "0b5025abc5ffb46ea49bbe9d484187a783d86bc278a57e12dfba55480b246ee9",
+    "modules/slp-1-2-r2/campaign.py": "5b71cb6911739adac028df21dccdb327a10643ca9c85bb96e9bb2815352b9976",
     "modules/slp-1-2-r2/cloud_io.py": "083b29ae647ea815ead4a533c8a16305ff7a1501362c55f53855d295d775693e",
     "modules/slp-1-2-r2/data.py": "3a9a0a25f12ce1a80f4a9fb58e71b2cff51fb638cf279f8e6a9d5e0e8e287379",
     "modules/slp-1-2-r2/diagnostics.py": "26474df918f7722b09b93464a6247062d4e9f63bbec2721b7847d9a7c0d76f1e",
@@ -37,7 +50,8 @@
     "modules/slp-1-2-r2/evaluate.py": "97a97c08a357b55437d76adc001e3e1cfa83131952f7047d2d9aa3c009edbd59",
     "modules/slp-1-2-r2/extract_features.py": "59aea836cd13e8b7da9537ffcbae51b0c8197193b8fcd7d061a8f4d8e780ddb5",
     "modules/slp-1-2-r2/feature_job.py": "b2f6140909a41b68b46f7576619a40366feefafc9c05e5395825ae46d70c251e",
-    "modules/slp-1-2-r2/fit.py": "f714a4d30258a589d3c9abb6fb27ccbc812ff8a262dfa7791f66b6ba197a7a84",
+    "modules/slp-1-2-r2/finish_readiness.py": "8208a37388c6d6f473e13c81f804e2573dfe9989da8e4bdb17eba9f83841931d",
+    "modules/slp-1-2-r2/fit.py": "fbbcb0c140085331d4ceee783e5905f0d197bd114c1dfd0224c52cc3323dae45",
     "modules/slp-1-2-r2/inference.py": "5be541da7433244a73bc500bc09b11b56a1d29125d1177212f8af958347fa337",
     "modules/slp-1-2-r2/model.py": "2fba8f5464be24dbc413b19e006a85fecffe358e70f2895866f37f692c2234d2",
     "modules/slp-1-2-r2/packed.py": "1a0508de17ade27ef5e89371c3fc52a74d42c229fb8d6eb11a89c7ce1f739e09",
@@ -45,12 +59,12 @@
     "modules/slp-1-2-r2/population.py": "c635c976d24da958c4f002f49c7f16ae0d84bee165f9cb95ec03921d2643a25a",
     "modules/slp-1-2-r2/readiness.py": "59ceb9c79c607b31eacdcf8b80d1bdbc0b43e628817b7f541b0b8576e595eeae",
     "modules/slp-1-2-r2/readiness_final.py": "7ab3f76f9dad2141f7cdbb5c500186b402df9c870ce25456037bca2f181e1299",
-    "modules/slp-1-2-r2/readiness_mixed.py": "6698c452e196d0a43d9b6b41c22d5420c3a688c6dc4598cfb2407d48f673a0dd",
+    "modules/slp-1-2-r2/readiness_mixed.py": "61c570e14ff2bce0012af90902d191b57b2eaaaa21de1536213eca4d999bb30a",
     "modules/slp-1-2-r2/records.py": "f5cbdf4d1f7229d4f75975488d4bb013dadda4973d79d9958b5d381f98a164fa",
     "modules/slp-1-2-r2/requirements-linux-cu128.lock": "239dff264bb3d4a5e0c54c8e381cf4fac3c90f52a0f87846b3a856d4d5ddbcab",
     "modules/slp-1-2-r2/requirements.in": "83cb77c262ea243e5d69c9633687a69460639acfda6fd9b875990dcb63430538",
     "modules/slp-1-2-r2/score.py": "73b96460dfdd6132ff7e3622f79b38f74ef5dc83aa384cde39d95f8155478310",
-    "modules/slp-1-2-r2/train.py": "6338ea9496df760b64c44fdd8d002305162240ba9c83b8eb0298c39938d67e28"
+    "modules/slp-1-2-r2/train.py": "0a147ad019ff6e25a1e418e99cc6c0a9e85c42709b854aa7d2883d3bae902620"
   },
   "corpus": {
     "basal": [
@@ -109,6 +123,7 @@
     ],
     "schema": "slp.fitting-corpus/v1"
   },
+  "corpus_sha256": "675e82d9b0b323c974fe529d8e38ed05ed13f1d7aa5387b68c8c811547326aa0",
   "variants": {
     "sequence_similarity": {
       "recipe": "sequence_similarity.json",
@@ -144,7 +159,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "bd7c3444582e08c039115708bdd36314a8478f5410a85ae5a7d477d334ab41f3",
       "outer_gene_count": 1308,
-      "inner_gene_count": 1220
+      "inner_gene_count": 1220,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s42-f0-test-manifest.json",
+          "rows": 1946,
+          "sha256": "f39bfe24806631970010ac3d40c6607c9536958818095a3c4ce0b720c2703c4a"
+        },
+        "train": {
+          "name": "musl-s42-f0-train-manifest.json",
+          "rows": 36348,
+          "sha256": "c35a02c44a32e86d311dae40af274e791aba69c5c215ea13984b01eb1cca7df5"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -153,7 +180,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "5d20e718da23fe480b451e22a8cdbfa4d8d6504e8a4949d3ee9750bb9c2fd451",
       "outer_gene_count": 1400,
-      "inner_gene_count": 1264
+      "inner_gene_count": 1264,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s42-f1-test-manifest.json",
+          "rows": 2616,
+          "sha256": "1aa2274526d10cf9f73a8d529044ee326749a0d99f0c0405ff046dfedacc8275"
+        },
+        "train": {
+          "name": "musl-s42-f1-train-manifest.json",
+          "rows": 33690,
+          "sha256": "e59ac3f2b705f23fda91ca6d757d868076c07c5c0c957dbcbfd907142e895282"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -162,7 +201,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "2d2bd6cb4ed6f0ee890c62a753f8696e65548865c08924820400186ebfd404f6",
       "outer_gene_count": 1275,
-      "inner_gene_count": 1251
+      "inner_gene_count": 1251,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s42-f2-test-manifest.json",
+          "rows": 1996,
+          "sha256": "b4c8ae34a9a7145995069bbbf948a942fa93777c7b06356267f04deab37dc531"
+        },
+        "train": {
+          "name": "musl-s42-f2-train-manifest.json",
+          "rows": 36078,
+          "sha256": "1540322a2b09fdc8b36eb3c80e1c5efae0de73e3f0525a225af4147d0e47d139"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -171,7 +222,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "4a14cabdf496dd097b5842a62b416e157902d31b614042eedf21d1ecdc401bfa",
       "outer_gene_count": 1164,
-      "inner_gene_count": 1221
+      "inner_gene_count": 1221,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s42-f3-test-manifest.json",
+          "rows": 1564,
+          "sha256": "a8ea8858c3b3e04fbcb979f163e2bdf5d6c8708fcd05564fc79b1a189876bddb"
+        },
+        "train": {
+          "name": "musl-s42-f3-train-manifest.json",
+          "rows": 37470,
+          "sha256": "2ce27f063417052608c58baeb34c30b8c891e1d0837ef9cb3b1662a63119be50"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -180,7 +243,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "b8385d802ad7f646fafa984d821b5ba8541816a12526b7db93d1442b379f6d96",
       "outer_gene_count": 1442,
-      "inner_gene_count": 1178
+      "inner_gene_count": 1178,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s42-f4-test-manifest.json",
+          "rows": 2992,
+          "sha256": "d97caba4ee00e69e931a3361555d82f928662c580d11cf817b500b80d54c48ad"
+        },
+        "train": {
+          "name": "musl-s42-f4-train-manifest.json",
+          "rows": 32288,
+          "sha256": "78db7425a87c89fcfb71773066f7a54fd3c7505a232f0440203e908d615fa0a5"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -189,7 +264,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "5033ad51d229ae0ad3d28c989f46b1abf6b6530f86607dfb9e98874b321748de",
       "outer_gene_count": 1439,
-      "inner_gene_count": 1246
+      "inner_gene_count": 1246,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s432-f0-test-manifest.json",
+          "rows": 2862,
+          "sha256": "578520d8a2ba5c2b5ca8bd06fe320c455a30eaf7baa9b2dc38ebf62bc205e5f6"
+        },
+        "train": {
+          "name": "musl-s432-f0-train-manifest.json",
+          "rows": 32716,
+          "sha256": "50e47c8f94631079ae621362a53576f455db73950c645854f68c9b50f7bea84e"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -198,7 +285,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "dd1189b822326abdff9861b02e40908282e2a811609d84c2e85285636dfa9f37",
       "outer_gene_count": 1344,
-      "inner_gene_count": 1224
+      "inner_gene_count": 1224,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s432-f1-test-manifest.json",
+          "rows": 2128,
+          "sha256": "257e273b372c50ada7f5b6e1d09784140b6ee81941f50191c028d6a35694202c"
+        },
+        "train": {
+          "name": "musl-s432-f1-train-manifest.json",
+          "rows": 35632,
+          "sha256": "f2b7a839de7c9975d550ebf805232624bcfd2c9642b079843bdcf0dc0c0c544b"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -207,7 +306,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "c495d5d0ddc6f01cc408d0aebf13daece61666284144a17873224104e53530a3",
       "outer_gene_count": 1237,
-      "inner_gene_count": 1185
+      "inner_gene_count": 1185,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s432-f2-test-manifest.json",
+          "rows": 1610,
+          "sha256": "463475ae1b374367dc7a24f5b6b8d97c17540c81bdf8ef2d77ce2c17af1a1a01"
+        },
+        "train": {
+          "name": "musl-s432-f2-train-manifest.json",
+          "rows": 37438,
+          "sha256": "0e330d8542a50d526df71624c301fe422262488d6f72cf4e71d94e7cb7165137"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -216,7 +327,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "2528fff9ec427869c4bba9ed1a53412ce9dba992f0116639024f1ce25fcb1ae7",
       "outer_gene_count": 1271,
-      "inner_gene_count": 1244
+      "inner_gene_count": 1244,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s432-f3-test-manifest.json",
+          "rows": 1896,
+          "sha256": "fe2042d4acfcaa9bd38e1d0f57e6f2f8b957f892da81b990b18d783842eb7f2f"
+        },
+        "train": {
+          "name": "musl-s432-f3-train-manifest.json",
+          "rows": 36128,
+          "sha256": "46503d356e7e595792253c1147dc8782d8da2b719a668cd4b5e38bd68c65fc76"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -225,7 +348,19 @@
       "benchmark": "MuSL-CV3",
       "metadata_sha256": "66c45500939ced236f154e2e82d63e0e9a26de3527e4577722a6e6319266f35f",
       "outer_gene_count": 1411,
-      "inner_gene_count": 1246
+      "inner_gene_count": 1246,
+      "partition_manifests": {
+        "test": {
+          "name": "musl-s432-f4-test-manifest.json",
+          "rows": 2568,
+          "sha256": "5dcfd108da10eac864e6ccf545fe693a282438d0e1672b6ae47aa7ef47a86113"
+        },
+        "train": {
+          "name": "musl-s432-f4-train-manifest.json",
+          "rows": 33898,
+          "sha256": "f72c8636137e9c67f720002ad7b0fc793e2b91b9f9adac33060b535db9ba5f80"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -234,7 +369,24 @@
       "benchmark": "SLAMR-scenario3-A549",
       "metadata_sha256": "58a2a8543be4cb25fb5bf685fcb8ab2cd2e35d54658b083c9d74c266550d0f2e",
       "outer_gene_count": 15,
-      "inner_gene_count": 8
+      "inner_gene_count": 8,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-A549-f0-test-manifest.json",
+          "rows": 210,
+          "sha256": "fc4402559d513064862bafd4e144c71855ba88d4225008807d1c63779cd92a03"
+        },
+        "train": {
+          "name": "slamr-A549-f0-train-manifest.json",
+          "rows": 1225,
+          "sha256": "a9fd2ebc3868bc46d5e5826deb125d1466326fa476ea1ab5daac8df3a621a37b"
+        },
+        "valid": {
+          "name": "slamr-A549-f0-valid-manifest.json",
+          "rows": 56,
+          "sha256": "ae03cd23daac251806f393efe76e5f3eb24ff1054004d8057a143651f39e2d73"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -243,7 +395,24 @@
       "benchmark": "SLAMR-scenario3-A549",
       "metadata_sha256": "c23d72c4cdf541e2e551f95a71d8f9c34ad1abc5811d226183402804aa7e3567",
       "outer_gene_count": 15,
-      "inner_gene_count": 8
+      "inner_gene_count": 8,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-A549-f1-test-manifest.json",
+          "rows": 210,
+          "sha256": "7990b766b676a654e4db80332f6517a68f9ba0343ad374c9f61190deceab5072"
+        },
+        "train": {
+          "name": "slamr-A549-f1-train-manifest.json",
+          "rows": 1225,
+          "sha256": "8d64077c6ab315de1d3e3d1dc5d217d929aa4b9fd4b472fb0659d62eacff71d2"
+        },
+        "valid": {
+          "name": "slamr-A549-f1-valid-manifest.json",
+          "rows": 56,
+          "sha256": "6e5e6cf2c4d79483239cb21beda10011c6573d0687c81550d174558e5685ac12"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -252,7 +421,24 @@
       "benchmark": "SLAMR-scenario3-A549",
       "metadata_sha256": "733d1fca97c67d1373f9a7a4e4ab537672975cdbe390d7858fcb399954bc1411",
       "outer_gene_count": 15,
-      "inner_gene_count": 8
+      "inner_gene_count": 8,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-A549-f2-test-manifest.json",
+          "rows": 210,
+          "sha256": "a8776c71e77964a589404b9d2bac160b509271467147f83233b465ad704804a5"
+        },
+        "train": {
+          "name": "slamr-A549-f2-train-manifest.json",
+          "rows": 1225,
+          "sha256": "e96194d27af1731a26d2ef72f3b68e08d659ea25b5d4d9e253fb644909155aba"
+        },
+        "valid": {
+          "name": "slamr-A549-f2-valid-manifest.json",
+          "rows": 56,
+          "sha256": "efc74476af539c93aa3e2558208c5a79734b95a35bf1a9b77c3cb3c1a5674a25"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -261,7 +447,24 @@
       "benchmark": "SLAMR-scenario3-A549",
       "metadata_sha256": "6e2baf4b2f3d398e5d1ecb54b9becd795723b823b5c5aec627e2a7e8b49700cb",
       "outer_gene_count": 14,
-      "inner_gene_count": 8
+      "inner_gene_count": 8,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-A549-f3-test-manifest.json",
+          "rows": 182,
+          "sha256": "c8a82adc953902ad3ef6e54526d99c5d4b62bcac7e75ccdf91f5a0492011a1d4"
+        },
+        "train": {
+          "name": "slamr-A549-f3-train-manifest.json",
+          "rows": 1275,
+          "sha256": "10b1ca236e9400a499ed687000c42b9309d827768d8b26be8b47f7d4322cb83d"
+        },
+        "valid": {
+          "name": "slamr-A549-f3-valid-manifest.json",
+          "rows": 56,
+          "sha256": "c62db227f8ebaae4eb6ce1401992cf79ccaa5921df723697967e16b8660ca2f1"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -270,7 +473,24 @@
       "benchmark": "SLAMR-scenario3-A549",
       "metadata_sha256": "1d11030b93f03dd12adc29d38c6af254ec2df352774c6532c29924f2b2c6dd4b",
       "outer_gene_count": 14,
-      "inner_gene_count": 8
+      "inner_gene_count": 8,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-A549-f4-test-manifest.json",
+          "rows": 182,
+          "sha256": "5e85551bfe768ef402f5e712ef34bf70c7de444243678470bde7cfca73e3471d"
+        },
+        "train": {
+          "name": "slamr-A549-f4-train-manifest.json",
+          "rows": 1275,
+          "sha256": "6e4221e51ca62bf2c3bc2d8afad1803327c4cb2526514cf4d65a59fd104a9a1d"
+        },
+        "valid": {
+          "name": "slamr-A549-f4-valid-manifest.json",
+          "rows": 56,
+          "sha256": "e7090523c680d6dea6baf0a4b3c414660f30f4f52b3e93812df0cf9cb92d4ea4"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -279,7 +499,24 @@
       "benchmark": "SLAMR-scenario3-JURKAT",
       "metadata_sha256": "364beec4b1c293d5fafd98744448511e76d28d27f9657748db2e58f221ca1fc5",
       "outer_gene_count": 72,
-      "inner_gene_count": 36
+      "inner_gene_count": 36,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-JURKAT-f0-test-manifest.json",
+          "rows": 5112,
+          "sha256": "90121e09964f39e3a27dd139f4a6b577e6304253f2294ed44e79afe38bbd498f"
+        },
+        "train": {
+          "name": "slamr-JURKAT-f0-train-manifest.json",
+          "rows": 31375,
+          "sha256": "95b25297aa96cca7a13d5afcf1cf6c364a503e0a518a956a88dc4c46e80b5ad2"
+        },
+        "valid": {
+          "name": "slamr-JURKAT-f0-valid-manifest.json",
+          "rows": 1260,
+          "sha256": "3ac279a4942f34efdfb5d4061edaf03f3a04323055c752dff7cd0bcc5867c827"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -288,7 +525,24 @@
       "benchmark": "SLAMR-scenario3-JURKAT",
       "metadata_sha256": "ddc782ceaa65cf3c3de12ec07ccbd4f9531b34f648bc0825e63faa79f6abea6b",
       "outer_gene_count": 72,
-      "inner_gene_count": 36
+      "inner_gene_count": 36,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-JURKAT-f1-test-manifest.json",
+          "rows": 5112,
+          "sha256": "549dc24231c750cf1400670f31a1aa059ea8929f2e2a5f388fb1c6a10cfa2939"
+        },
+        "train": {
+          "name": "slamr-JURKAT-f1-train-manifest.json",
+          "rows": 31375,
+          "sha256": "1552c1410541b5d331f5a61538e3135e12435d56c538ed7641004adf0a56bb34"
+        },
+        "valid": {
+          "name": "slamr-JURKAT-f1-valid-manifest.json",
+          "rows": 1260,
+          "sha256": "c5c9dc233999815356bad18523c4c504d9c5c7d11d0d9575a4bf8d4ab5f8812b"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -297,7 +551,24 @@
       "benchmark": "SLAMR-scenario3-JURKAT",
       "metadata_sha256": "1ba45199abba5497e4cae96e8861079a05a2cffb67a708da70ab2703ee701bb1",
       "outer_gene_count": 72,
-      "inner_gene_count": 36
+      "inner_gene_count": 36,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-JURKAT-f2-test-manifest.json",
+          "rows": 5112,
+          "sha256": "01cb8fb2cb119571b2eac2a3495fec85cdad047789dbc4a14288b1da2300c733"
+        },
+        "train": {
+          "name": "slamr-JURKAT-f2-train-manifest.json",
+          "rows": 31375,
+          "sha256": "cee05a46ce87c9950a32d3c4de5990143dc594d9fa9a147eea015d1c01dbd602"
+        },
+        "valid": {
+          "name": "slamr-JURKAT-f2-valid-manifest.json",
+          "rows": 1260,
+          "sha256": "ffcbe5617cd950e17f767c76ba37c5b30a88525c5b6f236eb5f355af32ab6678"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -306,7 +577,24 @@
       "benchmark": "SLAMR-scenario3-JURKAT",
       "metadata_sha256": "f551c9d637f5e419842195e23af907f7600e56fedf73ae749e42f55feb3ff896",
       "outer_gene_count": 72,
-      "inner_gene_count": 36
+      "inner_gene_count": 36,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-JURKAT-f3-test-manifest.json",
+          "rows": 5112,
+          "sha256": "be460794ec94edb21105c4e3d012f23b04a3670f55ab25f55d03b35ef178a982"
+        },
+        "train": {
+          "name": "slamr-JURKAT-f3-train-manifest.json",
+          "rows": 31375,
+          "sha256": "25ce38022f60c8bf6cd1cc47544c36f329a9e3e65997bf56c5cdcf7e076e4b69"
+        },
+        "valid": {
+          "name": "slamr-JURKAT-f3-valid-manifest.json",
+          "rows": 1260,
+          "sha256": "b62aba51f92b0addcb59f590af5358fdf49fb4af0a54e95978bcc0b87097d49d"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -315,7 +603,24 @@
       "benchmark": "SLAMR-scenario3-JURKAT",
       "metadata_sha256": "85d9c05373acb5c00522e4c32d9ecbfd8eb01c201e47ea33b8efb45d8e607175",
       "outer_gene_count": 71,
-      "inner_gene_count": 36
+      "inner_gene_count": 36,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-JURKAT-f4-test-manifest.json",
+          "rows": 4970,
+          "sha256": "656dd680532a102c6f48a20c63c335118b07a18b31ca9a33556409cc842ad659"
+        },
+        "train": {
+          "name": "slamr-JURKAT-f4-train-manifest.json",
+          "rows": 31626,
+          "sha256": "c1e5b6d8a225d8a6588e58c08b80674d72985f6a93c134c3ccd29af3a1b98c85"
+        },
+        "valid": {
+          "name": "slamr-JURKAT-f4-valid-manifest.json",
+          "rows": 1260,
+          "sha256": "838d4504c9e688d15e4bee0ea495df15485631a9039363f047f76f8651e5c56e"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -324,7 +629,24 @@
       "benchmark": "SLAMR-scenario3-K562",
       "metadata_sha256": "de9f0aad89d46b422a8617a5d9b6f58401c1f283695dcba9bced33fd379105ae",
       "outer_gene_count": 83,
-      "inner_gene_count": 42
+      "inner_gene_count": 42,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-K562-f0-test-manifest.json",
+          "rows": 6806,
+          "sha256": "e1c92fb7a21269f70400f81894f7e9a3c86e568898821a7e92dc803dd30df30f"
+        },
+        "train": {
+          "name": "slamr-K562-f0-train-manifest.json",
+          "rows": 41616,
+          "sha256": "ff7675b88cf2ee7db3d0bc9db4b7ae29f692544f813a936e2c1ecd97dffee3e9"
+        },
+        "valid": {
+          "name": "slamr-K562-f0-valid-manifest.json",
+          "rows": 1722,
+          "sha256": "8e59524a961b39812ad589082921a8b58d44937179c8ed417b75642a02e62aed"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -333,7 +655,24 @@
       "benchmark": "SLAMR-scenario3-K562",
       "metadata_sha256": "dc5e3c7db6f0f62a931a4223a6ff6c5a3831d42bcb430bea10474d890fe5bdd4",
       "outer_gene_count": 83,
-      "inner_gene_count": 42
+      "inner_gene_count": 42,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-K562-f1-test-manifest.json",
+          "rows": 6806,
+          "sha256": "98c75ab1b4c21cadc9455678920e8fc8fd4b25d7078f4227c21542d33a277c7f"
+        },
+        "train": {
+          "name": "slamr-K562-f1-train-manifest.json",
+          "rows": 41616,
+          "sha256": "15a63ec07a8482906c0bc06205c122ca926038204d5f68d0329b4af5462acb9b"
+        },
+        "valid": {
+          "name": "slamr-K562-f1-valid-manifest.json",
+          "rows": 1722,
+          "sha256": "922d6f65f087dda61b7a1add016f95dab793c06024b3f4a1278d72b71f03a0ab"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -342,7 +681,24 @@
       "benchmark": "SLAMR-scenario3-K562",
       "metadata_sha256": "ce5fb2cf1aab4128f8e34209b3b8c82e7ca57e2f5bbd5132efce52642c6a423a",
       "outer_gene_count": 83,
-      "inner_gene_count": 42
+      "inner_gene_count": 42,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-K562-f2-test-manifest.json",
+          "rows": 6806,
+          "sha256": "caf8a7a51a885b2ed2b23407f97a065a39d98daab681929e30138f6bc9409ceb"
+        },
+        "train": {
+          "name": "slamr-K562-f2-train-manifest.json",
+          "rows": 41616,
+          "sha256": "ca97990205232c150cee464427956714a1aa51bd7ede1466d026cb75924cce89"
+        },
+        "valid": {
+          "name": "slamr-K562-f2-valid-manifest.json",
+          "rows": 1722,
+          "sha256": "a997559ab06a9798d72dabf8cd3d2e546e42596f7d6eefc3a2ebd77d210663cf"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -351,7 +707,24 @@
       "benchmark": "SLAMR-scenario3-K562",
       "metadata_sha256": "e6cf8ff7c76401f258527e908b405372f39ac082f6981ba15ae9190247bdf3ee",
       "outer_gene_count": 83,
-      "inner_gene_count": 42
+      "inner_gene_count": 42,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-K562-f3-test-manifest.json",
+          "rows": 6806,
+          "sha256": "66bc734dde46ac7dd252ecd234f4b202f3cee16ab5e3bcedbac8d5401a6f6468"
+        },
+        "train": {
+          "name": "slamr-K562-f3-train-manifest.json",
+          "rows": 41616,
+          "sha256": "d0a0e7c117e8bd73b6b17c2ec14d3f6c43b34b97f81504d10149151c132deb8c"
+        },
+        "valid": {
+          "name": "slamr-K562-f3-valid-manifest.json",
+          "rows": 1722,
+          "sha256": "350c937e0ed877e9bdf9faead25206a0b6a0bd1ad27224dd57ad24fdca1a513f"
+        }
+      }
     },
     {
       "job": "protocol-r2-20260912-v4",
@@ -360,7 +733,24 @@
       "benchmark": "SLAMR-scenario3-K562",
       "metadata_sha256": "f7710fdf8d843e3cb12b45804f8c6742601d2c120251601a7acf218e3f41953a",
       "outer_gene_count": 82,
-      "inner_gene_count": 42
+      "inner_gene_count": 42,
+      "partition_manifests": {
+        "test": {
+          "name": "slamr-K562-f4-test-manifest.json",
+          "rows": 6642,
+          "sha256": "32c8975e6fc84b6b00a8a373b331f2d8f41eebfd8e16ce237128c381c331919c"
+        },
+        "train": {
+          "name": "slamr-K562-f4-train-manifest.json",
+          "rows": 41905,
+          "sha256": "710f87c4ce1db82c749cdce2fe969c083cd8440bab5cea0dfc5778effd339483"
+        },
+        "valid": {
+          "name": "slamr-K562-f4-valid-manifest.json",
+          "rows": 1722,
+          "sha256": "e62d8308bfc6cb42f376430aadeff54b5cc5e5a74fe6f4d298b8296a11dbfcce"
+        }
+      }
     },
     {
       "job": "feng-folds-r2-20260912-v1",
@@ -369,7 +759,19 @@
       "benchmark": "Feng-CV3-random1",
       "metadata_sha256": "a29fadc3aeb799606eaf1ea63396047f84356322fbd2097deda4535c06fbd37d",
       "outer_gene_count": 1641,
-      "inner_gene_count": 1552
+      "inner_gene_count": 1552,
+      "partition_manifests": {
+        "test": {
+          "name": "feng-cv3-random1-f0-test-manifest.json",
+          "rows": 2358,
+          "sha256": "31b63555a7108603edd41df7280da053bb4c0a6e756344874b28da426c4558a2"
+        },
+        "train": {
+          "name": "feng-cv3-random1-f0-train-manifest.json",
+          "rows": 47540,
+          "sha256": "7fc1cf1db97ea220b71a0210092ef8ffc4e7366b60d0b2eb91356d26e376a3f1"
+        }
+      }
     },
     {
       "job": "feng-folds-r2-20260912-v1",
@@ -378,7 +780,19 @@
       "benchmark": "Feng-CV3-random1",
       "metadata_sha256": "d20b0c9d89558b499e7d5498b5ce00dc8847785770aabb94ef253f5029561387",
       "outer_gene_count": 1568,
-      "inner_gene_count": 1572
+      "inner_gene_count": 1572,
+      "partition_manifests": {
+        "test": {
+          "name": "feng-cv3-random1-f1-test-manifest.json",
+          "rows": 2278,
+          "sha256": "315f7799f549de668519edc443046989e2abc9bab937607abb6a7b1176fd605e"
+        },
+        "train": {
+          "name": "feng-cv3-random1-f1-train-manifest.json",
+          "rows": 48230,
+          "sha256": "84f9783e0b670275cb74a603d5f0957bdadd2cee47308673a7adc822eba05807"
+        }
+      }
     },
     {
       "job": "feng-folds-r2-20260912-v1",
@@ -387,7 +801,19 @@
       "benchmark": "Feng-CV3-random1",
       "metadata_sha256": "ddfcd47c52cc76a8c1e7be69e32e429051a8d04ad0f8f9ac70358afe9ef9c8cb",
       "outer_gene_count": 1792,
-      "inner_gene_count": 1546
+      "inner_gene_count": 1546,
+      "partition_manifests": {
+        "test": {
+          "name": "feng-cv3-random1-f2-test-manifest.json",
+          "rows": 3250,
+          "sha256": "5952236008589aeab722d88257d054a9180c79c95abd561842c5a800d3304a4b"
+        },
+        "train": {
+          "name": "feng-cv3-random1-f2-train-manifest.json",
+          "rows": 44572,
+          "sha256": "f12bfeb116d70d42fc89704cb71b73884160ba4fa5b420e101adc359566e5122"
+        }
+      }
     },
     {
       "job": "feng-folds-r2-20260912-v1",
@@ -396,7 +822,19 @@
       "benchmark": "Feng-CV3-random1",
       "metadata_sha256": "8257b5de0fc9a90f630a7dc3ec591be388385b67705416ca2b68fbe1f5831acf",
       "outer_gene_count": 1785,
-      "inner_gene_count": 1539
+      "inner_gene_count": 1539,
+      "partition_manifests": {
+        "test": {
+          "name": "feng-cv3-random1-f3-test-manifest.json",
+          "rows": 2930,
+          "sha256": "1c196072e34768895bcf6e14b948d883b138dbfd588180e5a61975bd8682ab30"
+        },
+        "train": {
+          "name": "feng-cv3-random1-f3-train-manifest.json",
+          "rows": 45508,
+          "sha256": "5d5a1f81a12c45c8f710dc028f95c587e0166de58e254807c9536e189b41d33a"
+        }
+      }
     },
     {
       "job": "feng-folds-r2-20260912-v1",
@@ -405,7 +843,19 @@
       "benchmark": "Feng-CV3-random1",
       "metadata_sha256": "852b4915eab3004fb7ef89a3c3cc5fafeae7f427b059598a0d278946139a29e1",
       "outer_gene_count": 1815,
-      "inner_gene_count": 1589
+      "inner_gene_count": 1589,
+      "partition_manifests": {
+        "test": {
+          "name": "feng-cv3-random1-f4-test-manifest.json",
+          "rows": 3346,
+          "sha256": "f2c007b570605533356bbdd0e2ade99bebf315227746cea053c8c08ef53c690b"
+        },
+        "train": {
+          "name": "feng-cv3-random1-f4-train-manifest.json",
+          "rows": 43790,
+          "sha256": "32866dd500d04c5f3b6093ff6ab2099d5132ec66b97507755125fc9f315d35cc"
+        }
+      }
     }
   ],
   "selection": {
@@ -416,7 +866,15 @@
   },
   "outer_refits": "One selected recipe per outer fold, then the explicit score.py --scope outer --allow-outer-test path; preserve all original rows.",
   "checkpoint_policy": "Optimizer/RNG/sampler checkpoint every 2000 pretraining updates and every 500 adaptation updates; retain the 2000 and final pretraining points for matched probes. Publish each required checkpoint to a new exact R2 object prefix before deleting the pod.",
-  "storage_prefix": "s3://abiome-artifacts/slp/runs/slp-1.2-r2/<launch-id>/",
+  "storage_prefix": "s3://abiome-artifacts/slp/runs/slp-1.2-r2/campaign-r2-<launch-id>-<stage>/",
+  "execution": {
+    "runner": "modules/slp-1-2-r2/campaign.py",
+    "ticket_broker": "scripts/slp12_r2_broker.py",
+    "default": "Validate only; research execution requires --execute-research and final scoring requires --allow-outer-test",
+    "local_controller": "Run the broker against the owned pod allocation while the campaign is active. Keep the Mac awake for ticket delivery; no corpus or model payload is routed through the Mac.",
+    "outer_refit": "Preserve the full pretraining LR schedule and stop at the inner-selected update, then adapt from that fresh outer checkpoint.",
+    "publication": "Archive each stage under an immutable prefix. Verify R2 manifests before removing a completed fold's local cache; preserve partial-stage checkpoints on a bounded stage stop."
+  },
   "shutdown_policy": "Both scoped in-pod and local owner guards; reserve 600 seconds for finalization, refuse stages that cannot fit, stop at the lesser of authorized budget or account credit with a $5 reserve.",
   "quarantine": [
     "Costanzo 2016: pending rights confirmation; no fitting",
@@ -425,7 +883,7 @@
   ],
   "launch_requirements": [
     "Final engineering receipt complete",
-    "Resolve the intended inclusion of Costanzo before a mixed interaction campaign",
+    "Costanzo is excluded from this campaign; no source-permission decision is required to launch the admitted corpus",
     "Fresh budget/credit and explicit user launch instruction",
     "Freeze source/data packet, issue exact expiring transfer scopes for that launch, arm and verify both guards"
   ],

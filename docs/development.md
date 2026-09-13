@@ -556,14 +556,43 @@ are proposals rather than measured r2 properties.
 | 1. Cloud inventory and normalization | Checksum-verified, source-native experimental records in R2; study-overlap map and quarantine reports | Actual source schemas, retained measurement semantics, gene/condition coverage, immutable shard hashes | 28 checksum-verified raw objects; 22.53M admitted numeric measurements and 51,302 RNA populations prepared in R2; unresolved sources remain quarantined |
 | 2. Strict CV3 data views | Exact benchmark pair resolution, canonical identity/sequence manifest, fold sidecars and train-only transforms | Zero forbidden human intervention targets in every initializer/inner/outer fitting view; no unscored benchmark pairs | 30 official folds across five tasks; all 60 inner/outer masks audited against the packed/dense corpus; exact roster resolution |
 | 3. Conditional model and fitting path | Descriptor-only r2 model, independent queries, context cache, robust numeric objectives and end-to-end human SL adaptation | Numerical invariance, gradients, serialization/resume and input availability checks | Implemented and exercised through the ordinary fitting CLI, including human-only adaptation and direct feature baselines |
-| 4. RunPod readiness experiments | Real-shard forward/backward, short disposable optimization check, resume/export replay, memory/throughput measurements | Pinned code/data/environment receipts, finite values, exact resume comparison, resource deletion confirmed | Completed numerical checks and R2 inference replay on a 4090; full optimizer-state R2 backup check awaits explicit payload authorization |
-| 5. Training launch handoff | Exact initializer/fold campaign, comparison budgets, selected GPU, upper cost and shutdown limits | All required readiness evidence above, complete launch command and artifact destinations | Hold: launch packet prepared; Costanzo inclusion and optimizer backup permission remain unresolved; research launch remains unapproved |
+| 4. RunPod readiness experiments | Real-shard forward/backward, short disposable optimization check, resume/export replay, memory/throughput measurements | Pinned code/data/environment receipts, finite values, exact resume comparison, resource deletion confirmed | Complete: inference replay and full optimizer/RNG/sampler R2 recovery reproduce the expected results; continuation matches the complete saved state bit for bit |
+| 5. Training launch handoff | Exact initializer/fold campaign, comparison budgets, selected GPU, upper cost and shutdown limits | All required readiness evidence above, complete launch command and artifact destinations | Engineering ready; research launch held at the user's requested boundary. Costanzo is excluded from this campaign |
 
 Readiness experiments do not select a research checkpoint or establish model
 quality. They use disposable updates solely to test the real training path.
 No guarantee about convergence or SOTA follows from engineering readiness.
 The scientific candidate comparisons and full outer refits belong to the later
 research campaign, not the prelaunch checks.
+
+The executable campaign is `modules/slp-1-2-r2/campaign.py`, paired with the
+local `scripts/slp12_r2_broker.py`. The former validates its frozen packet by
+default and requires `--execute-research` to fit and `--allow-outer-test` to
+complete official scoring. Copy the generated `protocols/` metadata and recipe
+packet to the guarded pod, materialize the prepared corpus with
+`finish_readiness.py prepare`, then validate before enabling those switches.
+The source package contains only explicitly listed source/lock files, recipes
+and protocol metadata; runtime ticket files are never captured.
+
+Each outer fold selects among its own complete inner comparisons. Refitting a
+selected early pretraining checkpoint preserves its original learning-rate
+schedule using `stop_at_update`; it does not compress an 8,000-update schedule
+into 2,000 updates. The runner verifies and archives completed stages before
+clearing the fold's disposable local cache. Interrupted stages retain recoverable
+checkpoints; archive restoration also rebuilds the hard-link aliases used by
+pretraining probes. The broker saves a small recovery journal on the Mac, while
+all model/corpus payloads move directly between RunPod and R2. Keep the local
+broker running and the Mac awake during the campaign. Independent local and
+in-pod deadline guards remain required.
+
+The proposed $50 campaign ceiling includes a **$49.89** estimate: $40.64 for
+GPU/disposable disk including 25% reserve, plus $9.25 reserved for the first month
+of R2 storage and operations. Archive growth is bounded to 600 GB, checked
+conservatively before each new publication. Retaining those artifacts beyond the
+first month continues to incur storage charges; this is not a permanent-storage
+purchase. Recheck the live GPU quote/account credit at launch. The packet's
+`engineering_status` is `READY` only when the real optimizer recovery receipt
+passes and its numerical source hashes match the current module.
 
 ## SLp-1.2 joint pretraining
 
