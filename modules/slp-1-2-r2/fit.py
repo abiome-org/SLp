@@ -341,6 +341,7 @@ def main(args):
         context_dropout=phase.get("context_dropout", 0.0),
         retain_updates=phase.get("retain_updates", []),
         stop_at_update=phase.get("stop_at_update"),
+        numeric_loss=phase.get("numeric_loss", "student_t"),
     )
     report = {
         "stage": args.stage,

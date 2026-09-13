@@ -14,8 +14,8 @@ import torch
 from torch.nn import functional as F
 
 
-def objective(output, batch):
-    """Student-t(4) for admitted processed numeric scores; BCE for human SL.
+def objective(output, batch, numeric_loss="student_t"):
+    """Recipe-selected numeric regression loss; BCE for human SL.
 
     Raw counts require preprocessing/admission to their own likelihood and must
     not be mislabeled processed scores. Average coordinates within each sampled
@@ -25,9 +25,16 @@ def objective(output, batch):
     target = batch["target"].float()
     valid = batch["query_mask"]
     binary = batch["query_kind"] == 4
-    scale = output["log_scale"].exp()
-    residual = (target - output["location"]) / scale
-    numeric = output["log_scale"] + 2.5 * torch.log1p(residual.square() / 4.0)
+    if numeric_loss == "student_t":
+        scale = output["log_scale"].exp()
+        residual = (target - output["location"]) / scale
+        numeric = output["log_scale"] + 2.5 * torch.log1p(residual.square() / 4.0)
+    elif numeric_loss == "mse":
+        # Targets retain their fitting-only assay standardization. The unused
+        # uncertainty head is not a calibrated variance in this objective.
+        numeric = (target - output["location"].float()).square()
+    else:
+        raise ValueError("Unknown numeric loss")
     classification = F.binary_cross_entropy_with_logits(
         output["sl_logit"], target, reduction="none"
     )
@@ -112,6 +119,7 @@ def optimize(
     context_dropout=0.0,
     retain_updates=(),
     stop_at_update=None,
+    numeric_loss="student_t",
 ):
     stop_at = updates if stop_at_update is None else stop_at_update
     if (
@@ -166,7 +174,7 @@ def optimize(
                 dtype=torch.bfloat16,
                 enabled=bf16 and torch.device(device).type == "cuda",
             ):
-                loss = objective(model(batch), batch)
+                loss = objective(model(batch), batch, numeric_loss=numeric_loss)
             if not bool(torch.isfinite(loss)):
                 raise FloatingPointError("Nonfinite training loss")
             loss.backward()

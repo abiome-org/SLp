@@ -12,10 +12,16 @@ on 2026-09-13 under a $50 campaign cap. Its
 CUDA optimization, exact checkpoint continuation and Cloudflare artifact replay
 check. The prepared human/yeast RNA and human fitness corpus, both fitting phases,
 direct feature baselines and all 60 inner/outer exposure masks have now been
-exercised. Research results are pending.
+exercised. The first inner-fold results are weak: the original world-model
+candidates trail the direct feature MLP, and a fitting-pool diagnostic found
+poor RNA prediction and little sensitivity to the perturbed gene. SL-only
+adaptation helps some checkpoints but does not beat that MLP. The outer test
+is paused while a fresh, bounded MSE-pretraining comparison runs on the same
+pod and budget. These development results do not support a strong-model or
+SOTA claim.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
 The full optimizer checkpoint has passed an R2 roundtrip and bitwise-exact
-continuation; the frozen nested-CV3 campaign is launching on one RTX 4090. See the
+continuation; research execution uses one RTX 4090. See the
 [preparation ledger](docs/results.md#2026-09-12--slp-12-r2-preparation-in-progress).
 
 ## SLp-1.2 pretrained base

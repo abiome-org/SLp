@@ -38,6 +38,8 @@ else:
 train = module("train")
 evaluate = module("evaluate")
 extract_features = module("extract_features")
+
+
 previous_data = sys.modules.get("data")
 sys.modules["data"] = data
 packed = module("packed")
@@ -59,6 +61,26 @@ def prep_module(name):
         return value
     finally:
         sys.path[:] = previous
+
+
+def test_mse_loss_balances_units_and_ignores_uncertainty():
+    location = torch.zeros((2, 2), requires_grad=True)
+    log_scale = torch.full((2, 2), -6.0, requires_grad=True)
+    logit = torch.zeros((2, 2), requires_grad=True)
+    batch = {
+        "target": torch.tensor([[2.0, 900.0], [0.0, 1.0]]),
+        "query_mask": torch.tensor([[True, False], [True, True]]),
+        "query_kind": torch.tensor([[1, 1], [4, 4]]),
+    }
+    output = {"location": location, "log_scale": log_scale, "sl_logit": logit}
+    loss = train.objective(output, batch, numeric_loss="mse")
+    assert loss.item() == pytest.approx((4.0 + np.log(2.0)) / 2)
+    loss.backward()
+    torch.testing.assert_close(location.grad, torch.tensor([[-2.0, 0.0], [0.0, 0.0]]))
+    torch.testing.assert_close(logit.grad, torch.tensor([[0.0, 0.0], [0.125, -0.125]]))
+    assert log_scale.grad is None
+    with pytest.raises(ValueError, match="Unknown numeric loss"):
+        train.objective(output, batch, numeric_loss="typo")
 
 
 def test_packed_cloud_roundtrip_exclusions_sampling_and_actions(tmp_path, monkeypatch):

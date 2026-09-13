@@ -8758,3 +8758,68 @@ AP **0.54087**, trapezoidal PR-AUC **0.53978**, and AUROC **0.62940**. It improv
 on the unpretrained transformer (AP 0.49998) but trails the feature MLP (0.57713).
 This is one inner fold and one pretraining checkpoint; the remaining comparisons
 and official outer evaluation are still running.
+
+### 2026-09-13 — model-quality intervention before outer testing
+
+The completed original comparisons on MuSL seed-42/fold-0's inner partition
+(1,291 pairs, 514 positives) did not beat the feature MLP. The controller was
+paused before opening the official outer test. All rows remain included and
+the exposure reports show no forbidden human fitting genes.
+
+| Initializer | Original adaptation AP (75% SL) | SL-only adaptation AP |
+|---|---:|---:|
+| No pretraining | 0.499983 | 0.556760 |
+| Human, update 2,000 | 0.540870 | 0.526722 |
+| Human, update 8,000 | 0.502016 | 0.567278 |
+| Human/yeast, update 2,000 | 0.536806 | not run |
+| Human/yeast, update 8,000 | 0.522198 | 0.530338 |
+| Direct feature MLP | 0.577127 (SL-only baseline) | 0.577127 |
+
+The SL-only probes change the replay fraction from 0.75 to 1.0, retaining the
+same initialization, seed, 1,000-update budget and remaining adaptation
+settings. This improves some models but does not establish a useful
+mixed-species transfer gain. Repeated use of this inner partition is explicitly
+development feedback; it is not an independent evaluation.
+
+A gradient-free fitting-pool diagnostic sampled 128 distinct single-action
+units per source, with up to 128 RNA queries per unit. It swapped action gene
+sequence/annotation identities within each source, holding mechanisms,
+contexts, measurement queries and targets fixed. Human fitting masks were
+applied before drawing units and computing baseline statistics. RNA baselines
+are fitting-only per-query means; the DepMap baseline is the fitting assay mean.
+These are training-fit and specificity checks, not generalization scores.
+
+At human update 8,000, DepMap MSE is 0.727067 versus the mean's 0.766749,
+and wrong-gene substitution increases MSE by 0.143036. K562 RNA MSE is
+0.446357 versus 0.016301 for its per-query mean; substitution barely changes
+it. GWPS MSE is 1.293539 versus 1.274388, also without a useful substitution
+penalty. Thus there is a fitness intervention signal but poor RNA fitting.
+The mixed update-8,000 model has K562 MSE 0.723450 and yeast MSE 0.880637
+(yeast fitting mean 0.429364). About 29.5% of sampled yeast outputs reach
+the learned log-scale floor. Pre-clipping mixed-pretraining gradient norms
+reached roughly 224–1,089, although losses and gradients remained finite and
+global clipping stayed at 1.0.
+
+The bounded repair compares fresh human and mixed pretraining with **MSE on
+the existing fitting-standardized numeric targets**, followed by SL-only
+adaptation. Architecture, intervention admission and 8,000-update pretraining
+budget remain unchanged. Both 2,000/8,000 checkpoints receive an inner SL
+probe and the same fitting-pool specificity diagnostic. This tests whether
+learned uncertainty is obstructing mean prediction; it does not assume that
+MSE will solve the problem. The unused uncertainty output of an MSE-trained
+checkpoint is not a calibrated variance.
+
+Numerical source is captured separately in `/workspace/slp-r2-mse`; the original
+frozen source, recipe, checkpoints and paused controller remain intact. The
+driver SHA-256 is
+`d60c303a51f76da406908528d5878d8ec59c3979e3d81b202ba184c741254a0c`.
+The source/diagnostic archive is
+`slp/runs/slp-1.2-r2/campaign-r2-research-20260913-loss-repair-source/`.
+Launch state and small reports are under
+`data/slp12-r2-research-20260913/`; large checkpoints stay in cloud storage.
+The repair started at **21:24:16 UTC**, has a **22:19:59 UTC** process deadline,
+and precedes the bounded controller-hold expiry at **22:21:29 UTC**. The original
+$50 total cap, allocation deadline and independent shutdown guards are unchanged.
+An analytic gradient test covers the new MSE path, unequal query counts,
+unchanged BCE, and zero uncertainty-head gradient; the existing exact
+checkpoint-continuation test and two specificity tests also pass.
