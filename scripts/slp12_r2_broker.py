@@ -171,6 +171,7 @@ def main(args):
         )
         return result.stdout
 
+    issued = {}
     while time.time() < record["terminate_at"] - 300:
         raw = remote(
             "import json; from pathlib import Path; p=Path("
@@ -180,6 +181,11 @@ def main(args):
         for request in json.loads(raw):
             if request.get("plan_sha256") != plan_sha:
                 raise ValueError("GPU requested tickets for a different plan")
+            fingerprint = hashlib.sha256(
+                json.dumps(request, sort_keys=True).encode()
+            ).hexdigest()
+            if time.time() - issued.get(fingerprint, 0) < 1800:
+                continue
             permissions = permissions_for(
                 request, plan, args.run_id, allow_outer_test=args.allow_outer_test
             )
@@ -197,6 +203,7 @@ def main(args):
                 + "); t=p.with_suffix('.tmp'); t.write_bytes(sys.stdin.buffer.read()); t.chmod(0o600); t.replace(p)",
                 json.dumps(response).encode(),
             )
+            issued[fingerprint] = time.time()
         journal = remote(
             "from pathlib import Path; p=Path('/workspace/slp-r2/campaign-state/journal.json'); print(p.read_text() if p.exists() and p.stat().st_size<32*1024*1024 else '{}')"
         )

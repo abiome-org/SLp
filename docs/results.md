@@ -8642,3 +8642,51 @@ in private R2. Engineering readiness is complete; research launch is the only
 remaining user-controlled step.
 All thirty Cloudflare preparation container instances were confirmed inactive
 after cleanup. The local build VM remained stopped throughout this final pass.
+
+### 2026-09-13 — r2 research launch
+
+The user authorized training, final testing, monitoring and intervention within
+the proposed **$50 total campaign cap**. Run `research-20260913` uses the frozen
+packet `results/slp12-r2-ready-20260913/plan.json`, SHA-256
+`29c5a2946d4201ffcafe27738da8be95742e4176548b9b97492c3c45bc922bee`,
+and model/fitting source from commit `f31e947`. The original proposal remains
+unchanged; launch authorization is recorded separately in
+`data/slp12-r2-research-20260913/campaign.json`.
+
+Owned pod `b2fo6eya9vlca2` has one secure RTX 4090 at $0.74/hour and an 80 GB
+disposable container disk. Fresh account credit was $83.06295; no other pods
+were active. The allocation reserves $9.25 for the first month of R2 storage
+and operations and $0.25 for shutdown delay, leaving $40.50 for GPU/disk time.
+Its hard deadline is **2026-09-16 00:20:16 UTC**, with a separate $5 minimum
+account-credit stop. Both the local guard and the in-pod guard are armed; the
+latter verified its provider-injected credential is scoped to this exact pod.
+Reusable account credentials remain local. Corpus and artifact transfers use
+the previously authorized exact-file, expiring R2 capabilities.
+
+The detached launch restores the prepared corpus and features directly to the
+cloud disk, validates all frozen inputs, and runs the thirty-fold nested
+campaign. Five comparison families cover sequence similarity, a feature MLP,
+an unpretrained transformer, human pretraining and mixed-species pretraining.
+Each fold selects on its own inner results, refits fresh, then opens its official
+test partition. A local supervisor records progress every minute, restarts a
+failed ticket broker, and deletes the pod after all thirty folds and durable
+outputs complete. A failed runner left unresolved for thirty minutes triggers
+cleanup after its available journal is mirrored locally; completed stage
+artifacts are already in R2. A fifteen-minute task monitor is authorized to diagnose and
+intervene on actual failures or poor development results without increasing
+the budget or contaminating independent test claims. Research scores remain
+pending; successful startup is not evidence of model quality.
+
+Corpus restoration completed in **98.34 seconds**, and the frozen packet passed
+validation before the research runner started. The source package and first
+two baseline checkpoints and score reports are durable in R2. On the first
+MuSL seed-42/fold-0 **inner** partition (1,291 pairs, 514 positives, prevalence
+0.39814), sequence similarity achieved AP **0.39280** and AUROC **0.50772**;
+the feature MLP achieved AP **0.57713** and AUROC **0.65155**. Both reports show
+zero forbidden human fitting exposures. These are early development baselines,
+not official outer-test results or evidence about perturbation pretraining.
+The 118,652,163-parameter transformer subsequently reached update 760 of its
+first adaptation comparison with finite loss and gradients. Warm optimization
+was approximately 0.096 seconds/update, consistent with the compute estimate.
+The research launch controller and broker passed Python/Ruff checks, the focused
+broker test and repository audit. Model/fitting source remains frozen.

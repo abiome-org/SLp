@@ -6,15 +6,16 @@ fitting and all human perturbation fitting in each fold. Human/nonhuman
 perturbation prediction with one general conditional model is the proposed
 route, followed by human-only end-to-end SL-query post-training. The
 [next-model design](docs/development.md#next-model-design-derived-from-strict-cv3)
-is being implemented as **SLp-1.2-r2**, with research training on hold. Its
+is being trained as **SLp-1.2-r2**, with research training and testing authorized
+on 2026-09-13 under a $50 campaign cap. Its
 118,652,163-parameter inductive transformer has passed a disposable real-data
 CUDA optimization, exact checkpoint continuation and Cloudflare artifact replay
 check. The prepared human/yeast RNA and human fitness corpus, both fitting phases,
 direct feature baselines and all 60 inner/outer exposure masks have now been
-exercised. No r2 research checkpoint or real SL benchmark score exists.
+exercised. Research results are pending.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
 The full optimizer checkpoint has passed an R2 roundtrip and bitwise-exact
-continuation; the launch packet awaits only the research launch instruction. See the
+continuation; the frozen nested-CV3 campaign is launching on one RTX 4090. See the
 [preparation ledger](docs/results.md#2026-09-12--slp-12-r2-preparation-in-progress).
 
 ## SLp-1.2 pretrained base
