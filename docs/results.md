@@ -8820,6 +8820,11 @@ Launch state and small reports are under
 The repair started at **21:24:16 UTC**, has a **22:19:59 UTC** process deadline,
 and precedes the bounded controller-hold expiry at **22:21:29 UTC**. The original
 $50 total cap, allocation deadline and independent shutdown guards are unchanged.
+At 21:30:36 UTC the hold guard was changed to terminate the paused original
+controller at expiry instead of automatically proceeding to the test. The
+monitor must resolve the repair deliberately; unresolved controller failure
+still triggers the existing thirty-minute cleanup policy. Automatic test access
+therefore cannot outrun the model-quality decision.
 An analytic gradient test covers the new MSE path, unequal query counts,
 unchanged BCE, and zero uncertainty-head gradient; the existing exact
 checkpoint-continuation test and two specificity tests also pass.
