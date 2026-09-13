@@ -3,6 +3,8 @@ import manifest from '../source-objects.json' with {type: 'json'};
 import {JOB, JOBS, PREFIX, MAX_BYTES, ARTIFACT_JOBS, PREPARATION_JOBS, outputKey, json} from './routing.mjs';
 import build from './build-receipt.json' with {type: 'json'};
 import {mintFeatureTickets, mintReadinessTickets, mintOptimizerTickets, mintCampaignTickets, transfer} from './transfers.mjs';
+import {prepareGo} from './prepare_go.mjs';
+import goBuild from './go-build-receipt.json' with {type: 'json'};
 
 export class CorpusPrep extends Container {
   defaultPort = 8080;
@@ -34,6 +36,11 @@ export default {
       catch { return json({error:'Invalid campaign file scope'},400); }
     }
     if (request.method === 'GET' && path === '/manifest') return json(manifest);
+    const staticGo = path.match(/^\/static-go\/(human|yeast)$/);
+    if (request.method === 'POST' && staticGo) {
+      try { return json(await prepareGo(env.CORPUS, staticGo[1], manifest, goBuild.sha256)); }
+      catch (error) { return json({error: 'Static GO preparation failed', detail: error.message}, 500); }
+    }
     if (request.method === 'GET' && (path === '/status' || path.startsWith('/status/'))) {
       const job=path==='/status'?JOB:path.slice('/status/'.length);
       if(!JOBS.has(job)&&!PREPARATION_JOBS.has(job)&&!ARTIFACT_JOBS.has(job)) return json({error:'Unknown job'},404);

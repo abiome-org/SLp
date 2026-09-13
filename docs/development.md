@@ -1087,3 +1087,46 @@ current 64-dimensional annotation input contains species and locus-group flags,
 not functional GO or interaction-network annotations. High coverage therefore
 does not imply rich functional annotation. The strict fitting-data contract
 allows provenance-bearing observational/static data for withheld genes.
+
+The next static feature assembly is prepared by `storage/prep/prepare_go.mjs`
+inside the existing Cloudflare Worker. The exact 2022-09-19 human and SGD GAF
+archives are checksum-verified in R2. F/C terms pass the existing evidence,
+negation and date filters. Human joins use the already captured HGNC UniProt
+accession columns; ambiguous accessions are excluded. Human sequence candidate
+accessions are Ensembl proteins and cannot be used as UniProt join keys.
+Yeast joins use exact systematic ORFs in the native roster. The parser preserves
+empty terminal TSV columns; a regression test covers that real import failure.
+
+`scripts/slp12_r2_go_features.py` runs on cloud compute and appends binary direct
+GO terms to the original 64 annotation flags. The term vocabulary is static;
+neither SL labels nor perturbation values construct it. This avoids a hash
+collision or gene-ID lookup layer. ESM, known flags and roster files remain
+byte-identical. The resulting annotation dimension is 6,900 (6,836 GO terms).
+The feature manifest records all source manifests, checksums, vocabulary and
+vectorizer identity. It explicitly verifies both the raw R2 identity-manifest
+hash and the original feature extractor's JSON serialization hash. Only the
+four portable feature files are declared, preserving inference export behavior.
+
+`scripts/slp12_r2_go_probe.py` captures a separate numerical source directory,
+fetches only exact signed GO objects, deletes the read tickets, creates fresh
+features, and trains the same SL feature MLP on the first inner fold. Only its
+annotation input dimension changes. The original campaign and its features
+remain frozen. GO data are described in
+`sources/slp12-r2-static-go-hgnc-20260913.yaml`; the older Ensembl-mapped GO
+experiment is not rewritten. Current mappings are static data, so these
+retrospective evaluations must not be described as historical prospective tests.
+
+For the next benchmark packet, `outer_evaluation: all_families` supports a
+matched official comparison of the direct baseline, the world model trained
+only on SL, and the pretrained world model. Each outer fold selects a checkpoint
+within each declared family using inner AP, then freshly refits every family
+before the first request for that fold's test labels. The overall inner winner
+remains the selected model; all family scores and artifacts are retained to
+measure pretraining contribution. The historical default evaluates only the
+overall selected family. Packet validation requires all 30 folds and exactly
+one inner job per declared fold/family combination, rather than hardcoding five
+families. An optional feature-manifest hash pins the complete static assembly.
+The broker and supervisor accept an explicit SLp remote root for a separately
+captured continuation on the same allocation; defaults preserve the historical
+root. A replacement packet still needs a new immutable run namespace, fresh
+cost accounting, and a deliberate handoff from the paused controller.

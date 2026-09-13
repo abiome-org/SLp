@@ -9,17 +9,18 @@ import hashlib
 import io
 import json
 import os
-from pathlib import Path
+import re
 import shlex
 import signal
 import subprocess
 import sys
 import tarfile
 import time
+from pathlib import Path
 
-from slp12_runpod import run
+from cloud_data import call, settings
 from slp12_r2_runpod import IMAGE
-from cloud_data import settings, call
+from slp12_runpod import run
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -377,6 +378,9 @@ def supervise(args):
     connection = ssh(record)
     broker = None
     failure_since = None
+    if not re.fullmatch(r"/workspace/slp-r2(?:-[a-zA-Z0-9_-]+)?", args.remote_root):
+        raise ValueError("Invalid SLp campaign root")
+    status_code = STATUS_CODE.replace("/workspace/slp-r2", args.remote_root)
     while time.time() < record["terminate_at"] - 300:
         if broker is None or broker.poll() is not None:
             broker = detached(
@@ -389,6 +393,8 @@ def supervise(args):
                     str(args.plan),
                     "--run-id",
                     args.run_id,
+                    "--remote-root",
+                    args.remote_root,
                     "--allow-outer-test",
                 ],
                 args.state / "broker.log",
@@ -397,7 +403,7 @@ def supervise(args):
             record["broker_pid"] = broker.pid
             save(record_path, record)
         try:
-            status = remote(connection, STATUS_CODE)
+            status = remote(connection, status_code)
             status["gpu_disk_elapsed_estimate_usd"] = (
                 (time.time() - record["created_at"])
                 / 3600
@@ -408,7 +414,9 @@ def supervise(args):
                 # Mirror the final journal before cleanup; only metadata comes home.
                 journal = remote(
                     connection,
-                    "import json; from pathlib import Path; p=Path('/workspace/slp-r2/campaign-state/journal.json'); print(p.read_text() if p.exists() else '{}')",
+                    "import json; from pathlib import Path; p=Path("
+                    + repr(args.remote_root + "/campaign-state/journal.json")
+                    + "); print(p.read_text() if p.exists() else '{}')",
                 )
                 save(args.state / "campaign-journal.json", journal)
                 complete = (
@@ -478,7 +486,10 @@ if __name__ == "__main__":
     p.add_argument("--state", type=Path, required=True)
     p.add_argument("--plan", type=Path, required=True)
     p.add_argument("--run-id", required=True)
+    p.add_argument("--remote-root", default="/workspace/slp-r2")
     a = p.parse_args()
+    if a.action != "supervise" and a.remote_root != "/workspace/slp-r2":
+        p.error("An alternate root is only supported for supervision of an existing allocation")
     a.state, a.plan = a.state.resolve(), a.plan.resolve()
     if not a.state.is_relative_to(ROOT / "data"):
         raise ValueError(

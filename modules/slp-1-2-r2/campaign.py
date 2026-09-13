@@ -47,6 +47,20 @@ def choose(reports, fold, expected_candidates):
     )
 
 
+def validate_job_matrix(plan):
+    folds = [fold["name"] for fold in plan["protocols"]]
+    variants = set(plan["variants"])
+    actual = [(job["fold"], job["candidate"]) for job in plan["inner_jobs"]]
+    expected = {(fold, variant) for fold in folds for variant in variants}
+    if (
+        len(folds) != 30 or len(set(folds)) != 30 or not variants
+        or len(actual) != len(set(actual)) or set(actual) != expected
+    ):
+        raise ValueError("The declared suite is incomplete or duplicated")
+    if plan.get("outer_evaluation", "selected") not in ("selected", "all_families"):
+        raise ValueError("Unknown outer evaluation policy")
+
+
 class Runner:
     def __init__(self, args):
         self.args = args
@@ -75,8 +89,11 @@ class Runner:
         for spec in self.plan["variants"].values():
             if digest(self.packet / spec["recipe"]) != spec["sha256"]:
                 raise ValueError("Candidate recipe changed")
-        if len(self.plan["protocols"]) != 30 or len(self.plan["inner_jobs"]) != 150:
-            raise ValueError("The declared suite is incomplete")
+        validate_job_matrix(self.plan)
+        if self.plan.get("features_sha256") and digest(
+            self.root / "features/manifest.json"
+        ) != self.plan["features_sha256"]:
+            raise ValueError("Static feature assembly changed")
         for fold in self.plan["protocols"]:
             if (
                 digest(self.root / "protocols" / fold["file"])
@@ -307,6 +324,41 @@ class Runner:
             self.execute(command, output.parent / (output.name + ".log"))
         return json.loads(metrics.read_text())
 
+    def refit_outer(self, job, probe, run, label):
+        recipe = outer_recipe(
+            json.loads((self.packet / self.plan["variants"][job["candidate"]]["recipe"]).read_text()),
+            probe["checkpoint_update"],
+        )
+        recipe_path = self.state / (label + "-recipe.json")
+        write_json(recipe_path, recipe)
+        command = self.command(job["fitting_command"])
+        for flag, value in (("--scope", "outer"), ("--recipe", str(recipe_path))):
+            command[command.index(flag) + 1] = value
+        if job["pretraining_updates"]:
+            command[command.index("--output") + 1] = str(run / "pretrain")
+            self.fit(command, label + "-pretrain")
+            command += ["--initialize", str(run / "pretrain/checkpoint.pt")]
+        command[command.index("--stage") + 1] = "adapt"
+        command[command.index("--output") + 1] = str(run / "adapt")
+        self.fit(command, label + "-adapt")
+
+    def score_outer(self, probe, run, label):
+        score = self.command(probe["scoring_command"])
+        for flag, value in (
+            ("--checkpoint", str(run / "adapt/checkpoint.pt")),
+            ("--scope", "outer"),
+            ("--basal", str(run / "adapt/basal.json")),
+            ("--output", str(run / "scores")),
+        ):
+            score[score.index(flag) + 1] = value
+        score += ["--allow-outer-test", "--export", str(run / "bundle")]
+        metrics = self.score(score)
+        outputs = {
+            "scores": self.publish(run / "scores", label + "-scores"),
+            "bundle": self.publish(run / "bundle", label + "-bundle"),
+        }
+        return metrics, outputs
+
     def run(self):
         self.validate()
         if not self.args.execute_research:
@@ -374,53 +426,45 @@ class Runner:
                         write_json(self.journal, self.saved)
                     probes[candidate] = (job, probe)
             selection = choose(reports, fold, probes)
-            job, probe = probes[selection["selected"]]
-            run = self.root / "runs" / name / "outer"
-            recipe = outer_recipe(
-                json.loads(
-                    (
-                        self.packet / self.plan["variants"][job["candidate"]]["recipe"]
-                    ).read_text()
-                ),
-                probe["checkpoint_update"],
-            )
-            recipe_path = self.state / (name + "-outer-recipe.json")
-            write_json(recipe_path, recipe)
-            command = self.command(job["fitting_command"])
-            for flag, value in (("--scope", "outer"), ("--recipe", str(recipe_path))):
-                command[command.index(flag) + 1] = value
-            if job["pretraining_updates"]:
-                command[command.index("--output") + 1] = str(run / "pretrain")
-                self.fit(command, name + "-outer-pretrain")
-                command += ["--initialize", str(run / "pretrain/checkpoint.pt")]
-            command[command.index("--stage") + 1] = "adapt"
-            command[command.index("--output") + 1] = str(run / "adapt")
-            self.fit(command, name + "-outer-adapt")
+            all_families = self.plan.get("outer_evaluation", "selected") == "all_families"
+            choices = [selection]
+            if all_families:
+                choices = []
+                for family in self.plan["variants"]:
+                    keys = {key for key, (job, _) in probes.items() if job["candidate"] == family}
+                    choices.append(choose([r for r in reports if r["checkpoint"] in keys], fold, keys))
+            pending = []
+            for choice in choices:
+                job, probe = probes[choice["selected"]]
+                run = self.root / "runs" / name / "outer"
+                label = name + "-outer"
+                if all_families:
+                    run = run / job["candidate"]
+                    label += "-" + job["candidate"]
+                self.refit_outer(job, probe, run, label)
+                pending.append((job["candidate"], choice, probe, run, label))
+            # All compared families are selected and freshly fitted before any
+            # outer labels are fetched. Test outcomes cannot alter these choices.
             self.inputs(fold, "test")
-            score = self.command(probe["scoring_command"])
-            for flag, value in (
-                ("--checkpoint", str(run / "adapt/checkpoint.pt")),
-                ("--scope", "outer"),
-                ("--basal", str(run / "adapt/basal.json")),
-                ("--output", str(run / "scores")),
-            ):
-                score[score.index(flag) + 1] = value
-            score += ["--allow-outer-test", "--export", str(run / "bundle")]
-            metrics = self.score(score)
-            # Test access occurs only here, after selection and fresh refitting.
-            outputs = {
-                "scores": self.publish(run / "scores", name + "-outer-scores"),
-                "bundle": self.publish(run / "bundle", name + "-outer-bundle"),
-            }
+            families = {}
+            for family, choice, probe, run, label in pending:
+                metrics, outputs = self.score_outer(probe, run, label)
+                families[family] = {"selection": choice, "metrics": metrics, "outputs": outputs}
+            selected_family = probes[selection["selected"]][0]["candidate"]
+            selected = families[selected_family]
+            selection_dir = self.root / "runs" / name / "selection"
             write_json(
-                run / "selection.json",
-                {"selection": selection, "inner_reports": reports},
+                selection_dir / "selection.json",
+                {"selection": selection, "inner_reports": reports,
+                 "family_selections": {family: value["selection"] for family, value in families.items()}},
             )
-            outputs["selection"] = self.publish(run, name + "-selection")
+            outputs = dict(selected["outputs"])
+            outputs["selection"] = self.publish(selection_dir, name + "-selection")
             self.saved["folds"][name] = {
                 "selection": selection,
-                "metrics": metrics,
+                "metrics": selected["metrics"],
                 "outputs": outputs,
+                "families": families,
             }
             write_json(self.journal, self.saved)
             # Only this completed fold's owned cache is removed, after R2 verification.

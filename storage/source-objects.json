@@ -1,6 +1,6 @@
 {
   "schema": "slp.cloud-source-manifest/v1",
-  "version": "2026-09-12-cv3-core-v1",
+  "version": "2026-09-13-cv3-core-static-go-v2",
   "purpose": "Private source preservation; storage does not imply training admission or CV3 eligibility.",
   "objects": [
     {
@@ -308,6 +308,28 @@
       "checksum": {
         "algorithm": "md5",
         "value": "f00c434db50d811544ac4d047003979f"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "goa-human-20220919",
+      "key": "slp/raw/go-20220919/sha256-8b97980a895cb74255615f7cdbdd818f72a3999867b7d2a14f867874480693e1/goa_human.gaf.gz",
+      "url": "https://release.geneontology.org/2022-09-19/annotations/goa_human.gaf.gz",
+      "bytes": 12187638,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8b97980a895cb74255615f7cdbdd818f72a3999867b7d2a14f867874480693e1"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "go-sgd-20220919",
+      "key": "slp/raw/go-20220919/sha256-cb991189e29e847e1a0437baf5d786a8cff0cab2bc7d58f97251f5e5df11a535/sgd.gaf.gz",
+      "url": "https://release.geneontology.org/2022-09-19/annotations/sgd.gaf.gz",
+      "bytes": 3742380,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "cb991189e29e847e1a0437baf5d786a8cff0cab2bc7d58f97251f5e5df11a535"
       },
       "license": "CC BY 4.0"
     }

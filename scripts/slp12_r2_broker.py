@@ -4,12 +4,12 @@ import argparse
 import hashlib
 import json
 import math
-from pathlib import Path
 import re
 import shlex
 import subprocess
 import time
 import urllib.request
+from pathlib import Path
 
 from cloud_data import settings
 from slp12_runpod import run
@@ -45,6 +45,12 @@ def allowed_labels(plan):
                 "-input-test",
             )
         )
+        if plan.get("outer_evaluation") == "all_families":
+            labels.update(
+                fold["name"] + "-outer-" + family + suffix
+                for family in plan["variants"]
+                for suffix in ("-pretrain", "-adapt", "-scores", "-bundle")
+            )
     return {label.replace("_", "-") for label in labels}
 
 
@@ -159,7 +165,9 @@ def main(args):
         str(info["port"]),
         "root@" + info["ip"],
     ]
-    queue = "/workspace/slp-r2/transfer-requests"
+    if not re.fullmatch(r"/workspace/slp-r2(?:-[a-zA-Z0-9_-]+)?", args.remote_root):
+        raise ValueError("Invalid SLp campaign root")
+    queue = args.remote_root + "/transfer-requests"
 
     def remote(code, body=None):
         result = subprocess.run(
@@ -205,7 +213,9 @@ def main(args):
             )
             issued[fingerprint] = time.time()
         journal = remote(
-            "from pathlib import Path; p=Path('/workspace/slp-r2/campaign-state/journal.json'); print(p.read_text() if p.exists() and p.stat().st_size<32*1024*1024 else '{}')"
+            "from pathlib import Path; p=Path("
+            + repr(args.remote_root + "/campaign-state/journal.json")
+            + "); print(p.read_text() if p.exists() and p.stat().st_size<32*1024*1024 else '{}')"
         )
         if json.loads(journal).get("plan_sha256") == plan_sha:
             path = Path(args.state) / "campaign-journal.json"
@@ -222,6 +232,7 @@ if __name__ == "__main__":
     p.add_argument("--state", required=True)
     p.add_argument("--plan", required=True)
     p.add_argument("--run-id", required=True)
+    p.add_argument("--remote-root", default="/workspace/slp-r2")
     p.add_argument("--allow-outer-test", action="store_true")
     p.add_argument("--once", action="store_true")
     main(p.parse_args())

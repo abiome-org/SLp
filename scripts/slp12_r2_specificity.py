@@ -67,18 +67,20 @@ def main(args):
     started = time.time()
     torch.set_num_threads(4)
     torch.manual_seed(90217)
+    data_root = args.data_root or args.root
     features = Features(args.root / "features")
     genes = list(features.index)
-    fold = Benchmark(args.root / "protocols/musl-s42-f0-fold.json", features).fold(
+    fold = Benchmark(data_root / "protocols/musl-s42-f0-fold.json", features).fold(
         "inner"
     )
-    recipe = json.loads((args.root / "campaign/mixed_pretraining.json").read_text())
+    recipe_path = args.recipe or args.root / "campaign/mixed_pretraining.json"
+    recipe = json.loads(recipe_path.read_text())
     data_views, _, basal = views(
-        args.root / "mixed-corpus.json",
+        data_root / "mixed-corpus.json",
         features,
         fold,
         "pretrain",
-        args.root / "packed-cache",
+        data_root / "packed-cache",
         center_rna_queries=recipe["pretrain"].get("center_rna_queries", False),
     )
     mixture = population.Mixture(
@@ -141,11 +143,12 @@ def main(args):
         "center_rna_queries": recipe["pretrain"].get("center_rna_queries", False),
         "metric_units": "original fitting-assay standardization, centering undone",
     }
-    for variant in ("human_pretraining", "mixed_pretraining"):
-        for update in (2000, 8000):
+    run_root = args.run_root or args.root / "runs/musl-s42-f0"
+    for variant in args.variants:
+        for update in args.updates:
             if time.time() > args.deadline - 30:
                 raise TimeoutError("Diagnostic time allowance exhausted")
-            directory = args.root / "runs/musl-s42-f0" / variant / "pretrain"
+            directory = run_root / variant / "pretrain"
             file = directory / f"checkpoint-u{update:06d}.pt"
             saved = torch.load(file, map_location="cpu", weights_only=True, mmap=True)
             assert saved["update"] == update
@@ -213,6 +216,12 @@ def main(args):
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--root", type=Path, default=Path("/workspace/slp-r2"))
+    p.add_argument("--data-root", type=Path)
+    p.add_argument("--run-root", type=Path)
+    p.add_argument("--recipe", type=Path)
+    p.add_argument("--variants", nargs="+", choices=("human_pretraining", "mixed_pretraining"),
+                   default=["human_pretraining", "mixed_pretraining"])
+    p.add_argument("--updates", type=int, nargs="+", default=[2000, 8000])
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--deadline", type=float, required=True)
     main(p.parse_args())

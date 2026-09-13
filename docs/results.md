@@ -8888,3 +8888,74 @@ guard at **23:24:43 UTC**. The original campaign controller remains paused,
 official outer test data remain unopened, and financial guards and the total
 $50 cap are unchanged. Further choices using this inner partition are
 development feedback; no independent SOTA conclusion follows from them.
+
+### 2026-09-13 — Centering rejected; functional annotation comparison
+
+The centered comparison completed at **22:54:11 UTC**. All values below use the
+same repeatedly inspected first MuSL inner fold, with 1,291 evaluation pairs.
+
+| Centered-MSE initializer | Inner AP | Inner AUROC |
+|---|---:|---:|
+| Human, update 2,000 | 0.485382 | 0.582338 |
+| Human, update 8,000 | 0.562561 | 0.651292 |
+| Human/yeast, update 2,000 | 0.531161 | 0.621097 |
+| Human/yeast, update 8,000 | 0.435346 | 0.552368 |
+
+Centering is not a successful repair. In original metric coordinates the mixed
+8k model has K562 RNA MSE **0.016301238**, essentially its conditional fitting
+mean's **0.016301186**. GWPS MSE is **1.274575** versus **1.274388**; yeast is
+**0.356674** versus **0.356695**. Wrong-gene penalties are approximately zero
+or negative. The very high K562 correlation (0.99179) comes from the restored
+query means, not learned intervention effects. Mixed DepMap MSE improves to
+0.692632 versus 0.766749, but that does not rescue SL generalization. The
+centered mixed candidate is rejected. These numerical panels are fitting-pool
+diagnostics, not held-out perturbation benchmarks.
+
+Both centered 8k base checkpoints, both corresponding 1k SL-adapted checkpoints,
+their fitting metadata, and full diagnostic reports are verified in private R2
+under `campaign-r2-research-20260913-centered8k` at **23:08:31 UTC**
+(5,944,294,011 uncompressed bytes). Source and recipes remain in the separate
+centered-source archive. All paths are below `slp/runs/slp-1.2-r2/`.
+
+Cloudflare prepared filtered static GO terms for **19,356 human genes** and
+**5,984 yeast genes**, from the already specified 2022-09-19 releases. These
+are 45,054- and 6,380-gene native rosters; the human denominator includes
+noncoding genes. The assembly uses the captured HGNC accession mapping,
+excluding 71 ambiguous accessions. No SL labels or quantitative intervention
+outcomes enter the features. Large source and feature payloads stay in R2 or
+the cloud pod. Five Worker/parser tests and two Python materializer tests pass,
+including checksum failure, exposure rejection, unchanged original features,
+roster preservation and replay-safe output creation.
+
+A matched feature-MLP comparison started at **23:09:18 UTC** in
+`/workspace/slp-r2-go`, using fresh weights and the same fitting/inner partitions.
+The feature array adds 6,836 direct binary GO terms. This run is bounded to
+1,000 seconds; the original controller remains paused and the independent
+financial guards and $50 cap remain unchanged. The finite controller hold now
+expires at **2026-09-14 01:02:17 UTC**; expiry terminates the paused original
+controller rather than opening its outer test.
+
+The GO baseline completed at **23:11:12 UTC** with inner **AP 0.650402** and
+**AUROC 0.713701**, versus 0.577127 and 0.651552 without GO. It is a fresh
+6,441,713-parameter feature MLP with the same 1,000-update schedule, seed and
+permitted pairs. This supports adding functional inputs; it does not establish
+a benefit from world-model pretraining. The complete feature arrays and exact
+MLP checkpoint are verified in R2 under
+`campaign-r2-research-20260913-go-features-baseline` at **23:18:51 UTC**
+(1,818,146,897 uncompressed bytes). The 44-file source, recipe and provenance
+capture is verified under `campaign-r2-research-20260913-go-source`.
+
+A matched world-model comparison started at **23:14:40 UTC**: no pretraining
+versus 8,000 updates of mixed-species MSE pretraining, each followed by 1,000
+human SL-only adaptation updates. Both use the same GO inputs, 123,902,211-
+parameter architecture, seed and optimizer. RNA centering is disabled after its
+failed comparison. The driver is
+`scripts/slp12_r2_go_world_probe.py`, SHA-256
+`3215119c201aeab7c5559aee45e7657ec6c834f759bdbca264b32034c2c47b81`.
+Its finite wrapper expires at **2026-09-14 00:04:37 UTC**; the allocation's
+financial deadline is unchanged. Official test outcomes remain unopened.
+
+The SL-only world model completed with **AP 0.620219**, **AUROC 0.700531**.
+Its counterpart without GO reached 0.556760 AP. The mixed pretraining run is
+still active; any pretraining contribution must be measured against this
+stronger, feature-matched SL-only world model and the GO MLP.

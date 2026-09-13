@@ -1,0 +1,23 @@
+license: CC-BY-4.0 AND CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+scope: Exact source assembly in sources/slp12-r2-static-go-hgnc-20260913.yaml.
+rightsBasis: >-
+  Retain the GO annotation component of the existing GOA human rights record
+  and the exact SGD annotation rights record. HGNC states that all its data
+  are released under CC0 and permits any reuse. This assembly uses captured
+  HGNC stable-ID mappings instead of the historical Ensembl mapping.
+components:
+  goa: rights/goa-human-ensembl-2022-static-mapping.yaml
+  sgd: rights/go-sgd-2022-09-19-cc-by-4.0.yaml
+  hgnc:
+    license: CC0-1.0
+    evidence: https://www.genenames.org/about/license/
+    checkedAt: "2026-09-13"
+attribution: Gene Ontology Consortium, GOA and SGD release 2022-09-19; HGNC, genenames.org.
+purposeRestrictions:
+  staticFeatureGeneration: true
+  perturbationOutcomeFitting: false
+  syntheticLethalityLabels: false
+omfAdmissionClaimed: false

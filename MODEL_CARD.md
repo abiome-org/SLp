@@ -17,8 +17,10 @@ candidates trail the direct feature MLP, and a fitting-pool diagnostic found
 poor RNA prediction and little sensitivity to the perturbed gene. SL-only
 adaptation helps some checkpoints but does not beat that MLP. MSE improved
 fitness modeling and mixed-species SL transfer (AP 0.56371 versus the MLP's
-0.57713), while RNA specificity remains poor. A fitting-only RNA-centering
-comparison is now running on the same pod and budget; the outer test remains
+0.57713), while RNA specificity remains poor. Fitting-only RNA centering failed
+to improve perturbation-specific RNA prediction: its mixed model reached only
+0.43535 inner AP. That candidate is rejected. A separate static-GO feature
+comparison is running on the same pod and budget; the outer test remains
 paused. These development results do not support a strong-model or SOTA claim.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
 The full optimizer checkpoint has passed an R2 roundtrip and bitwise-exact

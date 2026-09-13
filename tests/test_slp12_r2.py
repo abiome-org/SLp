@@ -682,8 +682,9 @@ def test_long_protein_pooling_counts_every_residue_once():
         assert np.isclose(sum(weights.sum() for _, weights in pieces), length)
 
 
+@pytest.mark.parametrize("outer_evaluation", ["selected", "all_families"])
 def test_ordinary_fit_pretrain_then_human_adaptation_and_initializer_exclusion(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, outer_evaluation
 ):
     import subprocess
     import time
@@ -930,10 +931,10 @@ def test_ordinary_fit_pretrain_then_human_adaptation_and_initializer_exclusion(
         ],
     )
     assert result.returncode != 0 and "exposure contract" in result.stderr
-    exercise_nested_campaign(tmp_path, monkeypatch, recipe, fold, b)
+    exercise_nested_campaign(tmp_path, monkeypatch, recipe, fold, b, outer_evaluation)
 
 
-def exercise_nested_campaign(root, monkeypatch, recipe, fold, benchmark):
+def exercise_nested_campaign(root, monkeypatch, recipe, fold, benchmark, outer_evaluation):
     """Real fitting/scoring CLIs; synthetic biology and an in-memory publisher."""
     import gzip
     import shutil
@@ -1052,6 +1053,13 @@ def exercise_nested_campaign(root, monkeypatch, recipe, fold, benchmark):
             )
         ],
     )
+    plan["outer_evaluation"] = outer_evaluation
+    if outer_evaluation == "all_families":
+        # A second family exercises the rule that every refit must finish
+        # before the first official-label request, even for the inner loser.
+        alternate = json.loads(json.dumps(plan["inner_jobs"][0]).replace("mixed_pretraining", "second_pretraining"))
+        plan["inner_jobs"].append(alternate)
+        plan["variants"]["second_pretraining"] = {"recipe": "mixed.json"}
     (packet / "plan.json").write_text(json.dumps(plan))
     args = SimpleNamespace(
         root=str(root),
@@ -1084,7 +1092,10 @@ def exercise_nested_campaign(root, monkeypatch, recipe, fold, benchmark):
 
     def inputs(spec, partition):
         if partition == "test":
-            assert "fixture-outer-adapt" in runner.saved["stages"]
+            expected = ["fixture-outer-adapt"] if outer_evaluation == "selected" else [
+                "fixture-outer-" + family + "-adapt" for family in plan["variants"]
+            ]
+            assert all(label in runner.saved["stages"] for label in expected)
         return original_inputs(spec, partition)
 
     monkeypatch.setattr(runner, "inputs", inputs)
@@ -1093,7 +1104,11 @@ def exercise_nested_campaign(root, monkeypatch, recipe, fold, benchmark):
     assert runner.saved["folds"]["fixture"]["metrics"]["n"] == 2
     assert runner.saved["folds"]["fixture"]["metrics"]["forbidden_human_exposures"] == 0
     assert not (root / "runs/fixture").exists()
-    assert "fixture-outer-bundle" in published
+    if outer_evaluation == "selected":
+        assert "fixture-outer-bundle" in published
+    else:
+        assert set(runner.saved["folds"]["fixture"]["families"]) == set(plan["variants"])
+        assert all("fixture-outer-" + family + "-bundle" in published for family in plan["variants"])
 
 
 def test_direct_baselines_are_symmetric_inductive_and_trainable():
@@ -1282,6 +1297,11 @@ def test_campaign_broker_restricts_publication_and_outer_label_access(monkeypatc
     assert not any(
         p["method"] == "GET" and "checkpoint" in p["name"] for p in permissions
     )
+    family_request = {**request, "job": "campaign-r2-check-fold0-outer-feature-mlp-adapt"}
+    with pytest.raises(ValueError, match="declared"):
+        broker.permissions_for(family_request, plan, "check")
+    expanded = {**plan, "variants": {"feature_mlp": {}}, "outer_evaluation": "all_families"}
+    assert broker.permissions_for(family_request, expanded, "check")
     with pytest.raises(ValueError, match="declared"):
         broker.permissions_for(
             {**request, "job": "campaign-r2-another-fold0-outer-adapt"}, plan, "check"
@@ -1305,6 +1325,21 @@ def test_campaign_broker_restricts_publication_and_outer_label_access(monkeypatc
             "check",
             allow_outer_test=True,
         )
+
+
+def test_campaign_matrix_requires_every_declared_family_once_per_fold(monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / "modules/slp-1-2-r2"))
+    campaign = module("campaign")
+    plan = {"protocols": [{"name": str(i)} for i in range(30)],
+            "variants": {"feature_mlp": {}, "mixed_pretraining": {}},
+            "outer_evaluation": "all_families"}
+    plan["inner_jobs"] = [{"fold": fold["name"], "candidate": family}
+                          for fold in plan["protocols"] for family in plan["variants"]]
+    campaign.validate_job_matrix(plan)
+    with pytest.raises(ValueError, match="incomplete or duplicated"):
+        campaign.validate_job_matrix({**plan, "inner_jobs": plan["inner_jobs"][:-1]})
+    with pytest.raises(ValueError, match="incomplete or duplicated"):
+        campaign.validate_job_matrix({**plan, "inner_jobs": plan["inner_jobs"] + [plan["inner_jobs"][0]]})
 
 
 def test_campaign_restore_recreates_retained_checkpoint_alias(tmp_path, monkeypatch):

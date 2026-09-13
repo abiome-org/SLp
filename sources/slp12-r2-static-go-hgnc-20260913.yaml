@@ -1,0 +1,47 @@
+schema: slp.source-acquisition/v1
+id: slp12-r2-static-go-hgnc-20260913
+status: cloud-prepared-native-research-static-features
+admissionClaim: false
+preparer:
+  path: storage/prep/prepare_go.mjs
+  sha256: f94141c13dff56dbef7d9ef6edef7b06a19891d262aaf8e6ea10ffb4d8f0844a
+identity:
+  key: slp/prepared/identity-r2-20260912-v5/sequence-inputs-manifest.json
+  rawManifestSha256: 5f16e019d07993fe36197ac6efff02c0c1ad1715780c7b100ee01650f6c707ff
+humanAnnotations:
+  source: sources/goa-human-ensembl-2022-09-19.yaml
+  annotationSha256: 8b97980a895cb74255615f7cdbdd818f72a3999867b7d2a14f867874480693e1
+  mappingOverride: Captured HGNC exact UniProt accessions, replacing the historical Ensembl-108 mapping.
+  hgncKey: slp/prepared/identity-r2-20260912-v3/hgnc-raw.bin.gz
+  hgncUncompressedBytes: 16913731
+  hgncUncompressedSha256: 9e07bb49393c12aca8bc931a4349010404c24994a8a58745c14676b8c2b74492
+  hgncPublisherLastModified: "2026-09-11T13:36:41Z"
+  hgncUrl: https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt
+  join: Exact HGNC hgnc_id/uniprot_ids columns; exclude ambiguous accessions; no display-symbol join.
+  ambiguousAccessionsExcluded: 71
+  annotatedGenes: 19356
+  rosterGenes: 45054
+  preparedManifest: slp/runs/slp-1.2-r2/campaign-r2-static-go-20220919-human-v2/annotations-manifest.json
+yeastAnnotations:
+  source: sources/go-sgd-2022-09-19.yaml
+  annotationSha256: cb991189e29e847e1a0437baf5d786a8cff0cab2bc7d58f97251f5e5df11a535
+  join: Exact registered systematic ORFs to native NCBI 559292 identities.
+  annotatedGenes: 5984
+  rosterGenes: 6380
+  preparedManifest: slp/runs/slp-1.2-r2/campaign-r2-static-go-20220919-yeast-v2/annotations-manifest.json
+featurePolicy:
+  aspects: [F, C]
+  excludeQualifier: NOT
+  excludeEvidence: [HEP, HGI, HMP, IEP, IGI, IMP]
+  annotationDateMaximumInclusive: "2022-12-31"
+  directTermsOnly: true
+  geneNamesAsNumericalFeatures: false
+  fittedHumanInterventionGenes: []
+  vectorizer: Binary presence of each direct functional term; no hashing or fitted vocabulary from outcomes.
+rights: rights/slp12-r2-static-go-hgnc.yaml
+limitations:
+  - Static annotation availability and dates differ by gene; this is not a historical prospective benchmark.
+  - The captured HGNC mapping is from 2026, while GO annotation rows are from 2022.
+  - Human roster includes noncoding and unannotated genes; 19356/45054 is not protein-coding coverage.
+  - Exclusion uses recorded GAF evidence codes; it does not assert that all underlying literature is free of experimental knowledge.
+  - Native research preparation is not OpenFoundry DatasetSnapshot admission.
