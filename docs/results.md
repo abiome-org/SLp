@@ -8724,3 +8724,37 @@ the update-2,000 probe has resumed. The active controller is
 `/workspace/slp-r2-transport-wrapper.py`; its activation record is in the owned
 campaign state and separately archived under
 `campaign-r2-research-20260913-transport-v2-activation`.
+
+The next adaptation finished all 1,000 updates, but its publication stopped at
+**19:56:33 UTC** with HTTP 403. The 20:11 monitoring pass detected the stopped
+runner. The exact ticket remained valid, and retrying an identical checkpoint
+part returned `existing`; no model checkpoint was lost. The Worker had wrapped
+all storage exceptions in the same 403 response as malformed capabilities,
+making internal storage errors indistinguishable from authorization failures.
+
+The Worker now returns 503 for internal storage failures while retaining 403
+for invalid/expired capabilities. Identical concurrent immutable writes are
+acknowledged after checking their stored size and SHA. The transport adjunct
+adds up to six attempts with bounded backoff for transient HTTP/network errors;
+permission and conflicting-write responses remain fatal. **Eight Worker tests**
+and **three transport tests** pass. Worker version
+`83799e39-0a0f-4987-96dc-78d6996e521e` reuses the existing inactive container
+application and image. Transport v3 source SHA is
+`a8bc42dde93ecf27c510bd4b563726153a7c7e8ee7b4c52e87f7b3bc8c076067`,
+archived with Worker source and provenance under
+`campaign-r2-research-20260913-transport-v3-source`.
+
+Publication restarted at **20:19:15 UTC** from the completed adaptation
+checkpoint SHA
+`70133bde44bb8c57610a39b7bae6324a48b425c455fdd0da55d0f698e8329854`.
+The fitting/scoring source, data, fold selection and allocation deadline remain
+the frozen campaign. Activation is recorded in
+`data/slp12-r2-research-20260913/transport-v3-activation.json`.
+
+The restarted publication and its inner-score report completed successfully;
+the runner advanced to adaptation from the update-8,000 checkpoint. On the same
+first MuSL inner partition, the update-2,000 human-pretraining probe achieved
+AP **0.54087**, trapezoidal PR-AUC **0.53978**, and AUROC **0.62940**. It improves
+on the unpretrained transformer (AP 0.49998) but trails the feature MLP (0.57713).
+This is one inner fold and one pretraining checkpoint; the remaining comparisons
+and official outer evaluation are still running.

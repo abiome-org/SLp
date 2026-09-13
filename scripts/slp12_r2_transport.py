@@ -14,6 +14,34 @@ import json
 from pathlib import Path
 import re
 import sys
+import time
+import urllib.error
+
+
+def retry_io(operation):
+    """Retry the same authorized operation; permission/conflict errors stay fatal."""
+    for attempt in range(6):
+        try:
+            return operation()
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
+            if isinstance(error, urllib.error.HTTPError):
+                if error.code not in (408, 429, 500, 502, 503, 504):
+                    raise
+                error.close()
+            if attempt == 5:
+                raise
+            print(
+                json.dumps(
+                    {
+                        "event": "transfer_retry",
+                        "attempt": attempt + 1,
+                        "error": type(error).__name__,
+                        "status": getattr(error, "code", None),
+                    }
+                ),
+                flush=True,
+            )
+            time.sleep(min(2**attempt, 20))
 
 
 def upload_directory(directory, job):
@@ -21,8 +49,12 @@ def upload_directory(directory, job):
 
     def upload(chunk, name):
         body = gzip.compress(chunk, compresslevel=1, mtime=0)
-        with cloud_io.request(job, name, body) as response:
-            response.read(4096)
+
+        def put():
+            with cloud_io.request(job, name, body) as response:
+                response.read(4096)
+
+        retry_io(put)
         return {
             "name": name,
             "sha256": hashlib.sha256(body).hexdigest(),
@@ -53,7 +85,7 @@ def upload_directory(directory, job):
                 "parts": parts,
             }
     manifest = {"schema": "slp.artifact-parts/v1", "job": job, "files": files}
-    cloud_io.put_json(job, "artifact.json", manifest)
+    retry_io(lambda: cloud_io.put_json(job, "artifact.json", manifest))
     return manifest
 
 
@@ -70,6 +102,8 @@ if __name__ == "__main__":
     import campaign
 
     campaign.upload_directory = upload_directory
+    original_get_json = campaign.get_json
+    campaign.get_json = lambda *a, **kw: retry_io(lambda: original_get_json(*a, **kw))
     print(
         json.dumps(
             {

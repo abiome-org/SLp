@@ -68,3 +68,23 @@ test('campaign tickets isolate exact artifacts and cannot write benchmark inputs
   assert.equal(key,'slp/runs/slp-1.2-r2/campaign-r2-test-fold-adapt/artifact.json');
   assert.equal((await transfer(new Request(tickets.tickets[0].url,{method:'DELETE'}),env,now)).status,403);
 });
+
+test('storage failures are retryable but invalid capabilities remain forbidden', async()=>{
+  const {mintCampaignTickets}=await import('./transfers.mjs');
+  const now=1700000000000,secret='synthetic-secret';
+  const [ticket]=(await mintCampaignTickets(secret,'https://example.test',[{job:'campaign-r2-retry-source',name:'artifact.json',method:'GET',max_bytes:1000}],now)).tickets;
+  const env={ACCESS_TOKEN:secret,CORPUS:{get:async()=>{throw Error('synthetic storage outage');}}};
+  assert.equal((await transfer(new Request(ticket.url),env,now)).status,503);
+  assert.equal((await transfer(new Request(ticket.url),env,now+10801000)).status,403);
+});
+
+test('an identical concurrent write is acknowledged without overwriting', async()=>{
+  const {mintCampaignTickets}=await import('./transfers.mjs');
+  const now=1700000000000,secret='synthetic-secret';
+  const [ticket]=(await mintCampaignTickets(secret,'https://example.test',[{job:'campaign-r2-retry-source',name:'artifact.json',method:'PUT',max_bytes:1000}],now)).tickets;
+  let heads=0;
+  const env={ACCESS_TOKEN:secret,CORPUS:{head:async()=>++heads===1?null:{size:2,customMetadata:{sha256:'a'.repeat(64)}},put:async()=>null}};
+  const request=new Request(ticket.url,{method:'PUT',body:'{}',headers:{'Content-Length':'2','X-Content-SHA256':'a'.repeat(64)}});
+  assert.equal((await transfer(request,env,now)).status,200);
+  assert.equal(heads,2);
+});

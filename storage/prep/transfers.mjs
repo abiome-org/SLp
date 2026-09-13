@@ -75,13 +75,16 @@ async function mint(secret,origin,permissions,purpose,now) {
 }
 
 export async function transfer(request,env,now=Date.now()) {
+  let p;
   try {
     const match=new URL(request.url).pathname.match(/^\/transfer\/([A-Za-z0-9_-]{1,1000})\/([A-Za-z0-9_-]{43})$/);
     if(!match) return json({error:'Invalid capability'},403);
     const body=from64(match[1]), valid=await crypto.subtle.verify('HMAC',await signingKey(env.ACCESS_TOKEN),from64(match[2]),body);
     if(!valid) return json({error:'Invalid capability'},403);
-    const p=JSON.parse(new TextDecoder().decode(body));
+    p=JSON.parse(new TextDecoder().decode(body));
     if(p.expires<Math.floor(now/1000) || request.method!==p.method || !(campaignPermission(p) || [...featurePermissions(),...optimizerPermissions(),...readinessPermissions(),...readinessPermissions(true),...readinessPermissions(true,true)].some(v=>v.job===p.job&&v.name===p.name&&v.method===p.method&&v.max_bytes===p.max_bytes))) return json({error:'Expired or out-of-scope capability'},403);
+  } catch { return json({error:'Invalid capability'},403); }
+  try {
     const key=isCampaignJob(p.job)?`slp/runs/slp-1.2-r2/${p.job}/${p.name}`:`slp/prepared/${p.job}/${p.name}`;
     if(p.method==='GET') {
       const object=await env.CORPUS.get(key);
@@ -91,8 +94,11 @@ export async function transfer(request,env,now=Date.now()) {
     const bytes=Number(request.headers.get('Content-Length')), sha256=request.headers.get('X-Content-SHA256');
     if(!Number.isInteger(bytes)||bytes<1||bytes>p.max_bytes||!/^[a-f0-9]{64}$/.test(sha256||'')) return json({error:'Invalid bounded output'},400);
     const old=await env.CORPUS.head(key);
-    if(old) return json({state:old.size===bytes&&old.customMetadata.sha256===sha256?'existing':'conflict'},old.size===bytes&&old.customMetadata.sha256===sha256?200:409);
+    if(old) return json({state:old.size===bytes&&old.customMetadata?.sha256===sha256?'existing':'conflict'},old.size===bytes&&old.customMetadata?.sha256===sha256?200:409);
     const stored=await env.CORPUS.put(key,request.body,{onlyIf:new Headers({'If-None-Match':'*'}),sha256,customMetadata:{sha256,job:p.job},httpMetadata:{contentType:'application/octet-stream'}});
-    return json({state:stored?'stored':'conflict'},stored?201:409);
-  } catch { return json({error:'Invalid capability or transfer'},403); }
+    if(stored) return json({state:'stored'},201);
+    const raced=await env.CORPUS.head(key);
+    const identical=raced?.size===bytes&&raced?.customMetadata?.sha256===sha256;
+    return json({state:identical?'existing':'conflict'},identical?200:409);
+  } catch { return json({error:'Artifact storage temporarily unavailable'},503); }
 }

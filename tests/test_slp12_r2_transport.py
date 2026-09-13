@@ -51,8 +51,39 @@ def test_failed_part_never_publishes_manifest(tmp_path, monkeypatch):
         raise TimeoutError("synthetic upload failure")
 
     monkeypatch.setattr(cloud_io, "request", request)
+    monkeypatch.setattr(slp12_r2_transport.time, "sleep", lambda _: None)
     import pytest
 
     with pytest.raises(TimeoutError):
         slp12_r2_transport.upload_directory(tmp_path, "synthetic")
     assert "artifact.json" not in called
+
+
+def test_transient_retry_preserves_bytes_and_does_not_retry_permission_errors(
+    monkeypatch,
+):
+    import urllib.error
+    import pytest
+
+    monkeypatch.setattr(slp12_r2_transport.time, "sleep", lambda _: None)
+    calls = []
+
+    def flaky():
+        calls.append(b"identical payload")
+        if len(calls) < 3:
+            raise urllib.error.HTTPError(
+                "https://example.test", 503, "outage", {}, None
+            )
+        return "stored"
+
+    assert slp12_r2_transport.retry_io(flaky) == "stored"
+    assert calls == [b"identical payload"] * 3
+    denied = []
+
+    def forbidden():
+        denied.append(1)
+        raise urllib.error.HTTPError("https://example.test", 403, "forbidden", {}, None)
+
+    with pytest.raises(urllib.error.HTTPError):
+        slp12_r2_transport.retry_io(forbidden)
+    assert len(denied) == 1
