@@ -8690,3 +8690,37 @@ first adaptation comparison with finite loss and gradients. Warm optimization
 was approximately 0.096 seconds/update, consistent with the compute estimate.
 The research launch controller and broker passed Python/Ruff checks, the focused
 broker test and repository audit. Model/fitting source remains frozen.
+
+At the first monitoring pass, human-only pretraining was progressing at about
+0.097 seconds/update with finite losses/gradients, and the unpretrained
+transformer's first inner AP was **0.49998** (AUROC **0.57711**), below the feature
+MLP. The human pretraining comparison then completed **8,000 updates in 775.55
+seconds**. No conclusion about transfer follows until its adaptation probes run.
+
+The first 1.425 GB optimizer checkpoint took approximately **310.6 seconds** from
+fitting completion to inner-score completion. This substantially exceeded the
+90-second per-stage I/O allowance. At **19:48:11 UTC**, after the human pretraining
+optimizer had finished and while its serial upload was active, the controller
+was replaced with a separately captured transport adjunct using four concurrent
+16 MiB parts. The fitting/scoring subprocesses, source hashes, packet, checkpoint
+identities and selection remain the original frozen campaign. Already-written
+parts are retried with identical bytes under the immutable-write contract.
+The adjunct and provenance receipt are archived at
+`slp/runs/slp-1.2-r2/campaign-r2-research-20260913-transport-v2-source/`;
+source SHA-256 is
+`11a5d0d3510ac696197322c31f62e0df81ad4692fd53c65e0e062acc4b463236`.
+Two focused tests verify byte-for-byte/manifest identity with the serial uploader,
+bounded concurrency, and suppression of the final manifest after a failed part.
+
+The real **4.330 GB** publication completed and was verified by the runner within
+**281.2 seconds** of controller activation (a conservative bound from the first
+supervisor observation of the next stage). This is over three times the prior
+observed bytes/second. The archive contains the retained update-2,000 and
+update-8,000 files plus the final checkpoint; the latter two have identical
+content hashes but distinct inodes in this run and are both counted in the
+archive budget. All frozen source hashes still match. Human adaptation from
+the update-2,000 probe has resumed. The active controller is
+`/workspace/slp-r2-transport.py`, launched by
+`/workspace/slp-r2-transport-wrapper.py`; its activation record is in the owned
+campaign state and separately archived under
+`campaign-r2-research-20260913-transport-v2-activation`.
