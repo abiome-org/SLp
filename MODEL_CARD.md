@@ -6,7 +6,14 @@ fitting and all human perturbation fitting in each fold. Human/nonhuman
 perturbation prediction with one general conditional model is the proposed
 route, followed by human-only end-to-end SL-query post-training. The
 [next-model design](docs/development.md#next-model-design-derived-from-strict-cv3)
-is a proposal; the artifacts and measured capabilities below remain unchanged.
+is being implemented as **SLp-1.2-r2**, with research training on hold. Its
+118,652,163-parameter inductive transformer has passed a disposable real-data
+CUDA optimization, exact checkpoint continuation and Cloudflare artifact replay
+check. The prepared human/yeast RNA and human fitness corpus, both fitting phases,
+direct feature baselines and all 60 inner/outer exposure masks have now been
+exercised. No r2 research checkpoint or real SL benchmark score exists.
+The launch packet is held pending the remaining source/backup permissions; see the
+[preparation ledger](docs/results.md#2026-09-12--slp-12-r2-preparation-in-progress).
 
 ## SLp-1.2 pretrained base
 
@@ -29,8 +36,8 @@ This run did not produce a general scaling gain; the 142M artifact remains the
 recommended default base. These are selected checkpoints on retrospective
 development data, not an independent test or a controlled scaling curve.
 The [results ledger](docs/results.md) records the matched comparison, execution,
-recovery and costs. All SLp RunPod resources have been deleted after local
-artifact verification.
+recovery and costs. Resources for these historical training campaigns were
+deleted after local artifact verification.
 
 SLp-1.2 is a trained **142,311,171-parameter** shared set transformer for
 molecular endpoint and quantitative fitness prediction. Individual intervention

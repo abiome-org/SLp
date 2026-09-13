@@ -19,7 +19,7 @@ export async function ingest(spec, bucket, fetcher = fetch) {
     return json({id: spec.id, key: spec.key, bytes: existing.size, state: 'verified-existing'});
   }
   if (spec.bytes > 5 * 1024 ** 3) return json({error: 'Use a cloud CPU multipart importer for objects above 5 GiB'}, 422);
-  const upstream = await fetcher(spec.url, {headers: {'Accept-Encoding': 'identity'}});
+  const upstream = await fetcher(spec.url, {headers: {'Accept-Encoding': 'identity', 'User-Agent': 'SLp-Cloud-Storage/1.0'}});
   if (upstream.status !== 200 || !upstream.body) {
     await upstream.body?.cancel();
     return json({error: 'Publisher download failed', upstream_status: upstream.status, id: spec.id}, 502);

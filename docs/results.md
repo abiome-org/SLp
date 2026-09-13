@@ -8321,3 +8321,256 @@ No research training, GPU allocation, dataset transfer, release promotion or
 deployment was performed. Existing experiments retain isolated Linux execution; this
 check exercises the macOS controller and protocol/schema integration, not a new
 end-to-end artifact replay or OpenFoundry service deployment.
+
+## 2026-09-12 — SLp-1.2-r2 preparation in progress
+
+The user authorized staged implementation, Cloudflare corpus preparation and
+RunPod readiness experiments, with a hold before research training. Work is on
+`slp-1.2-r2`. A conservative $5 initial-work ceiling was stated; the separate
+research campaign has not been launched or allocated.
+
+The first Cloudflare Container pass independently verified all 20 existing raw
+objects and inspected their archive/table schemas. Its complete receipt is at
+`slp/prepared/inventory-r2-20260912-v1/complete.json` in private R2. The instance
+was observed inactive after completion. A second pass completed source-native
+staging under `slp/prepared/native-r2-20260912-v1/`:
+
+| Family | Staged rows | Shards |
+| --- | ---: | ---: |
+| SLKB original pair results | 280,483 | 9 |
+| SLKB original guide counts | 3,578,017 | 110 |
+| SLKB guide designs | 45,430 | 2 |
+| Original In4mer construct depletion | 185,838 | 6 |
+| SPIDR sensitive-lethality scores | 149,787 | 5 |
+| Native Costanzo pairwise fitness/interaction records | 20,684,253 | 632 |
+
+These are source records, not additive counts of independent experiments or
+fitting-admitted examples. SLKB contains 16,059 author SL calls and 264,424
+`Not SL` entries; the latter must retain their author call semantics. In4mer
+reanalyses and figure-level copies are excluded from additional source counts.
+Costanzo preserves original alleles, temperature and native epsilon values;
+21,359 rows have identifiers outside the initial ORF parser and remain in the
+raw archive for resolution. Harle's 547 nested files were inventoried. Its
+library pair labels can name a gene that a safe-targeting guide does not
+actually perturb, so subsequent admission derives targets from guide metadata.
+
+The dedicated preparation service is `slp-corpus-prep`. Each process has a
+30-minute deadline, exits on completion and permits one instance. Raw objects
+are read through the existing manifest-only service; new outputs use immutable,
+versioned SLp prefixes with checksums. JSON schema/coverage reports are the only
+local downloads. Dataset bytes are processed inside Cloudflare. The published
+container price bounds one standard-2 process to $0.064512 of container compute
+at 30 minutes before included usage; storage, Worker and Durable Object charges
+are separate. Actual invoices have not been reconciled.
+[Cloudflare Container pricing](https://developers.cloudflare.com/containers/platform/pricing/).
+
+The source manifest now additionally pins the official Feng small archive's
+five parts and DepMap 24Q2 expression, Model metadata and CRISPR GeneEffect.
+The three DepMap files are checksum-verified in R2; Feng transfer is in progress.
+A publisher HTTP 403 to the initial Worker request was resolved by setting an
+explicit client User-Agent. The first static-identity job preserved HGNC but
+failed at UniProt's bulk endpoint; its failure receipt is retained under
+`identity-r2-20260912-v1`. The replacement uses bounded UniProt pages.
+
+The new default model has **118,652,163 trainable parameters**, excluding the
+frozen sequence encoder. Eleven focused synthetic tests pass, covering action
+permutation, independent output queries, cached/full forward equivalence,
+missing/padded inputs, backbone SL gradients, strict human exposure exclusions,
+lineage and duplicate conflicts, condition sampling, exact optimizer/RNG/sampler
+resume and inner-only selection. The source ingest Worker's seven tests also
+pass. These checks do not establish real-corpus CUDA readiness or model quality.
+Canonical identity/feature completion, bounded-memory corpus loading, all
+benchmark fold views, source admission, GPU checks and the concrete training
+campaign were still in progress at this first checkpoint.
+
+Preparation subsequently completed the following, with large payloads remaining
+in Cloudflare R2 and the temporary GPU cache:
+
+- All 28 raw objects are checksum-verified, including the five Feng archive
+  parts (concatenated MD5 `5a36306fac1e31352c6d4645c8a57a6a`) and DepMap 24Q2.
+- Static identity includes 51,434 human/reference-yeast genes. Frozen ESM-2 650M
+  features cover 25,902 genes, using full proteins with overlapping windows and
+  coverage-corrected pooling. Extraction took 338.3 seconds on a 4090; no SLp
+  optimizer ran in that feature job. Missing protein sequences remain explicit.
+  The completed static stages are under `identity-r2-20260912-v5`; its later
+  Harle-phase failure does not invalidate the completed sequence manifests.
+  Frozen features are durable under `esm-r2-20260912-v1`.
+- Ten official MuSL folds and fifteen SLAMR scenario-3 folds are normalized
+  under `protocol-r2-20260912-v4`. Five Feng balanced random-negative CV3 folds
+  are complete under `feng-folds-r2-20260912-v1`. All 9,845 Feng and 7,684 MuSL
+  roster genes resolve. Published row order, multiplicity and conflicting labels
+  are preserved; MuSL's first inspected training fold has fourteen contradictory
+  duplicate rows. MuSL tensors index roster row positions, not its sparse
+  `unified_id` column. Feng's old sparse pickles use a restricted data-only reader.
+- Harle source-native output contains 1,801,184 construct fitness measurements
+  and 12,744 gene GI measurements. The first canonical human pack retains
+  2,090,851 measurements spanning 19,096 target genes across Harle, In4mer and
+  SPIDR. Its 58,702 quarantined rows include unresolved/ambiguous guide identities
+  and prototype triples with an unresolved fourth guide. SPIDR's engineered TP53
+  knockout is an explicit background action for CV3 exposure filtering; its two
+  variable CRISPRi targets plus that background must not be counted as a designed
+  three-gene combination screen. Source coverage is not a count of independent
+  experiments. R2 prefix: `pack-human-r2-20260912-v1`.
+- The canonical DepMap pack contains 20,443,284 quantitative Chronos GeneEffect
+  values for 18,437 resolved genes in 312 shards, under
+  `pack-depmap-r2-20260912-v1`. These are fitness outcomes, not binary SL calls.
+
+The user explicitly authorized expiring exact-object links for the SLp RunPod
+pod after automatic approval review rejected credential export. The GPU receives
+three-hour GET/PUT capabilities for exact files, with immutable writes and size
+caps; no reusable Cloudflare token or account-level RunPod key is forwarded.
+Container execution also verifies the running image's source hash before claiming
+a job, and every write names its immutable job prefix explicitly. Earlier failed
+preparation versions remain as provenance rather than being overwritten.
+
+The first real-data readiness run used native RunPod on one RTX 4090 at $0.74/hour,
+with an 80 GB disposable disk, a two-hour maximum allocation, and independent
+local and provider-scoped in-pod termination guards. The GPU/disk upper estimate
+is $1.52384; the actual invoice and total preparation charges are not reconciled.
+It used PyTorch 2.11.0+cu128 and the captured Linux dependency lock. This is native
+RunPod execution, not an admitted OpenFoundry executor.
+
+That run filtered all 2,090,851 human-pack rows using the MuSL seed-42 fold-0 outer
+and inner exclusions, leaving 1,508,639 fitting measurements with zero forbidden
+human targets. Forty disposable quantitative updates at batch size 32 completed;
+four SL-gradient checks followed. The full 118,652,163-parameter model used
+2,499,575,296 peak allocated GPU bytes for this short-query workload. Including
+checkpoint finalization, the quantitative check averaged 0.146 seconds/update;
+this is not the expected throughput of a full RNA-query batch. Exact CUDA
+optimizer/RNG/sampler continuation, action permutation and cached/full inference
+passed. A 752,372,987-byte self-contained inference bundle was uploaded to R2 in
+157.2 seconds, downloaded and reproduced predictions exactly. End-to-end runtime
+was 270.3 seconds. Evidence: `readiness-r2-20260912-v1/complete.json`.
+
+Sixteen focused local tests and four preparation Worker tests now pass. The
+readiness bundle contains disposable weights and is not a research result.
+Molecular preparation, broader real-data checks, source admission, comparison
+implementations and the concrete campaign remain in progress. Costanzo remains
+staged with fitting disabled by its existing unverified rights record. No r2
+research campaign, checkpoint selection or SL benchmark evaluation has launched.
+
+### Mixed corpus and final numerical readiness — 2026-09-13 UTC
+
+Cloudflare preparation now contains **22,534,135 admitted processed numeric
+measurements** (the human combination and DepMap packs) and **51,302 molecular
+population units** spanning **326,887,449 dense RNA coordinates**. The latter is
+an array-size count, not a count of independent experiments or cells. There are
+12,521 human populations in eight source/context cohorts and 38,781 native yeast
+populations. Missing coordinates retain observation masks. The legacy molecular
+population subsets are reused as measurements; their old fitted model features,
+feature normalizers, action embeddings and outcome centroids are not imported.
+Their original excluded cohorts have not yet been restored. Human RNA query
+rosters retain the publisher/source measurement coordinates, with current identity
+resolution and documented unresolved-coordinate quarantine.
+
+The human RNA jobs cover K562 and RPE1 essential Perturb-seq, Norman CRISPRa,
+K562 genome-wide Perturb-seq, HepG2 and three MCF10A conditions. MCF10A TGFB1-treated
+controls are explicitly labeled observational and treatment-exposed. TGFB1 is
+also represented as a ligand action, so its held-gene mask cannot disappear into
+a context name. DepMap observational preparation supplies 1,517 cell-line
+profiles, 19,137 unambiguous expression coordinates and 5,518 exact name aliases.
+Twenty-eight duplicate/collapsed expression headers are quarantined within the
+56 unresolved/excluded expression coordinates. These profiles have a fixed
+128-coordinate gene-sign projection and a deterministic 64-gene observation
+panel; neither projection is fitted on intervention outcomes. These are compact
+conditioning inputs, not a learned full transcriptomic representation.
+
+The yeast RNA source uses stable SGD CURIEs. Its join to native reference ORFs
+uses the exact current SGD feature-table hash
+`ac66e4df1b31c002a4aeb03b1bccbd5b4a0b360ee2c2a42a8a9f427473462dc8`.
+The publisher download endpoint ignored the older `versionId` parameter; the
+adapter rejected the unexpected content before proceeding. The available
+2026-09-11 table was explicitly reviewed and pinned by hash and byte count under
+`rights/sgd-identity-2026-09-11-cc-by-4.0.yaml`, then captured in R2. Its 6,613
+current ORF IDs have no ambiguous primary joins; two irregular rows are excluded.
+The resulting yeast pack has 38,781 populations and 6,035 RNA coordinates, with
+197 unresolved intervention populations and 648 output coordinates quarantined.
+Native source taxon 4932 is retained in provenance while ORFs join the S288C
+559292 reference; outcomes are never relabeled human.
+
+`readiness-r2-20260912-v2` exercised the **ordinary `fit.py` command** for forty
+mixed-corpus pretraining updates and twelve human-only adaptation updates,
+including human quantitative replay. The MuSL seed-42 fold-0 inner mask retains
+19,096,956 of 22,534,135 packed measurements. It retains all 38,781 native yeast
+populations for pretraining and excludes them from adaptation. Every human
+fitting source is filtered before its outcome scales are fitted. Both phases
+completed with finite loss and nonzero gradients. The initial completion-report
+upload exceeded its one-MiB link cap; the 1,662,051-byte receipt was subsequently
+published under a four-MiB cap, preserving the failed publication record. This
+was a report-publication failure, not an optimizer failure.
+
+`readiness-r2-20260912-v3` then checked all **60 inner/outer masks over the 30
+published folds**, ran the full model through 24 disposable pretraining and eight
+adaptation updates with context dropout, and ran four disposable updates for each
+of two direct SL baselines. The feature MLP has 2,928,009 parameters; the
+sequence-similarity model has five parameters and is not a curated paralogy
+annotation. A full-corpus human-only pretraining view also excludes native yeast.
+The maximum allocated GPU memory for the full model was approximately 2.46 GB
+for these batch-16, at-most-128-query checks. The pretraining loop's twenty-step
+warm segment took about 0.09 seconds/update; this does not include corpus
+materialization, per-fold filtering, uploads or checkpoint finalization.
+
+The final **807,173,894-byte** inference bundle includes real basal profiles,
+weights, frozen features, code, categorical vocabulary, numeric-scale provenance
+and the dependency lock. It was uploaded to R2, downloaded and reproduced its
+predictions **bit for bit**. That final readiness run took **737.60 seconds**.
+No official SL test scores were computed and no research checkpoint was selected.
+Earlier exact CPU/CUDA optimizer continuation checks remain numerical evidence;
+the separate full optimizer/RNG/sampler checkpoint R2 roundtrip is still pending.
+Automatic approval review rejected that payload upload, stating that earlier
+file-link permission did not explicitly authorize that checkpoint export. The
+user has been asked for this specific backup authorization. No alternate export
+route was attempted.
+
+After the CUDA run, focused local checks added immutable retention of requested
+pretraining checkpoints, exact basal-input checksum enforcement during scoring,
+synthetic scoring through the ordinary CLI, and atomic checkpoint-publication
+snapshot handling. **22 local tests** and **five preparation Worker tests** pass;
+Ruff's undefined-name/unused-code checks and whitespace checks pass. The late
+retention and scoring-provenance changes are covered locally; they do not change
+the numerical model or training objective exercised on CUDA.
+
+The proposed campaign packet is generated by `scripts/slp12_r2_campaign.py`.
+It declares five comparison recipes, thirty outer folds, pretraining probes at
+2,000 and 8,000 updates, and 1,000-update human adaptation budgets. Each outer
+model selects its own recipe/checkpoint using only its own inner-CV3 AP. The
+five-task equal-weight summary (MuSL, Feng random1, and the three SLAMR cell-line
+tasks) is for comparison reporting; it must not select nested outer models using
+other outer folds' fitting exposure. The selected recipe is refitted from scratch
+with the outer-only mask before any official test labels are scored. Unrequested
+Feng negative-set variants and partner-ranking tasks are not silently combined
+with this declared suite.
+
+Using conservative 0.15-second pretraining and 0.10-second adaptation estimates,
+plus ninety seconds per planned stage for setup/transfer overhead, the packet
+estimates **$40.64 for GPU and disposable disk including a 25% reserve** at the
+observed $0.74/hour 4090 price. This is an extrapolation from short checks, not a
+fixed quote; R2 retention charges, fresh pricing and actual selected outer paths
+must be reconciled at launch. The packet proposes a $50 ceiling and remains
+`HOLD`; no new research budget or launch is authorized. RunPod account credit
+was $84.40 at the last check, and the earlier unrelated pod was no longer listed.
+
+The preparation allocation was extended by one hour only after its replacement
+scoped guard was verified. Its total three-hour GPU/disk upper estimate is
+**$2.28575**, within the stated $5 preparation ceiling, excluding other users'
+concurrent account consumption. Costanzo remains staged with fitting disabled;
+SLKB raw counts and unresolved guide/alias rows remain quarantined. Broader
+original molecular cohorts, richer missing-protein/noncoding features and
+additional datasets are explicit follow-on coverage work. Native RunPod is not
+an admitted OpenFoundry executor, and no OpenFoundry admission is implied by these
+checks.
+
+Preparation cleanup completed at **2026-09-13 05:46:47 UTC**: the owned RunPod
+pod `ms0bho8qc9zps9` was deleted, its absence was verified, and its local guard
+was stopped. No RunPod pods remained in the account at that check. The elapsed
+GPU/disposable-disk estimate is **$2.133**, before Cloudflare charges; this is an
+elapsed-rate calculation rather than an invoiced total. All thirty Cloudflare
+preparation container instances were subsequently confirmed inactive. The local
+`omf-tests` Colima build VM was also shut down. R2 retains the prepared corpus,
+features, reports and verified inference bundles.
+
+The full optimizer-backup upload was never executed. Its disposable checkpoint
+was on the deleted pod, so completing that separate remote persistence check
+after authorization requires recreating a short disposable run. The saved
+inference bundles are not resumable optimizer checkpoints. Research training
+and official outer-test scoring remain unlaunched.

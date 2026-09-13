@@ -314,6 +314,257 @@ system built around our preferred explanation of biology. It is a design
 principle, not a guarantee of improved scores or unlimited benefit from a
 finite corpus.
 
+## SLp-1.2-r2 implementation sketch — 2026-09-12
+
+Status: implementation and cloud preparation authorized on 2026-09-12, following
+the `slp-1.2-0910` checkpoint and OpenFoundry migration. Research training remains
+on hold until a separate launch instruction. The staged readiness record below
+distinguishes implemented and verified work from the design.
+
+The next version should be a direct experimental predictor with an SL query,
+trained on a substantially better combination corpus. Retain the general
+transformer and rebuild its data, identity representation and selection loop.
+The current bases predict human single-gene fitness usefully but fail the tested
+yeast interaction task; their molecular intervention specificity is weak on the
+sampled panels. The XL comparison did not produce a general gain. Those results
+identify failed capabilities, not a proof that architecture, scale or the
+measurement panels alone caused them.
+
+### Proposed model
+
+```text
+Sequence representations + permitted annotations
+Basal molecular observations + species/assay/context metadata
+Unordered intervention tokens with mechanism, dose and timing
+Requested RNA / protein / fitness / interaction / human SL measurement
+                            |
+             one conditional transformer
+                            |
+             numeric distribution or SL probability
+```
+
+Start with width 768, 16 blocks, 12 attention heads, RMSNorm, SwiGLU and SDPA.
+Expect roughly 120–150M trainable parameters after implementation and counting;
+the frozen sequence encoder is separate. This is an engineering starting point,
+not a biologically privileged size or a claim about optimal capacity.
+
+Remove the learned gene-ID embedding table. Gene IDs join records and select
+sequence data; the same shared feature encoder represents a gene during fitting
+and cold-gene inference. Start with cached ESM-2 650M sequence representations
+and a trainable adapter. The upstream model supplies 1,280-dimensional features;
+retain a sequence/isoform manifest and explicit missing-feature masks. Preserve
+multiple sequence summaries if pooling discards useful information, and test
+richer sequence encoders as interchangeable inputs. Noncoding genes and missing
+sequences need admitted annotation features and an explicit missing-sequence
+path, not silent removal from the benchmark. Protein sequence is useful input,
+not a complete description of gene regulation.
+[ESM model and extraction documentation](https://github.com/facebookresearch/esm#pre-trained-models).
+
+Feed available basal RNA/protein measurements as variable observation tokens.
+Keep an explicit missing-context token and label-scope metadata for pan-cancer
+queries. Context dropout is a training option selected on inner validation;
+its initial value is not a fixed biological assumption. Preserve mechanism and
+method separately where available, along with species, dose, time, source units
+and measurement availability. Keep controls separate from post-intervention
+observations. Assay-imputation inputs and prospective-prediction inputs have
+separate availability masks.
+
+Use a block attention mask: basal/context tokens attend within their group;
+interventions attend to that group and one another; output queries attend to the
+conditioning tokens but do not change them or other output queries. This keeps
+simultaneous interventions permutation-invariant and makes a query's prediction
+independent of which unrelated output coordinates are requested beside it.
+Basal/context keys and values can be cached for a fixed checkpoint and input
+panel. A human SL prediction requires one joint pair query, with no preliminary
+control/A/B/AB simulation calls. Static sequence representations are also
+cacheable. This reduces repeated computation without imposing a cheap pair head
+as the only route through the model; full matrix-by-context throughput still
+needs measurement. Optional later distillation must preserve measured ranking.
+
+For the first r2, optimize assay-aware endpoint and interaction prediction plus
+human SL adaptation. Remove the separate flow-matching objective from this
+initial training recipe. Numeric heads report means and uncertainty appropriate
+to the observed assay; processed expression and raw counts do not share an
+invented common likelihood. Full correlated single-cell generation can be added
+if it helps the intended task. This first version does not promise that sampler.
+
+### Learn combinations as observations
+
+Teach the same backbone to answer control, single, double/multiple, fitness and
+interaction queries wherever those outcomes are measured. Directly supervise
+an interaction query with assay-provided GI values, or a compatible contrast
+constructed from observed controls and singles. For log-fitness, that contrast
+can be `f(AB)-f(A)-f(B)+f(0)`. In another assay the reference equation may differ.
+Predicting this target directly gives nonadditivity explicit supervision without
+requiring `f(AB)` or the SL logit to pass through an additive-plus-residual head.
+
+Do not feed the measured singles of a withheld gene into a strict-CV3 prediction.
+A baseline using measured singles is an information-rich diagnostic, not a
+matched deployable comparator. Compute training contrasts and replicate
+summaries only after the fold mask, from compatible assay/context measurements.
+Raw outcomes, derived contrasts and replicated screens remain linked to the
+same experimental unit, so they do not become fictitious independent data.
+Negative GI, signed double depletion and binary SL calls retain distinct target
+semantics; a double that is harmful only because one single is lethal does not
+establish synthetic lethality.
+
+Aggregate loss first within an experimental unit, then within task/source
+families. Fit scales and reliability estimates on fitting data only. A robust
+continuous objective is a useful starting point for processed screen scores;
+raw count likelihoods and binary SL BCE retain their own semantics. Search a
+small set of family weights rather than setting a universal 30–40% residual-loss
+quota or treating a protein MSE in different units as intrinsically more noise.
+
+### Corpus and cloud preparation
+
+Prepare the source objects already in private R2: quantitative human combinations
+from SLKB, SPIDR, Harle and In4mer; full Costanzo pairwise data; existing human
+single-fitness and molecular sources. SLKB membership does not make every row a
+usable quantitative human double. Identify raw measurements, curated binary
+labels, overlapping studies, technical repeats and multi-gene constructs before
+counting coverage. Labels stay in human SL adaptation; quantitative measurements
+can enter pretraining only under the applicable exposure mask.
+
+Broader human intervention coverage remains part of the design: Orion and
+primary CD4 data should follow the first combination adapters, with mouse as a
+further cross-species source. A rare pair screen cannot by itself teach the
+representations of every unseen gene. Large chemical atlases are lower priority
+for this genetic objective; their eventual admission requires a represented
+action and assay, not just more cells. Nothing is imported through the old
+7,683-gene feature roster.
+
+Use immutable raw objects, normalized experiment shards and small fold-index
+manifests in R2. Download/prepare large payloads on cloud CPU disks and cache
+training shards beside the GPU. The current Worker covers the small-object
+batch; larger atlas files require a multipart cloud importer. The Mac holds
+code, manifests and reports. Do not duplicate the entire corpus per fold.
+
+Each record carries stable source/experiment IDs, species-qualified intervention
+sets, context and assay, availability of basal observations, target semantics,
+replicate/group membership, rights, and the complete lineage of any derived
+value. Audit usable genes, conditions and targets before and after each fold's
+mask. Count independent interventions separately from cells, guides and draws.
+
+Within task families, start with temperature sampling over distinct admissible
+intervention/context conditions. Treat the exponent and family allocations as
+training parameters. Sample conditions without replacement before cycling, with
+explicit repeat budgets for tiny fixed aggregate datasets. Sample biological
+cells/replicates inside each condition separately. Log realized condition
+coverage, draws and effective repeats; restore all sampler state on resume.
+Do not decree ten epochs for every source or discard small studies solely
+because they are small. The actual admitted coverage must determine the first
+mixture, rather than the headline sizes of downloaded archives.
+
+### Strict CV3 through both training phases
+
+A shared initializer may learn from sequence data, nonhuman perturbations and
+human perturbations outside the union of benchmark target genes. Audit how much
+human coverage that last restriction retains; most human quantitative learning
+may need to happen during fold-specific pretraining.
+
+For each development inner fold, exclude its held genes and the outer-test
+genes from every human quantitative fitting row and every SL fitting label,
+across sources and benchmarks. Apply this before outcome-fitted transforms,
+contrast construction, repeat summaries or teacher creation. The initializer
+must have the same admissibility; filtering the final readout cannot fix earlier
+exposure. Measured output coordinates for a held gene are distinct from a human
+experiment that intervenes on it. Nonhuman homologs remain species-native and
+are permitted by the user's protocol.
+
+Then run mixed-species quantitative pretraining, followed by human-only
+end-to-end SL adaptation with allowed human quantitative replay. The backbone
+continues learning during adaptation. A frozen small decoder remains a useful
+comparison, not the main selection or deployment restriction. After selecting
+settings on inner folds, refit from the admissible initializer using all permitted
+outer-training genes, and evaluate the outer fold. Final folds can have different
+weights. This is the intended CV3 protocol, not an implementation inconvenience.
+
+Filtering belongs in fold construction and must produce exclusion receipts;
+assert that the constructed fitting view contains zero forbidden interventions.
+Do not make the raw union corpus invalid merely because it contains future held
+rows. Resolve aliases and canonical unordered pairs before splitting. Require
+exact benchmark pair resolution and report every unmappable record; never use
+an unchecked nearest `searchsorted` result or drop unscored pairs silently.
+
+### Selection and evidence
+
+Retire aggregate `selection_mse` as the model selector. At a limited set of
+pretraining checkpoints, perform the same bounded end-to-end human adaptation
+and score inner CV3. Select each outer model using only its own inner-CV3 AP. Summarize candidates
+with equal-benchmark mean AP after averaging each benchmark's inner folds, with
+per-benchmark AP, prevalence and AUROC visible. Do not use a cross-outer summary
+to select nested outer models: another fold may have fitted their held genes. Preserve official AP versus PR-AUC definitions and
+report partner-ranking tasks separately. Freeze this aggregation before a
+campaign; do not change weights after observing which benchmark improves.
+Frequent cheap quantitative evaluations remain useful for debugging and deciding
+which checkpoints warrant the more expensive transfer evaluation.
+
+Use all admissible held intervention groups where practical, with balanced
+sampling and gene/group bootstrap uncertainty. For large sources, expand well
+beyond twelve groups; for small sources, report actual coverage rather than
+requiring an impossible 256 genes. Report fitting-mean and predicted-additive
+baselines, double-outcome and interaction accuracy, between-intervention
+variation, and wrong-gene sensitivity within a fixed assay/context. Evaluate
+specificity alongside accuracy: deliberately wrong, highly variable predictions
+can inflate a swap penalty. Tiny panels limit generalization of the diagnosis;
+they do not erase the observed lack of specificity. No universal 15% swap gate
+or protein-error cutoff follows from the current evidence.
+
+The main comparisons share folds, admissible inputs and adaptation budgets:
+
+- Direct sequence/annotation SL predictors, including a simple paralogy-feature
+  baseline and a strong nonlinear feature model.
+- The same r2 architecture with human SL adaptation but no quantitative pretraining.
+- r2 after human-only quantitative pretraining.
+- r2 after mixed human/nonhuman quantitative pretraining.
+
+Report official benchmarks with their published negatives. Add measured-negative
+and difficult-negative analyses separately; uncalled/unmeasured pairs are not
+proven negatives. Stratify label evidence and paralog-enriched screens to detect
+source circularity. Do not assume paralogy explains most SL or attach an expected
+0.79 baseline score before measuring it. A prospective human screen can support
+independent human SL confirmation; a newly held yeast partition cannot substitute
+for that claim. Previously inspected benchmark results remain development evidence.
+
+### Build order and next checkpoint
+
+1. Build the record adapters, alias/duplicate map, fold views and exposure/coverage
+   receipts over the existing R2 combination batch. Establish direct-feature
+   baselines and large enough quantitative evaluation panels.
+2. Implement the descriptor-only conditional model, measured-interaction queries,
+   context caching and human SL query. Connect selection to fixed-budget inner-CV3
+   adaptation. Reuse existing numerical kernels, export/replay and cloud controls.
+3. Run a bounded candidate campaign near the current trainable scale, testing the
+   important data/representation choices. Compare pretraining attribution on the
+   same human task, then select and refit the outer folds.
+4. Expand independent data coverage and parameter/compute scale together, retaining
+   a curve of inner-CV3 transfer against actual compute. Larger models are warranted
+   by that curve, not by lower aggregate reconstruction loss alone.
+
+A useful r2 checkpoint should beat the matched direct-feature and no-pretraining
+baselines on human CV3, and predict held perturbation/interaction outcomes well
+enough to demonstrate the proposed route. The target remains above-SOTA scores
+under the user's stricter exposure rule. Published scores under different
+pretraining or feature access are context, not a matched proof of superiority.
+The pasted review's dollar costs, fixed gate values and training-time estimates
+are proposals rather than measured r2 properties.
+
+### Authorized preparation stages — 2026-09-12
+
+| Stage | Deliverable | Completion evidence | Current state |
+| --- | --- | --- | --- |
+| 1. Cloud inventory and normalization | Checksum-verified, source-native experimental records in R2; study-overlap map and quarantine reports | Actual source schemas, retained measurement semantics, gene/condition coverage, immutable shard hashes | 28 checksum-verified raw objects; 22.53M admitted numeric measurements and 51,302 RNA populations prepared in R2; unresolved sources remain quarantined |
+| 2. Strict CV3 data views | Exact benchmark pair resolution, canonical identity/sequence manifest, fold sidecars and train-only transforms | Zero forbidden human intervention targets in every initializer/inner/outer fitting view; no unscored benchmark pairs | 30 official folds across five tasks; all 60 inner/outer masks audited against the packed/dense corpus; exact roster resolution |
+| 3. Conditional model and fitting path | Descriptor-only r2 model, independent queries, context cache, robust numeric objectives and end-to-end human SL adaptation | Numerical invariance, gradients, serialization/resume and input availability checks | Implemented and exercised through the ordinary fitting CLI, including human-only adaptation and direct feature baselines |
+| 4. RunPod readiness experiments | Real-shard forward/backward, short disposable optimization check, resume/export replay, memory/throughput measurements | Pinned code/data/environment receipts, finite values, exact resume comparison, resource deletion confirmed | Completed numerical checks and R2 inference replay on a 4090; full optimizer-state R2 backup check awaits explicit payload authorization |
+| 5. Training launch handoff | Exact initializer/fold campaign, comparison budgets, selected GPU, upper cost and shutdown limits | All required readiness evidence above, complete launch command and artifact destinations | Hold: launch packet prepared; Costanzo inclusion and optimizer backup permission remain unresolved; research launch remains unapproved |
+
+Readiness experiments do not select a research checkpoint or establish model
+quality. They use disposable updates solely to test the real training path.
+No guarantee about convergence or SOTA follows from engineering readiness.
+The scientific candidate comparisons and full outer refits belong to the later
+research campaign, not the prelaunch checks.
+
 ## SLp-1.2 joint pretraining
 
 `modules/slp-1-2` is a self-contained PyTorch implementation of a shared set

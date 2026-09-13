@@ -1,6 +1,6 @@
 {
   "schema": "slp.cloud-source-manifest/v1",
-  "version": "2026-09-11-fitness-v1",
+  "version": "2026-09-12-cv3-core-v1",
   "purpose": "Private source preservation; storage does not imply training admission or CV3 eligibility.",
   "objects": [
     {
@@ -222,6 +222,94 @@
         "value": "05adf2aa309e5336cd1c3045eb033a2bc7b24e6f249d57a0cc25549ec6772522"
       },
       "license": "Source terms; reconcile existing rights record before fitting"
+    },
+    {
+      "id": "feng-2024-data_small-tar-gz-partaa",
+      "key": "slp/raw/feng-2024/md5-39fa8c8147f47bc48110426077981b0b/data_small.tar.gz.partaa",
+      "url": "https://zenodo.org/api/records/13691648/files/data_small.tar.gz.partaa/content",
+      "bytes": 1073741824,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "39fa8c8147f47bc48110426077981b0b"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "feng-2024-data_small-tar-gz-partab",
+      "key": "slp/raw/feng-2024/md5-08bde58524533937ad997febedbc0119/data_small.tar.gz.partab",
+      "url": "https://zenodo.org/api/records/13691648/files/data_small.tar.gz.partab/content",
+      "bytes": 1073741824,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "08bde58524533937ad997febedbc0119"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "feng-2024-data_small-tar-gz-partac",
+      "key": "slp/raw/feng-2024/md5-7c2a48df79fa700a86a2a30b089c332b/data_small.tar.gz.partac",
+      "url": "https://zenodo.org/api/records/13691648/files/data_small.tar.gz.partac/content",
+      "bytes": 1073741824,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "7c2a48df79fa700a86a2a30b089c332b"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "feng-2024-data_small-tar-gz-partad",
+      "key": "slp/raw/feng-2024/md5-0942bec2205267af1ed3ecd5dba3e0d3/data_small.tar.gz.partad",
+      "url": "https://zenodo.org/api/records/13691648/files/data_small.tar.gz.partad/content",
+      "bytes": 1073741824,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "0942bec2205267af1ed3ecd5dba3e0d3"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "feng-2024-data_small-tar-gz-partae",
+      "key": "slp/raw/feng-2024/md5-e48b86e7e190d3baec62889c1e54e5a4/data_small.tar.gz.partae",
+      "url": "https://zenodo.org/api/records/13691648/files/data_small.tar.gz.partae/content",
+      "bytes": 578902490,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "e48b86e7e190d3baec62889c1e54e5a4"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "depmap-24q2-46489063",
+      "key": "slp/raw/depmap-24q2/md5-d10d73692672380b3792231549e97d5a/CRISPRGeneEffect.csv",
+      "url": "https://ndownloader.figshare.com/files/46489063",
+      "bytes": 419330454,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "d10d73692672380b3792231549e97d5a"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "depmap-24q2-46489732",
+      "key": "slp/raw/depmap-24q2/md5-e5b60d1ce7636542d93f45494019eded/Model.csv",
+      "url": "https://ndownloader.figshare.com/files/46489732",
+      "bytes": 559182,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "e5b60d1ce7636542d93f45494019eded"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "depmap-24q2-46490878",
+      "key": "slp/raw/depmap-24q2/md5-f00c434db50d811544ac4d047003979f/OmicsExpressionProteinCodingGenesTPMLogp1.csv",
+      "url": "https://ndownloader.figshare.com/files/46490878",
+      "bytes": 460868099,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "f00c434db50d811544ac4d047003979f"
+      },
+      "license": "CC BY 4.0"
     }
   ]
 }

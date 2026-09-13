@@ -1,0 +1,7 @@
+{
+  "name": "slp-corpus-prep",
+  "private": true,
+  "type": "module",
+  "dependencies": {"@cloudflare/containers": "0.3.7"},
+  "scripts": {"test": "node --test worker.test.mjs"}
+}

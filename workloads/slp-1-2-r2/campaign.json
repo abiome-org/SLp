@@ -1,0 +1,434 @@
+{
+  "schema": "slp.r2-training-packet/v1",
+  "created_at": 1789278346.981915,
+  "launch_status": "HOLD",
+  "research_training_authorized": false,
+  "purpose": "human strict-CV3 SL prediction through perturbation modeling",
+  "proposed_spending_ceiling_usd": 50,
+  "budget_requires_fresh_launch_authorization": true,
+  "gpu": {
+    "type": "RTX 4090",
+    "measured_hourly_usd": 0.74,
+    "disposable_disk_gb": 80
+  },
+  "cost_estimate": {
+    "gpu_disk_hourly_usd": 0.7619178082191781,
+    "conservative_pretrain_seconds_per_update": 0.15,
+    "conservative_adapt_seconds_per_update": 0.1,
+    "pretraining_updates_total_with_outer_refits_upper": 720000,
+    "adaptation_updates_total_with_probes_and_outer_refits": 240000,
+    "compute_hours": 36.666666666666664,
+    "io_startup_allowance_hours": 6.0,
+    "estimate_usd": 32.50849315068493,
+    "with_25_percent_reserve_usd": 40.63561643835616,
+    "not_a_quote": "Derived from short numerical checks. Fresh pod pricing, credit, transfers, storage retention and the actual selected outer paths must be reconciled at launch."
+  },
+  "source": {
+    "modules/slp-1-2-r2/CONTRACT.md": "796476dc4f860df43e21e425bea4983eddef7c601a5e2952b35f2d2ab1a96ddd",
+    "modules/slp-1-2-r2/adaptation.py": "326e40be8ade4b1f7c7c2e396709d0a31b389fd9f92afb9e1ab6077f058614fb",
+    "modules/slp-1-2-r2/artifact.py": "a076dddc7dab0692493b6fc236a15dfcaca872fb15ad486ee2c9041eccfec848",
+    "modules/slp-1-2-r2/audit_folds.py": "ba19873d81809454e5fa8483e06dd354ae15e005be951f15a6380cd2b4c800db",
+    "modules/slp-1-2-r2/baselines.py": "e5f4120d7b3617be0ec8ed582c2cd3318dc99ea5af59d3dd6ac2f08d899f0082",
+    "modules/slp-1-2-r2/benchmarks.py": "0b5025abc5ffb46ea49bbe9d484187a783d86bc278a57e12dfba55480b246ee9",
+    "modules/slp-1-2-r2/cloud_io.py": "083b29ae647ea815ead4a533c8a16305ff7a1501362c55f53855d295d775693e",
+    "modules/slp-1-2-r2/data.py": "3a9a0a25f12ce1a80f4a9fb58e71b2cff51fb638cf279f8e6a9d5e0e8e287379",
+    "modules/slp-1-2-r2/diagnostics.py": "26474df918f7722b09b93464a6247062d4e9f63bbec2721b7847d9a7c0d76f1e",
+    "modules/slp-1-2-r2/disk_corpus.py": "60f27595dc9756c45902ee0c8cc360e4f76cd867be8e0de5d67d8ae2cf3a15f4",
+    "modules/slp-1-2-r2/evaluate.py": "97a97c08a357b55437d76adc001e3e1cfa83131952f7047d2d9aa3c009edbd59",
+    "modules/slp-1-2-r2/extract_features.py": "59aea836cd13e8b7da9537ffcbae51b0c8197193b8fcd7d061a8f4d8e780ddb5",
+    "modules/slp-1-2-r2/feature_job.py": "b2f6140909a41b68b46f7576619a40366feefafc9c05e5395825ae46d70c251e",
+    "modules/slp-1-2-r2/fit.py": "f714a4d30258a589d3c9abb6fb27ccbc812ff8a262dfa7791f66b6ba197a7a84",
+    "modules/slp-1-2-r2/inference.py": "5be541da7433244a73bc500bc09b11b56a1d29125d1177212f8af958347fa337",
+    "modules/slp-1-2-r2/model.py": "2fba8f5464be24dbc413b19e006a85fecffe358e70f2895866f37f692c2234d2",
+    "modules/slp-1-2-r2/packed.py": "1a0508de17ade27ef5e89371c3fc52a74d42c229fb8d6eb11a89c7ce1f739e09",
+    "modules/slp-1-2-r2/pod_guard.py": "b5226c07892ad414769995ede3b15e432fba76bdfdb92dbcfbd06d8f412553bb",
+    "modules/slp-1-2-r2/population.py": "c635c976d24da958c4f002f49c7f16ae0d84bee165f9cb95ec03921d2643a25a",
+    "modules/slp-1-2-r2/readiness.py": "59ceb9c79c607b31eacdcf8b80d1bdbc0b43e628817b7f541b0b8576e595eeae",
+    "modules/slp-1-2-r2/readiness_final.py": "7ab3f76f9dad2141f7cdbb5c500186b402df9c870ce25456037bca2f181e1299",
+    "modules/slp-1-2-r2/readiness_mixed.py": "6698c452e196d0a43d9b6b41c22d5420c3a688c6dc4598cfb2407d48f673a0dd",
+    "modules/slp-1-2-r2/records.py": "f5cbdf4d1f7229d4f75975488d4bb013dadda4973d79d9958b5d381f98a164fa",
+    "modules/slp-1-2-r2/requirements-linux-cu128.lock": "239dff264bb3d4a5e0c54c8e381cf4fac3c90f52a0f87846b3a856d4d5ddbcab",
+    "modules/slp-1-2-r2/requirements.in": "83cb77c262ea243e5d69c9633687a69460639acfda6fd9b875990dcb63430538",
+    "modules/slp-1-2-r2/score.py": "73b96460dfdd6132ff7e3622f79b38f74ef5dc83aa384cde39d95f8155478310",
+    "modules/slp-1-2-r2/train.py": "6338ea9496df760b64c44fdd8d002305162240ba9c83b8eb0298c39938d67e28"
+  },
+  "corpus": {
+    "basal": [
+      {
+        "path": "depmap-basal.json",
+        "sha256": "c2c434a3522224f3f3af613d5425a90f81e7fdf2acb7679db854e888cf8b3bf4"
+      }
+    ],
+    "packed": [
+      {
+        "path": "human-pack/human-combinations-manifest.json",
+        "sha256": "07082397c061c1844fbed781fc6faf86c0819d7ef01abcb3afd9509120c22acc"
+      },
+      {
+        "path": "depmap-pack/depmap-manifest.json",
+        "sha256": "30b6d226e125cb12abb94d40269da86e4e5f269341c109919ed1ee8820f4daa7"
+      }
+    ],
+    "populations": [
+      {
+        "path": "population-k562-r2-20260912-v1/population-manifest.json",
+        "sha256": "cd287dd660f835d38872e240321b24658d50c666c77dc16267f1a941006d87c1"
+      },
+      {
+        "path": "population-rpe1-r2-20260912-v1/population-manifest.json",
+        "sha256": "3d7c67758db67c83e24a47502bfc1f8e6397660fe1f8b3327df0890272b49912"
+      },
+      {
+        "path": "population-norman-r2-20260912-v1/population-manifest.json",
+        "sha256": "c82f957f251bd33518ecfe483f1805454b4bd780888b5b7c6467a53d3de8fe20"
+      },
+      {
+        "path": "population-gwps-r2-20260912-v1/population-manifest.json",
+        "sha256": "7259fdaf3412d905187db20d402d79b8beedd2c6bc53170fd9d0126f1d99951b"
+      },
+      {
+        "path": "population-hepg2-r2-20260912-v1/population-manifest.json",
+        "sha256": "057f97de5cade56120f3f995e46ea5579aced23f9141d0b2088f5115bcf7f273"
+      },
+      {
+        "path": "population-mcf10a-full-d0-r2-20260912-v2/population-manifest.json",
+        "sha256": "cad339636be2e6db68b9d697f9275e40800a04aaaff8bb7544490e2a06dec011"
+      },
+      {
+        "path": "population-mcf10a-full-d6-r2-20260912-v1/population-manifest.json",
+        "sha256": "d9f3175ec076032f48423b733edf0151dcc0a067cebaabc8b3d66255bdcc0f08"
+      },
+      {
+        "path": "population-mcf10a-tgfb1-d6-r2-20260912-v1/population-manifest.json",
+        "sha256": "3fd70fa2c568fb41c6d4c209d66c4034311f780ca338b05d338a974f18d43f21"
+      },
+      {
+        "path": "population-yeast-r2-20260912-v4/population-manifest.json",
+        "sha256": "5a56775e6e9f819b50fc6209ca3a17c53a4cfb979567f51a6bb37c56e2cff6ea"
+      }
+    ],
+    "schema": "slp.fitting-corpus/v1"
+  },
+  "variants": {
+    "sequence_similarity": {
+      "recipe": "sequence_similarity.json",
+      "sha256": "20e73b1a39ea9a884de72f636a83144136e3f2088508b04dbaa3ef49e1e7f34e",
+      "pretraining": false
+    },
+    "feature_mlp": {
+      "recipe": "feature_mlp.json",
+      "sha256": "3e4bc0bec9d51403c295c708bc4934998bb9e6abc5e3c9109c866fcaecd504c9",
+      "pretraining": false
+    },
+    "no_pretraining": {
+      "recipe": "no_pretraining.json",
+      "sha256": "ebd9a9c3d2f6a00d22d726aa96d560eba9fd83c4a311ab7c0daee192c42a1fb9",
+      "pretraining": false
+    },
+    "human_pretraining": {
+      "recipe": "human_pretraining.json",
+      "sha256": "99a5614eb1391b2b2d5dec86cc464e22719d335dd12a916e538dc8e3c27a0e4d",
+      "pretraining": true
+    },
+    "mixed_pretraining": {
+      "recipe": "mixed_pretraining.json",
+      "sha256": "ebd9a9c3d2f6a00d22d726aa96d560eba9fd83c4a311ab7c0daee192c42a1fb9",
+      "pretraining": true
+    }
+  },
+  "protocols": [
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s42-f0-fold.json",
+      "name": "musl-s42-f0",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "bd7c3444582e08c039115708bdd36314a8478f5410a85ae5a7d477d334ab41f3",
+      "outer_gene_count": 1308,
+      "inner_gene_count": 1220
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s42-f1-fold.json",
+      "name": "musl-s42-f1",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "5d20e718da23fe480b451e22a8cdbfa4d8d6504e8a4949d3ee9750bb9c2fd451",
+      "outer_gene_count": 1400,
+      "inner_gene_count": 1264
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s42-f2-fold.json",
+      "name": "musl-s42-f2",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "2d2bd6cb4ed6f0ee890c62a753f8696e65548865c08924820400186ebfd404f6",
+      "outer_gene_count": 1275,
+      "inner_gene_count": 1251
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s42-f3-fold.json",
+      "name": "musl-s42-f3",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "4a14cabdf496dd097b5842a62b416e157902d31b614042eedf21d1ecdc401bfa",
+      "outer_gene_count": 1164,
+      "inner_gene_count": 1221
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s42-f4-fold.json",
+      "name": "musl-s42-f4",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "b8385d802ad7f646fafa984d821b5ba8541816a12526b7db93d1442b379f6d96",
+      "outer_gene_count": 1442,
+      "inner_gene_count": 1178
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s432-f0-fold.json",
+      "name": "musl-s432-f0",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "5033ad51d229ae0ad3d28c989f46b1abf6b6530f86607dfb9e98874b321748de",
+      "outer_gene_count": 1439,
+      "inner_gene_count": 1246
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s432-f1-fold.json",
+      "name": "musl-s432-f1",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "dd1189b822326abdff9861b02e40908282e2a811609d84c2e85285636dfa9f37",
+      "outer_gene_count": 1344,
+      "inner_gene_count": 1224
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s432-f2-fold.json",
+      "name": "musl-s432-f2",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "c495d5d0ddc6f01cc408d0aebf13daece61666284144a17873224104e53530a3",
+      "outer_gene_count": 1237,
+      "inner_gene_count": 1185
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s432-f3-fold.json",
+      "name": "musl-s432-f3",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "2528fff9ec427869c4bba9ed1a53412ce9dba992f0116639024f1ce25fcb1ae7",
+      "outer_gene_count": 1271,
+      "inner_gene_count": 1244
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "musl-s432-f4-fold.json",
+      "name": "musl-s432-f4",
+      "benchmark": "MuSL-CV3",
+      "metadata_sha256": "66c45500939ced236f154e2e82d63e0e9a26de3527e4577722a6e6319266f35f",
+      "outer_gene_count": 1411,
+      "inner_gene_count": 1246
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-A549-f0-fold.json",
+      "name": "slamr-A549-f0",
+      "benchmark": "SLAMR-scenario3-A549",
+      "metadata_sha256": "58a2a8543be4cb25fb5bf685fcb8ab2cd2e35d54658b083c9d74c266550d0f2e",
+      "outer_gene_count": 15,
+      "inner_gene_count": 8
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-A549-f1-fold.json",
+      "name": "slamr-A549-f1",
+      "benchmark": "SLAMR-scenario3-A549",
+      "metadata_sha256": "c23d72c4cdf541e2e551f95a71d8f9c34ad1abc5811d226183402804aa7e3567",
+      "outer_gene_count": 15,
+      "inner_gene_count": 8
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-A549-f2-fold.json",
+      "name": "slamr-A549-f2",
+      "benchmark": "SLAMR-scenario3-A549",
+      "metadata_sha256": "733d1fca97c67d1373f9a7a4e4ab537672975cdbe390d7858fcb399954bc1411",
+      "outer_gene_count": 15,
+      "inner_gene_count": 8
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-A549-f3-fold.json",
+      "name": "slamr-A549-f3",
+      "benchmark": "SLAMR-scenario3-A549",
+      "metadata_sha256": "6e2baf4b2f3d398e5d1ecb54b9becd795723b823b5c5aec627e2a7e8b49700cb",
+      "outer_gene_count": 14,
+      "inner_gene_count": 8
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-A549-f4-fold.json",
+      "name": "slamr-A549-f4",
+      "benchmark": "SLAMR-scenario3-A549",
+      "metadata_sha256": "1d11030b93f03dd12adc29d38c6af254ec2df352774c6532c29924f2b2c6dd4b",
+      "outer_gene_count": 14,
+      "inner_gene_count": 8
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-JURKAT-f0-fold.json",
+      "name": "slamr-JURKAT-f0",
+      "benchmark": "SLAMR-scenario3-JURKAT",
+      "metadata_sha256": "364beec4b1c293d5fafd98744448511e76d28d27f9657748db2e58f221ca1fc5",
+      "outer_gene_count": 72,
+      "inner_gene_count": 36
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-JURKAT-f1-fold.json",
+      "name": "slamr-JURKAT-f1",
+      "benchmark": "SLAMR-scenario3-JURKAT",
+      "metadata_sha256": "ddc782ceaa65cf3c3de12ec07ccbd4f9531b34f648bc0825e63faa79f6abea6b",
+      "outer_gene_count": 72,
+      "inner_gene_count": 36
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-JURKAT-f2-fold.json",
+      "name": "slamr-JURKAT-f2",
+      "benchmark": "SLAMR-scenario3-JURKAT",
+      "metadata_sha256": "1ba45199abba5497e4cae96e8861079a05a2cffb67a708da70ab2703ee701bb1",
+      "outer_gene_count": 72,
+      "inner_gene_count": 36
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-JURKAT-f3-fold.json",
+      "name": "slamr-JURKAT-f3",
+      "benchmark": "SLAMR-scenario3-JURKAT",
+      "metadata_sha256": "f551c9d637f5e419842195e23af907f7600e56fedf73ae749e42f55feb3ff896",
+      "outer_gene_count": 72,
+      "inner_gene_count": 36
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-JURKAT-f4-fold.json",
+      "name": "slamr-JURKAT-f4",
+      "benchmark": "SLAMR-scenario3-JURKAT",
+      "metadata_sha256": "85d9c05373acb5c00522e4c32d9ecbfd8eb01c201e47ea33b8efb45d8e607175",
+      "outer_gene_count": 71,
+      "inner_gene_count": 36
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-K562-f0-fold.json",
+      "name": "slamr-K562-f0",
+      "benchmark": "SLAMR-scenario3-K562",
+      "metadata_sha256": "de9f0aad89d46b422a8617a5d9b6f58401c1f283695dcba9bced33fd379105ae",
+      "outer_gene_count": 83,
+      "inner_gene_count": 42
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-K562-f1-fold.json",
+      "name": "slamr-K562-f1",
+      "benchmark": "SLAMR-scenario3-K562",
+      "metadata_sha256": "dc5e3c7db6f0f62a931a4223a6ff6c5a3831d42bcb430bea10474d890fe5bdd4",
+      "outer_gene_count": 83,
+      "inner_gene_count": 42
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-K562-f2-fold.json",
+      "name": "slamr-K562-f2",
+      "benchmark": "SLAMR-scenario3-K562",
+      "metadata_sha256": "ce5fb2cf1aab4128f8e34209b3b8c82e7ca57e2f5bbd5132efce52642c6a423a",
+      "outer_gene_count": 83,
+      "inner_gene_count": 42
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-K562-f3-fold.json",
+      "name": "slamr-K562-f3",
+      "benchmark": "SLAMR-scenario3-K562",
+      "metadata_sha256": "e6cf8ff7c76401f258527e908b405372f39ac082f6981ba15ae9190247bdf3ee",
+      "outer_gene_count": 83,
+      "inner_gene_count": 42
+    },
+    {
+      "job": "protocol-r2-20260912-v4",
+      "file": "slamr-K562-f4-fold.json",
+      "name": "slamr-K562-f4",
+      "benchmark": "SLAMR-scenario3-K562",
+      "metadata_sha256": "f7710fdf8d843e3cb12b45804f8c6742601d2c120251601a7acf218e3f41953a",
+      "outer_gene_count": 82,
+      "inner_gene_count": 42
+    },
+    {
+      "job": "feng-folds-r2-20260912-v1",
+      "file": "feng-cv3-random1-f0-fold.json",
+      "name": "feng-cv3-random1-f0",
+      "benchmark": "Feng-CV3-random1",
+      "metadata_sha256": "a29fadc3aeb799606eaf1ea63396047f84356322fbd2097deda4535c06fbd37d",
+      "outer_gene_count": 1641,
+      "inner_gene_count": 1552
+    },
+    {
+      "job": "feng-folds-r2-20260912-v1",
+      "file": "feng-cv3-random1-f1-fold.json",
+      "name": "feng-cv3-random1-f1",
+      "benchmark": "Feng-CV3-random1",
+      "metadata_sha256": "d20b0c9d89558b499e7d5498b5ce00dc8847785770aabb94ef253f5029561387",
+      "outer_gene_count": 1568,
+      "inner_gene_count": 1572
+    },
+    {
+      "job": "feng-folds-r2-20260912-v1",
+      "file": "feng-cv3-random1-f2-fold.json",
+      "name": "feng-cv3-random1-f2",
+      "benchmark": "Feng-CV3-random1",
+      "metadata_sha256": "ddfcd47c52cc76a8c1e7be69e32e429051a8d04ad0f8f9ac70358afe9ef9c8cb",
+      "outer_gene_count": 1792,
+      "inner_gene_count": 1546
+    },
+    {
+      "job": "feng-folds-r2-20260912-v1",
+      "file": "feng-cv3-random1-f3-fold.json",
+      "name": "feng-cv3-random1-f3",
+      "benchmark": "Feng-CV3-random1",
+      "metadata_sha256": "8257b5de0fc9a90f630a7dc3ec591be388385b67705416ca2b68fbe1f5831acf",
+      "outer_gene_count": 1785,
+      "inner_gene_count": 1539
+    },
+    {
+      "job": "feng-folds-r2-20260912-v1",
+      "file": "feng-cv3-random1-f4-fold.json",
+      "name": "feng-cv3-random1-f4",
+      "benchmark": "Feng-CV3-random1",
+      "metadata_sha256": "852b4915eab3004fb7ef89a3c3cc5fafeae7f427b059598a0d278946139a29e1",
+      "outer_gene_count": 1815,
+      "inner_gene_count": 1589
+    }
+  ],
+  "selection": {
+    "per_outer_fold": "Select its pretraining point and comparison recipe using only that outer fold's own inner-CV3 AP. Refit from scratch on permitted outer-training genes.",
+    "suite_summary": "Equal benchmark weight after within-benchmark fold means; report AP, trapezoidal PR-AUC, prevalence and AUROC separately.",
+    "no_cross_outer_selection": "The suite summary does not choose a nested outer model: other folds can have fitted its held genes.",
+    "test_access": "Official test labels are fetched only for the final matching outer refit, never for readiness or selection."
+  },
+  "outer_refits": "One selected recipe per outer fold, then the explicit score.py --scope outer --allow-outer-test path; preserve all original rows.",
+  "checkpoint_policy": "Optimizer/RNG/sampler checkpoint every 2000 pretraining updates and every 500 adaptation updates; retain the 2000 and final pretraining points for matched probes. Publish each required checkpoint to a new exact R2 object prefix before deleting the pod.",
+  "storage_prefix": "s3://abiome-artifacts/slp/runs/slp-1.2-r2/<launch-id>/",
+  "shutdown_policy": "Both scoped in-pod and local owner guards; reserve 600 seconds for finalization, refuse stages that cannot fit, stop at the lesser of authorized budget or account credit with a $5 reserve.",
+  "quarantine": [
+    "Costanzo 2016: pending rights confirmation; no fitting",
+    "SLKB raw counts: study-specific count normalization/admission not complete",
+    "Unresolved human guide/alias rows and yeast identities remain excluded"
+  ],
+  "launch_requirements": [
+    "Final engineering receipt complete",
+    "Resolve the intended inclusion of Costanzo before a mixed interaction campaign",
+    "Fresh budget/credit and explicit user launch instruction",
+    "Freeze source/data packet, issue exact expiring transfer scopes for that launch, arm and verify both guards"
+  ],
+  "inner_comparison_count": 150,
+  "expanded_commands": "Generate plan.json with scripts/slp12_r2_campaign.py; it includes each fitting, adaptation-probe and scoring argv."
+}

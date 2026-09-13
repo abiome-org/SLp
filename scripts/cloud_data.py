@@ -28,19 +28,21 @@ def settings():
     return values
 
 
-def call(config, path, method='GET'):
+def call(config, path, method='GET', *, max_bytes=1024*1024):
+    if not 0 < max_bytes <= 4*1024*1024:
+        raise ValueError('Control metadata limit must be bounded to 4 MiB')
     request = urllib.request.Request(config['SLP_STORAGE_URL'].rstrip('/') + path,
         method=method, data=b'' if method == 'POST' else None,
         headers={'Authorization': 'Bearer ' + config['SLP_STORAGE_TOKEN'],
                  'User-Agent': 'SLp-Cloud-Storage/1.0'})
     try:
-        with urllib.request.urlopen(request, timeout=900) as response:
-            body = response.read(1024 * 1024 + 1)
+        with urllib.request.urlopen(request, timeout=3600 if method == 'POST' else 120) as response:
+            body = response.read(max_bytes + 1)
     except urllib.error.HTTPError as error:
         # The service returns bounded JSON errors, not source-file contents.
         detail = error.read(4096).decode('utf-8', errors='replace')
         raise RuntimeError(f'Cloud storage HTTP {error.code}: {detail}') from None
-    if len(body) > 1024 * 1024:
+    if len(body) > max_bytes:
         raise ValueError('Unexpectedly large control response')
     return json.loads(body)
 
@@ -76,6 +78,6 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except (ValueError, RuntimeError, urllib.error.URLError) as error:
+    except (ValueError, RuntimeError, urllib.error.URLError, TimeoutError) as error:
         print(str(error), file=sys.stderr)
         sys.exit(1)

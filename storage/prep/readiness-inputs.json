@@ -1,0 +1,224 @@
+[
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-manifest.json",
+    "method": "GET",
+    "max_bytes": 1088237
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00000.bin.gz",
+    "method": "GET",
+    "max_bytes": 3835831
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00001.bin.gz",
+    "method": "GET",
+    "max_bytes": 3824824
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00002.bin.gz",
+    "method": "GET",
+    "max_bytes": 4211088
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00003.bin.gz",
+    "method": "GET",
+    "max_bytes": 5005774
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00004.bin.gz",
+    "method": "GET",
+    "max_bytes": 3976815
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00005.bin.gz",
+    "method": "GET",
+    "max_bytes": 3054999
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00006.bin.gz",
+    "method": "GET",
+    "max_bytes": 3054480
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00007.bin.gz",
+    "method": "GET",
+    "max_bytes": 3055372
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00008.bin.gz",
+    "method": "GET",
+    "max_bytes": 3051651
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00009.bin.gz",
+    "method": "GET",
+    "max_bytes": 3056356
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00010.bin.gz",
+    "method": "GET",
+    "max_bytes": 3051915
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00011.bin.gz",
+    "method": "GET",
+    "max_bytes": 3043405
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00012.bin.gz",
+    "method": "GET",
+    "max_bytes": 3049820
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00013.bin.gz",
+    "method": "GET",
+    "max_bytes": 3058516
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00014.bin.gz",
+    "method": "GET",
+    "max_bytes": 3031028
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00015.bin.gz",
+    "method": "GET",
+    "max_bytes": 3040863
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00016.bin.gz",
+    "method": "GET",
+    "max_bytes": 3037130
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00017.bin.gz",
+    "method": "GET",
+    "max_bytes": 3037922
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00018.bin.gz",
+    "method": "GET",
+    "max_bytes": 3053414
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00019.bin.gz",
+    "method": "GET",
+    "max_bytes": 3036790
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00020.bin.gz",
+    "method": "GET",
+    "max_bytes": 3047685
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00021.bin.gz",
+    "method": "GET",
+    "max_bytes": 3038389
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00022.bin.gz",
+    "method": "GET",
+    "max_bytes": 2960536
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00023.bin.gz",
+    "method": "GET",
+    "max_bytes": 3049335
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00024.bin.gz",
+    "method": "GET",
+    "max_bytes": 3056871
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00025.bin.gz",
+    "method": "GET",
+    "max_bytes": 3050168
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00026.bin.gz",
+    "method": "GET",
+    "max_bytes": 3056497
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00027.bin.gz",
+    "method": "GET",
+    "max_bytes": 3058549
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00028.bin.gz",
+    "method": "GET",
+    "max_bytes": 3055578
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00029.bin.gz",
+    "method": "GET",
+    "max_bytes": 3056630
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00030.bin.gz",
+    "method": "GET",
+    "max_bytes": 3050458
+  },
+  {
+    "job": "pack-human-r2-20260912-v1",
+    "name": "human-combinations-00031.bin.gz",
+    "method": "GET",
+    "max_bytes": 2760666
+  },
+  {
+    "job": "protocol-r2-20260912-v4",
+    "name": "musl-s42-f0-fold.json",
+    "method": "GET",
+    "max_bytes": 1048576
+  },
+  {
+    "job": "protocol-r2-20260912-v4",
+    "name": "musl-s42-f0-train-manifest.json",
+    "method": "GET",
+    "max_bytes": 1048576
+  },
+  {
+    "job": "protocol-r2-20260912-v4",
+    "name": "musl-s42-f0-train-00000.jsonl.gz",
+    "method": "GET",
+    "max_bytes": 353947
+  },
+  {
+    "job": "protocol-r2-20260912-v4",
+    "name": "musl-s42-f0-train-00001.jsonl.gz",
+    "method": "GET",
+    "max_bytes": 40471
+  }
+]

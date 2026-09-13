@@ -1,0 +1,26 @@
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.tab
+evidence: https://doi.org/10.1093/genetics/iyae185
+evidenceMirror: https://wiki.yeastgenome.org/images/1/18/Engel_2025_PMID_39530598.pdf
+licenseTerms: https://creativecommons.org/licenses/by/4.0/
+scope: >-
+  Only the SGD-authored current feature identity table with SHA256
+  ac66e4df1b31c002a4aeb03b1bccbd5b4a0b360ee2c2a42a8a9f427473462dc8,
+  3383039 bytes, observed Last-Modified 2026-09-11T09:11:53Z.
+rightsBasis: >-
+  The same SGD-wide CC BY 4.0 statement recorded in
+  rights/sgd-stable-id-mapping-cc-by-4.0.yaml applies to this SGD-authored
+  identity table. This extends the reviewed object allowlist explicitly;
+  it does not admit linked third-party experimental datasets.
+technicalAccessIsRightsEvidence: false
+acquisition: >-
+  Checked 2026-09-13. The downloads host ignored the older versionId query
+  and returned its current object. Acquisition therefore verifies the exact
+  content hash and byte count, captures the file in R2, and makes no upstream
+  immutable-URL guarantee. Observed version UaAj1sMl_yJVO0Y8ME9oLKSonXlugJBb.
+attribution: >-
+  Saccharomyces Genome Database (SGD), Stanford University; Engel SR et al.
+  (2025), GENETICS 229(3), iyae185. https://doi.org/10.1093/genetics/iyae185

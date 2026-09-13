@@ -1,0 +1,49 @@
+{
+  "purpose": "research",
+  "seed": 731,
+  "cpu_threads": 4,
+  "model": {},
+  "pretrain": {
+    "quantitative_weights": {
+      "rna": 0.5,
+      "fitness": 0.25,
+      "interaction": 0.25
+    },
+    "temperature": 0.7,
+    "updates": 8000,
+    "batch_size": 16,
+    "max_seconds": 3600,
+    "checkpoint_every": 2000,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.01,
+    "warmup": 400,
+    "max_queries": 128,
+    "context_dropout": 0.1,
+    "retain_updates": [
+      2000,
+      8000
+    ]
+  },
+  "adapt": {
+    "quantitative_weights": {
+      "rna": 0.5,
+      "fitness": 0.25,
+      "interaction": 0.25
+    },
+    "temperature": 0.7,
+    "updates": 1000,
+    "batch_size": 16,
+    "max_seconds": 3600,
+    "checkpoint_every": 500,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.01,
+    "warmup": 100,
+    "max_queries": 128,
+    "context_dropout": 0.1,
+    "retain_updates": [
+      2000,
+      8000
+    ],
+    "sl_fraction": 0.75
+  }
+}

@@ -1,0 +1,11 @@
+*
+!Dockerfile
+!requirements.txt
+!requirements.lock
+!*.py
+!prep-jobs.json
+!molecular-inputs.json
+!runner.py
+!inspect_corpus.py
+!normalize_corpus.py
+!prepare_identity.py

@@ -1,0 +1,91 @@
+{
+  "repository": "potteryrage/SLp-1.1-data",
+  "revision": "3766b6cf98a9100e4e04cdfc3da4b338020b5a81",
+  "inventory_sha256": "2d444656ec3e12c0a7c670dbcbcf3213308d2585cb5e84e074aeb47e0c84a380",
+  "files": [
+    {
+      "remote": "data/derived/slp11-joint-world-context-transfer-v2-training-r4/gwps.npz",
+      "role": "molecular-source",
+      "terms": "source-specific; THIRD_PARTY_NOTICES.md",
+      "size": 243531165,
+      "sha256": "589e4a44bf0cf0e8677b92fcd29bc9ac3ed2ec12e001d1dcc68d4478715f1e02"
+    },
+    {
+      "remote": "data/derived/slp11-joint-world-context-transfer-v2-training-r4/hepg2.npz",
+      "role": "molecular-source",
+      "terms": "source-specific; THIRD_PARTY_NOTICES.md",
+      "size": 70164222,
+      "sha256": "9200c6f9c1ce31631a7fa4f5378491d966c79d8e68ac6d982cfcf1788d3c3f71"
+    },
+    {
+      "remote": "data/derived/slp11-joint-world-context-transfer-v2-training-r4/k562.npz",
+      "role": "molecular-source",
+      "terms": "source-specific; THIRD_PARTY_NOTICES.md",
+      "size": 249606758,
+      "sha256": "839d5e42419e73f74517d612c40facc76e52077f95d02058de97f9cfa02c2e1c"
+    },
+    {
+      "remote": "data/derived/slp11-joint-world-context-transfer-v2-training-r4/mcf10a_full_d0.npz",
+      "role": "molecular-source",
+      "terms": "source-specific; THIRD_PARTY_NOTICES.md",
+      "size": 17555710,
+      "sha256": "6e3e0a0125fba60b04f05c7050e38ed11303793d874f94d9adff843d3efb46bd"
+    },
+    {
+      "remote": "data/derived/slp11-joint-world-context-transfer-v2-training-r4/mcf10a_full_d6.npz",
+      "role": "molecular-source",
+      "terms": "source-specific; THIRD_PARTY_NOTICES.md",
+      "size": 17442568,
+      "sha256": "190628be23b2e053a84797033699e141999ab4f74a5566dd866609a983cc2118"
+    },
+    {
+      "remote": "data/derived/slp11-joint-world-context-transfer-v2-training-r4/mcf10a_tgfb1_d6.npz",
+      "role": "molecular-source",
+      "terms": "source-specific; THIRD_PARTY_NOTICES.md",
+      "size": 17264976,
+      "sha256": "40a30b924e8b87604a8289d6da68afc20bdcbf4236a7b6a34fcb2af178214544"
+    },
+    {
+      "remote": "data/derived/slp11-joint-world-context-transfer-v2-training-r4/norman.npz",
+      "role": "molecular-source",
+      "terms": "source-specific; THIRD_PARTY_NOTICES.md",
+      "size": 24974183,
+      "sha256": "80411e6ad08821c51b3f8a9b33f566c5fc09816b87b0c09071d0f8da112ba805"
+    },
+    {
+      "remote": "data/derived/slp11-joint-world-context-transfer-v2-training-r4/rpe1.npz",
+      "role": "molecular-source",
+      "terms": "source-specific; THIRD_PARTY_NOTICES.md",
+      "size": 289095552,
+      "sha256": "0d83e602846623bd913e078c9da6750213755db4e892e81e47ea4a342abe2044"
+    },
+    {
+      "remote": "data/derived/slp11-yeast-atlas-counts/nadal-ribelles-rna-neural-fitting-v1/manifest.json",
+      "role": "molecular-source",
+      "terms": "CC-BY-4.0",
+      "size": 1357,
+      "sha256": "9962374c84e29a39074eaf493e7dab87af750c5d76314f5636e0db3d23555d15"
+    },
+    {
+      "remote": "data/derived/slp11-yeast-atlas-counts/nadal-ribelles-rna-neural-fitting-v1/reference.npz",
+      "role": "molecular-source",
+      "terms": "CC-BY-4.0",
+      "size": 20652486,
+      "sha256": "09704a2cc40dd065cf2941e92e7a8eacad9d1cc7501ec99ee8f9201aebf1f194"
+    },
+    {
+      "remote": "data/derived/slp11-yeast-atlas-counts/nadal-ribelles-rna-neural-fitting-v1/train-metadata.npz",
+      "role": "molecular-source",
+      "terms": "CC-BY-4.0",
+      "size": 3587912,
+      "sha256": "c27f3e1671fbe6d1490ff3ff9e7582e601f8dfc96dd56f75236c8fc4411b8cfc"
+    },
+    {
+      "remote": "data/derived/slp11-yeast-atlas-counts/nadal-ribelles-rna-neural-fitting-v1/train-targets.npy",
+      "role": "molecular-source",
+      "terms": "CC-BY-4.0",
+      "size": 1041960024,
+      "sha256": "020d980d1384edbbe63fbe72789e104b3807955bb2d164f21472a0fadfb3a93d"
+    }
+  ]
+}

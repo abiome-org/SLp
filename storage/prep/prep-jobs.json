@@ -1,0 +1,122 @@
+{
+  "feng-folds-r2-20260912-v1": {
+    "entry": "prepare_feng.py"
+  },
+  "feng-inspect-r2-20260912-v1": {
+    "entry": "inspect_feng.py"
+  },
+  "pack-human-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "human-combinations"
+  },
+  "pack-depmap-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "depmap"
+  },
+  "pack-yeast-p0-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "yeast",
+    "shard_start": 0,
+    "shard_end": 80
+  },
+  "pack-yeast-p1-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "yeast",
+    "shard_start": 80,
+    "shard_end": 160
+  },
+  "pack-yeast-p2-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "yeast",
+    "shard_start": 160,
+    "shard_end": 240
+  },
+  "pack-yeast-p3-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "yeast",
+    "shard_start": 240,
+    "shard_end": 320
+  },
+  "pack-yeast-p4-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "yeast",
+    "shard_start": 320,
+    "shard_end": 400
+  },
+  "pack-yeast-p5-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "yeast",
+    "shard_start": 400,
+    "shard_end": 480
+  },
+  "pack-yeast-p6-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "yeast",
+    "shard_start": 480,
+    "shard_end": 560
+  },
+  "pack-yeast-p7-r2-20260912-v1": {
+    "entry": "pack_corpus.py",
+    "kind": "yeast",
+    "shard_start": 560,
+    "shard_end": 632
+  },
+  "population-k562-r2-20260912-v1": {
+    "entry": "prepare_populations.py",
+    "cohort": "k562"
+  },
+  "population-rpe1-r2-20260912-v1": {
+    "entry": "prepare_populations.py",
+    "cohort": "rpe1"
+  },
+  "population-norman-r2-20260912-v1": {
+    "entry": "prepare_populations.py",
+    "cohort": "norman"
+  },
+  "population-gwps-r2-20260912-v1": {
+    "entry": "prepare_populations.py",
+    "cohort": "gwps"
+  },
+  "population-hepg2-r2-20260912-v1": {
+    "entry": "prepare_populations.py",
+    "cohort": "hepg2"
+  },
+  "population-mcf10a-full-d0-r2-20260912-v1": {
+    "entry": "prepare_populations.py",
+    "cohort": "mcf10a_full_d0"
+  },
+  "population-mcf10a-full-d6-r2-20260912-v1": {
+    "entry": "prepare_populations.py",
+    "cohort": "mcf10a_full_d6"
+  },
+  "population-mcf10a-tgfb1-d6-r2-20260912-v1": {
+    "entry": "prepare_populations.py",
+    "cohort": "mcf10a_tgfb1_d6"
+  },
+  "population-yeast-r2-20260912-v1": {
+    "entry": "prepare_populations.py",
+    "cohort": "yeast"
+  },
+  "population-mcf10a-full-d0-r2-20260912-v2": {
+    "entry": "prepare_populations.py",
+    "cohort": "mcf10a_full_d0"
+  },
+  "basal-depmap-r2-20260912-v1": {
+    "entry": "prepare_basal.py"
+  },
+  "population-yeast-r2-20260912-v2": {
+    "entry": "prepare_populations.py",
+    "cohort": "yeast"
+  },
+  "population-yeast-r2-20260912-v3": {
+    "entry": "prepare_populations.py",
+    "cohort": "yeast"
+  },
+  "basal-depmap-r2-20260912-v2": {
+    "entry": "prepare_basal.py"
+  },
+  "population-yeast-r2-20260912-v4": {
+    "entry": "prepare_populations.py",
+    "cohort": "yeast"
+  }
+}
