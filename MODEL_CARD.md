@@ -30,7 +30,10 @@ The compact 8k checkpoint schedule is selected for the full matched suite
 because it captures most of the AP gain within the $50 allocation. The suite
 compares it with the same compact model without pretraining and the
 stronger GO MLP. The frozen 30-fold run started on 2026-09-14, with a total
-campaign estimate of $37.22 including reserves. Fitness modeling improves with longer pretraining, while RNA
+campaign estimate of $37.22 including reserves. On the first MuSL outer fold,
+mixed-pretrained SLp reaches **0.80002 AP / 0.77716 AUROC**, versus
+**0.80304 / 0.76689** for the GO MLP and **0.79208 / 0.76161** without
+pretraining. The remaining folds are still running. Fitness modeling improves with longer pretraining, while RNA
 prediction remains uneven. These development results do not support a
 strong-world-model or SOTA claim.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.

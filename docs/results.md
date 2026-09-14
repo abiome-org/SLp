@@ -9136,3 +9136,34 @@ development result exactly: **AP 0.650401538810204**, **AUROC
 published, and fitting has advanced to the compact SL-only model. This
 confirms the repaired runner reaches optimization, scoring and durable
 publication with the intended inputs; official outer testing is still pending.
+
+### 2026-09-14 — First complete outer fold
+
+By **01:58:40 UTC**, all three fresh outer refits and their scoring/bundle
+publications had completed for **MuSL seed42 fold0**. Its official outer
+partition contains **1,946 pairs**, including **973 positives** (prevalence
+0.5). Both held genes were excluded from SL-label and human perturbation
+fitting; all three models report zero forbidden human exposures.
+
+| Model | Outer AP | Trapezoidal PR-AUC | AUROC |
+|---|---:|---:|---:|
+| GO MLP | 0.803035 | 0.802927 | 0.766893 |
+| Compact world model, SL-only | 0.792079 | 0.791939 | 0.761613 |
+| Compact world model, mixed pretraining | 0.800022 | 0.799895 | 0.777156 |
+
+Pretraining adds **0.007943 AP** and **0.015543 AUROC** over the matched
+SL-only world model on this fold. The GO MLP leads AP; the pretrained model
+leads AUROC. The inner selector chose the GO MLP before outer scoring, so
+its result is the selected-model result for this fold. These outer numbers
+must not be compared directly with the earlier inner scores as a training
+gain: the partitions and positive prevalence differ. One of 30 folds is
+complete, and the fixed suite continues without test-driven recipe changes.
+
+R2-restored standalone inference replay started at **01:58:40 UTC** on the
+same pod, using a separate CPU process and at most two CPU threads per
+inference call. It compares 64 published pairs per family with saved score
+probabilities, after verifying restored bundle files against their publication
+receipts. The replay is bounded to 20 minutes, with artifacts confined to a
+disposable cloud directory. It is still in progress; success has not yet been
+established. Driver/source and launch metadata are captured in
+`bundle-replay-job.json` and `bundle-replay-request.json`.
