@@ -585,6 +585,25 @@ all model/corpus payloads move directly between RunPod and R2. Keep the local
 broker running and the Mac awake during the campaign. Independent local and
 in-pod deadline guards remain required.
 
+Summarize the matched three-family run from its captured plan and the broker's
+journal. The default requires all 30 outer folds:
+
+```sh
+python3 scripts/slp12_r2_summarize.py \
+  --plan results/slp12-r2-benchmark-v2-20260914/plan.json \
+  --journal data/slp12-r2-research-20260913/campaign-journal.json \
+  --output results/slp12-r2-benchmark-v2-20260914/summary.json
+```
+
+For progress only, add `--allow-partial` and use a separate output filename.
+Partial reports leave the complete-suite macro score empty. The summarizer
+checks matching protocols, cohorts, exposure masks and binary counts, averages
+folds within each benchmark and then weights benchmarks equally. It reports
+each fixed family and the sealed inner-selected model separately; test scores
+cannot substitute a new winner. Paired pretraining gains compare the same
+folds. Six focused tests cover weighting, partial results, invalid exposures,
+cohort changes, nonfinite metrics and preservation of the inner choice.
+
 The proposed $50 campaign ceiling includes a **$49.89** estimate: $40.64 for
 GPU/disposable disk including 25% reserve, plus $9.25 reserved for the first month
 of R2 storage and operations. Archive growth is bounded to 600 GB, checked

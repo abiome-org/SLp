@@ -34,7 +34,7 @@ campaign estimate of $37.22 including reserves. Across the first two MuSL
 outer folds, mixed-pretrained SLp averages **0.76999 AP / 0.77152 AUROC**,
 versus **0.81630 / 0.78938** for the GO MLP and **0.75228 / 0.75645** without
 pretraining. Pretraining helps in both folds, while the GO MLP leads their
-mean scores. Two of 30 folds are complete. Fitness modeling improves with longer pretraining, while RNA
+mean scores. The full 30-fold evaluation continues. Fitness modeling improves with longer pretraining, while RNA
 prediction remains uneven. These development results do not support a
 strong-world-model or SOTA claim.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
