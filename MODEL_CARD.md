@@ -37,8 +37,8 @@ pretraining. Pretraining adds **0.00819 AP**, improving six of ten folds,
 but loses to the GO MLP by **0.02709 AP** on average. The inner selector
 chooses the MLP in five folds and pretrained SLp in five, yielding
 **0.77583 AP / 0.76469 AUROC**. Both held genes are excluded from all human
-perturbation and SL fitting in each scope. SLAMR and Feng testing continues;
-ten of thirty suite folds are complete. Fitness modeling improves with longer pretraining, while RNA
+perturbation and SL fitting in each scope. MuSL and A549 are complete;
+fifteen of thirty suite folds remain. Fitness modeling improves with longer pretraining, while RNA
 prediction remains uneven. These development results do not support a
 strong-world-model or SOTA claim.
 The first A549 inner validation partition contains 56 negatives and no
@@ -47,6 +47,14 @@ undefined and uses inner binary log loss for selection when AP is unavailable.
 The rows, exposure masks, training recipes and completed MuSL results remain
 unchanged. Any undefined outer-fold metrics will have explicit evaluable-fold
 counts; they will not be imputed into the original all-fold macro score.
+On A549's four evaluable outer folds, mixed-pretrained SLp scores
+**0.13876 AP / 0.60910 AUROC**, versus **0.05389 / 0.52096** for the GO MLP
+and **0.06375 / 0.40323** for SL-only SLp. The fifth fold has zero positives;
+the entire A549 evaluation contains only 28 positive pair-row occurrences.
+Pretraining improves AP in three of four evaluable folds and AUROC in all
+four. Inner selection chose the MLP in all five folds, so the selection
+procedure did not capture the pretrained model's mean advantage. Jurkat,
+K562 and Feng testing continues with the same model recipes.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
 The full optimizer checkpoint has passed an R2 roundtrip and bitwise-exact
 continuation; research execution uses one RTX 4090. See the

@@ -9291,3 +9291,48 @@ Its checkpoint SHA-256 remains
 `ad6313ce0ccb3e03e1e3cd7618b698e5c4850622a3082fdef17a3cf2352f1a2d`.
 The amended score and source receipt were published, and the next SL-only
 fit started. `degenerate-recovery-proof.json` preserves this verification.
+
+### 2026-09-14 — Complete SLAMR A549 scenario-3 benchmark
+
+By **13:42 UTC**, all five A549 folds had completed their three fresh outer
+refits, scoring and verified checkpoint/bundle publications. Jurkat fold 0
+was training. Fifteen of the thirty suite folds are now complete.
+
+A549 preserves **994 pair-row occurrences**, including **28 positives**
+(pooled prevalence **0.028169**). Folds 0–4 contain respectively
+**210/210/210/182/182 rows** and **2/4/18/4/0 positives**. The fifth fold's
+AP, trapezoidal PR-AUC and AUROC are undefined and remain null. All its rows
+and model predictions are retained; it is not assigned a zero or perfect
+discrimination score. The table averages only the **four evaluable folds**.
+
+| Model | Mean outer AP | Mean trapezoidal PR-AUC | Mean AUROC |
+|---|---:|---:|---:|
+| Mixed-pretrained SLp | 0.138763 | 0.087488 | 0.609097 |
+| SL-only SLp | 0.063746 | 0.070481 | 0.403227 |
+| GO MLP | 0.053890 | 0.037975 | 0.520964 |
+| Model chosen by inner validation | 0.053890 | 0.037975 | 0.520964 |
+
+Pretraining adds **0.075017 AP** and **0.205871 AUROC** over the matched
+SL-only transformer, improving AP in three of four evaluable folds and
+AUROC in all four. Its mean advantage over the GO MLP is **0.084872 AP**
+and **0.088133 AUROC**. This is a positive transfer result on a small,
+sparse-positive benchmark; the 28 positive occurrences are not 28 independent
+biological interactions. Its absolute AP must not be compared directly with
+the balanced MuSL benchmark as though they had the same prevalence.
+
+Inner selection chose the GO MLP in all five folds: original AP selection
+in folds 1 and 3, and the documented log-loss fallback on the single-class
+validation sets in folds 0, 2 and 4. The selected-model procedure therefore
+did not capture the pretrained model's mean advantage. These sealed choices
+are preserved; outer results do not select a replacement. Protocol/cohort
+and exposure checks pass for all families, including the zero-positive fold.
+
+The immutable progress snapshot is
+`results/slp12-r2-benchmark-v2-20260914/summary-a549-complete.json`, from
+journal SHA-256
+`603b42231b05be5ca2e52f3e119dfa3d8d69d78c15b8ed2ef2ad021d7f76fe90`.
+The original all-fold macro will remain undefined for these discrimination
+metrics because A549 fold 4 has no positives. The separate available-fold
+macro will be reported only after the full suite finishes, with the
+denominator explicit. GPU/disk spending is approximately **$14.11**;
+credit and both independent financial guards were verified at **13:43 UTC**.
