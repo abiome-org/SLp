@@ -9379,3 +9379,50 @@ the original all-fold macro will still be undefined because A549 fold 4
 has no positives. At this check, K562 optimization is finite and progressing,
 approximately **23.9 GB** disk is free, and elapsed GPU/disk spending is
 **$17.59**. The independent spending guards and original deadline remain active.
+
+### 2026-09-14 — Complete SLAMR K562 scenario-3 benchmark
+
+By **23:16 UTC**, all five K562 folds had completed their three fresh outer
+refits, scoring and verified checkpoint/bundle publications. Feng fold 0
+had begun. Twenty-five of the thirty suite folds are complete.
+
+K562 retains **33,866 pair-row occurrences**, including **490 positives**
+(pooled prevalence **0.01446879**; mean fold prevalence **0.01449484**).
+Folds 0–4 contain **6,806/6,806/6,806/6,806/6,642 rows** and
+**136/64/100/58/132 positives**. All five folds have defined discrimination
+metrics; the following means weight them equally.
+
+| Model | Mean outer AP | Mean trapezoidal PR-AUC | Mean AUROC |
+|---|---:|---:|---:|
+| Mixed-pretrained SLp | 0.016635 | 0.015856 | 0.510169 |
+| SL-only SLp | 0.017647 | 0.017164 | 0.536355 |
+| GO MLP | 0.021475 | 0.019687 | 0.570363 |
+| Model chosen by inner validation | 0.018546 | 0.017076 | 0.496740 |
+
+This is a poor K562 model, and pretraining makes it worse. Relative to the
+matched SL-only transformer, pretraining reduces mean AP by **0.001013**
+and AUROC by **0.026187**, losing both metrics in four of five folds.
+Its mean AP is **0.004840** below the GO MLP and its mean AUROC is
+**0.060195** lower. Fold 2 improves, but the other four folds regress;
+pretrained fold 3 reaches only **0.005956 AP / 0.328598 AUROC**.
+The pretrained model's mean AUROC is near the 0.5 chance reference and
+its AP is modest relative to prevalence. A549's positive transfer therefore
+does not generalize reliably across these SLAMR cell lines.
+
+All five inner selections use AP: three choose the GO MLP, one pretrained
+SLp, and one SL-only SLp. Their sealed choices produce the selected-model
+row above. Protocol/cohort/exposure checks pass for every family, with zero
+forbidden human exposures; original rows and predictions are retained.
+No outer result changes the remaining training recipes or model selection.
+The suite remains retrospective development evidence, not an untouched SOTA
+evaluation.
+
+The immutable progress snapshot is
+`results/slp12-r2-benchmark-v2-20260914/summary-k562-complete.json`, from
+journal SHA-256
+`0ef75503962aed9720b7d07fe51fd0519615c136099bd27ca840dbc528193745`.
+Both suite macro fields remain null until Feng finishes; A549 fold 4 will
+still make the original all-fold discrimination macro undefined. At this
+check, approximately **23.9 GB** disk is free and elapsed GPU/disk spending
+is **$21.39**. RunPod credit was **$61.37** at **23:00 UTC**, when the
+controller, supervisor, broker and both financial guards were verified.
