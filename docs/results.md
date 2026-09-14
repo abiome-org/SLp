@@ -9178,3 +9178,24 @@ results, is verified in R2 under
 (199,609 raw bytes). `bundle-replay-artifact.json` records that publication.
 This confirms standalone Linux CPU inference for the three first-fold
 bundles; it does not constitute OpenFoundry admission or service promotion.
+
+### 2026-09-14 — Two-fold MuSL progress
+
+By **02:55 UTC**, MuSL seed42 folds 0 and 1 were complete and fold 2 was
+training. Fold 1 contains 2,616 pairs with 1,308 positives. It scores
+**0.829560 AP / 0.811868 AUROC** for the GO MLP, **0.739961 / 0.765877**
+for mixed-pretrained SLp and **0.712477 / 0.751286** for SL-only SLp.
+All three report zero forbidden human exposures. The inner selector chose
+the GO MLP in both completed folds.
+
+| Model | Mean outer AP, two folds | Mean trapezoidal PR-AUC | Mean AUROC |
+|---|---:|---:|---:|
+| GO MLP | 0.816298 | 0.816196 | 0.789381 |
+| Mixed-pretrained SLp | 0.769992 | 0.769552 | 0.771516 |
+| SL-only SLp | 0.752278 | 0.752042 | 0.756450 |
+
+These are equal-fold means on a partial MuSL evaluation. Pretraining improves
+AP and AUROC over SL-only training in both folds, but the direct GO MLP
+leads mean AP by **0.046306** over the pretrained model. The near AP tie on
+the first fold did not carry into the second. The frozen comparison continues
+without recipe changes based on these results.
