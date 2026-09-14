@@ -7,8 +7,8 @@ perturbation prediction with one general conditional model is the proposed
 route, followed by human-only end-to-end SL-query post-training. The
 [next-model design](docs/development.md#next-model-design-derived-from-strict-cv3)
 is being trained as **SLp-1.2-r2**, with research training and testing authorized
-on 2026-09-13 under a $50 campaign cap. Its
-118,652,163-parameter inductive transformer has passed a disposable real-data
+on 2026-09-13 under a $50 campaign cap. The original
+118,652,163-parameter inductive transformer passed a disposable real-data
 CUDA optimization, exact checkpoint continuation and Cloudflare artifact replay
 check. The prepared human/yeast RNA and human fitness corpus, both fitting phases,
 direct feature baselines and all 60 inner/outer exposure masks have now been
@@ -22,9 +22,16 @@ to improve perturbation-specific RNA prediction: its mixed model reached only
 0.43535 inner AP. That candidate is rejected. The outer test remains paused.
 GO improves the feature MLP to 0.65040 inner AP, the SL-only world
 model to 0.62022, and the mixed-pretrained world model to 0.62418. RNA fitting
-remains poor. A final bounded comparison uses an 11.1M transformer with four
-times the pretraining draws and longer SL adaptation before the design is
-frozen for the matched suite. These development results do not support a
+remains poor. The final compact comparison uses an 11.1M transformer:
+pretraining followed by early SL adaptation reaches 0.63777 AP at its 8k
+base checkpoint and 0.64247 at 32k, versus 0.62740 without pretraining.
+The GO MLP still leads at 0.65040. Longer SL adaptation reduces validation AP.
+The compact 8k checkpoint schedule is selected for the full matched suite
+because it captures most of the AP gain within the $50 allocation. The suite
+compares it with the same compact model without pretraining and the
+stronger GO MLP. The frozen 30-fold run started on 2026-09-14, with a total
+campaign estimate of $37.22 including reserves. Fitness modeling improves with longer pretraining, while RNA
+prediction remains uneven. These development results do not support a
 strong-world-model or SOTA claim.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
 The full optimizer checkpoint has passed an R2 roundtrip and bitwise-exact

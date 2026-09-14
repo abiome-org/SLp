@@ -9058,3 +9058,71 @@ estimated **$36.75 total**, including reserves, with 30.4 remaining hours
 reserved. This is an unselected option pending the retained-checkpoint results;
 the earlier large-model packet remains separately captured. No benchmark
 packet has been launched and no official outer result has been inspected.
+
+### 2026-09-14 — Compact comparison complete; final benchmark schedule selected
+
+The primary compact comparison completed at **00:49:40 UTC**, followed by
+retained-checkpoint scoring and specificity diagnostics at **00:53:58 UTC**.
+These results use the same repeatedly inspected first MuSL inner fold.
+
+| Compact training trajectory | Inner AP | Inner AUROC |
+|---|---:|---:|
+| No pretraining; SL 1k within the 4k LR schedule | 0.627400 | 0.701377 |
+| Mixed base 8k within the 32k LR schedule; SL 1k within 4k | 0.637771 | 0.691021 |
+| Mixed base 32k; SL 1k within 4k | 0.642472 | 0.687691 |
+| Mixed base 32k; SL 4k | 0.595290 | 0.676794 |
+| Stronger GO MLP, original 1k schedule | 0.650402 | 0.713701 |
+
+Pretraining improves compact-model AP but reduces AUROC on this split. The
+32k base adds 0.00470 AP over the 8k checkpoint; neither beats the GO MLP.
+The compact **8k-base/1k-SL** trajectory is selected for the full matched
+comparison, preserving both LR schedules. This choice keeps all 30 folds and
+matched fresh outer refits within the original allowance. The full 32k
+schedule alone would require approximately 48 hours of pretraining across
+the 60 inner/outer scopes before adaptation, setup or publication.
+
+Longer pretraining does improve fitting-pool numeric prediction. DepMap MSE
+falls from **0.801793** at 8k to **0.491128** at 32k, versus **0.766749** for
+the fitting mean; wrong-gene MSE at 32k is **1.142185**. K562 RNA improves
+from 0.199070 to 0.099596 but remains much worse than its 0.016301 fitting
+mean. GWPS improves from 1.285916 to 1.267873, slightly below its 1.274388
+mean; wrong-gene MSE is 1.287354 at 32k. Yeast improves from 0.400174 to
+0.379018 versus mean 0.429364, but wrong-gene MSE is 0.378888: its gain is
+not perturbation-specific. These are fitting-pool diagnostics, not external
+generalization results.
+
+The chosen benchmark will retain the stronger original GO MLP and compare
+compact SL-only and mixed-pretrained families on each official outer fold.
+All family selections and fresh outer fits must precede that fold's test
+access. Recipes are frozen before the first outer score; later scores cannot
+be used to redesign the model. Exact final packet and launch receipts follow
+after the completed compact artifacts are verified in R2.
+
+All 79 compact comparison files, including base/SL checkpoints, exact source,
+recipes and diagnostics, are verified in R2 under
+`campaign-r2-research-20260913-compact-comparison` at **01:00:46 UTC**
+(1,989,155,096 uncompressed bytes). The private prefix remains
+`slp/runs/slp-1.2-r2/`; no checkpoint payload was downloaded to the Mac.
+
+The first final-suite controller started at **01:04:11 UTC** but failed before
+its first fit, at **01:05:36 UTC**. Repeated command resolution duplicated the
+alternate working-directory prefix. The repair matches the original path
+component exactly and preserves already resolved paths. Three regression
+cases exercise repeated resolution through `execute`; four other focused
+campaign/selection/broker/restore checks also pass. No optimizer checkpoint
+or outer test result was produced by the failed controller. Its source
+publication and journal remain preserved.
+
+The repaired, separately captured packet is
+`results/slp12-r2-benchmark-v2-20260914/plan.json`, SHA-256
+`34465c3739a95182b790f889060d37a8785a202c2c65b101e430bb105aae699d`.
+It validated on the pod and launched at **01:09:45 UTC**, using root
+`/workspace/slp-r2-benchmark-v2` and run ID `research-final2-20260914`.
+The selected numerical recipes are unchanged. It includes 10 MuSL folds,
+five each for SLAMR A549/JURKAT/K562 and five Feng random1 folds, with three
+model families and separate inner/outer fitting scopes. The launch-time
+total estimate is **$37.22**, including all prior spending and reserves.
+No new allocation was created; the independent financial guards and
+**2026-09-16 00:20:16 UTC** deadline remain in force. Launch and supervisor
+receipts are in `benchmark-v2-handoff.json`; the old controllers are kept
+separate from the new run's logs and exit status.

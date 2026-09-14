@@ -1229,6 +1229,31 @@ def test_checkpoint_publication_captures_atomic_snapshot_without_credentials(
     assert path.read_bytes() == b"next atomic checkpoint"
 
 
+@pytest.mark.parametrize("root", ["/workspace/slp-r2", "/workspace/slp-r2-benchmark", "/tmp/captured-run"])
+def test_campaign_command_resolution_is_idempotent(root, tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    import time
+
+    monkeypatch.syspath_prepend(str(ROOT / "modules/slp-1-2-r2"))
+    campaign = module("campaign")
+    runner = object.__new__(campaign.Runner)
+    runner.root = Path(root)
+    runner.args = SimpleNamespace(deadline=time.time() + 1800)
+    original = ["python", "fit.py", "--features", "/workspace/slp-r2/features",
+                "--output", "/workspace/slp-r2/runs/fold/adapt", "--deadline", "<deadline>",
+                "--external", "/workspace/slp-r2-shared/features"]
+    resolved = runner.command(original)
+    assert resolved[resolved.index("--features") + 1] == root + "/features"
+    assert resolved[resolved.index("--output") + 1] == root + "/runs/fold/adapt"
+    assert resolved[-1] == "/workspace/slp-r2-shared/features"
+    assert runner.command(resolved) == resolved
+    executed = []
+    monkeypatch.setattr(campaign.subprocess, "run", lambda argv, **kwargs: executed.append(argv))
+    runner.execute(resolved, tmp_path / "fit.log")
+    assert executed == [resolved]
+    assert original[3] == "/workspace/slp-r2/features"
+
+
 def test_campaign_selection_is_per_outer_fold_and_preserves_schedule(monkeypatch):
     monkeypatch.syspath_prepend(str(ROOT / "modules/slp-1-2-r2"))
     campaign = module("campaign")

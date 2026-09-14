@@ -104,7 +104,14 @@ class Runner:
             raise ValueError("Fitting corpus changed")
 
     def command(self, argv):
-        result = [str(x).replace("/workspace/slp-r2", str(self.root)) for x in argv]
+        # fit/score/refit may pass an already resolved command to execute.
+        # Match the original path component, not an alternate root's prefix.
+        original = "/workspace/slp-r2"
+        result = [
+            str(self.root) + value[len(original):]
+            if value == original or value.startswith(original + "/") else value
+            for value in map(str, argv)
+        ]
         result[0] = sys.executable
         if "--deadline" in result:
             result[result.index("--deadline") + 1] = str(self.args.deadline)
