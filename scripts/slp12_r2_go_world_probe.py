@@ -42,7 +42,10 @@ def main(args):
                 timeout=min(seconds, remaining),
             )
 
-    for variant in ("no_pretraining", "mixed_pretraining"):
+    variants = ["no_pretraining", "mixed_pretraining"]
+    if args.include_baseline:
+        variants.insert(0, "feature_mlp")
+    for variant in variants:
         recipe_path = root / "world-campaign" / (variant + ".json")
         recipe = json.loads(recipe_path.read_text())
         assert recipe["adapt"]["sl_fraction"] == 1
@@ -78,13 +81,15 @@ def main(args):
                 flush=True,
             )
             command(
-                [*common, "--stage", "pretrain", "--output", run], run / "fit.log", 1800
+                [*common, "--stage", "pretrain", "--output", run],
+                run / "fit.log",
+                recipe["pretrain"]["max_seconds"] + 180,
             )
             if (
                 json.loads((run / "complete.json").read_text())["result"][
                     "completed_update"
                 ]
-                != 8000
+                != recipe["pretrain"]["updates"]
             ):
                 raise ValueError("Incomplete GO pretraining")
             initialize = ["--initialize", run / "checkpoint.pt"]
@@ -99,7 +104,7 @@ def main(args):
             json.loads((run / "complete.json").read_text())["result"][
                 "completed_update"
             ]
-            != 1000
+            != recipe["adapt"]["updates"]
         ):
             raise ValueError("Incomplete GO SL adaptation")
         name = variant + "-static-go"
@@ -148,4 +153,5 @@ if __name__ == "__main__":
     p.add_argument("--data-root", type=Path, default=Path("/workspace/slp-r2"))
     p.add_argument("--deadline", type=float, required=True)
     p.add_argument("--allocation-deadline", type=float, required=True)
+    p.add_argument("--include-baseline", action="store_true")
     main(p.parse_args())

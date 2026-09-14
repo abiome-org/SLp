@@ -19,9 +19,13 @@ adaptation helps some checkpoints but does not beat that MLP. MSE improved
 fitness modeling and mixed-species SL transfer (AP 0.56371 versus the MLP's
 0.57713), while RNA specificity remains poor. Fitting-only RNA centering failed
 to improve perturbation-specific RNA prediction: its mixed model reached only
-0.43535 inner AP. That candidate is rejected. A separate static-GO feature
-comparison is running on the same pod and budget; the outer test remains
-paused. These development results do not support a strong-model or SOTA claim.
+0.43535 inner AP. That candidate is rejected. The outer test remains paused.
+GO improves the feature MLP to 0.65040 inner AP, the SL-only world
+model to 0.62022, and the mixed-pretrained world model to 0.62418. RNA fitting
+remains poor. A final bounded comparison uses an 11.1M transformer with four
+times the pretraining draws and longer SL adaptation before the design is
+frozen for the matched suite. These development results do not support a
+strong-world-model or SOTA claim.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
 The full optimizer checkpoint has passed an R2 roundtrip and bitwise-exact
 continuation; research execution uses one RTX 4090. See the

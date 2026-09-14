@@ -8959,3 +8959,65 @@ The SL-only world model completed with **AP 0.620219**, **AUROC 0.700531**.
 Its counterpart without GO reached 0.556760 AP. The mixed pretraining run is
 still active; any pretraining contribution must be measured against this
 stronger, feature-matched SL-only world model and the GO MLP.
+
+### 2026-09-13 — GO world-model results and final bounded development comparison
+
+The 123.9M mixed-GO run completed at **23:40:25 UTC** with **AP 0.624175**,
+**AUROC 0.701066**, compared with 0.620219/0.700531 for the matched SL-only
+world model and 0.650402/0.713701 for the GO feature MLP. Pretraining adds
+little on this development split. The fitting-only specificity diagnostic
+finds DepMap MSE **0.665632** versus 0.766749 for its fitting mean, with a
+wrong-gene penalty of 0.378345. K562 RNA remains poor: MSE **0.234405** versus
+**0.016301** for the per-query mean. GWPS is 1.282690 versus 1.274388; yeast is
+0.429987 versus 0.429364. GO improves SL representation, but this run still
+does not learn useful general RNA perturbation prediction.
+
+The expanded official comparison packet was staged and validated without
+launching at `/workspace/slp-r2-go-campaign`. Its local packet is
+`results/slp12-r2-go-suite-20260913/plan.json`, SHA-256
+`cbf8640ff201635b9a5c6d6ddb5066c6604fb74aa20e5f98c3b430bb8824b8d6`.
+It includes 90 inner fits and 90 fresh outer refits, comparing all three
+families on 30 folds. Preparation-time total campaign estimate is $47.54,
+including elapsed GPU/disk cost, a 20% remaining-compute reserve and storage.
+The packet is held while one final bounded development comparison runs.
+It must not be silently changed or launched using a different feature/configuration.
+
+That comparison started at **23:48:46 UTC** in `/workspace/slp-r2-compact`.
+It uses the same general transformer, data and strict masks, with width 384,
+four layers and six heads: **11,069,571 parameters**. Mixed pretraining uses
+32,000 updates (512,000 sampled experimental units at batch 16), four times
+the earlier draws. Both compact SL-only and pretrained models use 4,000 SL
+adaptation updates. A separate GO MLP also trains for 4,000 updates. These
+are changed capacity and training schedules, not a controlled claim about
+scaling one variable. MSE remains uncentered and all parameters adapt.
+
+The driver SHA-256 is
+`17bbfd533077bac136f44b05e0195e8acef4cfed88a0071d23e61587121bc7e4`.
+Its wrapper deadline is **2026-09-14 01:03:44 UTC**, followed by the finite
+controller hold at **01:48:44 UTC**. The original financial guards and total
+$50 cap remain binding. After this comparison, freeze the strongest supported
+design for the matched suite rather than continuing an open-ended search on
+the same inner fold. No official outer outcome has been inspected.
+
+To make room for later refits, the exact four archived centered checkpoints
+and two archived MSE8k retained checkpoints were verified against R2 receipts
+and removed from the pod cache. Other checkpoint versions, shared corpus,
+features, and unarchived evidence were preserved. Reclamation receipts are in
+the campaign state directory. GO model archival is tracked separately by
+`go-world-publication.json`. Its full 21-file, 6,118,813,336-byte artifact was
+verified at **23:56:01 UTC** under `campaign-r2-research-20260913-go-world8k`.
+Both the exact final initializer and retained 8k file are included. Its four
+archived checkpoint files were subsequently verified and removed from the
+pod cache, with the feature arrays and source retained. The compact source
+capture is verified under `campaign-r2-research-20260913-compact-source`.
+
+Longer SL fitting hurts inner validation. The new 4k-schedule MLP scores
+**AP 0.636480** at its retained 1k point and **0.548772** at 4k; the compact
+SL-only transformer scores **0.627400** at 1k and **0.545289** at 4k. The
+earlier, separately trained 1k-schedule GO MLP remains stronger at 0.650402.
+These are different LR schedules; the retained 1k point is not the same
+training trajectory as the original 1k-schedule model. Early checkpoint
+selection remains part of the bounded comparison. Mixed compact pretraining
+is active; its first 660 updates took about 58 seconds, so full-suite cost
+must use observed throughput rather than assuming parameter count predicts
+wall-clock speed.
