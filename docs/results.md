@@ -9163,7 +9163,18 @@ R2-restored standalone inference replay started at **01:58:40 UTC** on the
 same pod, using a separate CPU process and at most two CPU threads per
 inference call. It compares 64 published pairs per family with saved score
 probabilities, after verifying restored bundle files against their publication
-receipts. The replay is bounded to 20 minutes, with artifacts confined to a
-disposable cloud directory. It is still in progress; success has not yet been
-established. Driver/source and launch metadata are captured in
-`bundle-replay-job.json` and `bundle-replay-request.json`.
+receipts. All three replays completed successfully at **02:03:03 UTC**,
+with 17 restored files verified per bundle. Maximum absolute probability
+errors relative to the published GPU scores are **3.12e-7** for the GO MLP,
+**6.98e-7** for mixed-pretrained SLp and **3.35e-7** for SL-only SLp, below
+the fixed 1e-5 tolerance. The isolated processes use the exported code and
+real restored weights/features. Disposable bundle/score restores and the
+temporary capability file were removed after verification; the next fold
+continued training on the GPU.
+
+The six-file replay proof, including source, request, report and first-fold
+results, is verified in R2 under
+`campaign-r2-research-final2-20260914-inference-replay` at **02:04:15 UTC**
+(199,609 raw bytes). `bundle-replay-artifact.json` records that publication.
+This confirms standalone Linux CPU inference for the three first-fold
+bundles; it does not constitute OpenFoundry admission or service promotion.
