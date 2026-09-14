@@ -9199,3 +9199,45 @@ AP and AUROC over SL-only training in both folds, but the direct GO MLP
 leads mean AP by **0.046306** over the pretrained model. The near AP tie on
 the first fold did not carry into the second. The frozen comparison continues
 without recipe changes based on these results.
+
+### 2026-09-14 — Complete MuSL CV3 benchmark
+
+By **08:57 UTC**, all ten MuSL folds (seeds 42 and 432, five folds each)
+were complete, with all three model families' fresh outer refits, predictions
+and standalone bundles published. The controller advanced to SLAMR A549.
+The MuSL evaluation contains **22,178 pair-row occurrences**, including
+**11,089 positives**; every fold has prevalence **0.5**. Official rows,
+including duplicates, remain intact. The summary validates protocol hashes,
+matched cohorts, sealed inner selections and zero forbidden human exposures
+for every completed family's outer result.
+
+| Model | Mean outer AP, ten folds | Mean trapezoidal PR-AUC | Mean AUROC |
+|---|---:|---:|---:|
+| GO MLP | 0.790748 | 0.790574 | 0.776405 |
+| Mixed-pretrained SLp | 0.763659 | 0.763348 | 0.755793 |
+| SL-only SLp | 0.755466 | 0.755184 | 0.749111 |
+| Model chosen by inner validation in each fold | 0.775829 | 0.775582 | 0.764692 |
+
+Pretraining improves AP and AUROC in **six of ten folds**, with paired mean
+gains of **0.008193 AP** and **0.006681 AUROC** over SL-only training. The
+GO MLP leads the pretrained model by **0.027089 AP** and **0.020612 AUROC**
+on average. Inner validation selected the GO MLP in five folds and the
+pretrained model in five; these choices are preserved even when another
+family scores better on the corresponding outer test. World-model
+pretraining therefore provides a modest mean transfer gain over the same
+transformer trained only on SL, but it does not beat the direct feature MLP
+on this completed benchmark.
+
+These are equal-fold means, not metrics from pooled predictions. The frozen
+suite still has twenty SLAMR/Feng folds to complete; its equal-benchmark
+macro score remains unset. No model or numerical recipe changed after outer
+testing began. Repeated development on the first MuSL inner partition makes
+this retrospective development evidence, not an untouched SOTA evaluation.
+
+The ten-fold snapshot is
+`results/slp12-r2-benchmark-v2-20260914/summary-musl-complete.json`, produced
+by `scripts/slp12_r2_summarize.py` from journal SHA-256
+`d596980415d48d1c44894b6700c4787fb9852eb1448569ebc57b5cd06de21a4a`.
+The original plan hash and financial deadline remain unchanged. Elapsed
+GPU/disk spending is approximately **$10.49**, excluding the separately
+reserved R2 storage and shutdown allowances.

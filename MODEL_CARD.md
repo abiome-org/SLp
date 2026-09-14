@@ -19,7 +19,7 @@ adaptation helps some checkpoints but does not beat that MLP. MSE improved
 fitness modeling and mixed-species SL transfer (AP 0.56371 versus the MLP's
 0.57713), while RNA specificity remains poor. Fitting-only RNA centering failed
 to improve perturbation-specific RNA prediction: its mixed model reached only
-0.43535 inner AP. That candidate is rejected. The outer test remains paused.
+0.43535 inner AP. That candidate was rejected before outer testing.
 GO improves the feature MLP to 0.65040 inner AP, the SL-only world
 model to 0.62022, and the mixed-pretrained world model to 0.62418. RNA fitting
 remains poor. The final compact comparison uses an 11.1M transformer:
@@ -30,11 +30,15 @@ The compact 8k checkpoint schedule is selected for the full matched suite
 because it captures most of the AP gain within the $50 allocation. The suite
 compares it with the same compact model without pretraining and the
 stronger GO MLP. The frozen 30-fold run started on 2026-09-14, with a total
-campaign estimate of $37.22 including reserves. Across the first two MuSL
-outer folds, mixed-pretrained SLp averages **0.76999 AP / 0.77152 AUROC**,
-versus **0.81630 / 0.78938** for the GO MLP and **0.75228 / 0.75645** without
-pretraining. Pretraining helps in both folds, while the GO MLP leads their
-mean scores. The full 30-fold evaluation continues. Fitness modeling improves with longer pretraining, while RNA
+campaign estimate of $37.22 including reserves. All ten MuSL CV3 folds are
+complete: mixed-pretrained SLp averages **0.76366 AP / 0.75579 AUROC**,
+versus **0.79075 / 0.77640** for the GO MLP and **0.75547 / 0.74911** without
+pretraining. Pretraining adds **0.00819 AP**, improving six of ten folds,
+but loses to the GO MLP by **0.02709 AP** on average. The inner selector
+chooses the MLP in five folds and pretrained SLp in five, yielding
+**0.77583 AP / 0.76469 AUROC**. Both held genes are excluded from all human
+perturbation and SL fitting in each scope. SLAMR and Feng testing continues;
+ten of thirty suite folds are complete. Fitness modeling improves with longer pretraining, while RNA
 prediction remains uneven. These development results do not support a
 strong-world-model or SOTA claim.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
