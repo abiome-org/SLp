@@ -9021,3 +9021,40 @@ selection remains part of the bounded comparison. Mixed compact pretraining
 is active; its first 660 updates took about 58 seconds, so full-suite cost
 must use observed throughput rather than assuming parameter count predicts
 wall-clock speed.
+
+### 2026-09-14 — Retained compact checkpoints and budgeted suite preparation
+
+At **00:32:12 UTC**, compact mixed pretraining had completed **23,180 of
+32,000 updates** in 2,109 optimizer seconds with finite loss and gradients.
+The original controller remains paused before its first outer test. The
+queued checkpoint-selection driver waits for the primary comparison to finish
+before using the GPU: it scores the retained 1k SL adapter of the 32k base,
+fits a fresh 1k SL adapter from the already retained 8k base, and measures
+fitting-pool perturbation specificity at both base checkpoints. The adapter
+preserves the 4k LR schedule, stopping at 1k. These are retained points from
+the final bounded comparison, not another architecture search.
+
+The driver is `scripts/slp12_r2_compact_finish.py`, SHA-256
+`8ea83f5a41336bbe442fc3e215def08780fa317455dbe4cf1e130e0fad93c99d`.
+It started waiting at **00:31:35 UTC**, PID 58979, with a finite deadline of
+**01:20:00 UTC**. The financial deadline and controller hold are unchanged.
+
+The packet builder now captures explicitly selected recipes and actual stopping
+points, preserving their original LR schedules. Its cost estimate includes all
+90 inner fits and 90 fresh outer refits, prior spending, an eight-hour I/O/setup
+allowance, a 20% compute reserve and the existing storage/shutdown reserves.
+Seven focused tests pass, including rejection of an unaffordable 32k suite,
+invalid timing inputs and attempts to exceed the original allocation deadline.
+
+An optional compact-8k packet was staged and validated at **00:33:34 UTC**,
+without starting fits or fetching test partitions. It retains the stronger
+original 1k-schedule GO MLP and compares it with compact SL-only and mixed
+world models stopped at 1k within their 4k adaptation schedules. The mixed
+initializer stops at 8k within the 32k pretraining schedule. Its local plan is
+`results/slp12-r2-compact-suite-20260914/plan.json`, SHA-256
+`c3ab37ddee9a30c2610aecb5fa1ddfcd63a536d8cb9f5b122cac107b561c33f0`;
+the remote root is `/workspace/slp-r2-compact-campaign`. At preparation it
+estimated **$36.75 total**, including reserves, with 30.4 remaining hours
+reserved. This is an unselected option pending the retained-checkpoint results;
+the earlier large-model packet remains separately captured. No benchmark
+packet has been launched and no official outer result has been inspected.
