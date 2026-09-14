@@ -9336,3 +9336,46 @@ metrics because A549 fold 4 has no positives. The separate available-fold
 macro will be reported only after the full suite finishes, with the
 denominator explicit. GPU/disk spending is approximately **$14.11**;
 credit and both independent financial guards were verified at **13:43 UTC**.
+
+### 2026-09-14 — Complete SLAMR Jurkat scenario-3 benchmark
+
+By **18:16 UTC**, all five Jurkat folds had completed their three fresh outer
+refits, scoring and verified checkpoint/bundle publications. K562 fold 0
+was training. Twenty of the thirty suite folds are complete.
+
+Jurkat retains **25,418 pair-row occurrences**, including **124 positives**
+(pooled prevalence **0.00487843**; mean fold prevalence **0.00488486**).
+Folds 0–4 contain **5,112/5,112/5,112/5,112/4,970 rows** and
+**28/18/28/20/30 positives**. All five folds have defined discrimination
+metrics; the following means weight them equally.
+
+| Model | Mean outer AP | Mean trapezoidal PR-AUC | Mean AUROC |
+|---|---:|---:|---:|
+| Mixed-pretrained SLp | 0.006367 | 0.005093 | 0.433061 |
+| SL-only SLp | 0.005016 | 0.004448 | 0.453437 |
+| GO MLP | 0.006307 | 0.005564 | 0.582150 |
+| Model chosen by inner validation | 0.007104 | 0.005913 | 0.542068 |
+
+This is a poor Jurkat model. Pretraining adds **0.001351 AP** over SL-only,
+improving four of five folds, but reduces mean AUROC by **0.020376** and
+improves it in only two folds. Its mean AP is just **0.000060** above the
+GO MLP, while its mean AUROC is **0.149089** lower and below the 0.5 chance
+reference. AP is modest relative to the benchmark's low prevalence. The
+slight AP gain does not establish useful general ranking on Jurkat.
+
+All five inner selections use AP: two select the GO MLP, two pretrained
+SLp, and one SL-only SLp. Their preserved choices produce the selected-model
+row above; test scores do not change those choices or the remaining recipes.
+Protocol/cohort/exposure checks pass for every family, with zero forbidden
+human exposures. All original rows and their predictions remain available.
+This is retrospective development evidence, not an untouched SOTA result.
+
+The immutable progress snapshot is
+`results/slp12-r2-benchmark-v2-20260914/summary-jurkat-complete.json`, from
+journal SHA-256
+`18808944ff03afd52fd4d523385ceed5399fdadf439e532d162d10606869650b`.
+Both suite macro fields remain null until the full thirty folds complete;
+the original all-fold macro will still be undefined because A549 fold 4
+has no positives. At this check, K562 optimization is finite and progressing,
+approximately **23.9 GB** disk is free, and elapsed GPU/disk spending is
+**$17.59**. The independent spending guards and original deadline remain active.
