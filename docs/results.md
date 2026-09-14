@@ -9126,3 +9126,13 @@ No new allocation was created; the independent financial guards and
 **2026-09-16 00:20:16 UTC** deadline remain in force. Launch and supervisor
 receipts are in `benchmark-v2-handoff.json`; the old controllers are kept
 separate from the new run's logs and exit status.
+
+At **01:12:28 UTC**, after verifying the replacement's source publication and
+active fitting process, the exact paused original controller was terminated.
+Its hold guard subsequently exited; both original financial guards remained
+active. The first completed benchmark fit reproduces the stronger GO MLP
+development result exactly: **AP 0.650401538810204**, **AUROC
+0.7137010551407439**, on 1,291 inner pairs. Its checkpoint and scores are
+published, and fitting has advanced to the compact SL-only model. This
+confirms the repaired runner reaches optimization, scoring and durable
+publication with the intended inputs; official outer testing is still pending.
