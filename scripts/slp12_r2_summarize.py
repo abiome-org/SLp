@@ -45,13 +45,22 @@ def summarize(plan, journal, plan_sha, *, allow_partial=False):
                     or metric["forbidden_human_exposures"] != 0):
                 raise ValueError("Outer protocol/exposure contract mismatch")
             n, positives = metric["n"], metric["positives"]
-            if type(n) is not int or type(positives) is not int or not 0 < positives < n:
+            if type(n) is not int or type(positives) is not int or not 0 <= positives <= n:
                 raise ValueError("Invalid binary evaluation counts")
-            if not math.isclose(metric["prevalence"], positives / n, abs_tol=1e-12):
+            if (n and not math.isclose(metric["prevalence"], positives / n, abs_tol=1e-12)) or (not n and metric["prevalence"] is not None):
                 raise ValueError("Prevalence/count mismatch")
-            if any(not isinstance(metric[k], (int, float)) or not math.isfinite(metric[k])
-                   or not 0 <= metric[k] <= 1 for k in METRICS):
-                raise ValueError("Invalid evaluation metric")
+            if 0 < positives < n:
+                if any(not isinstance(metric[k], (int, float)) or not math.isfinite(metric[k])
+                       or not 0 <= metric[k] <= 1 for k in METRICS):
+                    raise ValueError("Invalid evaluation metric")
+            else:
+                amendment = metric.get("evaluation_amendment", {})
+                saved = journal.get("evaluation_amendments", {}).get(amendment.get("id"), {})
+                if (metric.get("metric_status") != ("undefined_single_class" if n else "undefined_empty")
+                        or any(metric[k] is not None for k in METRICS)
+                        or not amendment.get("source_sha256")
+                        or amendment.get("source_sha256") != saved.get("source_sha256")):
+                    raise ValueError("Missing audited undefined-metric evidence")
             current = (n, positives, metric["prevalence"], tuple(metric["forbidden_genes"]))
             if cohort is not None and current != cohort:
                 raise ValueError("Families evaluated different cohorts or masks")
@@ -68,34 +77,46 @@ def summarize(plan, journal, plan_sha, *, allow_partial=False):
         for family in (*families, "inner_selected"):
             values = [fold["metrics"] if family == "inner_selected"
                       else fold["families"][family]["metrics"] for _, fold, _ in rows]
-            models[family] = {key: statistics.mean(v[key] for v in values) if values else None
+            models[family] = {key: statistics.mean(available) if (available := [v[key] for v in values if v[key] is not None]) else None
                               for key in METRICS}
         pairs = sum(fold["metrics"]["n"] for _, fold, _ in rows)
         positives = sum(fold["metrics"]["positives"] for _, fold, _ in rows)
         delta = {}
         for key in METRICS:
             values = [fold["families"]["mixed_pretraining"]["metrics"][key]
-                      - fold["families"]["no_pretraining"]["metrics"][key] for _, fold, _ in rows]
+                      - fold["families"]["no_pretraining"]["metrics"][key] for _, fold, _ in rows
+                      if fold["families"]["mixed_pretraining"]["metrics"][key] is not None]
             delta[key] = {"mean": statistics.mean(values) if values else None,
+                          "evaluable_folds": len(values),
                           "positive_folds": sum(v > 0 for v in values),
                           "tied_folds": sum(v == 0 for v in values)}
         benchmarks[benchmark] = {
             "completed_folds": len(rows), "expected_folds": expected[benchmark],
             "folds": [name for name, _, _ in rows], "total_pair_rows": pairs, "positive_rows": positives,
             "pooled_prevalence": positives / pairs if pairs else None,
-            "mean_fold_prevalence": statistics.mean(f["metrics"]["prevalence"] for _, f, _ in rows) if rows else None,
+            "mean_fold_prevalence": statistics.mean(prevalences) if (prevalences := [f["metrics"]["prevalence"] for _, f, _ in rows if f["metrics"]["prevalence"] is not None]) else None,
+            "metric_fold_counts": {key: sum(f["metrics"][key] is not None for _, f, _ in rows) for key in METRICS},
+            "undefined_metric_folds": [name for name, f, _ in rows if f["metrics"]["average_precision"] is None],
             "mean_metrics": models, "inner_selection_counts": dict(Counter(s for _, _, s in rows)),
+            "inner_selection_criteria": dict(Counter(f["selection"].get("selector", "legacy AP") for _, f, _ in rows)),
             "paired_pretraining_minus_sl_only": delta,
         }
     macro = None
+    available_macro = None
     if complete:
         macro = {family: {key: statistics.mean(b["mean_metrics"][family][key] for b in benchmarks.values())
+                          if all(b["metric_fold_counts"][key] == b["expected_folds"] for b in benchmarks.values()) else None
                           for key in METRICS} for family in (*families, "inner_selected")}
+        available_macro = {family: {key: statistics.mean(b["mean_metrics"][family][key] for b in benchmarks.values())
+                                    if all(b["mean_metrics"][family][key] is not None for b in benchmarks.values()) else None
+                                    for key in METRICS} for family in (*families, "inner_selected")}
     return {
         "schema": "slp.r2-matched-benchmark-summary/v1", "plan_sha256": plan_sha,
         "complete": complete, "completed_folds": len(folds), "expected_folds": len(protocols),
         "benchmarks": benchmarks, "equal_benchmark_means": macro,
-        "weighting": "Equal fold weight within each benchmark; equal benchmark weight in the complete-suite macro score. No pooling of predictions.",
+        "available_fold_equal_benchmark_means": available_macro,
+        "evaluation_amendments": journal.get("evaluation_amendments", {}),
+        "weighting": "Equal evaluable-fold weight within each benchmark, with counts and undefined folds explicit. The original all-fold macro is null for a metric if any fold is undefined. The separately named available-fold macro weights benchmarks equally. Both macro fields require all 30 folds completed. No pooling or imputation.",
         "selection": "inner_selected preserves each fold's pre-test inner choice; family test scores do not select a new model.",
         "interpretation": plan["development_reuse"],
     }

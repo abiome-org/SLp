@@ -59,10 +59,23 @@ def permissions_for(request, plan, run_id, *, allow_outer_test=False):
     job = request.get("job", "")
     label = job[len(prefix) :]
     base_label = re.sub(r"-u\d{6}$", "", label)
+    amendment = label == "single-class-scoring-v1"
+    if amendment:
+        source = Path(__file__).with_name("slp12_r2_degenerate.py").read_bytes()
+        sha = hashlib.sha256(source).hexdigest()
+        record = {"id": "single-class-scoring-v1", "source_sha256": sha,
+                  "policy": "Undefined discrimination metrics are null; inner-only single-class selection minimizes binary log loss."}
+        payloads = {"slp12_r2_degenerate.py": source, "amendment.json": json.dumps(record, sort_keys=True).encode()}
+        expected = {name: {"bytes": len(body), "sha256": hashlib.sha256(body).hexdigest()} for name, body in payloads.items()}
+        if (run_id != "research-final2-20260914" or request.get("kind") is not None
+                or request.get("plan_sha256") != "34465c3739a95182b790f889060d37a8785a202c2c65b101e430bb105aae699d"
+                or sha != "936cb9c47e1be98fd32f595c51d668b8b898a44be2bc603ed16cf0e0927b1175"
+                or request.get("files") != expected):
+            raise ValueError("Scoring amendment differs from its exact authorized files")
     if (
         not re.fullmatch(r"[a-zA-Z0-9_-]{1,40}", run_id)
         or not job.startswith(prefix)
-        or base_label not in allowed_labels(plan)
+        or (not amendment and base_label not in allowed_labels(plan))
     ):
         raise ValueError("Request is not a declared campaign operation")
     if request.get("kind") == "partition":

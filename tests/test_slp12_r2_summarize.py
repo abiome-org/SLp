@@ -61,3 +61,25 @@ def test_invalid_results_fail_closed(change, error):
     change(journal["folds"]["fold0"])
     with pytest.raises(ValueError, match=error):
         summary.summarize(plan, journal, "pinned")
+
+
+def test_degenerate_fold_keeps_rows_and_makes_missing_macro_explicit():
+    plan, journal = fixture()
+    journal["evaluation_amendments"] = {"single-class-scoring-v1": {"source_sha256": "audited"}}
+    fold = journal["folds"]["fold0"]
+    for result in fold["families"].values():
+        result["metrics"].update(positives=0, prevalence=0.0,
+                                 metric_status="undefined_single_class",
+                                 evaluation_amendment={"id": "single-class-scoring-v1", "source_sha256": "audited"},
+                                 **dict.fromkeys(summary.METRICS, None))
+    fold["metrics"] = copy.deepcopy(fold["families"]["no_pretraining"]["metrics"])
+    result = summary.summarize(plan, journal, "pinned")
+    assert result["complete"]
+    assert result["benchmarks"]["large"]["total_pair_rows"] == 2000
+    assert result["benchmarks"]["large"]["metric_fold_counts"]["average_precision"] == 19
+    assert result["benchmarks"]["large"]["undefined_metric_folds"] == ["fold0"]
+    assert result["equal_benchmark_means"]["feature_mlp"]["average_precision"] is None
+    assert result["available_fold_equal_benchmark_means"]["feature_mlp"]["average_precision"] == pytest.approx(.5)
+    journal["evaluation_amendments"] = {}
+    with pytest.raises(ValueError, match="audited"):
+        summary.summarize(plan, journal, "pinned")

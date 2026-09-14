@@ -9241,3 +9241,53 @@ by `scripts/slp12_r2_summarize.py` from journal SHA-256
 The original plan hash and financial deadline remain unchanged. Elapsed
 GPU/disk spending is approximately **$10.49**, excluding the separately
 reserved R2 storage and shutdown allowances.
+
+### 2026-09-14 — Repair for official single-class validation
+
+At **08:59:49 UTC**, the first A549 inner MLP completed its 1,000 updates
+and checkpoint publication, then scoring stopped because the official
+validation partition has **56 negatives and zero positives**. The fitting
+partition has **1,225 rows: 1,200 negatives and 25 positives**; the outer
+fitting union has 1,281 rows with the same 25 positives. No A549 outer test
+partition had been fetched. This is an unhandled protocol edge case in our
+scorer, not a numerical training failure. The preflight should have checked
+class support on every actual inner partition before launch.
+
+The repair preserves every row, split, model, recipe, exposure mask and
+checkpoint. `scripts/slp12_r2_degenerate.py` is an external scoring/controller
+adjunct, SHA-256
+`936cb9c47e1be98fd32f595c51d668b8b898a44be2bc603ed16cf0e0927b1175`.
+It delegates two-class metrics and AP selection to the original captured code.
+For a single-class partition it records AP, trapezoidal PR-AUC and AUROC as
+null, with a reason and finite binary log loss. If all compared candidates
+share the same nonempty single-class inner partition, selection minimizes
+its log loss. This measures calibration on the observed class; it cannot
+measure class discrimination. Empty or mismatched selection evidence remains
+an error. The fallback was fixed using inner data before any A549 outer test
+access; it does not change the ten completed MuSL selections or results.
+
+The amended controller resumed at **09:22:17 UTC**, wrapper PID 154437 and
+controller PID 154438, from the already published A549 checkpoint. The
+original failure receipt remains separate. Its exact two-file amendment is
+published under `campaign-r2-research-final2-20260914-single-class-scoring-v1`
+before new scoring. The broker accepts only the pinned source and amendment
+bytes for this new publication; reusable credentials remain local. The
+original transport, source packet and financial deadline are retained. A
+bounded ten-minute hold on the failure supervisor ended after verifying the
+replacement controller; both independent financial guards stayed active.
+
+The summary now retains undefined folds and all pair rows, exposes evaluable
+fold counts, and leaves a metric's original all-fold macro undefined if any
+fold lacks that metric. A separately named available-fold macro may be
+reported after all thirty folds finish, with its changed denominator explicit.
+It is never substituted silently for the original macro. Fourteen focused
+tests pass across degenerate metrics, stable extreme-logit loss, unchanged
+two-class scoring/selection, rejection of outer or mismatched fallback
+evidence, exact-file broker limits and aggregation with missing metrics.
+
+The real checkpoint replay passed by **09:27:36 UTC**: all 56 validation rows
+were retained, AP/AUROC were null, and binary log loss was **4.398812e-6**.
+Its checkpoint SHA-256 remains
+`ad6313ce0ccb3e03e1e3cd7618b698e5c4850622a3082fdef17a3cf2352f1a2d`.
+The amended score and source receipt were published, and the next SL-only
+fit started. `degenerate-recovery-proof.json` preserves this verification.

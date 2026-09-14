@@ -41,6 +41,12 @@ perturbation and SL fitting in each scope. SLAMR and Feng testing continues;
 ten of thirty suite folds are complete. Fitness modeling improves with longer pretraining, while RNA
 prediction remains uneven. These development results do not support a
 strong-world-model or SOTA claim.
+The first A549 inner validation partition contains 56 negatives and no
+positives. A scoring amendment reports single-class AP/PR-AUC/AUROC as
+undefined and uses inner binary log loss for selection when AP is unavailable.
+The rows, exposure masks, training recipes and completed MuSL results remain
+unchanged. Any undefined outer-fold metrics will have explicit evaluable-fold
+counts; they will not be imputed into the original all-fold macro score.
 Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
 The full optimizer checkpoint has passed an R2 roundtrip and bitwise-exact
 continuation; research execution uses one RTX 4090. See the
