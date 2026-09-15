@@ -9426,3 +9426,168 @@ still make the original all-fold discrimination macro undefined. At this
 check, approximately **23.9 GB** disk is free and elapsed GPU/disk spending
 is **$21.39**. RunPod credit was **$61.37** at **23:00 UTC**, when the
 controller, supervisor, broker and both financial guards were verified.
+
+
+### 2026-09-15 — Complete SLp-1.2-r2 matched benchmark
+
+The frozen campaign completed all **30 folds and 330 fitting/scoring stages**
+at **03:14:40 UTC** with exit code zero and no pending transfers. This
+includes **90 inner fits and 90 fresh outer fits**, comparing GO MLP,
+SL-only SLp and mixed-pretrained SLp on the same cohorts. The remaining
+Feng random1 folds were evaluated without changing the recipes. Both genes
+remain withheld from SL labels and all human perturbation fitting in the
+corresponding scope; source, protocol, cohort and exposure checks pass for
+all families. Every family's fresh refit precedes its fold's test fetch.
+The original rows, ordering, duplicates and conflicting labels are retained.
+
+**The campaign did not meet the objective of a broadly strong, above-SOTA
+SL model.** Pretraining helps relative to the matched SL-only transformer
+on the balanced benchmarks, but both remain below the direct GO MLP.
+A549 improves substantially while K562 regresses and Jurkat AUROC falls
+below chance. Earlier fitting diagnostics also show weak RNA specificity.
+This is a useful transfer comparison, not evidence of a reliable general
+cellular world model or a reason to scale this recipe unchanged.
+
+Feng contains **14,162 pair-row occurrences and 7,081 positives**, with
+50% prevalence in every fold. All five folds are evaluable. Its complete
+means are:
+
+| Model | Feng AP | Feng trapezoidal PR-AUC | Feng AUROC |
+|---|---:|---:|---:|
+| Mixed-pretrained SLp | 0.784697 | 0.784439 | 0.772587 |
+| SL-only SLp | 0.769255 | 0.768962 | 0.756527 |
+| GO MLP | 0.801287 | 0.801163 | 0.785559 |
+| Model chosen by inner validation | 0.793489 | 0.793346 | 0.779554 |
+
+Pretraining improves Feng AP by **0.015442**, trapezoidal PR-AUC by
+**0.015478**, and AUROC by **0.016060**, winning each in four of five folds.
+It remains **0.016590 AP / 0.012971 AUROC** below the GO MLP. Inner AP
+selects pretrained SLp in four folds and the MLP in one; those choices
+are preserved rather than replaced by the outer-test winner.
+
+The complete suite is shown below. The three metrics are averaged within
+each benchmark over the explicitly counted evaluable folds. Positive counts
+are pair-row occurrences, not counts of independent biological interactions.
+
+| Benchmark | Evaluable folds | Positive rows / total rows | Pooled prevalence |
+|---|---:|---:|---:|
+| MuSL CV3, seeds 42 and 432 | 10/10 | 11,089 / 22,178 | 0.500000 |
+| SLAMR scenario 3, A549 | 4/5 | 28 / 994 | 0.028169 |
+| SLAMR scenario 3, Jurkat | 5/5 | 124 / 25,418 | 0.004878 |
+| SLAMR scenario 3, K562 | 5/5 | 490 / 33,866 | 0.014469 |
+| Feng CV3 random1 | 5/5 | 7,081 / 14,162 | 0.500000 |
+
+| Benchmark | Model | AP | Trapezoidal PR-AUC | AUROC |
+|---|---|---:|---:|---:|
+| MuSL | Mixed-pretrained SLp | 0.763659 | 0.763348 | 0.755793 |
+| MuSL | SL-only SLp | 0.755466 | 0.755184 | 0.749111 |
+| MuSL | GO MLP | 0.790748 | 0.790574 | 0.776405 |
+| MuSL | Inner-selected model | 0.775829 | 0.775582 | 0.764692 |
+| A549 | Mixed-pretrained SLp | 0.138763 | 0.087488 | 0.609097 |
+| A549 | SL-only SLp | 0.063746 | 0.070481 | 0.403227 |
+| A549 | GO MLP | 0.053890 | 0.037975 | 0.520964 |
+| A549 | Inner-selected model | 0.053890 | 0.037975 | 0.520964 |
+| Jurkat | Mixed-pretrained SLp | 0.006367 | 0.005093 | 0.433061 |
+| Jurkat | SL-only SLp | 0.005016 | 0.004448 | 0.453437 |
+| Jurkat | GO MLP | 0.006307 | 0.005564 | 0.582150 |
+| Jurkat | Inner-selected model | 0.007104 | 0.005913 | 0.542068 |
+| K562 | Mixed-pretrained SLp | 0.016635 | 0.015856 | 0.510169 |
+| K562 | SL-only SLp | 0.017647 | 0.017164 | 0.536355 |
+| K562 | GO MLP | 0.021475 | 0.019687 | 0.570363 |
+| K562 | Inner-selected model | 0.018546 | 0.017076 | 0.496740 |
+| Feng | Mixed-pretrained SLp | 0.784697 | 0.784439 | 0.772587 |
+| Feng | SL-only SLp | 0.769255 | 0.768962 | 0.756527 |
+| Feng | GO MLP | 0.801287 | 0.801163 | 0.785559 |
+| Feng | Inner-selected model | 0.793489 | 0.793346 | 0.779554 |
+
+The **original all-fold macro is undefined** for AP, trapezoidal PR-AUC
+and AUROC because A549 fold 4 has zero positives. Its rows and predictions
+remain archived, with null metrics and an explicit reason. No value is
+imputed. The table below is a separate **conditional macro over evaluable
+folds**: first average the 10/4/5/5/5 evaluable folds within each benchmark,
+then give each of the five benchmarks weight 1/5. It is neither an equal
+average of all 30 folds nor a pooled prediction score.
+
+| Model | Conditional AP | Conditional trapezoidal PR-AUC | Conditional AUROC |
+|---|---:|---:|---:|
+| Mixed-pretrained SLp | 0.342024 | 0.331245 | 0.616141 |
+| SL-only SLp | 0.322226 | 0.323248 | 0.579732 |
+| GO MLP | 0.334741 | 0.330993 | 0.647088 |
+| Inner-selected model | 0.329772 | 0.325978 | 0.620804 |
+
+Pretraining adds **0.019798 conditional AP / 0.007997 trapezoidal PR-AUC /
+0.036410 AUROC** over SL-only. Compared with the GO MLP, it adds only
+**0.007283 AP / 0.000252 trapezoidal PR-AUC** and loses **0.030947 AUROC**.
+A549 contributes 0.016974 to the AP difference after the 1/5 benchmark
+weight, more than the entire net AP lead. This aggregate therefore cannot
+hide the regressions or the small number of A549 positives.
+
+| Benchmark | Pretraining minus SL-only AP | AP wins | AUROC difference | AUROC wins |
+|---|---:|---:|---:|---:|
+| MuSL | +0.008193 | 6/10 | +0.006681 | 6/10 |
+| A549 | +0.075017 | 3/4 | +0.205871 | 4/4 |
+| Jurkat | +0.001351 | 4/5 | -0.020376 | 2/5 |
+| K562 | -0.001013 | 1/5 | -0.026187 | 1/5 |
+| Feng | +0.015442 | 4/5 | +0.016060 | 4/5 |
+
+Across all 30 folds, the sealed inner selector chooses GO MLP **16** times,
+pretrained SLp **12** times, and SL-only **2** times. It uses AP in 27
+folds and the previously recorded single-class log-loss fallback in A549
+folds 0, 2 and 4. Every A549 selection chooses MLP, so the selected
+procedure misses the pretrained model's mean A549 advantage. That is a
+failure of the full selection procedure and remains part of the result.
+The amendment did not change fitting or official partitions.
+
+The exact final summary is
+`results/slp12-r2-benchmark-v2-20260914/summary.json`, with journal SHA-256
+`fe69da6c0fc603227b66a4903a1fca460b2ba223d2cac70880585d328a5c6f72`
+and summarizer SHA-256
+`ec2a5ffd329dadf0d4d3f3ef6dc18cd355f134b2003e3bb84180324b8a6cafda`.
+The frozen plan remains
+`34465c3739a95182b790f889060d37a8785a202c2c65b101e430bb105aae699d`.
+The summary command passed its completeness, protocol, cohort, exposure,
+metric-support and sealed-selection checks. No fitting or inference replay
+was repeated during final aggregation. The earlier isolated Linux CPU
+replay restored all three families from R2 and matched published predictions
+within 7e-7, under the fixed 1e-5 tolerance.
+
+The first MuSL inner fold was repeatedly used to develop features, capacity
+and stopping schedules. The suite is **retrospective development evidence**.
+No new SOTA claim, untouched evaluation claim, model promotion or OpenFoundry
+serving claim follows from these results. The frozen numerical recipes were
+not tuned after outer testing began. Native RunPod execution and standalone
+bundle replay are the capabilities verified here.
+
+Final storage and shutdown verification: **573 immutable artifact manifests**
+were retrieved from private R2 after pod deletion. All active compressed-byte
+counts match the campaign journal, and **543 jobs** also match recorded
+per-file hashes (all 542 active publications plus the standalone replay proof).
+The 31 earlier auxiliary jobs are retained; their original accounting mixes
+raw-file and compressed-part sizes, so final storage uses the actual manifest
+part sizes. No archive is discarded and the original records are unchanged.
+The archive index records **257,292,775,323 raw bytes** in **92,057,890,571
+compressed part bytes**, plus **3,192,042 manifest bytes**, before this final
+report. At the budget's $0.015/GB-month assumption, these result archives
+alone cost approximately **$1.38 per month** before free-tier allowances and
+operations; this excludes shared source/corpus storage.
+
+The owned pod `b2fo6eya9vlca2` was deleted and its absence confirmed at
+**03:14:58 UTC**. An independent subsequent listing also confirmed absence.
+The supervisor, broker, local financial guard and caffeinate processes have
+all exited. The allocation lasted **32.066797 hours**, including preliminary
+development, setup and the benchmark. At the recorded rates, GPU is
+**$23.72943** and disk is **$0.70283**, totaling **$24.43226**. Keeping the
+entire original **$9.25 first-month archive reserve** and **$0.25 shutdown
+reserve** yields **$33.93226** conservative campaign accounting, below $50.
+These are elapsed-time estimates plus reserves, not a provider invoice or an
+account-wide balance subtraction. No new pod or additional training was started.
+
+Final summaries, plan, journal, archive index, scoring amendment, inference
+replay evidence and shutdown/cost receipts are preserved as the immutable
+R2 job `campaign-r2-research-final2-20260914-final-results`, under
+`s3://abiome-artifacts/slp/runs/slp-1.2-r2/`. Local metadata is in
+`results/slp12-r2-benchmark-v2-20260914/`; large weights and data remain cloud
+artifacts. `completion.json` records termination and accounting,
+`archive-verification.json` records the full immutable artifact inventory,
+and `final-publication.json` records the final report's checksum verification.
+The monitor is paused after these completion checks.

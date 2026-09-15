@@ -1,77 +1,75 @@
 # SLp molecular world models
 
-The current development target is above-SOTA human SL prediction across the
-combined benchmark suite under CV3: both test genes are withheld from SL-label
-fitting and all human perturbation fitting in each fold. Human/nonhuman
-perturbation prediction with one general conditional model is the proposed
-route, followed by human-only end-to-end SL-query post-training. The
-[next-model design](docs/development.md#next-model-design-derived-from-strict-cv3)
-is being trained as **SLp-1.2-r2**, with research training and testing authorized
-on 2026-09-13 under a $50 campaign cap. The original
-118,652,163-parameter inductive transformer passed a disposable real-data
-CUDA optimization, exact checkpoint continuation and Cloudflare artifact replay
-check. The prepared human/yeast RNA and human fitness corpus, both fitting phases,
-direct feature baselines and all 60 inner/outer exposure masks have now been
-exercised. The first inner-fold results are weak: the original world-model
-candidates trail the direct feature MLP, and a fitting-pool diagnostic found
-poor RNA prediction and little sensitivity to the perturbed gene. SL-only
-adaptation helps some checkpoints but does not beat that MLP. MSE improved
-fitness modeling and mixed-species SL transfer (AP 0.56371 versus the MLP's
-0.57713), while RNA specificity remains poor. Fitting-only RNA centering failed
-to improve perturbation-specific RNA prediction: its mixed model reached only
-0.43535 inner AP. That candidate was rejected before outer testing.
-GO improves the feature MLP to 0.65040 inner AP, the SL-only world
-model to 0.62022, and the mixed-pretrained world model to 0.62418. RNA fitting
-remains poor. The final compact comparison uses an 11.1M transformer:
-pretraining followed by early SL adaptation reaches 0.63777 AP at its 8k
-base checkpoint and 0.64247 at 32k, versus 0.62740 without pretraining.
-The GO MLP still leads at 0.65040. Longer SL adaptation reduces validation AP.
-The compact 8k checkpoint schedule is selected for the full matched suite
-because it captures most of the AP gain within the $50 allocation. The suite
-compares it with the same compact model without pretraining and the
-stronger GO MLP. The frozen 30-fold run started on 2026-09-14, with a total
-campaign estimate of $37.22 including reserves. All ten MuSL CV3 folds are
-complete: mixed-pretrained SLp averages **0.76366 AP / 0.75579 AUROC**,
-versus **0.79075 / 0.77640** for the GO MLP and **0.75547 / 0.74911** without
-pretraining. Pretraining adds **0.00819 AP**, improving six of ten folds,
-but loses to the GO MLP by **0.02709 AP** on average. The inner selector
-chooses the MLP in five folds and pretrained SLp in five, yielding
-**0.77583 AP / 0.76469 AUROC**. Both held genes are excluded from all human
-perturbation and SL fitting in each scope. MuSL and all three SLAMR benchmarks
-are complete; five Feng folds remain. Fitness modeling improves with longer pretraining, while RNA
-prediction remains uneven. These development results do not support a
-strong-world-model or SOTA claim.
-The first A549 inner validation partition contains 56 negatives and no
-positives. A scoring amendment reports single-class AP/PR-AUC/AUROC as
-undefined and uses inner binary log loss for selection when AP is unavailable.
-The rows, exposure masks, training recipes and completed MuSL results remain
-unchanged. Any undefined outer-fold metrics will have explicit evaluable-fold
-counts; they will not be imputed into the original all-fold macro score.
-On A549's four evaluable outer folds, mixed-pretrained SLp scores
-**0.13876 AP / 0.60910 AUROC**, versus **0.05389 / 0.52096** for the GO MLP
-and **0.06375 / 0.40323** for SL-only SLp. The fifth fold has zero positives;
-the entire A549 evaluation contains only 28 positive pair-row occurrences.
-Pretraining improves AP in three of four evaluable folds and AUROC in all
-four. Inner selection chose the MLP in all five folds, so the selection
-procedure did not capture the pretrained model's mean advantage.
-Jurkat is a poor result: mixed-pretrained SLp averages **0.00637 AP /
-0.43306 AUROC** across all five folds, versus **0.00631 / 0.58215** for
-the GO MLP and **0.00502 / 0.45344** for SL-only SLp. The benchmark contains
-124 positive pair-row occurrences among 25,418 rows (0.488% prevalence).
-Pretraining improves AP in four folds but reduces mean AUROC; the pretrained
-model's mean AUROC is below chance. Inner selection yields **0.00710 AP /
-0.54207 AUROC**, choosing MLP twice, pretrained twice and SL-only once.
-K562 is also poor: mixed-pretrained SLp averages **0.01663 AP / 0.51017
-AUROC**, versus **0.02147 / 0.57036** for the GO MLP and **0.01765 /
-0.53636** for SL-only SLp. Pretraining reduces AP and AUROC in four of
-five folds. The benchmark contains 490 positive pair-row occurrences among
-33,866 rows (1.447% prevalence). Inner selection yields **0.01855 AP /
-0.49674 AUROC**. The A549 transfer gain does not generalize reliably across
-SLAMR cell lines. Feng testing continues with the same frozen recipes.
-Engineering readiness is complete for the admitted corpus, with Costanzo excluded.
-The full optimizer checkpoint has passed an R2 roundtrip and bitwise-exact
-continuation; research execution uses one RTX 4090. See the
-[preparation ledger](docs/results.md#2026-09-12--slp-12-r2-preparation-in-progress).
+**SLp-1.2-r2 training and testing are complete. This campaign did not produce
+a broadly strong human SL model or meet the above-SOTA objective.** All 30
+frozen benchmark folds completed on 2026-09-15. Mixed human/nonhuman
+perturbation pretraining improves the matched SL-only transformer on MuSL,
+Feng and A549, but damages K562 performance and Jurkat AUROC. The direct GO
+feature MLP remains stronger on the two balanced benchmarks.
+
+The model is an **11,069,571-parameter** inductive conditional transformer
+(width 384, four layers, six heads), using frozen ESM descriptors and 6,900
+annotation dimensions, including 6,836 direct GO terms. It has no learned
+gene-ID lookup. Mixed pretraining uses 8,000 updates of the original
+32,000-update MSE schedule, followed by human-only end-to-end SL adaptation
+for 1,000 updates of the original 4,000-update schedule. SL-only fitting uses
+the same transformer and adaptation schedule; the GO MLP uses its original
+1,000-update schedule. The [development ledger](docs/results.md) records why
+these recipes were chosen, including weak RNA specificity and failed longer
+SL adaptation. Costanzo is excluded.
+
+Both test genes are excluded from **all SL-label fitting and all human
+perturbation fitting** in the corresponding inner or outer scope. Static
+features retain their recorded retrospective provenance. All three families
+finish inner selection and fresh outer refitting before that fold's test is
+fetched. The original pair rows, order, duplicates and conflicting labels are
+retained. Ninety inner fits and ninety fresh outer fits completed; all
+protocol, cohort and exposure checks pass.
+
+Each entry below is mean **average precision / AUROC**. A549 averages its
+four evaluable folds; all other benchmarks include every named fold.
+
+| Benchmark | Mixed-pretrained SLp | SL-only SLp | GO MLP |
+|---|---:|---:|---:|
+| MuSL CV3, 10 folds | 0.76366 / 0.75579 | 0.75547 / 0.74911 | 0.79075 / 0.77640 |
+| SLAMR A549, 4/5 folds | 0.13876 / 0.60910 | 0.06375 / 0.40323 | 0.05389 / 0.52096 |
+| SLAMR Jurkat, 5 folds | 0.00637 / 0.43306 | 0.00502 / 0.45344 | 0.00631 / 0.58215 |
+| SLAMR K562, 5 folds | 0.01663 / 0.51017 | 0.01765 / 0.53636 | 0.02147 / 0.57036 |
+| Feng CV3 random1, 5 folds | 0.78470 / 0.77259 | 0.76925 / 0.75653 | 0.80129 / 0.78556 |
+
+The original all-fold macro is undefined because A549 fold 4 contains no
+positives. A separate **conditional macro**, weighting the five benchmarks
+equally after averaging their evaluable folds, is **0.34202 AP / 0.61614
+AUROC** for pretrained SLp, **0.32223 / 0.57973** for SL-only, and
+**0.33474 / 0.64709** for GO MLP. The small AP lead over the MLP is driven
+largely by A549, which has only 28 positive pair-row occurrences. Pretrained
+SLp's conditional trapezoidal PR-AUC is 0.33124 versus the MLP's 0.33099.
+These metrics do not support a claim of broadly better ranking.
+
+Inner selection chose GO MLP in 16 folds, pretrained SLp in 12, and SL-only
+in two. AP selected 27 folds; a documented single-class scoring amendment
+used inner log loss for three A549 folds. The sealed selected procedure
+scores **0.32977 AP / 0.62080 AUROC** on the same conditional macro and
+misses A549's pretrained-model advantage. Test results never replace these
+choices. The first MuSL inner fold was repeatedly used for development;
+this suite is retrospective development evidence, not an untouched SOTA
+evaluation or a controlled scaling curve.
+
+Source, checkpoints, predictions, selections and standalone inference bundles
+are retained in private Cloudflare R2. Each model family's first-fold bundle
+passed isolated Linux CPU replay after restoration from R2, with maximum
+probability error below 7e-7 at a fixed 1e-5 tolerance. This is native RunPod
+research execution, not OpenFoundry admission or serving promotion. The owned
+RTX 4090 pod was deleted at **03:14:58 UTC on 2026-09-15** and all local
+supervision processes exited. The allocation lasted 32.067 hours, including
+preliminary development and setup, for an estimated **$24.43 GPU plus disk**.
+The original $9.25 first-month archive reserve and $0.25 shutdown reserve
+bring conservative campaign accounting to **$33.93**, below the $50 cap;
+this is an estimate with reserves, not a provider invoice.
+
+See the [complete results ledger](docs/results.md#2026-09-15--complete-slp-12-r2-matched-benchmark)
+for per-benchmark PR-AUC, prevalence, paired transfer, artifact receipts and
+final accounting. Historical model artifacts and claims below remain separate.
 
 ## SLp-1.2 pretrained base
 
