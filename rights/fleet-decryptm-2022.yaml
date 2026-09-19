@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'decryptm-2022'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://www.ebi.ac.uk/pride/archive/projects/PXD037285
+scope: >-
+  decryptM drug dose-response PTM curves (PRIDE PXD037285). 2 object(s) pinned in storage/source-objects.json
+  under slp/raw/decryptm-2022/. PRIDE submission after June 2018.
+scientificAttribution: >-
+  decryptM drug dose-response PTM curves (PRIDE PXD037285). See source for full author list and citation.

@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'horlbeck-2018-gi'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.17632/rdzk59n6j4.1
+scope: >-
+  Horlbeck et al. 2018 human CRISPRi genetic interaction map (Mendeley rdzk59n6j4 v1). 11 object(s) pinned in storage/source-objects.json
+  under slp/raw/horlbeck-2018-gi/. Mendeley Data dataset; provider sha256 matched fleet-verified copies.
+scientificAttribution: >-
+  Horlbeck et al. 2018 human CRISPRi genetic interaction map (Mendeley rdzk59n6j4 v1). See source for full author list and citation.

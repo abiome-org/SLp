@@ -1,0 +1,14 @@
+# Rights record draft for fleet round-1 source group 'biogrid-orcs-2-0-18'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: MIT
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://downloads.thebiogrid.org/BioGRID-ORCS/ORCS-2.0.18/
+scope: >-
+  BioGRID ORCS 2.0.18 CRISPR screen score tables. No objects are currently pinned in
+  storage/source-objects.json; two acquired tarballs are deferred to a manual multipart route.
+scientificAttribution: >-
+  BioGRID ORCS 2.0.18 CRISPR screen score tables. See source for full author list and citation.
+notes: >-
+  Publisher download endpoints are not statically addressable by the allowlisted worker; do not admit until a manual import verifies the release checksums.

@@ -1,0 +1,14 @@
+# Rights record draft for fleet round-1 source group 'tggates-2012'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC-BY-SA-2.1-JP
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://dbarchive.biosciencedbc.jp/data/open-tggates/LATEST/README_e.html
+scope: >-
+  Open TG-GATEs summary and attribute archives. 2 object(s) pinned in storage/source-objects.json
+  under slp/raw/tggates-2012/. Toxicogenomics Project archive.
+scientificAttribution: >-
+  Open TG-GATEs summary and attribute archives. See source for full author list and citation.
+notes: >-
+  ShareAlike: derivatives of these files inherit CC BY-SA 2.1 Japan; attribution statement required

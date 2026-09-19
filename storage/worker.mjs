@@ -6,13 +6,14 @@ const json = (body, status = 200) => Response.json(body, {
   status, headers: { 'Cache-Control': 'no-store' },
 });
 const hex = buffer => Array.from(new Uint8Array(buffer), n => n.toString(16).padStart(2, '0')).join('');
+const MAX_BUFFERED_SOURCE_BYTES = 4 * 1024 ** 2;
 
 export function verified(object, spec) {
   const checksum = object?.checksums?.[spec.checksum.algorithm];
   return object?.size === spec.bytes && checksum && hex(checksum) === spec.checksum.value;
 }
 
-export async function ingest(spec, bucket, fetcher = fetch) {
+export async function ingest(spec, bucket, fetcher = fetch, FixedLength = globalThis.FixedLengthStream) {
   const existing = await bucket.head(spec.key);
   if (existing) {
     if (!verified(existing, spec)) return json({error: 'Existing object fails checksum or size', id: spec.id}, 409);
@@ -24,12 +25,26 @@ export async function ingest(spec, bucket, fetcher = fetch) {
     await upstream.body?.cancel();
     return json({error: 'Publisher download failed', upstream_status: upstream.status, id: spec.id}, 502);
   }
-  // Streaming R2 writes require a known-length body. Fail rather than buffer a file.
+  let body = upstream.body;
+  let transfer = null;
   if (Number(upstream.headers.get('Content-Length')) !== spec.bytes) {
-    await upstream.body.cancel();
-    return json({error: 'Publisher size differs from pinned manifest', id: spec.id}, 502);
+    if (spec.bytes <= MAX_BUFFERED_SOURCE_BYTES) {
+      const buffered = await upstream.arrayBuffer();
+      if (buffered.byteLength !== spec.bytes) {
+        return json({error: 'Publisher size differs from pinned manifest', id: spec.id}, 502);
+      }
+      body = buffered;
+    } else {
+      if (!FixedLength) {
+        await upstream.body.cancel();
+        return json({error: 'Publisher size differs from pinned manifest', id: spec.id}, 502);
+      }
+      const fixed = new FixedLength(spec.bytes);
+      transfer = upstream.body.pipeTo(fixed.writable);
+      body = fixed.readable;
+    }
   }
-  const result = await bucket.put(spec.key, upstream.body, {
+  const write = bucket.put(spec.key, body, {
     onlyIf: new Headers({'If-None-Match': '*'}),
     [spec.checksum.algorithm]: spec.checksum.value,
     storageClass: 'Standard',
@@ -37,6 +52,7 @@ export async function ingest(spec, bucket, fetcher = fetch) {
     customMetadata: {source_id: spec.id, source_url: spec.url, manifest_version: manifest.version,
       storage_role: 'source-only', license: spec.license},
   });
+  const [result] = transfer ? await Promise.all([write, transfer]) : [await write];
   // A competing identical import may have won the conditional write.
   const stored = result || await bucket.head(spec.key);
   if (!verified(stored, spec)) return json({error: 'Stored object verification failed', id: spec.id}, 409);

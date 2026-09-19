@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'jump-cpg0016-profiles'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://broadinstitute.github.io/jump_hub/explanations/data_description.html
+scope: >-
+  JUMP Cell Painting cpg0016 assembled profiles (Cell Painting Gallery). 3 object(s) pinned in storage/source-objects.json
+  under slp/raw/jump-cpg0016-profiles/. Cell Painting Gallery public S3.
+scientificAttribution: >-
+  JUMP Cell Painting cpg0016 assembled profiles (Cell Painting Gallery). See source for full author list and citation.

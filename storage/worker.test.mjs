@@ -51,10 +51,42 @@ test('streaming upload pins the checksum and prevents overwrites', async () => {
   assert.ok(written);
 });
 
-test('publisher size drift fails before any R2 write', async () => {
+test('small objects tolerate a missing or unusable publisher length header', async () => {
+  let written = false;
+  const bucket = {head: async () => null, put: async (key, body) => {
+    assert.deepEqual(new Uint8Array(body), bytes);
+    written = true;
+    return object();
+  }};
+  const response = await ingest(spec, bucket, async () => new Response(bytes));
+  assert.equal(response.status, 200);
+  assert.ok(written);
+});
+
+test('publisher byte drift fails before any R2 write', async () => {
   const bucket = {head: async () => null, put: async () => assert.fail('must not write')};
-  const response = await ingest(spec, bucket, async () => new Response(bytes, {headers: {'Content-Length': '1'}}));
+  const drifted = new TextEncoder().encode('drifted');
+  const response = await ingest(spec, bucket, async () => new Response(drifted,
+    {headers: {'Content-Length': String(drifted.length)}}));
   assert.equal(response.status, 502);
+});
+
+test('large objects use a fixed-length stream when the publisher length is unusable', async () => {
+  const largeSpec = {...spec, bytes: 4 * 1024 ** 2 + 1};
+  let expectedLength = null;
+  class FakeFixedLengthStream {
+    constructor(length) {
+      expectedLength = length;
+      return new TransformStream();
+    }
+  }
+  const bucket = {head: async () => null, put: async (key, body) => {
+    assert.deepEqual(new Uint8Array(await new Response(body).arrayBuffer()), bytes);
+    return {...object(), size: largeSpec.bytes};
+  }};
+  const response = await ingest(largeSpec, bucket, async () => new Response(bytes), FakeFixedLengthStream);
+  assert.equal(response.status, 200);
+  assert.equal(expectedLength, largeSpec.bytes);
 });
 
 test('verified retries skip upstream; corrupted existing objects are never overwritten', async () => {

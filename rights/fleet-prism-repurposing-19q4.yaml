@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'prism-repurposing-19q4'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.6084/m9.figshare.9393293
+scope: >-
+  PRISM Repurposing Primary Screen 19Q4 (figshare 9393293). 5 object(s) pinned in storage/source-objects.json
+  under slp/raw/prism-repurposing-19q4/. Historical Broad DepMap figshare release; license verified via figshare API.
+scientificAttribution: >-
+  PRISM Repurposing Primary Screen 19Q4 (figshare 9393293). See source for full author list and citation.

@@ -1,0 +1,14 @@
+# Rights record draft for fleet round-1 source group 'lincs-l1000-phase1'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: LINCS-public
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE92742
+scope: >-
+  LINCS L1000 Phase I Level 2 measured matrices (GSE92742). 10 object(s) pinned in storage/source-objects.json
+  under slp/raw/lincs-l1000-phase1/. NIH-funded LINCS L1000 GEO archive.
+scientificAttribution: >-
+  LINCS L1000 Phase I Level 2 measured matrices (GSE92742). See source for full author list and citation.
+notes: >-
+  CLUE redistribution policy states no restrictions on NIH/publicly funded L1000 data

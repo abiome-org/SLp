@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'immune-dictionary-2023'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.1038/s41586-023-06816-9
+scope: >-
+  Cui et al. 2023 Immune Dictionary Supplementary Table 3 (doi:10.1038/s41586-023-06816-9). 1 object(s) pinned in storage/source-objects.json
+  under slp/raw/immune-dictionary-2023/. Open-access Nature article supplement; CC-BY-4.0 confirmed in PMC full text.
+scientificAttribution: >-
+  Cui et al. 2023 Immune Dictionary Supplementary Table 3 (doi:10.1038/s41586-023-06816-9). See source for full author list and citation.

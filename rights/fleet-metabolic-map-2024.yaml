@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'metabolic-map-2024'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://www.ebi.ac.uk/biostudies/studies/S-BSST1724
+scope: >-
+  Human metabolic map of pharmacological perturbations fold-changes (BioStudies S-BSST1724). 1 object(s) pinned in storage/source-objects.json
+  under slp/raw/metabolic-map-2024/. BioStudies submission; CC0 confirmed by fleet from study page.
+scientificAttribution: >-
+  Human metabolic map of pharmacological perturbations fold-changes (BioStudies S-BSST1724). See source for full author list and citation.

@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'jump-cpg0016-metadata'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://github.com/jump-cellpainting/datasets
+scope: >-
+  JUMP cpg0016 dataset metadata (jump-cellpainting/datasets). 7 object(s) pinned in storage/source-objects.json
+  under slp/raw/jump-cpg0016-metadata/. GitHub repository metadata files.
+scientificAttribution: >-
+  JUMP cpg0016 dataset metadata (jump-cellpainting/datasets). See source for full author list and citation.

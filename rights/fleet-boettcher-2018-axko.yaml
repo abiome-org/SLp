@@ -1,0 +1,14 @@
+# Rights record draft for fleet round-1 source group 'boettcher-2018-axko'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC-BY-unverified
+trainingAllowed: false
+redistributionAllowed: false
+attributionRequired: true
+source: https://doi.org/10.1038/nbt.4062
+scope: >-
+  Boettcher et al. 2018 CRISPRa x KO genetic interactions (doi:10.1038/nbt.4062) publisher supplementary files. 15 object(s) pinned in storage/source-objects.json
+  under slp/raw/boettcher-2018-axko/. Publisher supplementary material of a non-open-access article.
+scientificAttribution: >-
+  Boettcher et al. 2018 CRISPRa x KO genetic interactions (doi:10.1038/nbt.4062) publisher supplementary files. See source for full author list and citation.
+notes: >-
+  Note: article is not OA; supplement is publicly downloadable; redistribution requires publisher terms

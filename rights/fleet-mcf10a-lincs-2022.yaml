@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'mcf10a-lincs-2022'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.1038/s42003-022-03975-9
+scope: >-
+  LINCS MCF10A microenvironment time course (doi:10.1038/s42003-022-03975-9) supplementary files. 26 object(s) pinned in storage/source-objects.json
+  under slp/raw/mcf10a-lincs-2022/. Open-access Communications Biology article supplements.
+scientificAttribution: >-
+  LINCS MCF10A microenvironment time course (doi:10.1038/s42003-022-03975-9) supplementary files. See source for full author list and citation.

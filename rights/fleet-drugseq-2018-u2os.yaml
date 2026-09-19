@@ -1,0 +1,14 @@
+# Rights record draft for fleet round-1 source group 'drugseq-2018-u2os'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: GEO-public
+trainingAllowed: true
+redistributionAllowed: false
+attributionRequired: true
+source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE120222
+scope: >-
+  Novartis DRUG-seq 433-compound U2OS proof-of-concept (GSE120222). 1 object(s) pinned in storage/source-objects.json
+  under slp/raw/drugseq-2018-u2os/. GEO public archive submission.
+scientificAttribution: >-
+  Novartis DRUG-seq 433-compound U2OS proof-of-concept (GSE120222). See source for full author list and citation.
+notes: >-
+  Note: NCBI places no restrictions on use/distribution but does not transfer or clear submitter IP; treat redistribution as unverified

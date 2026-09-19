@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'cpjump1-cpg0000-profiles'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://www.nature.com/articles/s41592-024-02241-6
+scope: >-
+  CPJUMP1 cpg0000 augmented well profiles (Cell Painting Gallery). 51 object(s) pinned in storage/source-objects.json
+  under slp/raw/cpjump1-cpg0000-profiles/. Cell Painting Gallery public S3.
+scientificAttribution: >-
+  CPJUMP1 cpg0000 augmented well profiles (Cell Painting Gallery). See source for full author list and citation.

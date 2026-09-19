@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'cellpainting-profiles'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://zenodo.org/records/5008187
+scope: >-
+  LINCS Cell Painting full release and related profile files (Zenodo 5008187 / GitHub). 2 object(s) pinned in storage/source-objects.json
+  under slp/raw/cellpainting-profiles/. Zenodo record and GitHub repository.
+scientificAttribution: >-
+  LINCS Cell Painting full release and related profile files (Zenodo 5008187 / GitHub). See source for full author list and citation.

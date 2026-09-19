@@ -1,0 +1,14 @@
+# Rights record draft for fleet round-1 source group 'shen-2017-combinatorial'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC-BY-unverified
+trainingAllowed: false
+redistributionAllowed: false
+attributionRequired: true
+source: https://doi.org/10.1038/nmeth.4225
+scope: >-
+  Shen et al. 2017 combinatorial CRISPR (doi:10.1038/nmeth.4225) publisher supplementary files. 5 object(s) pinned in storage/source-objects.json
+  under slp/raw/shen-2017-combinatorial/. Publisher supplementary material of a non-open-access article.
+scientificAttribution: >-
+  Shen et al. 2017 combinatorial CRISPR (doi:10.1038/nmeth.4225) publisher supplementary files. See source for full author list and citation.
+notes: >-
+  Note: article is not OA; supplement is publicly downloadable; redistribution requires publisher terms

@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'cellpainting-rosetta-profiles'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC0-1.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://github.com/carpenter-singh-lab/2022_Haghighi_NatureMethods
+scope: >-
+  Rosetta cpg0003 paired Cell Painting and L1000 treatment/replicate profiles. 8 object(s) pinned in storage/source-objects.json
+  under slp/raw/cellpainting-rosetta-profiles/. Cell Painting Gallery preprocessed profiles.
+scientificAttribution: >-
+  Rosetta cpg0003 paired Cell Painting and L1000 treatment/replicate profiles. See source for full author list and citation.

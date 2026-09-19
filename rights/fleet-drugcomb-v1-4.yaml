@@ -1,0 +1,12 @@
+# Rights record draft for fleet round-1 source group 'drugcomb-v1-4'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: CC-BY-4.0
+trainingAllowed: true
+redistributionAllowed: true
+attributionRequired: true
+source: https://doi.org/10.5281/zenodo.18449193
+scope: >-
+  DrugComb v1.4 raw data and identifiers (Zenodo 18449193). 3 object(s) pinned in storage/source-objects.json
+  under slp/raw/drugcomb-v1-4/. Zenodo record 18449193.
+scientificAttribution: >-
+  DrugComb v1.4 raw data and identifiers (Zenodo 18449193). See source for full author list and citation.

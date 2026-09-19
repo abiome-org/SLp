@@ -1,7 +1,7 @@
 {
   "schema": "slp.cloud-source-manifest/v1",
-  "version": "2026-09-13-cv3-core-static-go-v2",
-  "purpose": "Private source preservation; storage does not imply training admission or CV3 eligibility.",
+  "version": "2026-09-18-fleet-round1",
+  "purpose": "Private source preservation; storage does not imply training admission or CV3 eligibility. Fleet round-1 additions (2026-09-18): direct-pair GI supplements, fitness and drug-combination data, chemical and cytokine response matrices, proteomics/metabolomics dose data, and Cell Painting profiles; storage does not imply training admission or CV3 eligibility.",
   "objects": [
     {
       "id": "slkb-2023-41055392",
@@ -332,6 +332,2424 @@
         "value": "cb991189e29e847e1a0437baf5d786a8cff0cab2bc7d58f97251f5e5df11a535"
       },
       "license": "CC BY 4.0"
+    },
+    {
+      "id": "bigpapi-2018-41587-2018-bfnbt4048-moesm25-esm-pdf",
+      "key": "slp/raw/bigpapi-2018/sha256-641cfb30f9eb568e6c1b84c87de65194e2aae8dbcfdbd9ac01437e0a626a49af/41587_2018_BFnbt4048_MOESM25_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4048/MediaObjects/41587_2018_BFnbt4048_MOESM25_ESM.pdf",
+      "bytes": 11898057,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "641cfb30f9eb568e6c1b84c87de65194e2aae8dbcfdbd9ac01437e0a626a49af"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "bigpapi-2018-41587-2018-bfnbt4048-moesm26-esm-pdf",
+      "key": "slp/raw/bigpapi-2018/sha256-83c3a7389ed87f952e5e290c6ad908139491d8b6e162a4d68e655a1a28f841b7/41587_2018_BFnbt4048_MOESM26_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4048/MediaObjects/41587_2018_BFnbt4048_MOESM26_ESM.pdf",
+      "bytes": 171701,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "83c3a7389ed87f952e5e290c6ad908139491d8b6e162a4d68e655a1a28f841b7"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "bigpapi-2018-41587-2018-bfnbt4048-moesm27-esm-zip",
+      "key": "slp/raw/bigpapi-2018/sha256-a2148ee55139ec3f4b4248f22558afe47c8663e06381f1388fb8955838418fa7/41587_2018_BFnbt4048_MOESM27_ESM.zip",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4048/MediaObjects/41587_2018_BFnbt4048_MOESM27_ESM.zip",
+      "bytes": 9865161,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "a2148ee55139ec3f4b4248f22558afe47c8663e06381f1388fb8955838418fa7"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm10-esm-csv",
+      "key": "slp/raw/boettcher-2018-axko/sha256-c1891d0a43d28008f5234153e141eb2843dfa1ff4f5dff4d631fde1eea7ec37c/41587_2018_BFnbt4062_MOESM10_ESM.csv",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM10_ESM.csv",
+      "bytes": 216177,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "c1891d0a43d28008f5234153e141eb2843dfa1ff4f5dff4d631fde1eea7ec37c"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm11-esm-csv",
+      "key": "slp/raw/boettcher-2018-axko/sha256-7aabf662f601369bbac0a1a8aef8309b29c23c6e6446f219f56783db0e3acdcc/41587_2018_BFnbt4062_MOESM11_ESM.csv",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM11_ESM.csv",
+      "bytes": 15260,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "7aabf662f601369bbac0a1a8aef8309b29c23c6e6446f219f56783db0e3acdcc"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm12-esm-pdf",
+      "key": "slp/raw/boettcher-2018-axko/sha256-d29ad51a25a3525329d981d3e9ecc1bedd60f53a838018ede0d969ef116cee84/41587_2018_BFnbt4062_MOESM12_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM12_ESM.pdf",
+      "bytes": 41859,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d29ad51a25a3525329d981d3e9ecc1bedd60f53a838018ede0d969ef116cee84"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm13-esm-pdf",
+      "key": "slp/raw/boettcher-2018-axko/sha256-c128a38a2808388dadfd9c5ed31e44a83f11dde3adc19a70f919912e5b85cfcf/41587_2018_BFnbt4062_MOESM13_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM13_ESM.pdf",
+      "bytes": 54415,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "c128a38a2808388dadfd9c5ed31e44a83f11dde3adc19a70f919912e5b85cfcf"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm14-esm-xls",
+      "key": "slp/raw/boettcher-2018-axko/sha256-ea9791b09b2c5c8a391265e09d346bc3a637e72aa3cd3d3500b0a99ba1d05f0a/41587_2018_BFnbt4062_MOESM14_ESM.xls",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM14_ESM.xls",
+      "bytes": 166468046,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "ea9791b09b2c5c8a391265e09d346bc3a637e72aa3cd3d3500b0a99ba1d05f0a"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm15-esm-txt",
+      "key": "slp/raw/boettcher-2018-axko/sha256-00b6a8200b153cc9525a7010049400a9de608dac10324bd4c24a6965a600d94a/41587_2018_BFnbt4062_MOESM15_ESM.txt",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM15_ESM.txt",
+      "bytes": 20895,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "00b6a8200b153cc9525a7010049400a9de608dac10324bd4c24a6965a600d94a"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm16-esm-txt",
+      "key": "slp/raw/boettcher-2018-axko/sha256-d682bfaa0c0fb252aaa63aeba507e7cb195f799fb6442ac53ae1998a14b1135a/41587_2018_BFnbt4062_MOESM16_ESM.txt",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM16_ESM.txt",
+      "bytes": 18125,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d682bfaa0c0fb252aaa63aeba507e7cb195f799fb6442ac53ae1998a14b1135a"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm17-esm-txt",
+      "key": "slp/raw/boettcher-2018-axko/sha256-6299979b613b9c0ffe1ec6e7ca2bb9c177fe37e7c8ab55f78ae5aaf530ff3229/41587_2018_BFnbt4062_MOESM17_ESM.txt",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM17_ESM.txt",
+      "bytes": 23392,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "6299979b613b9c0ffe1ec6e7ca2bb9c177fe37e7c8ab55f78ae5aaf530ff3229"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm3-esm-pdf",
+      "key": "slp/raw/boettcher-2018-axko/sha256-63bc8267002f6032db6b9196f01a4c089f035c9991e81f5c3dc2536014f9735c/41587_2018_BFnbt4062_MOESM3_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM3_ESM.pdf",
+      "bytes": 12754753,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "63bc8267002f6032db6b9196f01a4c089f035c9991e81f5c3dc2536014f9735c"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm4-esm-pdf",
+      "key": "slp/raw/boettcher-2018-axko/sha256-390a61f9df5a5a472071fab3ae361a47c18db57199bf7f3050972aa0454fdd7b/41587_2018_BFnbt4062_MOESM4_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM4_ESM.pdf",
+      "bytes": 4973205,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "390a61f9df5a5a472071fab3ae361a47c18db57199bf7f3050972aa0454fdd7b"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm5-esm-csv",
+      "key": "slp/raw/boettcher-2018-axko/sha256-40513f9b4aa47fa41edcd8fc09ce20e012f9a947c3d2f5329f5af5c1f44e5272/41587_2018_BFnbt4062_MOESM5_ESM.csv",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM5_ESM.csv",
+      "bytes": 26157954,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "40513f9b4aa47fa41edcd8fc09ce20e012f9a947c3d2f5329f5af5c1f44e5272"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm6-esm-csv",
+      "key": "slp/raw/boettcher-2018-axko/sha256-1bb530087ab2aa97c552ef4cecd346a474a6b3eeaef0eaa6f0daa8cae375bec5/41587_2018_BFnbt4062_MOESM6_ESM.csv",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM6_ESM.csv",
+      "bytes": 1150187,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "1bb530087ab2aa97c552ef4cecd346a474a6b3eeaef0eaa6f0daa8cae375bec5"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm7-esm-csv",
+      "key": "slp/raw/boettcher-2018-axko/sha256-9cf8a126a1d7ac285edc3b6f0699a9a6595df374b71aaebb92d1aea5e5fed62b/41587_2018_BFnbt4062_MOESM7_ESM.csv",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM7_ESM.csv",
+      "bytes": 10710,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "9cf8a126a1d7ac285edc3b6f0699a9a6595df374b71aaebb92d1aea5e5fed62b"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm8-esm-csv",
+      "key": "slp/raw/boettcher-2018-axko/sha256-3c3cc378db1de46564042bf29bd56af1d99a92df7d5eca210a2c27bb9358e4e4/41587_2018_BFnbt4062_MOESM8_ESM.csv",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM8_ESM.csv",
+      "bytes": 7145,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "3c3cc378db1de46564042bf29bd56af1d99a92df7d5eca210a2c27bb9358e4e4"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "boettcher-2018-axko-41587-2018-bfnbt4062-moesm9-esm-csv",
+      "key": "slp/raw/boettcher-2018-axko/sha256-5d03698eca0646a8637dd90afb1fa35f245a4fd1230ea604a095df402569715f/41587_2018_BFnbt4062_MOESM9_ESM.csv",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4062/MediaObjects/41587_2018_BFnbt4062_MOESM9_ESM.csv",
+      "bytes": 582294,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "5d03698eca0646a8637dd90afb1fa35f245a4fd1230ea604a095df402569715f"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm263-esm-pdf",
+      "key": "slp/raw/cdko-han-2017/sha256-3266829790f51caefb98c2546b32dc54a3f9a4d9dbeb89706aad8327080dcab6/41587_2017_BFnbt3834_MOESM263_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM263_ESM.pdf",
+      "bytes": 6171630,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "3266829790f51caefb98c2546b32dc54a3f9a4d9dbeb89706aad8327080dcab6"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm264-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-1292c518162a157a16dccc7e8b4cc7a104fee8159b43792ee5f298ff44e1292e/41587_2017_BFnbt3834_MOESM264_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM264_ESM.xlsx",
+      "bytes": 30093,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "1292c518162a157a16dccc7e8b4cc7a104fee8159b43792ee5f298ff44e1292e"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm265-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-e8dac46f6185eb97c6e0c4929a7319084d9fd6b35e7cc587a8264a0c7feae883/41587_2017_BFnbt3834_MOESM265_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM265_ESM.xlsx",
+      "bytes": 30119,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "e8dac46f6185eb97c6e0c4929a7319084d9fd6b35e7cc587a8264a0c7feae883"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm266-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-90e1f094ec21872c2b9a81086bfda3feb8f1c644de11045e1332aba3a73a689d/41587_2017_BFnbt3834_MOESM266_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM266_ESM.xlsx",
+      "bytes": 23706,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "90e1f094ec21872c2b9a81086bfda3feb8f1c644de11045e1332aba3a73a689d"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm267-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-9275950cdd6e67c0439f1991a0cc73ef6c5ff8db9debe179f95cba8b2e9c95d9/41587_2017_BFnbt3834_MOESM267_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM267_ESM.xlsx",
+      "bytes": 2995473,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "9275950cdd6e67c0439f1991a0cc73ef6c5ff8db9debe179f95cba8b2e9c95d9"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm268-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-2f52a509b77901b48177dc7a2fd89b0ef0e2b34176d4c1ec5eb19270e5c5e639/41587_2017_BFnbt3834_MOESM268_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM268_ESM.xlsx",
+      "bytes": 12090,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "2f52a509b77901b48177dc7a2fd89b0ef0e2b34176d4c1ec5eb19270e5c5e639"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm269-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-f25519e86a7fea3366e2273a615aa9b361aa8887363ca5e17a3cf87ae9265ed9/41587_2017_BFnbt3834_MOESM269_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM269_ESM.xlsx",
+      "bytes": 18013,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "f25519e86a7fea3366e2273a615aa9b361aa8887363ca5e17a3cf87ae9265ed9"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm270-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-22d01e3632b4f1cd2e6d136c33e2f1d70bb9eb7b3d5f36bb1b67ed2223c3825e/41587_2017_BFnbt3834_MOESM270_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM270_ESM.xlsx",
+      "bytes": 493957,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "22d01e3632b4f1cd2e6d136c33e2f1d70bb9eb7b3d5f36bb1b67ed2223c3825e"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm271-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-a70da62c833df9382e668e3dd9b2a87be5ca14fa464e8b6827ebe1bbe722b70c/41587_2017_BFnbt3834_MOESM271_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM271_ESM.xlsx",
+      "bytes": 31213,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "a70da62c833df9382e668e3dd9b2a87be5ca14fa464e8b6827ebe1bbe722b70c"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm272-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-b152c89eb4a534d8f6829037d97595ec074084a95318c844923351046b3905e4/41587_2017_BFnbt3834_MOESM272_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM272_ESM.xlsx",
+      "bytes": 13368,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b152c89eb4a534d8f6829037d97595ec074084a95318c844923351046b3905e4"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm273-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-8c6bfadf10f482ab2e58d5efc9151f1e47ce934f58b417b7b5bc43d45c526527/41587_2017_BFnbt3834_MOESM273_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM273_ESM.xlsx",
+      "bytes": 9344,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8c6bfadf10f482ab2e58d5efc9151f1e47ce934f58b417b7b5bc43d45c526527"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm274-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-00f2e172797e15b276b75f53bdba90caa0924f8319603bb502d54d80ee2f652f/41587_2017_BFnbt3834_MOESM274_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM274_ESM.xlsx",
+      "bytes": 18142,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "00f2e172797e15b276b75f53bdba90caa0924f8319603bb502d54d80ee2f652f"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm275-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-8d20b0db0b2749c59cfe57b630c180ed2405a5853822be256e282953beccfe29/41587_2017_BFnbt3834_MOESM275_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM275_ESM.xlsx",
+      "bytes": 13104,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8d20b0db0b2749c59cfe57b630c180ed2405a5853822be256e282953beccfe29"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm276-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-4325e968d5dcbec9fc5b3665a8c089d7d2eec7c8c2573d38441f7dd3aeb1c1ce/41587_2017_BFnbt3834_MOESM276_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM276_ESM.xlsx",
+      "bytes": 11783,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "4325e968d5dcbec9fc5b3665a8c089d7d2eec7c8c2573d38441f7dd3aeb1c1ce"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "cdko-han-2017-41587-2017-bfnbt3834-moesm277-esm-xlsx",
+      "key": "slp/raw/cdko-han-2017/sha256-6e25eed1538917533c24b82c6bf1074f8076ef56c1467f07d0867989f70929df/41587_2017_BFnbt3834_MOESM277_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.3834/MediaObjects/41587_2017_BFnbt3834_MOESM277_ESM.xlsx",
+      "bytes": 12127,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "6e25eed1538917533c24b82c6bf1074f8076ef56c1467f07d0867989f70929df"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "shen-2017-combinatorial-41592-2017-bfnmeth4225-moesm40-esm-pdf",
+      "key": "slp/raw/shen-2017-combinatorial/sha256-3a7a9e839f238a1439baea5ad2fb420834379cda5f9e39f9630b341070d56e3e/41592_2017_BFnmeth4225_MOESM40_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnmeth.4225/MediaObjects/41592_2017_BFnmeth4225_MOESM40_ESM.pdf",
+      "bytes": 1693338,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "3a7a9e839f238a1439baea5ad2fb420834379cda5f9e39f9630b341070d56e3e"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "shen-2017-combinatorial-41592-2017-bfnmeth4225-moesm41-esm-xlsx",
+      "key": "slp/raw/shen-2017-combinatorial/sha256-18e0af402ad53c48d0c9c0250ec1e4dc25b2ca9dd30dcfde7200bdf9951e5ee5/41592_2017_BFnmeth4225_MOESM41_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnmeth.4225/MediaObjects/41592_2017_BFnmeth4225_MOESM41_ESM.xlsx",
+      "bytes": 15920,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "18e0af402ad53c48d0c9c0250ec1e4dc25b2ca9dd30dcfde7200bdf9951e5ee5"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "shen-2017-combinatorial-41592-2017-bfnmeth4225-moesm42-esm-xlsx",
+      "key": "slp/raw/shen-2017-combinatorial/sha256-302fe3c4a0d7103e44c6d2d204f488ce27a528ba62f90382e123a4d75b7f8bb2/41592_2017_BFnmeth4225_MOESM42_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnmeth.4225/MediaObjects/41592_2017_BFnmeth4225_MOESM42_ESM.xlsx",
+      "bytes": 3699297,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "302fe3c4a0d7103e44c6d2d204f488ce27a528ba62f90382e123a4d75b7f8bb2"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "shen-2017-combinatorial-41592-2017-bfnmeth4225-moesm43-esm-xlsx",
+      "key": "slp/raw/shen-2017-combinatorial/sha256-42efa44d143bbcae9097716019b831f2d9fa16331f2c5a62612b9eb34b8f41a7/41592_2017_BFnmeth4225_MOESM43_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnmeth.4225/MediaObjects/41592_2017_BFnmeth4225_MOESM43_ESM.xlsx",
+      "bytes": 39897,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "42efa44d143bbcae9097716019b831f2d9fa16331f2c5a62612b9eb34b8f41a7"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "shen-2017-combinatorial-41592-2017-bfnmeth4225-moesm44-esm-xlsx",
+      "key": "slp/raw/shen-2017-combinatorial/sha256-f99cc90b047c7e7733990bc5e71501f38d2ab9511269c2ad3e67d54455e13ca0/41592_2017_BFnmeth4225_MOESM44_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnmeth.4225/MediaObjects/41592_2017_BFnmeth4225_MOESM44_ESM.xlsx",
+      "bytes": 15304,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "f99cc90b047c7e7733990bc5e71501f38d2ab9511269c2ad3e67d54455e13ca0"
+      },
+      "license": "CC-BY-unverified; training and redistribution deferred pending publisher-rights adjudication"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm10-esm-xlsx",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-00a1efc7ca86ec6fa699f2c709308e0634abb0fae12eb686c6e3373dc89d2967/41467_2021_21478_MOESM10_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM10_ESM.xlsx",
+      "bytes": 78611,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "00a1efc7ca86ec6fa699f2c709308e0634abb0fae12eb686c6e3373dc89d2967"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm11-esm-xlsx",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-8578e64e717816e6dab1eb3ca91bfe4b276d8626cbce59dd9315857e65578b7f/41467_2021_21478_MOESM11_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM11_ESM.xlsx",
+      "bytes": 26702,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8578e64e717816e6dab1eb3ca91bfe4b276d8626cbce59dd9315857e65578b7f"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm12-esm-pdf",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-88c8982a637e2bda8e82c3aa5844fce752c59a9858abf71960099be6be413385/41467_2021_21478_MOESM12_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM12_ESM.pdf",
+      "bytes": 347756,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "88c8982a637e2bda8e82c3aa5844fce752c59a9858abf71960099be6be413385"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm13-esm-xlsx",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-b62b960e6689a8359baa2eb0d8cf7224f793c1dd3981e27453d4da0f333f9804/41467_2021_21478_MOESM13_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM13_ESM.xlsx",
+      "bytes": 48759,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b62b960e6689a8359baa2eb0d8cf7224f793c1dd3981e27453d4da0f333f9804"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm1-esm-pdf",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-1a429102919ed640c5f38fe23d1d20222e3e15f5c48ccdd5dc7a1e9361b4efc2/41467_2021_21478_MOESM1_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM1_ESM.pdf",
+      "bytes": 18854192,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "1a429102919ed640c5f38fe23d1d20222e3e15f5c48ccdd5dc7a1e9361b4efc2"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm2-esm-pdf",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-404d865e9895255ae7b46d75404504466b5ddbc6fd0621ac6e7b763185d50eed/41467_2021_21478_MOESM2_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM2_ESM.pdf",
+      "bytes": 265678,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "404d865e9895255ae7b46d75404504466b5ddbc6fd0621ac6e7b763185d50eed"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm3-esm-pdf",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-fad0c208395ec7c9e74927bc42b64a6beb50437e1a1bf51f9c816f817619c16e/41467_2021_21478_MOESM3_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM3_ESM.pdf",
+      "bytes": 49693,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "fad0c208395ec7c9e74927bc42b64a6beb50437e1a1bf51f9c816f817619c16e"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm4-esm-xlsx",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-6ab438558c086c3901fc6e6143cc8f4860f9f8bf25001ae9122aa0f5d404a494/41467_2021_21478_MOESM4_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM4_ESM.xlsx",
+      "bytes": 283348,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "6ab438558c086c3901fc6e6143cc8f4860f9f8bf25001ae9122aa0f5d404a494"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm5-esm-xlsx",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-0032786a4fb93c06dd1845e7407d658c9726c458c152093cec12054dc74ece4e/41467_2021_21478_MOESM5_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM5_ESM.xlsx",
+      "bytes": 14639,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0032786a4fb93c06dd1845e7407d658c9726c458c152093cec12054dc74ece4e"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm6-esm-xlsx",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-51a11fc3978eeea14a4d034f6330011056ccfe3af0844738205cd2ac14cf70e3/41467_2021_21478_MOESM6_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM6_ESM.xlsx",
+      "bytes": 161012,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "51a11fc3978eeea14a4d034f6330011056ccfe3af0844738205cd2ac14cf70e3"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm7-esm-xlsx",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-0a41dfda583b3b6fb9e955fa1387e47868d6fe5250e276ae05c3645e10512ad9/41467_2021_21478_MOESM7_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM7_ESM.xlsx",
+      "bytes": 2339577,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0a41dfda583b3b6fb9e955fa1387e47868d6fe5250e276ae05c3645e10512ad9"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm8-esm-xlsx",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-491aa8561e28ae7124f6ca71aff4f15ab6d286bbc54ff5b6e969f109908fe168/41467_2021_21478_MOESM8_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM8_ESM.xlsx",
+      "bytes": 12676,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "491aa8561e28ae7124f6ca71aff4f15ab6d286bbc54ff5b6e969f109908fe168"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "gonatopoulos-2021-paralog-41467-2021-21478-moesm9-esm-xlsx",
+      "key": "slp/raw/gonatopoulos-2021-paralog/sha256-381607a200aa0ba720c18919b9a686d63a6f5b0909d6ad241c4ad4dc46fc62e7/41467_2021_21478_MOESM9_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-21478-9/MediaObjects/41467_2021_21478_MOESM9_ESM.xlsx",
+      "bytes": 554348,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "381607a200aa0ba720c18919b9a686d63a6f5b0909d6ad241c4ad4dc46fc62e7"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm10-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-71f631b4d3696296994d5bf54965a4aafb4a58c1d0d77d7d4a341f319bc5bc0f/42003_2022_3975_MOESM10_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM10_ESM.xlsx",
+      "bytes": 10301,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "71f631b4d3696296994d5bf54965a4aafb4a58c1d0d77d7d4a341f319bc5bc0f"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm11-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-46d89d1dfca1c665eefa97cc7732796bf0ee7964c5ba991d20407cdcac56c857/42003_2022_3975_MOESM11_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM11_ESM.xlsx",
+      "bytes": 279266,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "46d89d1dfca1c665eefa97cc7732796bf0ee7964c5ba991d20407cdcac56c857"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm12-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-b116b01c8d01d80032b2506b7e95756e6174ab7062e8b918bba5b848a36d1598/42003_2022_3975_MOESM12_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM12_ESM.xlsx",
+      "bytes": 144557,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b116b01c8d01d80032b2506b7e95756e6174ab7062e8b918bba5b848a36d1598"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm13-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-69e7d72c0696de2c750ae5b80171e5fd84ccf8c50023dc3d4ac76ab9f217a748/42003_2022_3975_MOESM13_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM13_ESM.xlsx",
+      "bytes": 11592,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "69e7d72c0696de2c750ae5b80171e5fd84ccf8c50023dc3d4ac76ab9f217a748"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm14-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-4648990de502c4a87b6a02276eb6d4d8a03ea98c0c9649e6c4bdea248c38d5a6/42003_2022_3975_MOESM14_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM14_ESM.xlsx",
+      "bytes": 11590,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "4648990de502c4a87b6a02276eb6d4d8a03ea98c0c9649e6c4bdea248c38d5a6"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm15-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-bcd148fbe9f328cdf5a454e29605e2d2ac3465e9a3bbaee56684661282da9e13/42003_2022_3975_MOESM15_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM15_ESM.xlsx",
+      "bytes": 12945,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "bcd148fbe9f328cdf5a454e29605e2d2ac3465e9a3bbaee56684661282da9e13"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm16-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-404b9dc1bf783c144c3b345555773476191e2f21bee7000cfb85849d683bb63a/42003_2022_3975_MOESM16_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM16_ESM.xlsx",
+      "bytes": 68273,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "404b9dc1bf783c144c3b345555773476191e2f21bee7000cfb85849d683bb63a"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm17-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-f9b0b4f5c4df940fa11831a6c15246b48702db8ae2b98ce98982e9ae20d8521b/42003_2022_3975_MOESM17_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM17_ESM.xlsx",
+      "bytes": 1046483,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "f9b0b4f5c4df940fa11831a6c15246b48702db8ae2b98ce98982e9ae20d8521b"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm18-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-118635884f51e34d085c7515399092840b918f37077d78b43892e7064d900691/42003_2022_3975_MOESM18_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM18_ESM.xlsx",
+      "bytes": 240349,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "118635884f51e34d085c7515399092840b918f37077d78b43892e7064d900691"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm19-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-7248e8178a1d08de6029f916d8fa34266d86545e6d9d9878c2c540987a0eef10/42003_2022_3975_MOESM19_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM19_ESM.xlsx",
+      "bytes": 525257,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "7248e8178a1d08de6029f916d8fa34266d86545e6d9d9878c2c540987a0eef10"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm1-esm-pdf",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-b66082e58bf2f9dd5c1fdfa3d5747fa940f9b8cb59a8ef1a351d89af866d3807/42003_2022_3975_MOESM1_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM1_ESM.pdf",
+      "bytes": 36725186,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b66082e58bf2f9dd5c1fdfa3d5747fa940f9b8cb59a8ef1a351d89af866d3807"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm20-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-11de17354c2882e262dcf9bffca9ed5d9b6b3f9aeffc2dc08a4d00633f13061b/42003_2022_3975_MOESM20_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM20_ESM.xlsx",
+      "bytes": 22043,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "11de17354c2882e262dcf9bffca9ed5d9b6b3f9aeffc2dc08a4d00633f13061b"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm21-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-c84ea5b46f65f807ec963fe71208a54a290be65966a6e95d34ec0428c21221b3/42003_2022_3975_MOESM21_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM21_ESM.xlsx",
+      "bytes": 31773,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "c84ea5b46f65f807ec963fe71208a54a290be65966a6e95d34ec0428c21221b3"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm22-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-d7d1ab5b11195e18f8e5aa8e24b9b346e2f50b9552fb7f51ef1ff3168ed4f97d/42003_2022_3975_MOESM22_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM22_ESM.xlsx",
+      "bytes": 12788,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d7d1ab5b11195e18f8e5aa8e24b9b346e2f50b9552fb7f51ef1ff3168ed4f97d"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm23-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-11e6cc520e6f112502c3783898849ec88340ec60e6af514a0a70e12b801b17c8/42003_2022_3975_MOESM23_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM23_ESM.xlsx",
+      "bytes": 10848,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "11e6cc520e6f112502c3783898849ec88340ec60e6af514a0a70e12b801b17c8"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm24-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-f86c7f12c953987089383720b9930009c2ab8eb1844465d77e8af7b098c3bb10/42003_2022_3975_MOESM24_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM24_ESM.xlsx",
+      "bytes": 10826,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "f86c7f12c953987089383720b9930009c2ab8eb1844465d77e8af7b098c3bb10"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm25-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-0f74f51269c94dd8bde300ddfbcd20c1195672fc1be380efbd16d93351196814/42003_2022_3975_MOESM25_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM25_ESM.xlsx",
+      "bytes": 89683,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0f74f51269c94dd8bde300ddfbcd20c1195672fc1be380efbd16d93351196814"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm26-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-8862ecfefd2740fc83532bc87940f03c4fabc6aabe4061755cd72ae8c57bf24f/42003_2022_3975_MOESM26_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM26_ESM.xlsx",
+      "bytes": 14483,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8862ecfefd2740fc83532bc87940f03c4fabc6aabe4061755cd72ae8c57bf24f"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm2-esm-pdf",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-b085a6bab273965fda6b0de4d3037324e4850c8d528c0ca7d9c220113da9681e/42003_2022_3975_MOESM2_ESM.pdf",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM2_ESM.pdf",
+      "bytes": 114224,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b085a6bab273965fda6b0de4d3037324e4850c8d528c0ca7d9c220113da9681e"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm3-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-a1055652224ba1f0e3f1df1e767637ae417ffb5544024131043d0907b133ca26/42003_2022_3975_MOESM3_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM3_ESM.xlsx",
+      "bytes": 25788,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "a1055652224ba1f0e3f1df1e767637ae417ffb5544024131043d0907b133ca26"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm4-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-4bd0a0819f29d5668f002f2bbbebe8940cffb67d5c81d322384c57452515ac5b/42003_2022_3975_MOESM4_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM4_ESM.xlsx",
+      "bytes": 4190009,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "4bd0a0819f29d5668f002f2bbbebe8940cffb67d5c81d322384c57452515ac5b"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm5-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-d2be86abc975f6d23940d0f8b7d84aa169a2d16914b0893bbf102bda879830a2/42003_2022_3975_MOESM5_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM5_ESM.xlsx",
+      "bytes": 77631,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d2be86abc975f6d23940d0f8b7d84aa169a2d16914b0893bbf102bda879830a2"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm6-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-47f195b34e09283ef55e46af4d80e7a86f7c0acb6ed576015383675450697db8/42003_2022_3975_MOESM6_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM6_ESM.xlsx",
+      "bytes": 169495,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "47f195b34e09283ef55e46af4d80e7a86f7c0acb6ed576015383675450697db8"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm7-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-b35d62e0c687f091124a2c90517c29128ca669534190712d72b464bfefa764ab/42003_2022_3975_MOESM7_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM7_ESM.xlsx",
+      "bytes": 474181,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b35d62e0c687f091124a2c90517c29128ca669534190712d72b464bfefa764ab"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm8-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-924c19bd596a388c11a6451599aa79658b6ca51bf73a82cd89b73535f8ed77fb/42003_2022_3975_MOESM8_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM8_ESM.xlsx",
+      "bytes": 10575,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "924c19bd596a388c11a6451599aa79658b6ca51bf73a82cd89b73535f8ed77fb"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "mcf10a-lincs-2022-42003-2022-3975-moesm9-esm-xlsx",
+      "key": "slp/raw/mcf10a-lincs-2022/sha256-f820d3347aee92b016dedf2981bc94900614702eca00f01c245e85c0ae49c7b5/42003_2022_3975_MOESM9_ESM.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs42003-022-03975-9/MediaObjects/42003_2022_3975_MOESM9_ESM.xlsx",
+      "bytes": 10674,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "f820d3347aee92b016dedf2981bc94900614702eca00f01c245e85c0ae49c7b5"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "immune-dictionary-2023-immune-dictionary-supplementary-table-3-xlsx",
+      "key": "slp/raw/immune-dictionary-2023/sha256-c99ff0b3ac36c070a85883ba4f403e894c7afb0fb2b232fce3a2ddacf26c866c/immune-dictionary-supplementary-table-3.xlsx",
+      "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-023-06816-9/MediaObjects/41586_2023_6816_MOESM5_ESM.xlsx",
+      "bytes": 5015978,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "c99ff0b3ac36c070a85883ba4f403e894c7afb0fb2b232fce3a2ddacf26c866c"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "prism-repurposing-19q4-primary-screen-cell-line-info-csv",
+      "key": "slp/raw/prism-repurposing-19q4/md5-580b9f0b5118d44f473ffa4efac7e0c2/primary-screen-cell-line-info.csv",
+      "url": "https://ndownloader.figshare.com/files/20237718",
+      "bytes": 46849,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "580b9f0b5118d44f473ffa4efac7e0c2"
+      },
+      "license": "CC BY 4.0",
+      "note": "size and md5 pinned from figshare API; remote HEAD unreliable, worker post-ingest verification applies"
+    },
+    {
+      "id": "prism-repurposing-19q4-primary-screen-pooling-info-csv",
+      "key": "slp/raw/prism-repurposing-19q4/md5-011b2faa74664e72ca10eb4ea98256c0/primary-screen-pooling-info.csv",
+      "url": "https://ndownloader.figshare.com/files/20237721",
+      "bytes": 151201,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "011b2faa74664e72ca10eb4ea98256c0"
+      },
+      "license": "CC BY 4.0",
+      "note": "size and md5 pinned from figshare API; remote HEAD unreliable, worker post-ingest verification applies"
+    },
+    {
+      "id": "prism-repurposing-19q4-primary-screen-readme-txt",
+      "key": "slp/raw/prism-repurposing-19q4/md5-0cb01777a60e7bacee187d85159d279e/primary-screen-readme.txt",
+      "url": "https://ndownloader.figshare.com/files/20237700",
+      "bytes": 5919,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "0cb01777a60e7bacee187d85159d279e"
+      },
+      "license": "CC BY 4.0",
+      "note": "size and md5 pinned from figshare API; remote HEAD unreliable, worker post-ingest verification applies"
+    },
+    {
+      "id": "prism-repurposing-19q4-primary-screen-replicate-collapsed-logfold-change-csv",
+      "key": "slp/raw/prism-repurposing-19q4/md5-47ee90bbca457ed07c238f1803018033/primary-screen-replicate-collapsed-logfold-change.csv",
+      "url": "https://ndownloader.figshare.com/files/20237709",
+      "bytes": 41254209,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "47ee90bbca457ed07c238f1803018033"
+      },
+      "license": "CC BY 4.0",
+      "note": "size and md5 pinned from figshare API; remote HEAD unreliable, worker post-ingest verification applies"
+    },
+    {
+      "id": "prism-repurposing-19q4-primary-screen-replicate-collapsed-treatment-info-csv",
+      "key": "slp/raw/prism-repurposing-19q4/md5-ec1da11ef0710944269cdd783b5bd341/primary-screen-replicate-collapsed-treatment-info.csv",
+      "url": "https://ndownloader.figshare.com/files/20237715",
+      "bytes": 1185606,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "ec1da11ef0710944269cdd783b5bd341"
+      },
+      "license": "CC BY 4.0",
+      "note": "size and md5 pinned from figshare API; remote HEAD unreliable, worker post-ingest verification applies"
+    },
+    {
+      "id": "demeter2-2018-d2-combined-cl-data-csv",
+      "key": "slp/raw/demeter2-2018/md5-9493ab77f2c6c9590d81b204d6807ed8/D2_combined_CL_data.csv",
+      "url": "https://ndownloader.figshare.com/files/13515401",
+      "bytes": 68023,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "9493ab77f2c6c9590d81b204d6807ed8"
+      },
+      "license": "CC BY 4.0",
+      "note": "size and md5 pinned from figshare API; remote HEAD unreliable, worker post-ingest verification applies"
+    },
+    {
+      "id": "demeter2-2018-d2-combined-gene-dep-scores-csv",
+      "key": "slp/raw/demeter2-2018/md5-e82566a48993753c20ea5f480f1867ec/D2_combined_gene_dep_scores.csv",
+      "url": "https://ndownloader.figshare.com/files/13515395",
+      "bytes": 160616970,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "e82566a48993753c20ea5f480f1867ec"
+      },
+      "license": "CC BY 4.0",
+      "note": "size and md5 pinned from figshare API; remote HEAD unreliable, worker post-ingest verification applies"
+    },
+    {
+      "id": "demeter2-2018-readme-txt",
+      "key": "slp/raw/demeter2-2018/md5-befeabf1c83375ed1837389f060ef115/README.txt",
+      "url": "https://ndownloader.figshare.com/files/13515380",
+      "bytes": 9476,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "befeabf1c83375ed1837389f060ef115"
+      },
+      "license": "CC BY 4.0",
+      "note": "size and md5 pinned from figshare API; remote HEAD unreliable, worker post-ingest verification applies"
+    },
+    {
+      "id": "demeter2-2018-sample-info-csv",
+      "key": "slp/raw/demeter2-2018/md5-5e563f94ef9ba26c86bfefe9ea62eff7/sample_info.csv",
+      "url": "https://ndownloader.figshare.com/files/11489717",
+      "bytes": 76352,
+      "checksum": {
+        "algorithm": "md5",
+        "value": "5e563f94ef9ba26c86bfefe9ea62eff7"
+      },
+      "license": "CC BY 4.0",
+      "note": "size and md5 pinned from figshare API; remote HEAD unreliable, worker post-ingest verification applies"
+    },
+    {
+      "id": "drugcomb-v1-4-drugcomb-data-v1-4-csv",
+      "key": "slp/raw/drugcomb-v1-4/sha256-58c3893c9b8973eaea22aee819c0f268b3739d091a1d451187c1488c1058fe1d/drugcomb_data_v1.4.csv",
+      "url": "https://zenodo.org/api/records/18449193/files/drugcomb_data_v1.4.csv/content",
+      "bytes": 2008117325,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "58c3893c9b8973eaea22aee819c0f268b3739d091a1d451187c1488c1058fe1d"
+      },
+      "license": "cc-by-4.0"
+    },
+    {
+      "id": "drugcomb-v1-4-drugcomb-cell-line-identifiers-xlsx",
+      "key": "slp/raw/drugcomb-v1-4/sha256-88c7c2a06351e715f1f5c276a98d049fbe33d038516f711b8d9a166e11cd045d/DrugComb_cell_line_identifiers.xlsx",
+      "url": "https://zenodo.org/api/records/18449193/files/DrugComb_cell_line_identifiers.xlsx/content",
+      "bytes": 161434,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "88c7c2a06351e715f1f5c276a98d049fbe33d038516f711b8d9a166e11cd045d"
+      },
+      "license": "cc-by-4.0"
+    },
+    {
+      "id": "drugcomb-v1-4-drugcomb-drug-identifiers-xlsx",
+      "key": "slp/raw/drugcomb-v1-4/sha256-02b1655ad15a81e0bef06909e147ff4c688938aa7f75eb04603f440e8b18438c/DrugComb_drug_identifiers.xlsx",
+      "url": "https://zenodo.org/api/records/18449193/files/DrugComb_drug_identifiers.xlsx/content",
+      "bytes": 5856350,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "02b1655ad15a81e0bef06909e147ff4c688938aa7f75eb04603f440e8b18438c"
+      },
+      "license": "cc-by-4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-extended-data-figures-pdf",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-033638466db691fc7bdab812eba8a519b4090b7101a7a712f2b25dad98838a32/Extended_Data_Figures.pdf",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/5bd01591-920d-4a4c-aca7-33cc5a2aedea/file_downloaded",
+      "bytes": 5465225,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "033638466db691fc7bdab812eba8a519b4090b7101a7a712f2b25dad98838a32"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-gi-correlations-html",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-50dc45fa694885a62bdf680f43f51fbc4931b2f68ef83892de6a960dcf9c70c2/GI_correlations.html",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/68c5d28b-f1fc-4bd6-88d7-b135881f05b8/file_downloaded",
+      "bytes": 8030315,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "50dc45fa694885a62bdf680f43f51fbc4931b2f68ef83892de6a960dcf9c70c2"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-gi-map-treeview-zip",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-d389b3ebdd2c88f86cc446f272f3ff6526df635d666cd17d67440bf10c0f9115/GI_map_treeview.zip",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/5542388b-e895-4f29-af07-bfe2eecd0655/file_downloaded",
+      "bytes": 9280985,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d389b3ebdd2c88f86cc446f272f3ff6526df635d666cd17d67440bf10c0f9115"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-gi-scores-html",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-e6056076320a84dc79676c2bf0ede09fd45f7deaa8ea199047652924b9ac0053/GI_scores.html",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/0c044755-8a9d-46d0-b297-0975c3108d15/file_downloaded",
+      "bytes": 8137548,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "e6056076320a84dc79676c2bf0ede09fd45f7deaa8ea199047652924b9ac0053"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-jurkat-zip",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-4ac2718eab6b0d2723148f0d1b5dcca14a41d03e74619f92db960d38a9404958/Jurkat.zip",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/7ab168b7-3944-4f35-b249-5a672b32b20c/file_downloaded",
+      "bytes": 94300357,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "4ac2718eab6b0d2723148f0d1b5dcca14a41d03e74619f92db960d38a9404958"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-k562-zip",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-2c0ea9d5b78668b64451ce5ada81b422ccafffae5c8517e2733eadc6a888893f/K562.zip",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/c3e9f1da-bdb3-4c6b-a161-bca1a1500ed7/file_downloaded",
+      "bytes": 145276911,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "2c0ea9d5b78668b64451ce5ada81b422ccafffae5c8517e2733eadc6a888893f"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-cluster-annotations-jurkat-txt",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-1d22fe6dbc4500bb25255ceb715f14432e53ffbeafd7d05062b2fff3342d24a3/cluster_annotations_Jurkat.txt",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/e312a812-e790-4397-88c2-f2bb3feebc35/file_downloaded",
+      "bytes": 14787,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "1d22fe6dbc4500bb25255ceb715f14432e53ffbeafd7d05062b2fff3342d24a3"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-cluster-annotations-k562-txt",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-de80f00085122d0c93f4187ab69c10f2d62f93a9de854e27770aee14d9f35e4c/cluster_annotations_K562.txt",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/02e67b54-f848-4a61-bfa7-cf85c0d4f624/file_downloaded",
+      "bytes": 24867,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "de80f00085122d0c93f4187ab69c10f2d62f93a9de854e27770aee14d9f35e4c"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-cluster-annotations-combined-map-txt",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-223770060ac4bf578892a421b65489372e39325dc693c28d398fbf13ed098ef6/cluster_annotations_combined_map.txt",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/127f4ce6-e487-4c2b-aa4d-a1d5cb7aa545/file_downloaded",
+      "bytes": 20050,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "223770060ac4bf578892a421b65489372e39325dc693c28d398fbf13ed098ef6"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-clustering-network-zip",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-9e5fd8f625405a2f945960581b74e4f576bb6e749f6ac932e2c2f344e0c6c027/clustering_network.zip",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/3a0eb60c-6c05-45e1-b87b-ec9070bfa797/file_downloaded",
+      "bytes": 62080,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "9e5fd8f625405a2f945960581b74e4f576bb6e749f6ac932e2c2f344e0c6c027"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "horlbeck-2018-gi-single-vs-double-phenotypes-k562-html",
+      "key": "slp/raw/horlbeck-2018-gi/sha256-cc152a9f46a39998b989281e329053345b70fdb6d7bb58096d5192ec513a486b/single_vs_double_phenotypes_K562.html",
+      "url": "https://data.mendeley.com/public-files/datasets/rdzk59n6j4/files/846b458c-690c-4b1d-9469-a44051a8a7ec/file_downloaded",
+      "bytes": 34640078,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "cc152a9f46a39998b989281e329053345b70fdb6d7bb58096d5192ec513a486b"
+      },
+      "license": "CC BY 4.0"
+    },
+    {
+      "id": "drugseq-2018-u2os-gse120222-raw-tar",
+      "key": "slp/raw/drugseq-2018-u2os/sha256-7aa2a0bb6efd018528c0ffcc7e920eb1d6848376d0e9219ca4ab4855fe97afe1/GSE120222_RAW.tar",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE120nnn/GSE120222/suppl/GSE120222_RAW.tar",
+      "bytes": 104202240,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "7aa2a0bb6efd018528c0ffcc7e920eb1d6848376d0e9219ca4ab4855fe97afe1"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-broad-lincs-level2-gex-delta-n49216x978-gctx-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-d7b5dfb1c76ebf5ce20b295902906223b0aaef074dd37d6cdde2c576a54bc100/GSE92742_Broad_LINCS_Level2_GEX_delta_n49216x978.gctx.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_Broad_LINCS_Level2_GEX_delta_n49216x978.gctx.gz",
+      "bytes": 103748263,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d7b5dfb1c76ebf5ce20b295902906223b0aaef074dd37d6cdde2c576a54bc100"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-broad-lincs-cell-info-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-88c6ca5ff8bb3cf3af22c2eb8cbe769f9ae8e305a760959b18711877d730d61c/GSE92742_Broad_LINCS_cell_info.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_Broad_LINCS_cell_info.txt.gz",
+      "bytes": 2528,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "88c6ca5ff8bb3cf3af22c2eb8cbe769f9ae8e305a760959b18711877d730d61c"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-broad-lincs-gene-info-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-741216ccc53320119b47ab006de3bcad48963c57087c9e07f50f0d6cd088711a/GSE92742_Broad_LINCS_gene_info.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_Broad_LINCS_gene_info.txt.gz",
+      "bytes": 216692,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "741216ccc53320119b47ab006de3bcad48963c57087c9e07f50f0d6cd088711a"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-broad-lincs-gene-info-delta-landmark-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-627308963859ed1a87f90a200ec8c6f6713c02605edf0d6d9d256592553db36c/GSE92742_Broad_LINCS_gene_info_delta_landmark.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_Broad_LINCS_gene_info_delta_landmark.txt.gz",
+      "bytes": 18711,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "627308963859ed1a87f90a200ec8c6f6713c02605edf0d6d9d256592553db36c"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-broad-lincs-inst-info-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-9eddd1efbbd754588bb9cbe4fd4530a2a85b926bfb1657a359f0e9d809350472/GSE92742_Broad_LINCS_inst_info.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_Broad_LINCS_inst_info.txt.gz",
+      "bytes": 12046182,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "9eddd1efbbd754588bb9cbe4fd4530a2a85b926bfb1657a359f0e9d809350472"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-broad-lincs-pert-info-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-b1945b3fde51021865b12269929cc78ccf2665be27f53a4da9336e4ddcf4b42f/GSE92742_Broad_LINCS_pert_info.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_Broad_LINCS_pert_info.txt.gz",
+      "bytes": 1138509,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b1945b3fde51021865b12269929cc78ccf2665be27f53a4da9336e4ddcf4b42f"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-broad-lincs-pert-metrics-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-421bbc87b79269f6da6897a8281b64f34c3be5837c030d0716c6aa9fdab33457/GSE92742_Broad_LINCS_pert_metrics.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_Broad_LINCS_pert_metrics.txt.gz",
+      "bytes": 930668,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "421bbc87b79269f6da6897a8281b64f34c3be5837c030d0716c6aa9fdab33457"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-broad-lincs-sig-info-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299/GSE92742_Broad_LINCS_sig_info.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_Broad_LINCS_sig_info.txt.gz",
+      "bytes": 11124404,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "19da29c0ee12ddf27f9698cd0da40beaff58657dcde9d382aae068737e831299"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-broad-lincs-sig-metrics-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-54f19003e5e3445bc293347cca004eeb066e22e97f5eec50f1605b393e90f466/GSE92742_Broad_LINCS_sig_metrics.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_Broad_LINCS_sig_metrics.txt.gz",
+      "bytes": 12520228,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "54f19003e5e3445bc293347cca004eeb066e22e97f5eec50f1605b393e90f466"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase1-gse92742-sha512sums-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase1/sha256-43bbea5abfe40e7755c88ae8a2e680544bd8cb1a190538d3ad786036e6009edf/GSE92742_SHA512SUMS.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92742/suppl/GSE92742_SHA512SUMS.txt.gz",
+      "bytes": 1429,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "43bbea5abfe40e7755c88ae8a2e680544bd8cb1a190538d3ad786036e6009edf"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase2-gse70138-broad-lincs-level2-gex-n345976x978-2017-03-06-gctx-",
+      "key": "slp/raw/lincs-l1000-phase2/sha256-aea95e65cdb6522a38e114d8ab024eba737d913531119c1342392f6f436b2b03/GSE70138_Broad_LINCS_Level2_GEX_n345976x978_2017-03-06.gctx.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70138/suppl/GSE70138_Broad_LINCS_Level2_GEX_n345976x978_2017-03-06.gctx.gz",
+      "bytes": 668884165,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "aea95e65cdb6522a38e114d8ab024eba737d913531119c1342392f6f436b2b03"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase2-gse70138-broad-lincs-cell-info-2017-04-28-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase2/sha256-88c6ca5ff8bb3cf3af22c2eb8cbe769f9ae8e305a760959b18711877d730d61c/GSE70138_Broad_LINCS_cell_info_2017-04-28.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70138/suppl/GSE70138_Broad_LINCS_cell_info_2017-04-28.txt.gz",
+      "bytes": 2528,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "88c6ca5ff8bb3cf3af22c2eb8cbe769f9ae8e305a760959b18711877d730d61c"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase2-gse70138-broad-lincs-gene-info-2017-03-06-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase2/sha256-741216ccc53320119b47ab006de3bcad48963c57087c9e07f50f0d6cd088711a/GSE70138_Broad_LINCS_gene_info_2017-03-06.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70138/suppl/GSE70138_Broad_LINCS_gene_info_2017-03-06.txt.gz",
+      "bytes": 216692,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "741216ccc53320119b47ab006de3bcad48963c57087c9e07f50f0d6cd088711a"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase2-gse70138-broad-lincs-inst-info-2017-03-06-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase2/sha256-84fb2ff891c7d97012c6d97356ce7a1ebc82da0f37d7da011415bddd70c90a6c/GSE70138_Broad_LINCS_inst_info_2017-03-06.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70138/suppl/GSE70138_Broad_LINCS_inst_info_2017-03-06.txt.gz",
+      "bytes": 4783200,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "84fb2ff891c7d97012c6d97356ce7a1ebc82da0f37d7da011415bddd70c90a6c"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase2-gse70138-broad-lincs-pert-info-2017-03-06-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase2/sha256-000171e8ce17cb00a3e80a907d97f0bc4218077eb4cb2ac03f4e0f9f4f2e5493/GSE70138_Broad_LINCS_pert_info_2017-03-06.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70138/suppl/GSE70138_Broad_LINCS_pert_info_2017-03-06.txt.gz",
+      "bytes": 82376,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "000171e8ce17cb00a3e80a907d97f0bc4218077eb4cb2ac03f4e0f9f4f2e5493"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase2-gse70138-broad-lincs-sig-info-2017-03-06-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase2/sha256-b78284478d62029f600d4397334c538d363123110affd2454bf0055bd0678e01/GSE70138_Broad_LINCS_sig_info_2017-03-06.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70138/suppl/GSE70138_Broad_LINCS_sig_info_2017-03-06.txt.gz",
+      "bytes": 1943865,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b78284478d62029f600d4397334c538d363123110affd2454bf0055bd0678e01"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase2-gse70138-broad-lincs-sig-metrics-2017-03-06-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase2/sha256-05dd9139f7db1caef03b534611c0bcf97dd071a764445688eaa7e6c47e50b04c/GSE70138_Broad_LINCS_sig_metrics_2017-03-06.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70138/suppl/GSE70138_Broad_LINCS_sig_metrics_2017-03-06.txt.gz",
+      "bytes": 3137083,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "05dd9139f7db1caef03b534611c0bcf97dd071a764445688eaa7e6c47e50b04c"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "lincs-l1000-phase2-gse70138-sha512sums-txt-gz",
+      "key": "slp/raw/lincs-l1000-phase2/sha256-12e3f02bb086aa0dff42559f839e5cf17a088757f89d7c05b1bdc97145f5f108/GSE70138_SHA512SUMS.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70138/suppl/GSE70138_SHA512SUMS.txt.gz",
+      "bytes": 1071,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "12e3f02bb086aa0dff42559f839e5cf17a088757f89d7c05b1bdc97145f5f108"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150376-sciplex1-hek293t-nih3t3-umi-count-matrix-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-ef01e468e26dd8a1c3c07d1f7cc05ec2ecf9144639c15fa9b7894851ffe7d1f7/GSM4150376_sciPlex1_HEK293T_NIH3T3_UMI.count.matrix.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150376/suppl/GSM4150376_sciPlex1_HEK293T_NIH3T3_UMI.count.matrix.gz",
+      "bytes": 26420070,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "ef01e468e26dd8a1c3c07d1f7cc05ec2ecf9144639c15fa9b7894851ffe7d1f7"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150376-sciplex1-hek293t-nih3t3-cell-annotations-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-1ccb6ec5d2eec9d5d4205579f91904d6abda1b4cc6d263193ea2f25d0feddde0/GSM4150376_sciPlex1_HEK293T_NIH3T3_cell.annotations.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150376/suppl/GSM4150376_sciPlex1_HEK293T_NIH3T3_cell.annotations.txt.gz",
+      "bytes": 7755,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "1ccb6ec5d2eec9d5d4205579f91904d6abda1b4cc6d263193ea2f25d0feddde0"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150376-sciplex1-hek293t-nih3t3-gene-annotations-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-728894f303a5b4fab19cd02a6ce4e83f4717393da975af953ec20bb1a51ca137/GSM4150376_sciPlex1_HEK293T_NIH3T3_gene.annotations.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150376/suppl/GSM4150376_sciPlex1_HEK293T_NIH3T3_gene.annotations.txt.gz",
+      "bytes": 806108,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "728894f303a5b4fab19cd02a6ce4e83f4717393da975af953ec20bb1a51ca137"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150376-sciplex1-hek293t-nih3t3-hashtable-out-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-76456a909b5aec27b61c5939cf403297105592a062aa8048a4bc58f37de04c49/GSM4150376_sciPlex1_HEK293T_NIH3T3_hashTable.out.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150376/suppl/GSM4150376_sciPlex1_HEK293T_NIH3T3_hashTable.out.txt.gz",
+      "bytes": 357894,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "76456a909b5aec27b61c5939cf403297105592a062aa8048a4bc58f37de04c49"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150376-sciplex1-cds-rds-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-4f8b0df60c78629925e572b55248d8a78bfdbb156ccbc30b6bf1103ac5fa3fa3/GSM4150376_sciPlex1_cds.RDS.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150376/suppl/GSM4150376_sciPlex1_cds.RDS.gz",
+      "bytes": 24743523,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "4f8b0df60c78629925e572b55248d8a78bfdbb156ccbc30b6bf1103ac5fa3fa3"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150376-sciplex1-hashsamplesheet-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-2c8ec3667e0c8712dcb22979af3bb033705e9a5399b4d1bb6d115e7781b88ad1/GSM4150376_sciPlex1_hashSampleSheet.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150376/suppl/GSM4150376_sciPlex1_hashSampleSheet.txt.gz",
+      "bytes": 794,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "2c8ec3667e0c8712dcb22979af3bb033705e9a5399b4d1bb6d115e7781b88ad1"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150376-sciplex1-pdata-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-0ac1a51e865e3c1b848d786357a9ba18a489b277936eab0868b861852f0b40e6/GSM4150376_sciPlex1_pData.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150376/suppl/GSM4150376_sciPlex1_pData.txt.gz",
+      "bytes": 96456,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0ac1a51e865e3c1b848d786357a9ba18a489b277936eab0868b861852f0b40e6"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150377-sciplex2-a549-transcription-modulators-cell-annot",
+      "key": "slp/raw/sciplex3-2019/sha256-bd3a14187c2d56c87717f74811aad93bf971938adf941ab4d0b30af1645206a4/GSM4150377_sciPlex2_A549_Transcription_Modulators_cell.annotations.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150377/suppl/GSM4150377_sciPlex2_A549_Transcription_Modulators_cell.annotations.txt.gz",
+      "bytes": 64843,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "bd3a14187c2d56c87717f74811aad93bf971938adf941ab4d0b30af1645206a4"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150377-sciplex2-a549-transcription-modulators-gene-annot",
+      "key": "slp/raw/sciplex3-2019/sha256-fb60559c1e17fe2d0c8b903f8ae273aedfb8fd2440f649a432fc2812bce69363/GSM4150377_sciPlex2_A549_Transcription_Modulators_gene.annotations.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150377/suppl/GSM4150377_sciPlex2_A549_Transcription_Modulators_gene.annotations.txt.gz",
+      "bytes": 430187,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "fb60559c1e17fe2d0c8b903f8ae273aedfb8fd2440f649a432fc2812bce69363"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150377-sciplex2-a549-transcription-modulators-hashtable-",
+      "key": "slp/raw/sciplex3-2019/sha256-4190f206a64f4d09605016a8242582646a2a592a9183c567d0460516fcbf4c37/GSM4150377_sciPlex2_A549_Transcription_Modulators_hashTable.out.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150377/suppl/GSM4150377_sciPlex2_A549_Transcription_Modulators_hashTable.out.txt.gz",
+      "bytes": 1544922,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "4190f206a64f4d09605016a8242582646a2a592a9183c567d0460516fcbf4c37"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150377-sciplex2-cds-rds-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-7a5e28c189f73da453b20b3d273699607708c08893c314612472537cd99061f5/GSM4150377_sciPlex2_cds.RDS.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150377/suppl/GSM4150377_sciPlex2_cds.RDS.gz",
+      "bytes": 143790551,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "7a5e28c189f73da453b20b3d273699607708c08893c314612472537cd99061f5"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150377-sciplex2-hashsamplesheet-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-1a3a925cbd59e256f19c286d9a0f7dff42289900951b72f754f022a64adc355f/GSM4150377_sciPlex2_hashSampleSheet.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150377/suppl/GSM4150377_sciPlex2_hashSampleSheet.txt.gz",
+      "bytes": 1694,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "1a3a925cbd59e256f19c286d9a0f7dff42289900951b72f754f022a64adc355f"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150377-sciplex2-pdata-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-47d6d2a72c907e11b4ebb30ceadf8fd3e7b8fa6ab2a6206550c3b877cefa267f/GSM4150377_sciPlex2_pData.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150377/suppl/GSM4150377_sciPlex2_pData.txt.gz",
+      "bytes": 886907,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "47d6d2a72c907e11b4ebb30ceadf8fd3e7b8fa6ab2a6206550c3b877cefa267f"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150378-sciplex3-a549-mcf7-k562-hashtable-metadata-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-98a65191d343d149c5742cf6e7b734d403e853d165da800fa2daea41b978a2ff/GSM4150378_sciPlex3_A549_MCF7_K562_hashTable_metadata.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150378/suppl/GSM4150378_sciPlex3_A549_MCF7_K562_hashTable_metadata.txt.gz",
+      "bytes": 64715,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "98a65191d343d149c5742cf6e7b734d403e853d165da800fa2daea41b978a2ff"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150378-sciplex3-a549-mcf7-k562-screen-cell-annotations-t",
+      "key": "slp/raw/sciplex3-2019/sha256-5db11591747a49f07ceb90a070971d60816591911f1022171adba7d8d032f379/GSM4150378_sciPlex3_A549_MCF7_K562_screen_cell.annotations.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150378/suppl/GSM4150378_sciPlex3_A549_MCF7_K562_screen_cell.annotations.txt.gz",
+      "bytes": 2770264,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "5db11591747a49f07ceb90a070971d60816591911f1022171adba7d8d032f379"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150378-sciplex3-a549-mcf7-k562-screen-gene-annotations-t",
+      "key": "slp/raw/sciplex3-2019/sha256-fbe43028cfb75dc5ebf383cbbbb100da6b51e7be8e2e74f6354f7c59b9fda7c2/GSM4150378_sciPlex3_A549_MCF7_K562_screen_gene.annotations.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150378/suppl/GSM4150378_sciPlex3_A549_MCF7_K562_screen_gene.annotations.txt.gz",
+      "bytes": 806168,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "fbe43028cfb75dc5ebf383cbbbb100da6b51e7be8e2e74f6354f7c59b9fda7c2"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150378-sciplex3-hashsamplesheet-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-ac66d0dfdcc3c170af9beafe2843d0250a10f753f7bf99968aafe7a2e7279084/GSM4150378_sciPlex3_hashSampleSheet.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150378/suppl/GSM4150378_sciPlex3_hashSampleSheet.txt.gz",
+      "bytes": 6441,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "ac66d0dfdcc3c170af9beafe2843d0250a10f753f7bf99968aafe7a2e7279084"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150378-sciplex3-pdata-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-860ba5c21846e2cfe97c39c805895982ef9db4b108cdf8b841a4a91be65024c2/GSM4150378_sciPlex3_pData.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150378/suppl/GSM4150378_sciPlex3_pData.txt.gz",
+      "bytes": 84673357,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "860ba5c21846e2cfe97c39c805895982ef9db4b108cdf8b841a4a91be65024c2"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150379-sciplex4-a549-mcf7-hdaci-cell-annotations-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-8aa672fbb8b9b77e49e277a9ab8e706e63671107ce59e70a9ef3c00aa567f1c3/GSM4150379_sciPlex4_A549_MCF7_HDACi_cell.annotations.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150379/suppl/GSM4150379_sciPlex4_A549_MCF7_HDACi_cell.annotations.txt.gz",
+      "bytes": 304603,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8aa672fbb8b9b77e49e277a9ab8e706e63671107ce59e70a9ef3c00aa567f1c3"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150379-sciplex4-a549-mcf7-hdaci-gene-annotations-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-d46c8e40ec6f5f982de42b205b1739e456516cb42cb11d18451e33ef327d3fe2/GSM4150379_sciPlex4_A549_MCF7_HDACi_gene.annotations.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150379/suppl/GSM4150379_sciPlex4_A549_MCF7_HDACi_gene.annotations.txt.gz",
+      "bytes": 430173,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d46c8e40ec6f5f982de42b205b1739e456516cb42cb11d18451e33ef327d3fe2"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150379-sciplex4-a549-mcf7-hdaci-hashtable-out-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-90ac3b7c1d4b393626e8c0c90a1aed0319801431646cc51a52d304d67547e3f5/GSM4150379_sciPlex4_A549_MCF7_HDACi_hashTable.out.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150379/suppl/GSM4150379_sciPlex4_A549_MCF7_HDACi_hashTable.out.txt.gz",
+      "bytes": 15346745,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "90ac3b7c1d4b393626e8c0c90a1aed0319801431646cc51a52d304d67547e3f5"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150379-sciplex4-hashsamplesheet-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-8bba3f14035a35471ea285590ef8df67b7ce4eda0f231e096f85bfba062c3c92/GSM4150379_sciPlex4_hashSampleSheet.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150379/suppl/GSM4150379_sciPlex4_hashSampleSheet.txt.gz",
+      "bytes": 5922,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8bba3f14035a35471ea285590ef8df67b7ce4eda0f231e096f85bfba062c3c92"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "sciplex3-2019-gsm4150379-sciplex4-pdata-txt-gz",
+      "key": "slp/raw/sciplex3-2019/sha256-9b4b0617919d73cc9898e92e3983e2bf665ecca17933f2159501abbf0e0047a2/GSM4150379_sciPlex4_pData.txt.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4150nnn/GSM4150379/suppl/GSM4150379_sciPlex4_pData.txt.gz",
+      "bytes": 1835864,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "9b4b0617919d73cc9898e92e3983e2bf665ecca17933f2159501abbf0e0047a2"
+      },
+      "license": "GEO public archive; NCBI no-restriction distribution policy; submitter IP not transferred (LINCS-funded L1000: no redistribution restrictions per CLUE policy)"
+    },
+    {
+      "id": "decryptm-2022-10-kinase-inhibitors-curves-zip",
+      "key": "slp/raw/decryptm-2022/sha256-5ac158d08c4554621f68f9543147e780fcc9adb4190b8d43772a63500fa06f49/10_Kinase_Inhibitors_Curves.zip",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2023/03/PXD037285/10_Kinase_Inhibitors_Curves.zip",
+      "bytes": 1002089685,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "5ac158d08c4554621f68f9543147e780fcc9adb4190b8d43772a63500fa06f49"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "decryptm-2022-uniprot-proteome-up000005640-03112020-fasta",
+      "key": "slp/raw/decryptm-2022/sha256-7323ed3c22df70d6f5c6ef1a9b62fa21baab2cc4c2280c30c07fb782b4dff063/uniprot_proteome_up000005640_03112020.fasta",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2023/03/PXD037285/uniprot_proteome_up000005640_03112020.fasta",
+      "bytes": 49789995,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "7323ed3c22df70d6f5c6ef1a9b62fa21baab2cc4c2280c30c07fb782b4dff063"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "metabolic-map-2024-nbt-ra62370a-z-nonpooledfoldchanges-xlsx",
+      "key": "slp/raw/metabolic-map-2024/sha256-183697b09c9fcfc1c843220bfe331419a2b09ed68347fd8d0a0640046b2b7806/NBT-RA62370A-Z_NonPooledFoldChanges.xlsx",
+      "url": "https://www.ebi.ac.uk/biostudies/files/S-BSST1724/NBT-RA62370A-Z_NonPooledFoldChanges.xlsx",
+      "bytes": 137274520,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "183697b09c9fcfc1c843220bfe331419a2b09ed68347fd8d0a0640046b2b7806"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-rosetta-cdrp-bbbc047-bray-cp",
+      "key": "slp/raw/cellpainting-rosetta-profiles/sha256-1eae2ebbb9889fe032a99639c95bc5c974c420f4160751ad4daf012d9fa93126/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0003-rosetta/broad/workspace/preprocessed_data/CDRP-BBBC047-Bray/CellPainting/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "bytes": 1051158842,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "1eae2ebbb9889fe032a99639c95bc5c974c420f4160751ad4daf012d9fa93126"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-rosetta-cdrp-bbbc047-bray-l1k",
+      "key": "slp/raw/cellpainting-rosetta-profiles/sha256-66b5b231b0804d535ac5a7cf40ba1938d429c2036bcd79830ed3fec2e43d2327/treatment_level_l1k.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0003-rosetta/broad/workspace/preprocessed_data/CDRP-BBBC047-Bray/L1000/treatment_level_l1k.csv.gz",
+      "bytes": 108240674,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "66b5b231b0804d535ac5a7cf40ba1938d429c2036bcd79830ed3fec2e43d2327"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-rosetta-cdrpbio-bbbc036-bray-cp",
+      "key": "slp/raw/cellpainting-rosetta-profiles/sha256-d41f5e6c112facd507c7d46659a7c956907c12bb2eb63dadfa508d4028958785/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0003-rosetta/broad/workspace/preprocessed_data/CDRPBIO-BBBC036-Bray/CellPainting/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "bytes": 112143618,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d41f5e6c112facd507c7d46659a7c956907c12bb2eb63dadfa508d4028958785"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-rosetta-lincs-pilot1-cp",
+      "key": "slp/raw/cellpainting-rosetta-profiles/sha256-5468813f6223490ed9fd5c31d3af4f0f67c0ad96a6a6bc3033a4e5603b790b51/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0003-rosetta/broad/workspace/preprocessed_data/LINCS-Pilot1/CellPainting/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "bytes": 93575102,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "5468813f6223490ed9fd5c31d3af4f0f67c0ad96a6a6bc3033a4e5603b790b51"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-rosetta-luad-bbbc041-caicedo-cp",
+      "key": "slp/raw/cellpainting-rosetta-profiles/sha256-127a9da41074341bbe8ae22e06eb1dd0c22dec1630c3ba82a2bbd4fffdc87332/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0003-rosetta/broad/workspace/preprocessed_data/LUAD-BBBC041-Caicedo/CellPainting/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "bytes": 15858878,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "127a9da41074341bbe8ae22e06eb1dd0c22dec1630c3ba82a2bbd4fffdc87332"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-rosetta-luad-bbbc041-caicedo-l1k",
+      "key": "slp/raw/cellpainting-rosetta-profiles/sha256-fd50141ea50c2a7b063893f9d356c0441a0994d409a5735b154df4bd4ba1ee47/treatment_level_l1k.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0003-rosetta/broad/workspace/preprocessed_data/LUAD-BBBC041-Caicedo/L1000/treatment_level_l1k.csv.gz",
+      "bytes": 4574805,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "fd50141ea50c2a7b063893f9d356c0441a0994d409a5735b154df4bd4ba1ee47"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-rosetta-ta-orf-bbbc037-rohban-cp",
+      "key": "slp/raw/cellpainting-rosetta-profiles/sha256-4a711ee022e8820c032169ae09b954b406206dfa4903ce3eadfaf2763031b73a/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0003-rosetta/broad/workspace/preprocessed_data/TA-ORF-BBBC037-Rohban/CellPainting/replicate_level_cp_normalized_variable_selected.csv.gz",
+      "bytes": 1049962,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "4a711ee022e8820c032169ae09b954b406206dfa4903ce3eadfaf2763031b73a"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-metadata-compound-csv-gz",
+      "key": "slp/raw/jump-cpg0016-metadata/sha256-8885960e92ebd99eb33699a79129f517e668d78dd94f0d7478d39c9825bd3c0a/compound.csv.gz",
+      "url": "https://raw.githubusercontent.com/jump-cellpainting/datasets/main/metadata/compound.csv.gz",
+      "bytes": 8595537,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8885960e92ebd99eb33699a79129f517e668d78dd94f0d7478d39c9825bd3c0a"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-metadata-compound-source-csv-gz",
+      "key": "slp/raw/jump-cpg0016-metadata/sha256-229b7adb8eb2418bb4ea14a383550b05b4c6309e2afa90fb2faa225953303e80/compound_source.csv.gz",
+      "url": "https://raw.githubusercontent.com/jump-cellpainting/datasets/main/metadata/compound_source.csv.gz",
+      "bytes": 384169,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "229b7adb8eb2418bb4ea14a383550b05b4c6309e2afa90fb2faa225953303e80"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-metadata-crispr-csv-gz",
+      "key": "slp/raw/jump-cpg0016-metadata/sha256-55e36e6802c6fc5f8e5d5258554368d64601f1847205e0fceb28a2c246c8d1ed/crispr.csv.gz",
+      "url": "https://raw.githubusercontent.com/jump-cellpainting/datasets/main/metadata/crispr.csv.gz",
+      "bytes": 64933,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "55e36e6802c6fc5f8e5d5258554368d64601f1847205e0fceb28a2c246c8d1ed"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-metadata-orf-csv-gz",
+      "key": "slp/raw/jump-cpg0016-metadata/sha256-9c7ec4b0fa460a3a30f270a15f11b5e85cef9dd105c8a0ab8ab50f6cc98894b8/orf.csv.gz",
+      "url": "https://raw.githubusercontent.com/jump-cellpainting/datasets/main/metadata/orf.csv.gz",
+      "bytes": 550505,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "9c7ec4b0fa460a3a30f270a15f11b5e85cef9dd105c8a0ab8ab50f6cc98894b8"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-metadata-perturbation-control-csv",
+      "key": "slp/raw/jump-cpg0016-metadata/sha256-f513c4017555efa486d07c3e9924944d5b0c44d2f2e76ca6e1fc934f5f718ef6/perturbation_control.csv",
+      "url": "https://raw.githubusercontent.com/jump-cellpainting/datasets/main/metadata/perturbation_control.csv",
+      "bytes": 740,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "f513c4017555efa486d07c3e9924944d5b0c44d2f2e76ca6e1fc934f5f718ef6"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-metadata-plate-csv-gz",
+      "key": "slp/raw/jump-cpg0016-metadata/sha256-541ada1f64816166509a4e2328316d2a6662ba67e257b7ae134cbec9d7079319/plate.csv.gz",
+      "url": "https://raw.githubusercontent.com/jump-cellpainting/datasets/main/metadata/plate.csv.gz",
+      "bytes": 9690,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "541ada1f64816166509a4e2328316d2a6662ba67e257b7ae134cbec9d7079319"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-metadata-well-csv-gz",
+      "key": "slp/raw/jump-cpg0016-metadata/sha256-fde9fe0678b8d9973f17e106e4cf7e62017110ee3b700f10e27122e1d5f291a1/well.csv.gz",
+      "url": "https://raw.githubusercontent.com/jump-cellpainting/datasets/main/metadata/well.csv.gz",
+      "bytes": 5975108,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "fde9fe0678b8d9973f17e106e4cf7e62017110ee3b700f10e27122e1d5f291a1"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-rosetta-readme-md",
+      "key": "slp/raw/cellpainting-rosetta-profiles/sha256-b934455e8b3c16aa8a8b71387000fd5b71647a3d652eb9177ef98d761a2daf3c/README.md",
+      "url": "https://raw.githubusercontent.com/carpenter-singh-lab/2022_Haghighi_NatureMethods/8cd317f6228904818ff0d5586e943aba5c08cc30/README.md",
+      "bytes": 9914,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b934455e8b3c16aa8a8b71387000fd5b71647a3d652eb9177ef98d761a2daf3c"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-profiles-profile-index-json",
+      "key": "slp/raw/cellpainting-profiles/sha256-b11e99b221a1afeb5e5e6cf19c0a52c25430285624dd3fda436e9ad839599818/profile_index.json",
+      "url": "https://raw.githubusercontent.com/jump-cellpainting/datasets/main/manifests/profile_index.json",
+      "bytes": 4443,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b11e99b221a1afeb5e5e6cf19c0a52c25430285624dd3fda436e9ad839599818"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cellpainting-profiles-broadinstitute-lincs-cell-painting-v1-zip",
+      "key": "slp/raw/cellpainting-profiles/sha256-3acc2e886b92cfa58c7bb25a7aed8600f3c30aef2b6fc97b051e01818d7690ca/broadinstitute-lincs-cell-painting-v1.zip",
+      "url": "https://zenodo.org/records/5008187/files/broadinstitute%2Flincs-cell-painting-v1.zip",
+      "bytes": 110882277,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "3acc2e886b92cfa58c7bb25a7aed8600f3c30aef2b6fc97b051e01818d7690ca"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-profiles-profiles-wellpos-cc-var-mad-outlier-6153c918",
+      "key": "slp/raw/jump-cpg0016-profiles/sha256-6153c9182faf0a0a9ba22448dfa5572bd7de9b943007356830304834e81a1d05/profiles_wellpos_cc_var_mad_outlier.parquet",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0016-jump-assembled/source_all/workspace/profiles_assembled/CRISPR/v1.0a/profiles_wellpos_cc_var_mad_outlier.parquet",
+      "bytes": 1124927663,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "6153c9182faf0a0a9ba22448dfa5572bd7de9b943007356830304834e81a1d05"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-profiles-profiles-wellpos-cc-var-mad-outlier-featselect-sph-32f25ee6",
+      "key": "slp/raw/jump-cpg0016-profiles/sha256-32f25ee6fdc4dcfa3349397ddf0e1f6ca2594001b8266c5dc0644fa65944f193/profiles_wellpos_cc_var_mad_outlier_featselect_sphering_harmony.parquet",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0016-jump-assembled/source_all/workspace/profiles_assembled/ORF/v1.0a/profiles_wellpos_cc_var_mad_outlier_featselect_sphering_harmony.parquet",
+      "bytes": 361894255,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "32f25ee6fdc4dcfa3349397ddf0e1f6ca2594001b8266c5dc0644fa65944f193"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "jump-cpg0016-profiles-profiles-wellpos-cc-var-mad-outlier-featselect-sph-019cd1b7",
+      "key": "slp/raw/jump-cpg0016-profiles/sha256-019cd1b767db48dad6fbab5cbc483449a229a44c2193d2341a8d331d067204c8/profiles_wellpos_cc_var_mad_outlier_featselect_sphering_harmony_PCA_corrected.parquet",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0016-jump-assembled/source_all/workspace/profiles_assembled/CRISPR/v1.0a/profiles_wellpos_cc_var_mad_outlier_featselect_sphering_harmony_PCA_corrected.parquet",
+      "bytes": 79866678,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "019cd1b767db48dad6fbab5cbc483449a229a44c2193d2341a8d331d067204c8"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00116991",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-85f9b12c2a1ee9170dec31f8aad968bc6e644c738f2c3b15dfddaa8a0fd0bafe/BR00116991__BR00116991_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00116991/BR00116991_augmented.csv.gz",
+      "bytes": 7154812,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "85f9b12c2a1ee9170dec31f8aad968bc6e644c738f2c3b15dfddaa8a0fd0bafe"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00116992",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-f6e02762f7e882bccea0a15d7efe0b843ea21bd97f7a473703267128eab4a359/BR00116992__BR00116992_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00116992/BR00116992_augmented.csv.gz",
+      "bytes": 7152252,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "f6e02762f7e882bccea0a15d7efe0b843ea21bd97f7a473703267128eab4a359"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00116993",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-0cb5996109fb80977811743e5d7e4212b09ba8e9d48c75792ec2594f2aa2bb16/BR00116993__BR00116993_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00116993/BR00116993_augmented.csv.gz",
+      "bytes": 7134514,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0cb5996109fb80977811743e5d7e4212b09ba8e9d48c75792ec2594f2aa2bb16"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00116994",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-db04490d2b52a64af32675d3f743392760539e23298ad4e8eb93b5d5d3de9ea6/BR00116994__BR00116994_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00116994/BR00116994_augmented.csv.gz",
+      "bytes": 7163596,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "db04490d2b52a64af32675d3f743392760539e23298ad4e8eb93b5d5d3de9ea6"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00116995",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-c2f9292cd154e9ef46cb6c7b376b3a851cd88e95d8e87deff043cb696f3e3817/BR00116995__BR00116995_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00116995/BR00116995_augmented.csv.gz",
+      "bytes": 5541908,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "c2f9292cd154e9ef46cb6c7b376b3a851cd88e95d8e87deff043cb696f3e3817"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00116996",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-02aec022839dcc69d0c1a1aff9081c63df1868bfbae8d3f903faafffd90f01b4/BR00116996__BR00116996_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00116996/BR00116996_augmented.csv.gz",
+      "bytes": 7043406,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "02aec022839dcc69d0c1a1aff9081c63df1868bfbae8d3f903faafffd90f01b4"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00116997",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-4136174916e0664bb955f1e4208eba1ed5fbf09cfdcb3e5aebc091aba6f5a0fc/BR00116997__BR00116997_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00116997/BR00116997_augmented.csv.gz",
+      "bytes": 7041492,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "4136174916e0664bb955f1e4208eba1ed5fbf09cfdcb3e5aebc091aba6f5a0fc"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00116998",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-92efc8f456d4bb0dd578621364972095401ceda49b7a51bc8f7a697f3e7248d6/BR00116998__BR00116998_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00116998/BR00116998_augmented.csv.gz",
+      "bytes": 7041421,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "92efc8f456d4bb0dd578621364972095401ceda49b7a51bc8f7a697f3e7248d6"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00116999",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-28c4fe48637f5c685c89387e31a72390814b9fca4af2f626daf025cf31bcb214/BR00116999__BR00116999_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00116999/BR00116999_augmented.csv.gz",
+      "bytes": 7034842,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "28c4fe48637f5c685c89387e31a72390814b9fca4af2f626daf025cf31bcb214"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117000",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-b95a1fd2f3b96fff26e7e519552b0ef64dbe276aa87e8f44cc020055c2b2860f/BR00117000__BR00117000_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117000/BR00117000_augmented.csv.gz",
+      "bytes": 7101705,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b95a1fd2f3b96fff26e7e519552b0ef64dbe276aa87e8f44cc020055c2b2860f"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117001",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-d7271296024aeaa65c576a1569cf48dc24586989861dc94ca35b3e2adba5ee4a/BR00117001__BR00117001_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117001/BR00117001_augmented.csv.gz",
+      "bytes": 7103674,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d7271296024aeaa65c576a1569cf48dc24586989861dc94ca35b3e2adba5ee4a"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117002",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-8a051a26a99d4c7784863ef8faf1d56be67ff85775eb9ae85b5b167f8be719ce/BR00117002__BR00117002_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117002/BR00117002_augmented.csv.gz",
+      "bytes": 7111745,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8a051a26a99d4c7784863ef8faf1d56be67ff85775eb9ae85b5b167f8be719ce"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117003",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-8637885e59d78e18ec9d94e0a28bb9ee5afc8a8a1dd67e01f3cc24a111e5ed80/BR00117003__BR00117003_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117003/BR00117003_augmented.csv.gz",
+      "bytes": 7096379,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8637885e59d78e18ec9d94e0a28bb9ee5afc8a8a1dd67e01f3cc24a111e5ed80"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117004",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-6e494d4caf4eaab59a997877ec58c7f3e63c5860830f527d2c6d9f3bfd284685/BR00117004__BR00117004_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117004/BR00117004_augmented.csv.gz",
+      "bytes": 7096775,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "6e494d4caf4eaab59a997877ec58c7f3e63c5860830f527d2c6d9f3bfd284685"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117005",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-3825c9f086acdfecddb046e2c6450d1a0bdf2573bdc1d9aa4591bdbee1aeb003/BR00117005__BR00117005_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117005/BR00117005_augmented.csv.gz",
+      "bytes": 7091748,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "3825c9f086acdfecddb046e2c6450d1a0bdf2573bdc1d9aa4591bdbee1aeb003"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117006",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-a626dd18144195ee891aee8e3d11bfe80c3a6e01ca9f509e4e8b8b761743d308/BR00117006__BR00117006_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117006/BR00117006_augmented.csv.gz",
+      "bytes": 7083336,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "a626dd18144195ee891aee8e3d11bfe80c3a6e01ca9f509e4e8b8b761743d308"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117008",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-70b4c3ef2dd1fd52336a745796a5afda9058fdefc2497631e974975768484776/BR00117008__BR00117008_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117008/BR00117008_augmented.csv.gz",
+      "bytes": 7169573,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "70b4c3ef2dd1fd52336a745796a5afda9058fdefc2497631e974975768484776"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117009",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-a329681a6208d8de1d242b570755ec051d711ef5070874b047564487930330aa/BR00117009__BR00117009_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117009/BR00117009_augmented.csv.gz",
+      "bytes": 7170764,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "a329681a6208d8de1d242b570755ec051d711ef5070874b047564487930330aa"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117010",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-2341300df9c616632ba1dfddfc40e91d2c3fc080a956f4cdf1b2e05c20340216/BR00117010__BR00117010_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117010/BR00117010_augmented.csv.gz",
+      "bytes": 7101949,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "2341300df9c616632ba1dfddfc40e91d2c3fc080a956f4cdf1b2e05c20340216"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117011",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-b1c390b2846b8a5d1edc00ba3559f56f3cfa2711aeb76d22d0dbb51edd06047d/BR00117011__BR00117011_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117011/BR00117011_augmented.csv.gz",
+      "bytes": 7103216,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "b1c390b2846b8a5d1edc00ba3559f56f3cfa2711aeb76d22d0dbb51edd06047d"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117012",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-10dcbf1240abc5d06c064fc1819d2af967c295e453c0a344c298a38cf543aaa5/BR00117012__BR00117012_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117012/BR00117012_augmented.csv.gz",
+      "bytes": 7104851,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "10dcbf1240abc5d06c064fc1819d2af967c295e453c0a344c298a38cf543aaa5"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117013",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-0214c54b170540fab1ca78182ab7f76c79a630f0eb2f2831ee7603b28a3b95b4/BR00117013__BR00117013_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117013/BR00117013_augmented.csv.gz",
+      "bytes": 7102306,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0214c54b170540fab1ca78182ab7f76c79a630f0eb2f2831ee7603b28a3b95b4"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117015",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-223d9128c0327ec0d1b4d5e354c40201dd938b821e41d6dbab402e25e448daf1/BR00117015__BR00117015_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117015/BR00117015_augmented.csv.gz",
+      "bytes": 7152669,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "223d9128c0327ec0d1b4d5e354c40201dd938b821e41d6dbab402e25e448daf1"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117016",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-7198106702dfe3bbd3e9cf5a963d8e273f0169ce52b70e54872191521024fb7f/BR00117016__BR00117016_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117016/BR00117016_augmented.csv.gz",
+      "bytes": 7151981,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "7198106702dfe3bbd3e9cf5a963d8e273f0169ce52b70e54872191521024fb7f"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117017",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-8fb4791afd3939dfba0728d4233d9a335375689efa657615da29f16a0f864c0c/BR00117017__BR00117017_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117017/BR00117017_augmented.csv.gz",
+      "bytes": 7160110,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "8fb4791afd3939dfba0728d4233d9a335375689efa657615da29f16a0f864c0c"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117019",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-19b3055624155e2222c2ac7793fef3c623561eb41decf42e7b4cdf62997a139f/BR00117019__BR00117019_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117019/BR00117019_augmented.csv.gz",
+      "bytes": 7149360,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "19b3055624155e2222c2ac7793fef3c623561eb41decf42e7b4cdf62997a139f"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117020",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-26007f9b2b31cd4efc0c634f133cfbfb34d293c0693de86c16162ab9a489cd48/BR00117020__BR00117020_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117020/BR00117020_augmented.csv.gz",
+      "bytes": 7097942,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "26007f9b2b31cd4efc0c634f133cfbfb34d293c0693de86c16162ab9a489cd48"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117021",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-27002b0fb8703283608517ce090d2be96428468ec2cf72541c57405bb4ba9174/BR00117021__BR00117021_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117021/BR00117021_augmented.csv.gz",
+      "bytes": 7091311,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "27002b0fb8703283608517ce090d2be96428468ec2cf72541c57405bb4ba9174"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117022",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-bb590bf9a432c40b62d8282ed9eadd229b4ff270c9ec3367687ab7907f5b75fb/BR00117022__BR00117022_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117022/BR00117022_augmented.csv.gz",
+      "bytes": 7028113,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "bb590bf9a432c40b62d8282ed9eadd229b4ff270c9ec3367687ab7907f5b75fb"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117023",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-a0ee5ec387b9c546ec5a579b6487fd5490ca957403723164fad7c4657524f81c/BR00117023__BR00117023_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117023/BR00117023_augmented.csv.gz",
+      "bytes": 7041784,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "a0ee5ec387b9c546ec5a579b6487fd5490ca957403723164fad7c4657524f81c"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117024",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-9003de5ca890612c8891b82694dca5cdbc3e44936e67997b21d8d7802908e093/BR00117024__BR00117024_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117024/BR00117024_augmented.csv.gz",
+      "bytes": 7087636,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "9003de5ca890612c8891b82694dca5cdbc3e44936e67997b21d8d7802908e093"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117025",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-7b3fd62681aac233cd6d84e5004dd5a1117439ebe6678b59d4173044a375e313/BR00117025__BR00117025_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117025/BR00117025_augmented.csv.gz",
+      "bytes": 7083630,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "7b3fd62681aac233cd6d84e5004dd5a1117439ebe6678b59d4173044a375e313"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117026",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-589bb63b88def3d3018fda85b7269ca5f7521f0819a37627c5068da1baa7497a/BR00117026__BR00117026_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117026/BR00117026_augmented.csv.gz",
+      "bytes": 7092689,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "589bb63b88def3d3018fda85b7269ca5f7521f0819a37627c5068da1baa7497a"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117050",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-22350241d68b9e9487cef0975fa71bf086b0b24f1d42cd7c2c184cecd3b0418d/BR00117050__BR00117050_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117050/BR00117050_augmented.csv.gz",
+      "bytes": 7162449,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "22350241d68b9e9487cef0975fa71bf086b0b24f1d42cd7c2c184cecd3b0418d"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117051",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-ebd1cff403c6d3917e0e9e3f2effe50e8cc6266bf5b304f65345c24cf19ee3ee/BR00117051__BR00117051_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117051/BR00117051_augmented.csv.gz",
+      "bytes": 7112060,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "ebd1cff403c6d3917e0e9e3f2effe50e8cc6266bf5b304f65345c24cf19ee3ee"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117052",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-5815795861704ca56c1a67312457bc3282daf35f23e5326302d95a010a950efc/BR00117052__BR00117052_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117052/BR00117052_augmented.csv.gz",
+      "bytes": 7139858,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "5815795861704ca56c1a67312457bc3282daf35f23e5326302d95a010a950efc"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117053",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-0f954ac095bf9463c4225184600ca3322a70c7215dc9acbc6a201b10d82dcc01/BR00117053__BR00117053_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117053/BR00117053_augmented.csv.gz",
+      "bytes": 7143015,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0f954ac095bf9463c4225184600ca3322a70c7215dc9acbc6a201b10d82dcc01"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117054",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-557439311255415ac3f2112a9bc088a2a66f7b0814de33e323ff0790a22fddb2/BR00117054__BR00117054_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117054/BR00117054_augmented.csv.gz",
+      "bytes": 7148354,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "557439311255415ac3f2112a9bc088a2a66f7b0814de33e323ff0790a22fddb2"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00117055",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-4d4b7e2dd03208a9ed8065325662b6ac404a94c3f0cdae556de678673d25faa5/BR00117055__BR00117055_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00117055/BR00117055_augmented.csv.gz",
+      "bytes": 7151850,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "4d4b7e2dd03208a9ed8065325662b6ac404a94c3f0cdae556de678673d25faa5"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118039",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-9ed51939b8307eab028a2aa3976b0e36db3de6c1e31aba98231cd4ea841d54c9/BR00118039__BR00118039_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118039/BR00118039_augmented.csv.gz",
+      "bytes": 7020044,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "9ed51939b8307eab028a2aa3976b0e36db3de6c1e31aba98231cd4ea841d54c9"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118040",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-c987d509e538d0fad2a3652884e5acaf0f4311946be9a941ace12bd67ef36b8b/BR00118040__BR00118040_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118040/BR00118040_augmented.csv.gz",
+      "bytes": 7029052,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "c987d509e538d0fad2a3652884e5acaf0f4311946be9a941ace12bd67ef36b8b"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118041",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-d6fef75524f89c7f74298b3249642520c4877667fff3bf4988d61930de7f2933/BR00118041__BR00118041_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118041/BR00118041_augmented.csv.gz",
+      "bytes": 7090478,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d6fef75524f89c7f74298b3249642520c4877667fff3bf4988d61930de7f2933"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118042",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-e6869f6e870b542c66a271ea565151bd03a0bcdf73df29b62bdeabcc5beb1eab/BR00118042__BR00118042_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118042/BR00118042_augmented.csv.gz",
+      "bytes": 7111519,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "e6869f6e870b542c66a271ea565151bd03a0bcdf73df29b62bdeabcc5beb1eab"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118043",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-038bcc2a6332fd7d4221208452ba7d5d51e902f95ae9ef97ba3e985a1cc07871/BR00118043__BR00118043_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118043/BR00118043_augmented.csv.gz",
+      "bytes": 7099481,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "038bcc2a6332fd7d4221208452ba7d5d51e902f95ae9ef97ba3e985a1cc07871"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118044",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-3549e4242f2c536348e3eb95c2588a8bc0079c37156cb6dc54827e0c3171ea04/BR00118044__BR00118044_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118044/BR00118044_augmented.csv.gz",
+      "bytes": 7078974,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "3549e4242f2c536348e3eb95c2588a8bc0079c37156cb6dc54827e0c3171ea04"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118045",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-a979f72851d2636e13018015be9c84469940d1465ca585d2f0f8d04404fd37f4/BR00118045__BR00118045_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118045/BR00118045_augmented.csv.gz",
+      "bytes": 7039304,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "a979f72851d2636e13018015be9c84469940d1465ca585d2f0f8d04404fd37f4"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118046",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-6d3d2a13cecf2cf319788a6a00778f3460871305f13dff668ba2db310bbea7a0/BR00118046__BR00118046_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118046/BR00118046_augmented.csv.gz",
+      "bytes": 7032700,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "6d3d2a13cecf2cf319788a6a00778f3460871305f13dff668ba2db310bbea7a0"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118047",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-10b442b70423ae894dc8700022ac90a3ac714faacef36bcf1f70cf559317b084/BR00118047__BR00118047_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118047/BR00118047_augmented.csv.gz",
+      "bytes": 7047324,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "10b442b70423ae894dc8700022ac90a3ac714faacef36bcf1f70cf559317b084"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118048",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-e3e453467f26ace951deebcc27590e0d1ffc76eddf352fd5059308b8d95d7f7a/BR00118048__BR00118048_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118048/BR00118048_augmented.csv.gz",
+      "bytes": 7038794,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "e3e453467f26ace951deebcc27590e0d1ffc76eddf352fd5059308b8d95d7f7a"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118049",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-e59568623b9daac6b47b892783dd2bb19c94d36459e48f2e96b0b0a9e975b700/BR00118049__BR00118049_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118049/BR00118049_augmented.csv.gz",
+      "bytes": 7102219,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "e59568623b9daac6b47b892783dd2bb19c94d36459e48f2e96b0b0a9e975b700"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "cpjump1-cpg0000-profiles-br00118050",
+      "key": "slp/raw/cpjump1-cpg0000-profiles/sha256-d96860f776f43b47c270a81381c75c70a124bc5a50b5621aa7da5c93ec2ef39b/BR00118050__BR00118050_augmented.csv.gz",
+      "url": "https://cellpainting-gallery.s3.amazonaws.com/cpg0000-jump-pilot/source_4/workspace/profiles/2020_11_04_CPJUMP1/BR00118050/BR00118050_augmented.csv.gz",
+      "bytes": 7088714,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "d96860f776f43b47c270a81381c75c70a124bc5a50b5621aa7da5c93ec2ef39b"
+      },
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "tggates-2012-open-tggates-allattribute-zip",
+      "key": "slp/raw/tggates-2012/sha256-12b8d92fb14cb8e7f46be05bc067d15fbaeb56ac69847d6e251eaca87979ac31/Open-tggates_AllAttribute.zip",
+      "url": "https://dbarchive.biosciencedbc.jp/data/open-tggates/LATEST/Open-tggates_AllAttribute.zip",
+      "bytes": 1801847,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "12b8d92fb14cb8e7f46be05bc067d15fbaeb56ac69847d6e251eaca87979ac31"
+      },
+      "license": "CC BY-SA 2.1 Japan with attribution requirements"
+    },
+    {
+      "id": "tggates-2012-open-tggates-main-zip",
+      "key": "slp/raw/tggates-2012/sha256-185f92f73636bd4f249bcee4243c8e3bbb35f16131d6f78cc5ef7b3bb4fd7991/open_tggates_main.zip",
+      "url": "https://dbarchive.biosciencedbc.jp/data/open-tggates/LATEST/open_tggates_main.zip",
+      "bytes": 6589,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "185f92f73636bd4f249bcee4243c8e3bbb35f16131d6f78cc5ef7b3bb4fd7991"
+      },
+      "license": "CC BY-SA 2.1 Japan with attribution requirements"
     }
   ]
 }

@@ -1,0 +1,14 @@
+# Rights record draft for fleet round-1 source group 'sciplex3-2019'
+# Generated 2026-09-18 during corpus unification; reconcile before fitting.
+license: GEO-public
+trainingAllowed: true
+redistributionAllowed: false
+attributionRequired: true
+source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE139944
+scope: >-
+  sci-Plex3 chemical screen per-sample matrices (GSE139944). 23 object(s) pinned in storage/source-objects.json
+  under slp/raw/sciplex3-2019/. GEO public archive submission.
+scientificAttribution: >-
+  sci-Plex3 chemical screen per-sample matrices (GSE139944). See source for full author list and citation.
+notes: >-
+  Note: NCBI no-restriction policy with submitter-rights caveat
