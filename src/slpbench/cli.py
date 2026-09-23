@@ -39,6 +39,7 @@ def main(argv: list[str] | None = None) -> None:
     lk.add_argument("--allow-dev", action="store_true", help="only test families are forbidden")
 
     sub.add_parser("card", help="regenerate DATA_CARD.md from the built benchmark")
+    sub.add_parser("leaderboard", help="regenerate LEADERBOARD.md from leaderboard.yaml")
 
     bl = sub.add_parser("baseline")
     bl.add_argument("name")
@@ -61,10 +62,15 @@ def main(argv: list[str] | None = None) -> None:
         r = evaluate.compare(evaluate.read_predictions(a.a), evaluate.read_predictions(a.b), a.split, a.boot)
         print(f"A={r['a']:.4f}  B={r['b']:.4f}  B-A={r['delta']:+.4f}  95% CI [{r['delta_ci95'][0]:+.4f}, "
               f"{r['delta_ci95'][1]:+.4f}]  P(B<=A)={r['p_b_not_better']:.3f}")
+        print(f"fitness-matched: A={r['matched_a']:.4f}  B={r['matched_b']:.4f}  B-A={r['matched_delta']:+.4f}  "
+              f"95% CI [{r['matched_delta_ci95'][0]:+.4f}, {r['matched_delta_ci95'][1]:+.4f}]")
         print("  per species: " + "  ".join(f"{k}={v:+.4f}" for k, v in r["species_delta"].items()))
     elif a.cmd == "check-leakage":
         from slpbench import leakage
         sys.exit(leakage.main(a.records, a.allow_dev))
+    elif a.cmd == "leaderboard":
+        from slpbench import leaderboard
+        leaderboard.main()
     elif a.cmd == "card":
         from slpbench import card
         card.main()

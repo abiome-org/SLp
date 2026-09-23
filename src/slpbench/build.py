@@ -183,6 +183,7 @@ def stage_splits() -> None:
         else:
             _write(part, OUT / f"{split}.parquet", manifest)
     _write(ctx, OUT / "contexts.parquet", manifest)
+    _write(_single_effect_bins(genes), OUT / "gene_single_effects.parquet", manifest)
     _write(fam.sort("species", "gene"), OUT / "held_out_families.parquet", manifest)
     counts = ex.group_by("split", "species").agg(
         pl.len().alias("n"), (pl.col("label") == 1).sum().alias("pos"), pl.col("context_id").n_unique().alias("contexts")
@@ -191,6 +192,23 @@ def stage_splits() -> None:
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2))
     with pl.Config(tbl_rows=100):
         print(counts)
+
+
+FITNESS_BINS = 5
+
+
+def _single_effect_bins(genes: pl.DataFrame) -> pl.DataFrame:
+    """Per benchmark gene: reference single-loss effect and its within-species quintile (1 = sickest;
+    0 = unknown). Used by the fitness-matched metric; also a legitimate single-gene model input."""
+    from slpbench.baselines import single_effects
+
+    se = genes.join(single_effects(), on=["species", "gene"], how="left")
+    return se.with_columns(
+        pl.when(pl.col("single_effect").is_null()).then(0)
+        .otherwise((pl.col("single_effect").rank("ordinal").over("species") - 1) * FITNESS_BINS
+                   // pl.col("single_effect").count().over("species") + 1)
+        .cast(pl.Int8).alias("fitness_bin")
+    ).sort("species", "gene")
 
 
 def _write(df: pl.DataFrame, path: Path, manifest: dict) -> None:

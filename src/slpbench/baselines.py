@@ -4,7 +4,9 @@ Unsupervised (no SL labels):
   random            uniform noise
   paralog_identity  max protein sequence identity if the pair are Ensembl 116 paralogs, else 0
   fitness           sickness of the two single mutants: -(f_a + f_b); human = DepMap gene effect
-                    in that cell line (else the pan-line mean), yeast = SGA single-mutant fitness
+                    in that cell line (else the pan-line mean); yeast = SGA single-mutant fitness,
+                    fly = RNAi main effect on cell count, S. pneumoniae = single-sgRNA log2FC;
+                    none for S. pombe
   codependency      correlation of the two genes' DepMap gene-effect profiles (human only)
 Supervised (fit on the SLB train split only):
   lgbm              gradient boosting on all features above + species
@@ -61,13 +63,51 @@ def yeast_smf() -> dict[str, float]:
     return {k: float(np.mean(v)) for k, v in acc.items()}
 
 
+@functools.cache
+def fly_main() -> dict[str, float]:
+    """Single-dsRNA main effect on cell count (Heigwer 2023), mean per FBgn; negative = fewer cells."""
+    lf = pl.scan_csv(RAW / "heigwer2023_dmel/interactions_stat_tested_bias_corrected.csv.gz", infer_schema_length=10000)
+    d = lf.filter(pl.col("feature") == "cells").select("fbgn", "query_name", "query_main", "target_main").collect()
+    t = d.group_by("fbgn").agg(pl.col("target_main").mean())
+    out = dict(zip(t["fbgn"], t["target_main"]))
+    q = d.group_by("query_name").agg(pl.col("query_main").mean())
+    fb = ids.resolve("dmel", q["query_name"])
+    for g, v in zip(fb, q["query_main"]):
+        if g and g not in out:
+            out[g] = v
+    return out
+
+
+@functools.cache
+def spne_single() -> dict[str, float]:
+    """Single-sgRNA knockdown log2FC (dual CRISPRi-seq reference arm), single-gene targets only."""
+    d = pl.read_csv(RAW / "dualcrispri2025_spneumo/mmc4.csv", infer_schema_length=0, null_values=["NA", ""])
+    parts = [d.select(pl.col(f"SG{i}.targets").alias("g"), pl.col(f"SG{i}.refLog2FC").cast(pl.Float64).alias("v"))
+             for i in (1, 2)]
+    t = pl.concat(parts).filter(~pl.col("g").str.contains(",")).drop_nulls().group_by("g").agg(pl.col("v").median())
+    return dict(zip(t["g"], t["v"]))
+
+
+def single_effects() -> pl.DataFrame:
+    """Reference single-loss effect per (species, gene); negative = sicker. Human: DepMap mean
+    Chronos effect across lines; yeast: SGA fitness - 1; fly: RNAi main effect; S. pneumoniae:
+    single-sgRNA log2FC. S. pombe has none."""
+    x, gcol, _ = depmap()
+    mean_eff = x.mean(0)
+    rows = [("human", g, float(mean_eff[j])) for g, j in gcol.items()]
+    rows += [("scer", g, v - 1) for g, v in yeast_smf().items()]
+    rows += [("dmel", g, v) for g, v in fly_main().items()]
+    rows += [("spne", g, v) for g, v in spne_single().items()]
+    return pl.DataFrame(rows, schema=["species", "gene", "single_effect"], orient="row")
+
+
 def features(df: pl.DataFrame) -> pl.DataFrame:
     ctx = pl.read_parquet(BENCH / "contexts.parquet").select("context_id", "depmap_id")
     df = df.join(ctx, on="context_id", how="left")
     x, gcol, lrow = depmap()
     z = _depmap_z()
     mean_eff = x.mean(0)
-    smf = yeast_smf()
+    single = {"scer": {k: v - 1 for k, v in yeast_smf().items()}, "dmel": fly_main(), "spne": spne_single()}
     par = identity_lookup()
     n = df.height
     fa, fb, mfa, mfb, cod, pid = (np.full(n, np.nan) for _ in range(6))
@@ -84,10 +124,10 @@ def features(df: pl.DataFrame) -> pl.DataFrame:
                 mfb[i] = mean_eff[jb]
             if ja is not None and jb is not None:
                 cod[i] = float(z[:, ja] @ z[:, jb]) / z.shape[0]
-        elif sp == "scer":
-            # SGA fitness is ~1 for wild type; shift to 0 so both species read "0 = neutral, negative = sick"
-            fa[i] = smf.get(a, np.nan) - 1
-            fb[i] = smf.get(b, np.nan) - 1
+        elif sp in single:
+            # native single-loss effect (yeast fitness shifted so 0 = wild type); negative = sicker
+            fa[i] = single[sp].get(a, np.nan)
+            fb[i] = single[sp].get(b, np.nan)
     return df.with_columns(
         pl.Series("fit_min", np.fmin(fa, fb)), pl.Series("fit_max", np.fmax(fa, fb)),
         pl.Series("fit_sum", fa + fb), pl.Series("pan_fit_sum", mfa + mfb),

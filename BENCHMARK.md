@@ -39,6 +39,7 @@ Your model reads `data/bench/slb1/{split}.parquet` (or `test_inputs.parquet`) an
 | `hidden/test*_labels.parquet` | Test labels. Only `slpbench eval --split test` reads them. |
 | `contexts.parquet` | Per context: Cellosaurus accession, DepMap ID, disease, sex, ancestry group and fractions. |
 | `held_out_families.parquet` | Gene → family → bucket. Used by the leakage checker. |
+| `gene_single_effects.parquet` | Reference single-loss effect and quintile per gene. Used by the fitness-matched metric; also a permitted input. |
 | `manifest.json` | Build parameters, row counts and sha256 of every file. |
 
 Example columns: `example_id, species, context_id, ancestry_group, gene_a, gene_b, same_family,
@@ -67,14 +68,54 @@ Gene IDs:
 
 `eval` also reports these for every species, ancestry group, human cell line and paralog vs.
 non-paralog stratum:
+- **fitness-matched AUROC** (see below), with its own SLB aggregate, `SLB fitness-matched`.
 - **within-gene AUROC**: stratified by (context, gene). It asks "given gene A, rank its partners".
 - **AP lift**: average precision ÷ prevalence.
 
 Use `--boot N` for a gene-family cluster-bootstrap 95% CI. Use `slpbench compare A B` for a paired
-bootstrap of the difference. That is the right tool for deciding whether a change helped.
+bootstrap of the difference in both SLB and fitness-matched SLB. That is the right tool for deciding
+whether a change helped.
+
+### The single-gene fitness confound
+
+In every species, SL calls are concentrated on genes that are already sick on their own. This is
+known biology: genetic-interaction degree tracks single-mutant fitness. How much of the signal it
+explains varies a lot by species. On test, the `fitness` baseline uses no pair information at all,
+only -(f_a + f_b), and scores:
+
+| Species | AUROC from single-gene fitness alone |
+|---|---:|
+| Fly | 0.85 |
+| *S. pneumoniae* | 0.87 |
+| *S. cerevisiae* | 0.69 |
+| Human | 0.65 |
+
+A model can therefore climb the SLB score by predicting which genes are sick, without learning
+anything about pairs.
+
+**Fitness-matched AUROC** controls for this. It compares an SL and a non-SL pair only when they come
+from the same context *and* both genes fall in the same within-species quintiles of a reference
+single-loss effect:
+
+| Species | Reference single-loss effect |
+|---|---|
+| Human | DepMap mean Chronos score |
+| *S. cerevisiae* | SGA single-mutant fitness |
+| Fly | RNAi main effect |
+| *S. pneumoniae* | Single-sgRNA log2FC |
+| *S. pombe* | None available, so this metric reduces to the SLB score there |
+
+The quintiles are in `gene_single_effects.parquet`. Quintile matching removes most of the confound
+but not all of it: the fitness baseline still scores 0.75 in fly and 0.71 in *S. pneumoniae*. Finer
+bins removed more of the confound but were too noisy at dev-set size.
+
+**Read the two numbers together.** A gain in SLB score that does not show up in the fitness-matched
+score is probably better single-gene modelling, not better pair modelling. Every leaderboard entry
+should also be compared against the `fitness` and `lgbm` baselines with `slpbench compare`.
 
 **Protocol.** Hill-climb on `dev`. Evaluate on `test` only at milestones, and record every test
-evaluation in `results/LEADERBOARD.md`. The test labels are local files, so holding back from
+evaluation: add it to `leaderboard.yaml`, then run `slpbench leaderboard` to regenerate
+[LEADERBOARD.md](LEADERBOARD.md). The test labels are local files, so holding back from
 peeking is on us.
 
 ## Leakage contract

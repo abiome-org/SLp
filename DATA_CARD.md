@@ -26,14 +26,14 @@ per-source rules in [BENCHMARK.md](BENCHMARK.md#label-rules); unlabelled rows ar
 | human | wong2016 | 1 | CRISPR-KO | 1,225 | 52 | 608 |
 | human | zhao2018 | 2 | CRISPR-KO | 2,550 | 56 | 1,274 |
 | scer | costanzo2016 | 1 | SGA | 13,129,005 | 115,749 | 4,451,655 |
-| spne | dualcrispri2025 | 1 | CRISPRi | 140,185 | 1,611 | 69,214 |
+| spne | dualcrispri2025 | 1 | CRISPRi | 125,650 | 1,436 | 62,764 |
 | spom | ryan2012 | 1 | E-MAP | 1,334,962 | 25,065 | 1,143,965 |
 
-Merging the same (species, context, pair) across sources: 6,462,549 labelled examples;
+Merging the same (species, context, pair) across sources: 6,455,924 labelled examples;
 199 pairs dropped because sources disagreed. Of
 250 pairs measured by 2+ sources in the same cell line where at least one
-called SL, **20%** were called SL by all of them — the
-cross-study reproducibility ceiling that any label set built from these screens inherits.
+called SL, **20%** were called SL by all of them. That is how
+reproducible an SL call from these screens is across studies, and it bounds how well any model can agree with them.
 
 ## Splits
 
@@ -46,27 +46,27 @@ families; `*_semi` hold pairs with one held-out and one train gene. Pairs spanni
 | dev | dmel | 7,499 | 73 | 1 |
 | dev | human | 20,723 | 537 | 60 |
 | dev | scer | 90,763 | 2,335 | 1 |
-| dev | spne | 1,709 | 75 | 1 |
+| dev | spne | 1,564 | 73 | 1 |
 | dev | spom | 23,057 | 354 | 1 |
 | dev_semi | dmel | 68,037 | 825 | 1 |
 | dev_semi | human | 39,234 | 1,489 | 59 |
 | dev_semi | scer | 849,279 | 21,605 | 1 |
-| dev_semi | spne | 14,243 | 400 | 1 |
+| dev_semi | spne | 12,920 | 363 | 1 |
 | dev_semi | spom | 219,862 | 4,282 | 1 |
 | test | dmel | 11,215 | 138 | 1 |
 | test | human | 27,277 | 797 | 60 |
 | test | scer | 184,722 | 4,352 | 1 |
-| test | spne | 2,726 | 50 | 1 |
+| test | spne | 2,467 | 49 | 1 |
 | test | spom | 42,252 | 695 | 1 |
 | test_semi | dmel | 83,459 | 1,138 | 1 |
 | test_semi | human | 54,774 | 2,053 | 60 |
 | test_semi | scer | 1,208,455 | 29,566 | 1 |
-| test_semi | spne | 18,149 | 395 | 1 |
+| test_semi | spne | 16,433 | 356 | 1 |
 | test_semi | spom | 298,138 | 5,981 | 1 |
 | train | dmel | 152,808 | 2,268 | 1 |
 | train | human | 158,970 | 5,493 | 60 |
 | train | scer | 1,975,418 | 51,656 | 1 |
-| train | spne | 29,639 | 544 | 1 |
+| train | spne | 26,848 | 456 | 1 |
 | train | spom | 523,009 | 12,799 | 1 |
 
 ## Human genetic ancestry
