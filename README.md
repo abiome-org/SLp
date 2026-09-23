@@ -3,10 +3,13 @@
 Restarted on 2026-09-22. Step one is a single evaluation that current and future models are all
 measured against.
 
-- [BENCHMARK.md](BENCHMARK.md): **SLB-1**, a benchmark built only from measured combinatorial
+- [BENCHMARK.md](BENCHMARK.md): **SLB-1.1**, a benchmark built only from measured combinatorial
   screens. Positives and negatives were both tested in the lab. Test gene families (paralogs plus
-  orthologs) are held out across 5 species and 60 human cell lines annotated with genetic ancestry.
-  This file covers the task, metric, leakage contract and label rules.
+  orthologs) are held out across 4 species and 50 human cell lines annotated with genetic ancestry.
+  Every label source passed a reproducibility audit. This file covers the task, metric, leakage
+  contract and label rules.
+- [REPLICATION.md](REPLICATION.md): per-source reproducibility evidence and include/exclude decisions. Generated.
+- [ROBUSTNESS.md](ROBUSTNESS.md): baseline ranking across 5 random family splits.
 - [DATA_CARD.md](DATA_CARD.md): per-source, per-split, per-ancestry and per-cell-line counts. Generated.
 - [LEADERBOARD.md](LEADERBOARD.md): test-split results. Generated from `leaderboard.yaml`.
 - `reference/old-slp/`: the prior repo's model card, literature review and SL results
@@ -15,7 +18,8 @@ measured against.
 ```bash
 uv sync
 uv run python -m slpbench.fetch      # raw sources → data/raw (about 3 GB)
-uv run slpbench build                # → data/bench/slb1
+uv run slpbench build                # → data/bench/slb1.1
+uv run slpbench audit                # → REPLICATION.md
 uv run slpbench baseline lgbm --split dev --out results/lgbm_dev.parquet
 uv run slpbench eval results/lgbm_dev.parquet --split dev
 uv run pytest -q

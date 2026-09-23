@@ -123,26 +123,64 @@ def chou2025() -> pl.DataFrame:
 
 
 def spidr2025() -> pl.DataFrame:
-    """Fielden et al. 2025 SPIDR: CRISPRi all-by-all DDR library in RPE1.
+    """Fielden et al. 2025 SPIDR: CRISPRi all-by-all DDR library in RPE1, re-scored from raw counts.
 
-    Positive: GEMINI sensitive-lethality score <= -1 (authors). Negative: score == 0, which the
-    authors assign to pairs with no sensitive-lethality evidence. `_mis` mismatched guides
-    (attenuated knockdown of essential genes) are collapsed onto their gene.
+    The published GEMINI sensitive-lethality calls are recovered by a single replicate's additive GI
+    at only AUROC 0.62 (docs: REPLICATION.md), so they fail the benchmark's reproducibility bar.
+    The counts themselves replicate well, so SPIDR is scored the same way as the paralog screens
+    (Dede et al. zdLFC): per replicate, LFC(d14 vs d0) centred on non-targeting pairs; single
+    effect f_g = median LFC of gene x non-targeting; GI = LFC - f_a - f_b, median over guide pairs;
+    z-scored over all gene pairs. `_mis` (attenuated) guides are separate alleles and excluded.
+    Positive: pooled z <= -3 and GI < 0 in both replicates. Negative: |pooled z| < 1.
     """
-    df = pl.read_csv(RAW / "spidr2025/MOESM5_pairs.csv")
-    df = df.with_columns(
-        pl.col("gene_combination").str.replace_all("_mis", "").str.split_exact(";", 1)
-        .struct.rename_fields(["gene_a", "gene_b"])
-    ).unnest("gene_combination")
-    df = df.select(
+    gi = spidr_replicate_gi()
+    pooled = gi.select(pl.col("gi_rep1"), pl.col("gi_rep2")).mean_horizontal()
+    z = (pooled - pooled.mean()) / pooled.std()
+    df = gi.with_columns(z.alias("score")).select(
         pl.lit("human").alias("species"), pl.lit("spidr2025").alias("source"), pl.lit("RPE1").alias("context"),
-        pl.lit("CRISPRi").alias("mechanism"), "gene_a", "gene_b",
-        pl.col("sens.score").cast(pl.Float64).alias("score"), pl.lit("GEMINI_sens").alias("score_name"),
+        pl.lit("CRISPRi").alias("mechanism"), "gene_a", "gene_b", "score", pl.lit("zGI_additive").alias("score_name"),
         pl.lit(None, pl.Float64).alias("signif"), pl.lit(None, pl.String).alias("signif_name"),
-        pl.when(pl.col("sens.score") <= -1).then(1).when(pl.col("sens.score") == 0).then(0)
-        .otherwise(None).cast(pl.Int8).alias("label"),
+        pl.when((pl.col("score") <= -3) & (pl.col("gi_rep1") < 0) & (pl.col("gi_rep2") < 0)).then(1)
+        .when(pl.col("score").abs() < 1).then(0).otherwise(None).cast(pl.Int8).alias("label"),
     )
     return finalize(df, "human")
+
+
+def spidr_replicate_gi() -> pl.DataFrame:
+    """Per-replicate additive GI for SPIDR RPE1 gene pairs (columns gene_a, gene_b, gi_rep1, gi_rep2)."""
+    import numpy as np
+
+    d = pl.read_csv(RAW / "spidr2025/MOESM9_counts.txt", separator="\t")
+
+    def gene(c):
+        return (pl.when(pl.col(c).str.starts_with("non_targeting")).then(pl.lit("CONTROL"))
+                .when(pl.col(c).str.contains("_mis")).then(pl.lit("MISMATCH"))
+                .otherwise(pl.col(c).str.split("_").list.first()))
+
+    d = d.with_columns(gene("sg1").alias("g1"), gene("sg2").alias("g2"))
+    t0 = ((d["RPE1_d0_Rep1"] + d["RPE1_d0_Rep2"]) / 2).to_numpy()
+    keep = t0 >= np.quantile(t0, 0.02)
+    base = np.log2((t0 + 1) / (t0 + 1).sum())
+    g1, g2 = d["g1"].to_numpy(), d["g2"].to_numpy()
+    out = None
+    for i, col in enumerate(["RPE1_d14_Rep1", "RPE1_d14_Rep2"], start=1):
+        te = d[col].to_numpy()
+        lfc = np.log2((te + 1) / (te + 1).sum()) - base
+        lfc = lfc - np.median(lfc[keep & (g1 == "CONTROL") & (g2 == "CONTROL")])
+        x = pl.DataFrame({"g1": g1, "g2": g2, "lfc": lfc}).filter(pl.Series(keep))
+        x = x.filter((pl.col("g1") != "MISMATCH") & (pl.col("g2") != "MISMATCH"))
+        single = pl.concat([
+            x.filter(pl.col("g2") == "CONTROL").select(pl.col("g1").alias("g"), "lfc"),
+            x.filter(pl.col("g1") == "CONTROL").select(pl.col("g2").alias("g"), "lfc"),
+        ]).filter(pl.col("g") != "CONTROL").group_by("g").agg(pl.col("lfc").median().alias("f"))
+        f = dict(zip(single["g"], single["f"]))
+        du = x.filter((pl.col("g1") != "CONTROL") & (pl.col("g2") != "CONTROL") & (pl.col("g1") != pl.col("g2")))
+        gi = du["lfc"].to_numpy() - np.array([f.get(v, np.nan) for v in du["g1"]]) - np.array([f.get(v, np.nan) for v in du["g2"]])
+        du = du.with_columns(pl.Series("gi", gi)).drop_nans("gi").with_columns(
+            pl.min_horizontal("g1", "g2").alias("gene_a"), pl.max_horizontal("g1", "g2").alias("gene_b"))
+        agg = du.group_by("gene_a", "gene_b").agg(pl.col("gi").median().alias(f"gi_rep{i}"))
+        out = agg if out is None else out.join(agg, on=["gene_a", "gene_b"])
+    return out
 
 
 def harle2025() -> pl.DataFrame:

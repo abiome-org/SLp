@@ -3,7 +3,7 @@
 Cellosaurus "Genome ancestry" comments carry per-line ancestry fractions inferred from
 genotypes (Kessler et al. 2019, PubMed 30894373). We collapse them to 1000 Genomes-style
 super-populations and call a line's ancestry group the majority component if it is at
-least ANCESTRY_MAJORITY, otherwise "admixed". Lines with no genotype-based estimate fall
+more than ANCESTRY_MAJORITY (a strict majority), otherwise "admixed". Lines with no genotype-based estimate fall
 back to the self-reported Cellosaurus "Population" field, flagged as such.
 """
 
@@ -16,7 +16,7 @@ from pathlib import Path
 import polars as pl
 
 RAW = Path("data/raw")
-ANCESTRY_MAJORITY = 0.70
+ANCESTRY_MAJORITY = 0.50
 
 SUPERPOP = {
     "African": "AFR",
@@ -83,7 +83,7 @@ def _finish(rec: dict) -> dict:
             if m and m.group(1) in SUPERPOP:
                 fracs[SUPERPOP[m.group(1)]] += float(m.group(2)) / 100
         top = max(fracs, key=fracs.get)
-        group, basis = (top if fracs[top] >= ANCESTRY_MAJORITY else "admixed"), "genotype"
+        group, basis = (top if fracs[top] > ANCESTRY_MAJORITY else "admixed"), "genotype"
     elif rec["population"]:
         tokens = [t.strip() for t in re.split(r"[;,/]| and ", rec["population"].lower()) if t.strip()]
         groups = {POPULATION_SELF_REPORT.get(t, POPULATION_SELF_REPORT.get(t.split()[0])) for t in tokens} - {None}

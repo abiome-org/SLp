@@ -3,7 +3,8 @@
 A family is a connected component of a graph whose nodes are "species:gene" and whose edges are
   * close paralogs within a species (Ensembl 116; human, S. cerevisiae, S. pombe, D. melanogaster),
     kept when max protein sequence identity >= PARALOG_MIN_IDENTITY;
-  * reciprocal-best orthologs across human, S. cerevisiae and D. melanogaster (Alliance combined);
+  * orthologs across human, S. cerevisiae and D. melanogaster (Alliance combined) that are reciprocal
+    best hits or supported by >= ORTHOLOG_MIN_ALGORITHMS prediction methods;
   * curated S. pombe orthologs to human and S. cerevisiae (PomBase).
 Holding out a whole family holds out a gene, its close paralogs and its orthologs in every species.
 """
@@ -17,6 +18,7 @@ import polars as pl
 
 RAW = Path("data/raw")
 PARALOG_MIN_IDENTITY = 0.30
+ORTHOLOG_MIN_ALGORITHMS = 3
 MAX_FAMILY = 400  # components larger than this are broken up (see _cap)
 
 ALLIANCE_TAXA = {"NCBITaxon:9606": "human", "NCBITaxon:559292": "scer", "NCBITaxon:7227": "dmel"}
@@ -49,7 +51,7 @@ def edges() -> pl.DataFrame:
     par = paralogs().filter(pl.col("identity") >= PARALOG_MIN_IDENTITY)
     out += [(f"{sp}:{a}", f"{sp}:{b}", "paralog", w) for sp, a, b, w in par.iter_rows()]
 
-    # Alliance orthology: reciprocal best only
+    # Alliance orthology: reciprocal best, or supported by >= ORTHOLOG_MIN_ALGORITHMS prediction methods
     hgnc = pl.read_csv(RAW / "ids/hgnc_complete_set.txt", separator="\t", infer_schema_length=0, quote_char=None,
                        columns=["hgnc_id", "symbol"])
     hgnc = dict(zip(hgnc["hgnc_id"], hgnc["symbol"]))
@@ -64,7 +66,9 @@ def edges() -> pl.DataFrame:
                 header = p
                 continue
             s1, s2 = ALLIANCE_TAXA.get(p[2]), ALLIANCE_TAXA.get(p[6])
-            if not s1 or not s2 or s1 == s2 or p[11] != "Yes" or p[12] != "Yes":
+            if not s1 or not s2 or s1 == s2:
+                continue
+            if not ((p[11] == "Yes" and p[12] == "Yes") or int(p[9]) >= ORTHOLOG_MIN_ALGORITHMS):
                 continue
             g1, g2 = _alliance_id(p[0], s1, hgnc, sgd), _alliance_id(p[4], s2, hgnc, sgd)
             if g1 and g2:

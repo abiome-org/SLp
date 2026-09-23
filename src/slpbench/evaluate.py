@@ -14,6 +14,7 @@ MIN_GROUP_POS positives) of the context-stratified AUROC within the group.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -21,9 +22,9 @@ import polars as pl
 
 from slpbench.metrics import average_precision, stratified_auc
 
-BENCH = Path("data/bench/slb1")
-MIN_GROUP_POS = 10
-SPECIES = ["human", "scer", "spom", "dmel", "spne"]
+BENCH = Path(os.environ.get("SLB_BENCH", "data/bench/slb1.1"))
+MIN_GROUP_POS = 20
+SPECIES = ["human", "scer", "spom", "spne", "dmel"]
 SPECIES_NAMES = {"human": "H. sapiens", "scer": "S. cerevisiae", "spom": "S. pombe",
                  "dmel": "D. melanogaster", "spne": "S. pneumoniae"}
 
@@ -47,7 +48,10 @@ def _codes(*cols: pl.Series) -> np.ndarray:
 
 
 def _auc(df: pl.DataFrame, w: np.ndarray | None = None, matched: bool = False) -> tuple[float, float]:
-    keys = [df["context_id"]] + ([df["fbin_lo"].cast(pl.String), df["fbin_hi"].cast(pl.String)] if matched else [])
+    # stratum = context x screen: pairs are only compared with pairs from the same cell line/strain
+    # AND the same screen(s), so library composition (e.g. a pre-selected candidate library with a
+    # high hit rate) cannot be exploited.
+    keys = [df["context_id"], df["sources"]] + ([df["fbin_lo"].cast(pl.String), df["fbin_hi"].cast(pl.String)] if matched else [])
     return stratified_auc(_codes(*keys), df["label"].to_numpy(), df["score"].to_numpy(), w)
 
 
@@ -65,10 +69,10 @@ def attach_fitness_bins(df: pl.DataFrame) -> pl.DataFrame:
 def _within_gene_auc(df: pl.DataFrame) -> tuple[float, float]:
     """Stratify by (context, gene): each example sits in two strata, one per gene."""
     both = pl.concat([
-        df.select("context_id", pl.col("gene_a").alias("g"), "label", "score"),
-        df.select("context_id", pl.col("gene_b").alias("g"), "label", "score"),
+        df.select("context_id", "sources", pl.col("gene_a").alias("g"), "label", "score"),
+        df.select("context_id", "sources", pl.col("gene_b").alias("g"), "label", "score"),
     ])
-    return stratified_auc(_codes(both["context_id"], both["g"]), both["label"].to_numpy(), both["score"].to_numpy())
+    return stratified_auc(_codes(both["context_id"], both["sources"], both["g"]), both["label"].to_numpy(), both["score"].to_numpy())
 
 
 def headline(df: pl.DataFrame, w: np.ndarray | None = None, matched: bool = False) -> tuple[float, dict]:

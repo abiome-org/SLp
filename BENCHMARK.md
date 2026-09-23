@@ -1,19 +1,28 @@
-# SLB-1: a held-out, real-data synthetic-lethality benchmark
+# SLB-1.1: a held-out, reproducibility-checked synthetic-lethality benchmark
 
-**Task.** Given a genetic context (a species plus a cell line or strain) and a gene pair, score how
-likely it is that losing both genes is synthetically lethal or sick, i.e. a strong negative genetic
-interaction beyond the two single-loss effects.
+**Task.** Given a genetic context (species + cell line or strain) and a gene pair, score how likely
+losing both genes is synthetically lethal or sick: a strong negative genetic interaction beyond the
+two single-loss effects.
 
-**Data.** Every example is a measured outcome from a published combinatorial screen. Both positives
-and negatives were tested in the lab. There are no random "unknown = negative" pairs, no
-literature-mined labels and no synthetic data. The v1 build draws on 19 sources across 5 species:
-human (60 cell lines, 16 studies), *S. cerevisiae*, *S. pombe*, *D. melanogaster* and
-*S. pneumoniae*. Counts are in [DATA_CARD.md](DATA_CARD.md).
+**Data.** Every example is a measured outcome from a published combinatorial screen. Positives and
+negatives were both tested. There are no "unknown = negative" pairs, no literature-mined labels and no
+synthetic data. Every source that supplies labels passed a reproducibility check (next section).
 
-**Held out.** Genes are grouped into families: close paralogs plus reciprocal-best orthologs across
-species. Whole families are hashed into train, dev or test. A test pair has both genes in test
-families, so neither gene, nor any of its paralogs, nor its orthologs in any other species appear in
-the train split.
+The v1.1 build covers:
+- **Human:** 50 cell lines from 8 studies, annotated with genetic ancestry.
+- ***S. cerevisiae***, ***S. pombe*** and ***S. pneumoniae***: one source each.
+
+Counts are in [DATA_CARD.md](DATA_CARD.md). The replication evidence for every source, included or
+not, is in [REPLICATION.md](REPLICATION.md).
+
+**Held out.** Genes are grouped into families: paralogs with ≥ 30% protein identity, plus orthologs
+across human, both yeasts and fly (reciprocal best hits, or ones supported by at least 3 prediction
+methods). Whole families are hashed into train, dev or test. In a test pair, neither gene has a
+paralog above 30% identity or any ortholog in train, in any species.
+
+There is only one evaluation: both genes held out. Splits that hold out a pair but let its genes
+appear in training (sometimes called CV1/CV2) are not offered. Models can memorise which genes have
+many SL partners, so those splits measure training-set lookup, not prediction.
 
 ## Quick start
 
@@ -24,177 +33,195 @@ uv run slpbench compare results/fitness_dev.parquet results/lgbm_dev.parquet --s
 uv run slpbench check-leakage my_training_pairs.parquet
 ```
 
-Your model reads `data/bench/slb1/{split}.parquet` (or `test_inputs.parquet`) and writes one
-`score` per `example_id`. Higher means more likely SL. Rebuilding from raw sources:
-`uv run python -m slpbench.fetch && uv run slpbench build && uv run slpbench card` (see
-[Rebuilding](#rebuilding)).
+A model reads `data/bench/slb1.1/{split}.parquet` (or `test_inputs.parquet`) and writes one `score`
+per `example_id`. Higher means more likely SL.
 
-## Files (`data/bench/slb1/`)
+## Label quality
 
-| File | Contents |
+The same pair measured twice, in replicates or by two labs, often gets a different SL call. The
+benchmark therefore admits a source's labels only if they reproduce.
+
+**Rule.** A source's labels are used if all three hold:
+1. An independent re-measurement recovers them at AUROC ≥ 0.65. The re-measurement is another study in
+   the same cell line where one exists; otherwise the source's own replicates, alleles or query/array
+   orientations, each re-scored separately.
+2. They are not contradicted by the cross-study consensus.
+3. The hit rate is plausible.
+
+`slpbench audit` re-runs every check and regenerates REPLICATION.md.
+
+**Included sources:**
+
+| Source | Evidence | AUROC |
+|---|---|---|
+| Dede 2020 | Cross-study, vs the other included studies | 0.93 |
+| Chou 2025 | Cross-study | 0.81 |
+| Harle 2025 | Cross-study | 0.80 |
+| Flister 2025 | Cross-study | 0.76 |
+| Horlbeck 2018 | Own replicates | 0.71–0.81 |
+| Parrish 2021 | Own replicates | 0.90–0.95 |
+| Zhao 2018 | Own replicates | 0.69–0.72 |
+| SPIDR 2025 | Own replicates, after re-scoring | 0.86 |
+| Costanzo 2016 (*S. cerevisiae*) | Opposite orientation, at the SLB cut-off | 0.74 |
+| Ryan 2012 (*S. pombe*) | Independent alleles or orientation, at the SLB cut-off | 0.76 |
+| Dual CRISPRi-seq 2025 (*S. pneumoniae*) | Own replicates | 0.95 |
+
+**Excluded sources.** Their measurements are kept in `data/interim/measurements` as optional training
+data, but they supply no benchmark labels.
+
+| Source | Reason |
 |---|---|
-| `train.parquet` | Labelled training pairs. Both genes in train families. |
-| `dev.parquet`, `dev_semi.parquet` | Labelled. Use for hill-climbing and model selection. |
-| `test_inputs.parquet`, `test_semi_inputs.parquet` | No labels. |
-| `hidden/test*_labels.parquet` | Test labels. Only `slpbench eval --split test` reads them. |
-| `contexts.parquet` | Per context: Cellosaurus accession, DepMap ID, disease, sex, ancestry group and fractions. |
-| `held_out_families.parquet` | Gene → family → bucket. Used by the leakage checker. |
-| `gene_single_effects.parquet` | Reference single-loss effect and quintile per gene. Used by the fitness-matched metric; also a permitted input. |
-| `manifest.json` | Build parameters, row counts and sha256 of every file. |
+| Ito 2021 | Agrees with itself (0.91–1.00), but contradicted by 4 concordant studies (0.55) |
+| Thompson 2021 | Cross-study 0.60; its calls are largely predictable from single-gene fitness (0.87) |
+| Shen 2017 | Its own replicates don't recover its labels (0.56–0.72) |
+| Han 2017, Wong 2016, CHyMErA 2020 | Unverifiable: no usable replicate counts and no overlap with other studies |
+| Fischer 2015, Heigwer 2023 (fly) | The two studies contradict each other (0.57 / 0.41). Same lab, same cell line |
+| Diehl 2021, Tang 2022 | Implausible hit rates: 63% and 22% of tested pairs called SL |
 
-Example columns: `example_id, species, context_id, ancestry_group, gene_a, gene_b, same_family,
-sources, label`.
+**Where published calls were replaced:**
+- **Budding and fission yeast:** stronger interactions replicate better, so the positive cut-offs are
+  stricter than the authors' (ε < −0.2 instead of −0.12; S < −3 instead of −2.3).
+- **SPIDR:** its published GEMINI calls are recovered by its own replicates at only 0.62. Its raw
+  counts are therefore re-scored with the same additive zdLFC recipe as the other paralog screens.
 
-Gene IDs:
-- human: HGNC symbols
-- *S. cerevisiae*: SGD systematic ORFs
-- *S. pombe*: PomBase systematic IDs
-- fly: FBgn IDs
-- *S. pneumoniae*: D39V gene names or locus tags
+Remaining disagreement: where two included studies measured the same pair in the same cell line and
+at least one called SL, all of them agreed 43% of the time. The earlier set, with the non-replicating
+sources included, managed 20%.
 
-`slpbench.ids.resolve` maps other names to these.
+## Label rules
+
+- **Negative:** a tested pair that was not called, and whose score falls in that screen's neutral band.
+- **Ambiguous:** anything between positive and negative. It is dropped.
+- **Merging:** the same (species, context, pair) measured by several included sources is merged;
+  conflicting labels are dropped.
+
+| Source | Positive | Negative |
+|---|---|---|
+| Horlbeck 2018, Zhao 2018 (SLKB original calls) | Author SL call | Not called, and \|score\| < median for that screen |
+| Dede 2020, Parrish 2021 (Ryan-lab uniform zdLFC) | zdLFC ≤ −3 | \|zdLFC\| < 1 |
+| SPIDR 2025 (RPE1, CRISPRi; re-scored from counts) | z(additive GI) ≤ −3 and GI < 0 in both replicates | \|z\| < 1 |
+| Chou 2025 | ZdLFC < −2 (authors) | \|ZdLFC\| < 1 |
+| Flister 2025 | Author "Lethal" call; diff_z ≤ −2 for lines with no call | \|diff_z\| < 1 |
+| Harle 2025 | Author binary hit matrix | Not a hit, FDR > 0.25, \|GI\| < median for that line |
+| Costanzo 2016 SGA | ε < −0.2 and p < 0.05 | p > 0.25 and \|ε\| < median |
+| Ryan 2012 *S. pombe* E-MAP | S < −3 | \|S\| < 1 |
+| Dual CRISPRi-seq 2025 (*S. pneumoniae*) | Authors' "Negative" call; single-gene sgRNAs, essential × essential pairs dropped | "Neutral", \|ε\| < median |
 
 ## Metric
 
 **SLB score** is the primary hill-climbing number.
 
-1. Scores are compared only within a context: the AUROC over (SL, non-SL) pairs from the same cell
-   line or strain. A model gains nothing by learning which screens or cell lines have high hit rates.
-2. Each species gets one score. For human, the score is the mean over genetic-ancestry groups (each
-   with at least 10 positives in the split) of that group's context-stratified AUROC. Each ancestry
-   group counts equally, however many cell lines it has.
-3. SLB score is the mean of the species scores. Each species counts equally, so yeast's 185k test
-   pairs cannot drown out fly's 11k.
+1. **Compare within a stratum.** A stratum is one context (cell line or strain) × one screen (source
+   set). Using AUROC, SL pairs are compared only with non-SL pairs from the same stratum. Knowing which
+   cell lines or libraries have high hit rates therefore earns nothing: a library-prior baseline
+   scores exactly 0.500.
+2. **Human species score:** the mean over genetic-ancestry groups with at least 20 positives in the
+   split. Ancestry is the donor's genotype-inferred majority super-population from Cellosaurus
+   (Kessler et al. 2019), with more than 50% as the cut-off. Lines with no estimate (hTERT-RPE1, C092)
+   are reported but not averaged in. Each ancestry group counts equally, however many cell lines it has.
+3. **SLB score** = the mean of the species scores. Each species counts equally.
 
-`eval` also reports these for every species, ancestry group, human cell line and paralog vs.
-non-paralog stratum:
-- **fitness-matched AUROC** (see below), with its own SLB aggregate, `SLB fitness-matched`.
-- **within-gene AUROC**: stratified by (context, gene). It asks "given gene A, rank its partners".
+`eval` reports every species, ancestry group, cell line and paralog/non-paralog stratum:
+- **fitness-matched AUROC** (below), plus its own aggregate, `SLB fitness-matched`.
+- **within-gene AUROC**: stratified additionally by gene. It asks "given gene A, rank its partners".
 - **AP lift**: average precision ÷ prevalence.
 
 Use `--boot N` for a gene-family cluster-bootstrap 95% CI. Use `slpbench compare A B` for a paired
-bootstrap of the difference in both SLB and fitness-matched SLB. That is the right tool for deciding
-whether a change helped.
+bootstrap of the difference on both scores. Use `compare` on dev to decide whether a change helped.
 
 ### The single-gene fitness confound
 
-In every species, SL calls are concentrated on genes that are already sick on their own. This is
-known biology: genetic-interaction degree tracks single-mutant fitness. How much of the signal it
-explains varies a lot by species. On test, the `fitness` baseline uses no pair information at all,
-only -(f_a + f_b), and scores:
+SL calls concentrate on genes that are already sick on their own. That is real biology
+(interaction degree tracks single-mutant fitness), but it means SLB can be climbed by predicting
+sickness rather than interactions. The `fitness` baseline uses only -(f_a + f_b), and its test scores
+are on the [leaderboard](LEADERBOARD.md).
 
-| Species | AUROC from single-gene fitness alone |
-|---|---:|
-| Fly | 0.85 |
-| *S. pneumoniae* | 0.87 |
-| *S. cerevisiae* | 0.69 |
-| Human | 0.65 |
-
-A model can therefore climb the SLB score by predicting which genes are sick, without learning
-anything about pairs.
-
-**Fitness-matched AUROC** controls for this. It compares an SL and a non-SL pair only when they come
-from the same context *and* both genes fall in the same within-species quintiles of a reference
-single-loss effect:
+**Fitness-matched AUROC** additionally requires the compared SL and non-SL pairs to have both genes in
+the same within-species quintiles of a reference single-loss effect:
 
 | Species | Reference single-loss effect |
 |---|---|
 | Human | DepMap mean Chronos score |
 | *S. cerevisiae* | SGA single-mutant fitness |
-| Fly | RNAi main effect |
 | *S. pneumoniae* | Single-sgRNA log2FC |
-| *S. pombe* | None available, so this metric reduces to the SLB score there |
+| *S. pombe* | None available, so the metric reduces to SLB there |
 
-The quintiles are in `gene_single_effects.parquet`. Quintile matching removes most of the confound
-but not all of it: the fitness baseline still scores 0.75 in fly and 0.71 in *S. pneumoniae*. Finer
-bins removed more of the confound but were too noisy at dev-set size.
-
-**Read the two numbers together.** A gain in SLB score that does not show up in the fitness-matched
-score is probably better single-gene modelling, not better pair modelling. Every leaderboard entry
-should also be compared against the `fitness` and `lgbm` baselines with `slpbench compare`.
+The quintiles are in `gene_single_effects.parquet`. Read both scores together. A gain in SLB that does
+not show up in the fitness-matched score is better single-gene modelling, not better pair modelling.
 
 **Protocol.** Hill-climb on `dev`. Evaluate on `test` only at milestones, and record every test
-evaluation: add it to `leaderboard.yaml`, then run `slpbench leaderboard` to regenerate
-[LEADERBOARD.md](LEADERBOARD.md). The test labels are local files, so holding back from
-peeking is on us.
+evaluation in `leaderboard.yaml`; `slpbench leaderboard` regenerates [LEADERBOARD.md](LEADERBOARD.md).
 
 ## Leakage contract
 
-A model scored on `test` must not have been fitted on any record that involves a gene from a test
-family, in any species:
+A model scored on `test` must not have been fitted on any record involving a gene from a test family,
+in any species:
 
-- **Not allowed:** any combinatorial or multi-gene perturbation readout (double knockout, knockdown or
-  CRISPRi screen); any SL or genetic-interaction label or edge, from any source (SynLethDB, BioGRID,
-  SLKB, knowledge graphs containing SL or GI edges, papers). This covers the benchmark's own sources
-  and any other copy of the same screens.
+- **Not allowed:** any combinatorial or multi-gene perturbation readout; any SL or genetic-interaction
+  label or edge from any source (SynLethDB, BioGRID, SLKB, knowledge graphs with SL or GI edges,
+  papers). This includes the excluded sources above.
 - **Allowed, but declare it:** single-gene data (DepMap and other single-KO screens, expression,
-  sequence, GO, PPI, pathways), and pretrained models whose training data follows the same rule.
+  sequence, GO, PPI), and pretrained models whose training data follows the same rule.
 
-`slpbench check-leakage pairs.parquet` (columns `species, gene_a, gene_b`) flags records that touch
-held-out families. That includes genes absent from the benchmark that are paralogs or orthologs of
-held-out genes. Add `--allow-dev` for final models trained on train + dev.
+`slpbench check-leakage pairs.parquet` (columns `species, gene_a, gene_b`) flags records touching
+held-out families, including genes absent from the benchmark that are paralogs or orthologs of
+held-out genes. Add `--allow-dev` for final models trained on train + dev. Models fitted on public SL
+databases without this filter are listed as `leaky` and not ranked.
 
-Models trained on public SL databases without this filter can still be scored, but they are marked
-`leaky` on the leaderboard. Most published SL predictors fall in that group.
+What "held out" leaves behind:
+- 31% of human test genes (15% in *S. cerevisiae*, 19% in *S. pombe*) have a distant paralog in
+  train, always below 30% identity (median 23%).
+- No test gene has an ortholog in train at any level of algorithm support.
 
-## Label rules
+## Files (`data/bench/slb1.1/`)
 
-Each source is labelled with its own interaction score and its authors' threshold wherever one
-exists.
+| File | Contents |
+|---|---|
+| `train.parquet` | Labelled. Both genes in train families. |
+| `dev.parquet`, `dev_semi.parquet` | Labelled. Hill-climbing and model selection. `*_semi`: one gene held out. |
+| `test_inputs.parquet`, `test_semi_inputs.parquet` | No labels. |
+| `hidden/test*_labels.parquet` | Test labels. Only `slpbench eval --split test` reads them. |
+| `contexts.parquet` | Per context: Cellosaurus accession, DepMap ID, disease, sex, ancestry group and fractions. |
+| `held_out_families.parquet` | Gene → family → bucket. Used by the leakage checker. |
+| `gene_single_effects.parquet` | Reference single-loss effect and quintile per gene. A permitted input. |
+| `manifest.json` | Build parameters, excluded sources, row counts, sha256 of every file. |
 
-- **Negative:** a tested pair that was not called, and whose score falls in that screen's neutral band.
-- **Ambiguous:** anything between positive and negative. It is dropped, not guessed.
-- **Merging:** measurements of the same (species, context, pair) from several sources are merged.
-  Pairs where the sources disagree (at least one says SL and another non-SL) are dropped.
+Example columns: `example_id, species, context_id, ancestry_group, gene_a, gene_b, same_family,
+sources, label`. Gene IDs:
 
-| Source | Positive | Negative |
-|---|---|---|
-| Horlbeck 2018, Han 2017, Shen 2017, Zhao 2018, Wong 2016 (SLKB original calls) | Author SL call | Not called, and \|score\| < median for that screen |
-| Dede 2020, CHyMErA 2020, Parrish 2021, Thompson 2021, Ito 2021 (Ryan-lab uniform zdLFC, final time point) | zdLFC ≤ −3 | \|zdLFC\| < 1 |
-| Chou 2025 | ZdLFC < −2 (authors) | \|ZdLFC\| < 1 |
-| Flister 2025 | Author "Lethal" call; diff_z ≤ −2 for lines with no call | \|diff_z\| < 1 |
-| Harle 2025 | Author binary hit matrix | Not a hit, FDR > 0.25, \|GI\| < median for that line |
-| SPIDR / Fielden 2025 (CRISPRi, RPE1) | GEMINI sensitive score ≤ −1 | Score = 0 (authors' no-evidence value) |
-| Costanzo 2016 SGA | ε < −0.12 and p < 0.05 (authors' stringent cut) | p > 0.25 and \|ε\| < median |
-| Ryan 2012 *S. pombe* E-MAP | S < −2.3 | \|S\| < 1 |
-| Fischer 2015, Heigwer 2023 (fly S2 RNAi, cell count) | π < 0 at FDR < 1% / 10% (per paper) | FDR > 0.25 and \|π\| < median |
-| Dual CRISPRi-seq 2025 (*S. pneumoniae*) | Authors' "Negative" call; single-gene sgRNA targets only | "Neutral", \|ε\| < median, not essential × essential |
+| Species | ID |
+|---|---|
+| Human | HGNC symbol |
+| *S. cerevisiae* | SGD systematic ORF |
+| *S. pombe* | PomBase systematic ID |
+| *S. pneumoniae* | D39V gene name or locus tag |
 
-Exclusions:
-- **Diehl 2021 (RPE1):** 63% of tested pairs are called SL.
-- **Tang 2022 (22Rv1):** 22% are called SL. Both rates are implausible for an unbiased pairwise screen.
-- **Najm 2018:** no effect size.
-- **SLKB's own Ito 2021 calls:** the score direction is ambiguous, so the uniform re-scoring is used instead.
+`slpbench.ids.resolve` maps other names.
 
 ## Known limitations
 
-- **Ancestry coverage is thin.** The human test set is 27k pairs:
-
-  | Ancestry group | Cell lines |
-  |---|---:|
-  | European (EUR) | 41 |
-  | East Asian (EAS) | 11 |
-  | African (AFR) | 1 (RKO) |
-  | Admixed | 2 (HeLa, NCI-H23) |
-  | Unknown | 5 (hTERT-RPE1, HAP1, HEK293T, Mel202, C092) |
-
-  The AFR and admixed strata are small and noisy. This reflects the public screens, and new screens
-  in non-European lines are the highest-value additions.
-- **Human screens mostly test paralog pairs,** so human same-family pairs are overrepresented.
-- **Label agreement across studies is low.** Where two studies screened the same pair in the same
-  cell line and at least one called it SL, the other agreed 20% of the time. A perfect model of
-  biology would still score well below 1.0.
-- **Fission yeast, fly and pneumococcus have no single-gene feature tables** in the reference
-  baselines, so those baselines score 0.5 there. That is a property of the baselines, not the benchmark.
+- **Ancestry coverage is thin.** European 38 lines, East Asian 7, African 3 (RKO, HeLa, NCI-H23),
+  with 30 test positives for the African group. This reflects the public screens. New screens in
+  non-European lines are the highest-value additions.
+- **No fly or other metazoan besides human.** The only two fly GI maps contradict each other.
+- **Human screens mostly test paralog pairs,** so same-family pairs are overrepresented.
+- **Inclusion is binary.** Every included source cleared the bar, but not equally: Dede 0.93 versus
+  Zhao 0.69. Labels are not weighted by source reliability.
 
 ## Rebuilding
 
-1. `uv run python -m slpbench.fetch` downloads every raw source. The URLs are in
-   `src/slpbench/fetch.py`.
-2. `uv run slpbench build` unpacks the archives, then parses, merges and splits.
-3. `uv run slpbench card` rewrites DATA_CARD.md.
+`uv run python -m slpbench.fetch` downloads the raw sources. `uv run slpbench build` parses, audits
+decisions, merges and splits. Then run `uv run slpbench audit` and `uv run slpbench card`.
+`reference/raw_sha256sums.txt` pins the raw inputs. The split depends only on `SALT`, the family
+graph and the bucket fractions (all in `manifest.json`). A robustness study across 4 alternative
+salts is in [ROBUSTNESS.md](ROBUSTNESS.md).
 
-`reference/raw_sha256sums.txt` pins the raw files this build used.
+## Changes from SLB-1
 
-The split depends only on `SALT`, the family graph and the bucket fractions, all recorded in
-`manifest.json`. Changing any of them creates a new benchmark version, not an update to SLB-1.
+- Label sources are now filtered by the replication audit. Ito, Thompson, Shen, Han, Wong, CHyMErA
+  and both fly maps are out.
+- Yeast positive cut-offs are stricter, and SPIDR is re-scored from its raw counts.
+- Strata are context × screen, which removes a library-composition shortcut worth up to 0.57 AUROC
+  on human.
+- Ancestry uses a majority rule (> 50%), and a group needs at least 20 positives to count.
+- Orthologs supported by 3 or more methods join families.

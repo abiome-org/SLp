@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import json
 import time
 from pathlib import Path
@@ -17,13 +18,28 @@ import polars as pl
 from slpbench import contexts, families
 from slpbench.sources import bacteria, dmel, human, yeast
 
-VERSION = "slb1"
-SALT = "slb1-2026-09-22"
+VERSION = "slb1.1"
+SALT = os.environ.get("SLB_SALT", "slb1-2026-09-22")  # unchanged from SLB-1 so family buckets stay identical
 INTERIM = Path("data/interim")
-OUT = Path("data/bench") / VERSION
+OUT = Path(os.environ.get("SLB_OUT", f"data/bench/{VERSION}"))  # overrides are for robustness studies only
 
 # fraction of families per bucket
 TEST_FRAC, DEV_FRAC = 0.20, 0.15
+
+# Sources measured and audited but NOT used for benchmark labels, with the evidence (REPLICATION.md).
+# Rule: a source's labels enter the benchmark only if an independent re-measurement (another study
+# in the same context, or its own replicates/alleles/orientations) recovers them at AUROC >= 0.65,
+# they are not contradicted by the cross-study consensus, and the hit rate is plausible.
+EXCLUDED_SOURCES = {
+    "ito2021": "internally consistent but contradicted by 4 concordant studies (cross-study AUROC 0.55)",
+    "thompson2021": "cross-study AUROC 0.60; calls largely predicted by single-gene fitness (0.87)",
+    "shen2017": "replicates do not recover its labels (0.56-0.72; tail reproducibility 16-26%)",
+    "han2017": "no replicate counts and no cross-study overlap: unverifiable",
+    "wong2016": "replicate counts not scorable (control naming) and no overlap: unverifiable",
+    "chymera2020": "not in SLKB (no counts) and 1 overlapping positive: unverifiable",
+    "fischer2015": "the two fly GI maps contradict each other (cross-study AUROC 0.57 / 0.41)",
+    "heigwer2023": "the two fly GI maps contradict each other (cross-study AUROC 0.57 / 0.41)",
+}
 
 PARSERS = {
     "slkb": human.slkb,
@@ -111,6 +127,7 @@ def stage_examples() -> None:
     conflicting labels are dropped and counted in the build report.
     """
     m = pl.concat([pl.read_parquet(p) for p in sorted((INTERIM / "measurements").glob("*.parquet"))])
+    m = m.filter(~pl.col("source").is_in(list(EXCLUDED_SOURCES)))
     ctx = _context_table(m)
     m = m.join(ctx.select("species", "source", "context", "context_id"), on=["species", "source", "context"])
     lab = m.filter(pl.col("label").is_not_null())
@@ -173,7 +190,7 @@ def stage_splits() -> None:
     cols = ["example_id", "species", "context_id", "ancestry_group", "gene_a", "gene_b", "same_family", "sources", "label"]
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "hidden").mkdir(exist_ok=True)
-    manifest = {"version": VERSION, "salt": SALT, "test_frac": TEST_FRAC, "dev_frac": DEV_FRAC,
+    manifest = {"version": VERSION, "salt": SALT, "excluded_sources": EXCLUDED_SOURCES, "test_frac": TEST_FRAC, "dev_frac": DEV_FRAC,
                 "paralog_min_identity": families.PARALOG_MIN_IDENTITY, "built": time.strftime("%Y-%m-%d"), "files": {}}
     for split in ["train", "dev", "dev_semi", "test", "test_semi"]:
         part = ex.filter(pl.col("split") == split).select(cols).sort("example_id")

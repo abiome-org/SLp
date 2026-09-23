@@ -1,10 +1,10 @@
-"""Integration checks on the built benchmark (skipped if data/bench/slb1 is absent)."""
+"""Integration checks on the built benchmark (skipped if the current benchmark version is not built)."""
 from pathlib import Path
 
 import polars as pl
 import pytest
 
-BENCH = Path("data/bench/slb1")
+from slpbench.evaluate import BENCH  # noqa: E402
 pytestmark = pytest.mark.skipif(not (BENCH / "manifest.json").exists(), reason="benchmark not built")
 
 
@@ -28,7 +28,7 @@ def test_both_classes_every_species_in_test():
     from slpbench.evaluate import load_split
     t = load_split("test")
     c = t.group_by("species").agg((pl.col("label") == 1).sum().alias("p"), (pl.col("label") == 0).sum().alias("n"))
-    assert c.height == 5 and (c["p"] > 0).all() and (c["n"] > 0).all()
+    assert c.height == 4 and (c["p"] > 0).all() and (c["n"] > 0).all()
 
 
 def test_leakage_catches_paralog_of_heldout_gene():

@@ -37,6 +37,7 @@ SOURCES: dict[str, list[tuple[str, str]]] = {
     ],
     "fischer2015_dmel": [
         ("Interactions.rda", "https://raw.githubusercontent.com/bioc/DmelSGI/HEAD/data/Interactions.rda"),
+        ("mainEffects.rda", "https://raw.githubusercontent.com/bioc/DmelSGI/HEAD/data/mainEffects.rda"),
     ],
     "heigwer2023_dmel": [
         ("interactions_stat_tested_bias_corrected.csv.gz", "https://ndownloader.figshare.com/files/31506566"),
@@ -50,16 +51,19 @@ SOURCES: dict[str, list[tuple[str, str]]] = {
     ],
     "dualcrispri2025_spneumo": [
         ("mmc4.csv", "https://ars.els-cdn.com/content/image/1-s2.0-S2405471225002418-mmc4.csv"),
+        ("mmc3_counts.csv", "https://ars.els-cdn.com/content/image/1-s2.0-S2405471225002418-mmc3.csv"),
     ],
     "costanzo2016_scer": [
         ("pairwise.zip", "https://thecellmap.org/costanzo2016/data_files/Raw%20genetic%20interaction%20datasets:%20Pair-wise%20interaction%20format.zip"),
     ],
     "ryan2012_spombe": [
         ("mmc5_averaged.zip", "https://ars.els-cdn.com/content/image/1-s2.0-S1097276512004443-mmc5.zip"),
+        ("mmc4_unaveraged.zip", "https://ars.els-cdn.com/content/image/1-s2.0-S1097276512004443-mmc4.zip"),
     ],
     "spidr2025": [
         ("MOESM5_pairs.csv", "https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-025-08815-4/MediaObjects/41586_2025_8815_MOESM5_ESM.csv"),
         ("MOESM6_followup.xlsx", "https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-025-08815-4/MediaObjects/41586_2025_8815_MOESM6_ESM.xlsx"),
+        ("MOESM9_counts.txt", "https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-025-08815-4/MediaObjects/41586_2025_8815_MOESM9_ESM.txt"),
     ],
     "harle2025_calls": [
         ("MOESM1_additional_file1.xlsx", "https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-025-03737-w/MediaObjects/13059_2025_3737_MOESM1_ESM.xlsx"),

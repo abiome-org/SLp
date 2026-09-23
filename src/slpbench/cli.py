@@ -40,6 +40,7 @@ def main(argv: list[str] | None = None) -> None:
 
     sub.add_parser("card", help="regenerate DATA_CARD.md from the built benchmark")
     sub.add_parser("leaderboard", help="regenerate LEADERBOARD.md from leaderboard.yaml")
+    sub.add_parser("audit", help="re-run label reproducibility checks, write REPLICATION.md")
 
     bl = sub.add_parser("baseline")
     bl.add_argument("name")
@@ -68,6 +69,9 @@ def main(argv: list[str] | None = None) -> None:
     elif a.cmd == "check-leakage":
         from slpbench import leakage
         sys.exit(leakage.main(a.records, a.allow_dev))
+    elif a.cmd == "audit":
+        from slpbench import audit
+        audit.main()
     elif a.cmd == "leaderboard":
         from slpbench import leaderboard
         leaderboard.main()
