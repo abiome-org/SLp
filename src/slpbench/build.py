@@ -126,7 +126,7 @@ def stage_examples() -> None:
         pl.col("source").n_unique().alias("ns"), pl.col("label").min().alias("lmin"), pl.col("label").max().alias("lmax"),
         pl.col("label").max().alias("any_pos"),
     ).filter(pl.col("ns") > 1)
-    ctx_meta = ctx.drop("source", "context").unique("context_id")
+    ctx_meta = ctx.drop("source", "context").unique("context_id").sort("context_id")
     INTERIM.mkdir(exist_ok=True, parents=True)
     ex.write_parquet(INTERIM / "examples.parquet")
     ctx_meta.write_parquet(INTERIM / "contexts.parquet")
@@ -182,7 +182,7 @@ def stage_splits() -> None:
             _write(part.select("example_id", "label", "sources"), OUT / "hidden" / f"{split}_labels.parquet", manifest)
         else:
             _write(part, OUT / f"{split}.parquet", manifest)
-    _write(ctx, OUT / "contexts.parquet", manifest)
+    _write(ctx.sort("context_id"), OUT / "contexts.parquet", manifest)
     _write(_single_effect_bins(genes), OUT / "gene_single_effects.parquet", manifest)
     _write(fam.sort("species", "gene"), OUT / "held_out_families.parquet", manifest)
     counts = ex.group_by("split", "species").agg(
