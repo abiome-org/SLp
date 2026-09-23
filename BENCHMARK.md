@@ -1,4 +1,4 @@
-# SLB-1.1: a held-out, reproducibility-checked synthetic-lethality benchmark
+# SLB-1.2: a held-out, reproducibility-checked, fitness-balanced synthetic-lethality benchmark
 
 **Task.** Given a genetic context (species + cell line or strain) and a gene pair, score how likely
 losing both genes is synthetically lethal or sick: a strong negative genetic interaction beyond the
@@ -8,7 +8,7 @@ two single-loss effects.
 negatives were both tested. There are no "unknown = negative" pairs, no literature-mined labels and no
 synthetic data. Every source that supplies labels passed a reproducibility check (next section).
 
-The v1.1 build covers:
+The v1.2 build covers:
 - **Human:** 50 cell lines from 8 studies, annotated with genetic ancestry.
 - ***S. cerevisiae***, ***S. pombe*** and ***S. pneumoniae***: one source each.
 
@@ -33,7 +33,7 @@ uv run slpbench compare results/fitness_dev.parquet results/lgbm_dev.parquet --s
 uv run slpbench check-leakage my_training_pairs.parquet
 ```
 
-A model reads `data/bench/slb1.1/{split}.parquet` (or `test_inputs.parquet`) and writes one `score`
+A model reads `data/bench/slb1.2/{split}.parquet` (or `test_inputs.parquet`) and writes one `score`
 per `example_id`. Higher means more likely SL.
 
 ## Label quality
@@ -109,45 +109,70 @@ sources included, managed 20%.
 
 ## Metric
 
-**SLB score** is the primary hill-climbing number.
+**SLB score** is the one number to hill-climb. It is fitness-balanced by construction. There is no
+separate "adjusted" score to read alongside it.
 
 1. **Compare within a stratum.** A stratum is one context (cell line or strain) × one screen (source
    set). Using AUROC, SL pairs are compared only with non-SL pairs from the same stratum. Knowing which
    cell lines or libraries have high hit rates therefore earns nothing: a library-prior baseline
    scores exactly 0.500.
-2. **Human species score:** the mean over genetic-ancestry groups with at least 20 positives in the
+2. **Balance single-gene fitness.** SL calls concentrate on genes that are already sick on their own.
+   That is real biology, but a model that only predicts sickness would climb an unadjusted AUROC
+   (to 0.70–0.75 on this data). So each pair gets a propensity *e* = P(SL | both genes' single-loss
+   effects, screen, context), fitted on the evaluation split itself. SL pairs are then weighted
+   1 − *e* and non-SL pairs *e* (overlap weights; Li, Morgan & Zaslavsky 2018), and the weights are
+   rescaled per stratum and class. After weighting, SL and non-SL pairs in each stratum have the
+   same single-gene fitness profile, so predicting "sick genes are SL" scores 0.5. Only information
+   beyond the two genes' fitness earns credit.
+3. **Human species score:** the mean over genetic-ancestry groups with at least 20 positives in the
    split. Ancestry is the donor's genotype-inferred majority super-population from Cellosaurus
    (Kessler et al. 2019), with more than 50% as the cut-off. Lines with no estimate (hTERT-RPE1, C092)
    are reported but not averaged in. Each ancestry group counts equally, however many cell lines it has.
-3. **SLB score** = the mean of the species scores. Each species counts equally.
+4. **SLB score** = the mean of the species scores. Each species counts equally.
 
 `eval` reports every species, ancestry group, cell line and paralog/non-paralog stratum:
-- **fitness-matched AUROC** (below), plus its own aggregate, `SLB fitness-matched`.
-- **within-gene AUROC**: stratified additionally by gene. It asks "given gene A, rank its partners".
-- **AP lift**: average precision ÷ prevalence.
+- **SLB AUROC** (the balanced AUROC the score uses).
+- **within-gene**: balanced AUROC stratified additionally by gene. It asks "given gene A, rank its partners".
+- **unadj**: plain stratified AUROC without fitness balancing. This is a diagnostic only: the gap
+  between it and SLB AUROC is how much of a model's ranking is single-gene fitness.
+- **AP lift**: average precision ÷ prevalence (unweighted).
 
 Use `--boot N` for a gene-family cluster-bootstrap 95% CI. Use `slpbench compare A B` for a paired
-bootstrap of the difference on both scores. Use `compare` on dev to decide whether a change helped.
+bootstrap of the difference. Use `compare` on dev to decide whether a change helped.
 
-### The single-gene fitness confound
+### How the fitness balancing works
 
-SL calls concentrate on genes that are already sick on their own. That is real biology
-(interaction degree tracks single-mutant fitness), but it means SLB can be climbed by predicting
-sickness rather than interactions. The `fitness` baseline uses only -(f_a + f_b), and its test scores
-are on the [leaderboard](LEADERBOARD.md).
+The reference single-loss effect per gene (`gene_single_effects.parquet`, a permitted model input):
 
-**Fitness-matched AUROC** additionally requires the compared SL and non-SL pairs to have both genes in
-the same within-species quintiles of a reference single-loss effect:
-
-| Species | Reference single-loss effect |
+| Species | Single-loss effect |
 |---|---|
-| Human | DepMap mean Chronos score |
-| *S. cerevisiae* | SGA single-mutant fitness |
-| *S. pneumoniae* | Single-sgRNA log2FC |
-| *S. pombe* | None available, so the metric reduces to SLB there |
+| Human | DepMap 24Q4 Chronos effect in that cell line where DepMap screened it, plus the pan-line mean |
+| *S. cerevisiae* | SGA single-mutant fitness − 1 (Costanzo 2016) |
+| *S. pombe* | PomBase deletion viability: inviable −1, slow growth −0.5, viable 0 |
+| *S. pneumoniae* | Single-sgRNA knockdown log2FC (dual CRISPRi-seq reference arm) |
 
-The quintiles are in `gene_single_effects.parquet`. Read both scores together. A gain in SLB that does
-not show up in the fitness-matched score is better single-gene modelling, not better pair modelling.
+The propensity model (`fitness.propensity`) is a lightly penalised logistic regression per species.
+Its inputs are cubic splines of each gene's context and pan-context effect (lower and higher of the
+pair), their product, screen and context intercepts, and screen × effect interactions. Design choices:
+- **Fitted on the evaluation split, not on train.** The fitness→SL relation differs between held-out
+  family sets. For example, in *S. pombe* (inviable, viable) pairs, P(SL) is 0.9% in train but 0.15%
+  in dev. A propensity fitted elsewhere leaves the fitness baseline at 0.42–0.79.
+- **Logistic, not boosted.** Logistic propensity + overlap weights balance every design column exactly
+  in the mean, and the smooth design cannot memorise individual genes through their exact fitness
+  values. A gradient-boosted propensity with odds weights left *S. pneumoniae* with an effective
+  sample of 6 negatives.
+
+Checks, all on dev and test (`tests/test_benchmark.py` asserts the first):
+- Within-stratum standardised mean differences of all four fitness covariates fall from up to 1.4
+  to ≤ 0.015 in every species.
+- Fitness-only predictors score about 0.5: the propensity itself, −(f_a + f_b), and `fitness_lgbm`
+  (gradient boosting on the fitness covariates, trained on train). On *S. pneumoniae*, `fitness_lgbm`
+  ranges from 0.42 to 0.65 across the 5 family splits in [ROBUSTNESS.md](ROBUSTNESS.md), with a mean
+  of 0.53. That is noise around 0.5, not a systematic leak.
+- Effective sample sizes stay large: human 3.5k of 15k negatives on dev, *S. pneumoniae* 130–450 negatives.
+
+The propensities are stored under `hidden/`. They are evaluation machinery built from the split's
+labels, never a model input.
 
 **Protocol.** Hill-climb on `dev`. Evaluate on `test` only at milestones, and record every test
 evaluation in `leaderboard.yaml`; `slpbench leaderboard` regenerates [LEADERBOARD.md](LEADERBOARD.md).
@@ -173,7 +198,7 @@ What "held out" leaves behind:
   train, always below 30% identity (median 23%).
 - No test gene has an ortholog in train at any level of algorithm support.
 
-## Files (`data/bench/slb1.1/`)
+## Files (`data/bench/slb1.2/`)
 
 | File | Contents |
 |---|---|
@@ -181,9 +206,10 @@ What "held out" leaves behind:
 | `dev.parquet`, `dev_semi.parquet` | Labelled. Hill-climbing and model selection. `*_semi`: one gene held out. |
 | `test_inputs.parquet`, `test_semi_inputs.parquet` | No labels. |
 | `hidden/test*_labels.parquet` | Test labels. Only `slpbench eval --split test` reads them. |
+| `hidden/*_propensity.parquet` | Per-example fitness propensity for the SLB balance weights (dev, test and semi splits). Not a model input. |
 | `contexts.parquet` | Per context: Cellosaurus accession, DepMap ID, disease, sex, ancestry group and fractions. |
 | `held_out_families.parquet` | Gene → family → bucket. Used by the leakage checker. |
-| `gene_single_effects.parquet` | Reference single-loss effect and quintile per gene. A permitted input. |
+| `gene_single_effects.parquet` | Reference (pan-context) single-loss effect per gene. A permitted input. |
 | `manifest.json` | Build parameters, excluded sources, row counts, sha256 of every file. |
 
 Example columns: `example_id, species, context_id, ancestry_group, gene_a, gene_b, same_family,
@@ -205,6 +231,15 @@ sources, label`. Gene IDs:
   non-European lines are the highest-value additions.
 - **No fly or other metazoan besides human.** The only two fly GI maps contradict each other.
 - **Human screens mostly test paralog pairs,** so same-family pairs are overrepresented.
+- ***S. pneumoniae* is the noisiest species.** It has 49 test positives, and after balancing only a few
+  hundred effective negatives, because its SL calls sit almost entirely on the sickest genes. Its
+  species score moves by about ±0.08 between family splits, and it counts for a quarter of the headline.
+  Check per-species `compare` output before crediting a gain that comes only from *S. pneumoniae*.
+- **Current baselines are close to 0.5.** Once fitness is balanced out they span 0.48–0.55, closer
+  together than the split-to-split noise, so their ranking is not stable
+  ([ROBUSTNESS.md](ROBUSTNESS.md)). Human carries the real signal: paralog identity scores 0.70, and
+  lgbm scores 0.53–0.58 against 0.48–0.52 for fitness alone. The yeasts sit at 0.50–0.51 for every
+  baseline, which leaves the most headroom.
 - **Inclusion is binary.** Every included source cleared the bar, but not equally: Dede 0.93 versus
   Zhao 0.69. Labels are not weighted by source reliability.
 
@@ -215,6 +250,15 @@ decisions, merges and splits. Then run `uv run slpbench audit` and `uv run slpbe
 `reference/raw_sha256sums.txt` pins the raw inputs. The split depends only on `SALT`, the family
 graph and the bucket fractions (all in `manifest.json`). A robustness study across 4 alternative
 salts is in [ROBUSTNESS.md](ROBUSTNESS.md).
+
+## Changes from SLB-1.1
+
+- The SLB score is fitness-balanced (overlap weights on a single-gene fitness propensity). The separate
+  fitness-matched score, and its quintile bins, are gone.
+- *S. pombe* now has a single-loss effect (PomBase deletion viability), so it is balanced too.
+- Same examples, labels and splits as SLB-1.1. Only the metric changed, and SLB-1.1 scores are not
+  comparable. `slpbench leaderboard` shows only results computed on the current version.
+- New baseline `fitness_lgbm`: the strongest fitness-only model, kept as a probe of residual fitness signal.
 
 ## Changes from SLB-1
 

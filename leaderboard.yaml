@@ -2,7 +2,12 @@
 - name: lgbm
   result: results/lgbm_test.json
   description: gradient boosting on single-gene fitness, paralog identity, DepMap co-dependency
-  trained_on: SLB-1.1 train
+  trained_on: SLB-1.2 train
+  leaky: false
+- name: fitness_lgbm
+  result: results/fitness_lgbm_test.json
+  description: gradient boosting on the single-loss covariates only (probe of residual fitness signal)
+  trained_on: SLB-1.2 train
   leaky: false
 - name: fitness
   result: results/fitness_test.json

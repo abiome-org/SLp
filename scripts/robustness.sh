@@ -1,0 +1,12 @@
+# Rebuild the splits under 4 alternative salts and score the baselines on each test split.
+# Then: uv run python scripts/robustness.py  (writes ROBUSTNESS.md)
+set -e
+for salt in alt-a alt-b alt-c alt-d; do
+  out=data/robustness/$salt
+  SLB_SALT=$salt SLB_OUT=$out uv run python -m slpbench.build --stage splits > /dev/null
+  for b in random paralog_identity codependency fitness fitness_lgbm lgbm; do
+    SLB_BENCH=$out uv run slpbench baseline $b --split test --out $out/pred_$b.parquet > /dev/null
+    SLB_BENCH=$out uv run slpbench eval $out/pred_$b.parquet --split test --out $out/res_$b.json > /dev/null
+  done
+  echo "$salt done"
+done

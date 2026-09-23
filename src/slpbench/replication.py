@@ -269,9 +269,9 @@ def heigwer_split_half() -> list[dict]:
 
 
 def fitness_diagnostic() -> pl.DataFrame:
-    from slpbench.baselines import single_effects
+    from slpbench.fitness import gene_effects
 
-    f = {(s, g): v for s, g, v in single_effects().iter_rows()}
+    f = {(s, g): v for s, g, v in gene_effects().iter_rows()}
     rows = []
     for p in sorted((INTERIM / "measurements").glob("*.parquet")):
         m = pl.read_parquet(p).filter(pl.col("label").is_not_null())

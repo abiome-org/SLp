@@ -44,3 +44,24 @@ def test_leakage_catches_paralog_of_heldout_gene():
     rec = pl.DataFrame({"species": ["human", "human"], "gene_a": [novel, train_g[0]], "gene_b": [train_g[1], train_g[1]]})
     leaks = leakage.check(rec)
     assert leaks.height == 1 and novel in (leaks["gene_a"][0], leaks["gene_b"][0])
+
+
+def test_balance_weights_equalise_single_gene_fitness():
+    """Within each stratum, SLB's weights give SL and non-SL pairs the same mean single-loss effects."""
+    from slpbench.evaluate import load_gold
+    from slpbench.fitness import COVARIATES, covariates
+
+    d = covariates(load_gold("dev"), pl.read_parquet(BENCH / "contexts.parquet"))
+    pos, w = pl.col("label") == 1, pl.col("_bw")
+    for (sp,), g in d.group_by(["species"]):
+        for c in COVARIATES:
+            x = pl.col(c)
+            t = g.drop_nulls(c).group_by("context_id", "sources").agg(
+                pos.sum().alias("np"),
+                (x.filter(pos).mean() - x.filter(~pos).mean()).alias("raw"),
+                ((x * w).filter(pos).sum() / w.filter(pos).sum()
+                 - (x * w).filter(~pos).sum() / w.filter(~pos).sum()).alias("bal"),
+            ).filter(pl.col("np") > 0)
+            sd = g[c].cast(pl.Float64).std()
+            raw, bal = (abs((t[k] * t["np"]).sum() / t["np"].sum() / sd) for k in ("raw", "bal"))
+            assert bal < 0.03 and bal < raw / 3, (sp, c, raw, bal)

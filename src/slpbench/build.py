@@ -18,7 +18,7 @@ import polars as pl
 from slpbench import contexts, families
 from slpbench.sources import bacteria, dmel, human, yeast
 
-VERSION = "slb1.1"
+VERSION = "slb1.2"
 SALT = os.environ.get("SLB_SALT", "slb1-2026-09-22")  # unchanged from SLB-1 so family buckets stay identical
 INTERIM = Path("data/interim")
 OUT = Path(os.environ.get("SLB_OUT", f"data/bench/{VERSION}"))  # overrides are for robustness studies only
@@ -192,15 +192,21 @@ def stage_splits() -> None:
     (OUT / "hidden").mkdir(exist_ok=True)
     manifest = {"version": VERSION, "salt": SALT, "excluded_sources": EXCLUDED_SOURCES, "test_frac": TEST_FRAC, "dev_frac": DEV_FRAC,
                 "paralog_min_identity": families.PARALOG_MIN_IDENTITY, "built": time.strftime("%Y-%m-%d"), "files": {}}
+    from slpbench.fitness import propensity
+
     for split in ["train", "dev", "dev_semi", "test", "test_semi"]:
         part = ex.filter(pl.col("split") == split).select(cols).sort("example_id")
+        if split != "train":
+            # SLB balance weights: fitted within this split (see fitness.propensity), never a model input
+            w = part.select("example_id").with_columns(propensity(part, ctx))
+            _write(w, OUT / "hidden" / f"{split}_propensity.parquet", manifest)
         if split.startswith("test"):
             _write(part.drop("label", "sources"), OUT / f"{split}_inputs.parquet", manifest)
             _write(part.select("example_id", "label", "sources"), OUT / "hidden" / f"{split}_labels.parquet", manifest)
         else:
             _write(part, OUT / f"{split}.parquet", manifest)
     _write(ctx.sort("context_id"), OUT / "contexts.parquet", manifest)
-    _write(_single_effect_bins(genes), OUT / "gene_single_effects.parquet", manifest)
+    _write(_single_effects(genes), OUT / "gene_single_effects.parquet", manifest)
     _write(fam.sort("species", "gene"), OUT / "held_out_families.parquet", manifest)
     counts = ex.group_by("split", "species").agg(
         pl.len().alias("n"), (pl.col("label") == 1).sum().alias("pos"), pl.col("context_id").n_unique().alias("contexts")
@@ -211,21 +217,12 @@ def stage_splits() -> None:
         print(counts)
 
 
-FITNESS_BINS = 5
+def _single_effects(genes: pl.DataFrame) -> pl.DataFrame:
+    """Per benchmark gene: the reference single-loss effect (fitness.gene_effects). A permitted input."""
+    from slpbench.fitness import gene_effects
 
-
-def _single_effect_bins(genes: pl.DataFrame) -> pl.DataFrame:
-    """Per benchmark gene: reference single-loss effect and its within-species quintile (1 = sickest;
-    0 = unknown). Used by the fitness-matched metric; also a legitimate single-gene model input."""
-    from slpbench.baselines import single_effects
-
-    se = genes.join(single_effects(), on=["species", "gene"], how="left")
-    return se.with_columns(
-        pl.when(pl.col("single_effect").is_null()).then(0)
-        .otherwise((pl.col("single_effect").rank("ordinal").over("species") - 1) * FITNESS_BINS
-                   // pl.col("single_effect").count().over("species") + 1)
-        .cast(pl.Int8).alias("fitness_bin")
-    ).sort("species", "gene")
+    return genes.join(gene_effects(), on=["species", "gene"], how="left").rename({"effect": "single_effect"}) \
+        .sort("species", "gene")
 
 
 def _write(df: pl.DataFrame, path: Path, manifest: dict) -> None:
