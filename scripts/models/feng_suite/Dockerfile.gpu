@@ -1,0 +1,13 @@
+# GPU environment for the Feng et al. 2024 SL_benchmark code on Ampere (RTX 3090):
+# NVIDIA TF1 container (TF 1.15.5+nv, py3.8, CUDA 12) + torch 1.13.1/cu117, PyG 2.3, dgl 0.9 (cu117)
+FROM nvcr.io/nvidia/tensorflow:23.03-tf1-py3
+RUN pip install --no-cache-dir torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117 \
+ && pip install --no-cache-dir torch-scatter==2.1.1 torch-sparse==0.6.17 -f https://data.pyg.org/whl/torch-1.13.1+cu117.html \
+ && pip install --no-cache-dir torch-geometric==2.3.1 dgl==0.9.1 -f https://data.dgl.ai/wheels/cu117/repo.html \
+ && pip install --no-cache-dir pandas==1.5.3 scikit-learn==1.2.2 lmdb tqdm wandb==0.15.8 pyarrow networkx==2.8.8
+ENV WANDB_MODE=disabled
+WORKDIR /work
+# torch's bundled cuDNN 8.5 shadows the container's 8.8 that TF was built against (cuDNN init failure in TF convs):
+# drop torch's copy so both frameworks use the system cuDNN 8.8; dgl with CUDA kernels (the plain wheel is CPU-only)
+RUN rm -f /usr/local/lib/python3.8/dist-packages/torch/lib/libcudnn* \
+ && pip uninstall -y dgl && pip install --no-cache-dir dgl-cu117==0.9.1.post1 -f https://data.dgl.ai/wheels/repo.html

@@ -1,0 +1,334 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 902B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.7-slim
+#2 DONE 0.6s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/library/python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b
+#4 resolve docker.io/library/python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b 0.0s done
+#4 DONE 0.0s
+
+#5 [2/4] RUN apt-get update && apt-get install -y --no-install-recommends build-essential git && rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [3/4] RUN pip install --no-cache-dir numpy==1.18.5 scipy==1.7.3 pandas==1.3.5 scikit-learn==1.0.2 networkx==2.6.3     tensorflow==1.15.5 protobuf==3.19.0 h5py==2.10.0 tqdm lmdb==0.98 pyarrow==12.0.1 wandb==0.15.8 matplotlib==3.5.3     && pip install --no-cache-dir torch==1.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html     && pip install --no-cache-dir torch-scatter==2.0.4 torch-sparse==0.6.4 torch-cluster==1.5.4 torch-spline-conv==1.2.0 -f https://data.pyg.org/whl/torch-1.5.0+cpu.html     && pip install --no-cache-dir torch-geometric==1.5.0 dgl==0.4.3post2
+#6 9.029 Collecting numpy==1.18.5
+#6 9.864   Downloading numpy-1.18.5-cp37-cp37m-manylinux1_x86_64.whl (20.1 MB)
+#6 23.88      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 20.1/20.1 MB 1.4 MB/s eta 0:00:00
+#6 24.90 Collecting scipy==1.7.3
+#6 25.32   Downloading scipy-1.7.3-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (38.1 MB)
+#6 47.01      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 38.1/38.1 MB 1.8 MB/s eta 0:00:00
+#6 47.85 Collecting pandas==1.3.5
+#6 48.13   Downloading pandas-1.3.5-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (11.3 MB)
+#6 54.53      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.3/11.3 MB 1.8 MB/s eta 0:00:00
+#6 55.18 Collecting scikit-learn==1.0.2
+#6 55.36   Downloading scikit_learn-1.0.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (24.8 MB)
+#6 61.64      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 24.8/24.8 MB 5.4 MB/s eta 0:00:00
+#6 61.92 Collecting networkx==2.6.3
+#6 62.05   Downloading networkx-2.6.3-py3-none-any.whl (1.9 MB)
+#6 62.26      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 9.2 MB/s eta 0:00:00
+#6 62.82 Collecting tensorflow==1.15.5
+#6 62.97   Downloading tensorflow-1.15.5-cp37-cp37m-manylinux2010_x86_64.whl (110.5 MB)
+#6 83.99      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 110.5/110.5 MB 3.4 MB/s eta 0:00:00
+#6 85.26 Collecting protobuf==3.19.0
+#6 85.44   Downloading protobuf-3.19.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.1 MB)
+#6 85.74      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 3.5 MB/s eta 0:00:00
+#6 85.99 Collecting h5py==2.10.0
+#6 86.10   Downloading h5py-2.10.0-cp37-cp37m-manylinux1_x86_64.whl (2.9 MB)
+#6 86.74      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 4.5 MB/s eta 0:00:00
+#6 87.03 Collecting tqdm
+#6 87.10   Downloading tqdm-4.68.2-py3-none-any.whl (78 kB)
+#6 87.14      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.6/78.6 kB 1.9 MB/s eta 0:00:00
+#6 87.49 Collecting lmdb==0.98
+#6 87.61   Downloading lmdb-0.98.tar.gz (869 kB)
+#6 87.80      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 869.9/869.9 kB 4.7 MB/s eta 0:00:00
+#6 87.85   Preparing metadata (setup.py): started
+#6 88.35   Preparing metadata (setup.py): finished with status 'done'
+#6 88.91 Collecting pyarrow==12.0.1
+#6 89.02   Downloading pyarrow-12.0.1-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (39.1 MB)
+#6 112.8      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 39.1/39.1 MB 1.9 MB/s eta 0:00:00
+#6 113.7 Collecting wandb==0.15.8
+#6 113.8   Downloading wandb-0.15.8-py3-none-any.whl (2.1 MB)
+#6 114.6      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 2.8 MB/s eta 0:00:00
+#6 115.5 Collecting matplotlib==3.5.3
+#6 115.7   Downloading matplotlib-3.5.3-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl (11.2 MB)
+#6 121.5      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.2/11.2 MB 1.9 MB/s eta 0:00:00
+#6 121.9 Collecting pytz>=2017.3
+#6 121.9   Downloading pytz-2026.3.post1-py2.py3-none-any.whl (508 kB)
+#6 122.4      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 508.3/508.3 kB 1.1 MB/s eta 0:00:00
+#6 122.5 Collecting python-dateutil>=2.7.3
+#6 122.6   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#6 122.8      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 1.3 MB/s eta 0:00:00
+#6 123.0 Collecting threadpoolctl>=2.0.0
+#6 123.1   Downloading threadpoolctl-3.1.0-py3-none-any.whl (14 kB)
+#6 123.2 Collecting joblib>=0.11
+#6 123.3   Downloading joblib-1.3.2-py3-none-any.whl (302 kB)
+#6 123.5      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 302.2/302.2 kB 1.2 MB/s eta 0:00:00
+#6 123.7 Requirement already satisfied: wheel>=0.26 in /usr/local/lib/python3.7/site-packages (from tensorflow==1.15.5) (0.41.2)
+#6 123.8 Collecting termcolor>=1.1.0
+#6 123.8   Downloading termcolor-2.3.0-py3-none-any.whl (6.9 kB)
+#6 124.0 Collecting keras-preprocessing>=1.0.5
+#6 124.0   Downloading Keras_Preprocessing-1.1.2-py2.py3-none-any.whl (42 kB)
+#6 124.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 42.6/42.6 kB 5.1 MB/s eta 0:00:00
+#6 124.2 Collecting tensorboard<1.16.0,>=1.15.0
+#6 124.3   Downloading tensorboard-1.15.0-py3-none-any.whl (3.8 MB)
+#6 130.9      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 572.9 kB/s eta 0:00:00
+#6 131.0 Collecting google-pasta>=0.1.6
+#6 131.1   Downloading google_pasta-0.2.0-py3-none-any.whl (57 kB)
+#6 131.2      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.5/57.5 kB 1.4 MB/s eta 0:00:00
+#6 131.3 Collecting tensorflow-estimator==1.15.1
+#6 131.4   Downloading tensorflow_estimator-1.15.1-py2.py3-none-any.whl (503 kB)
+#6 132.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 503.4/503.4 kB 780.3 kB/s eta 0:00:00
+#6 132.2 Collecting keras-applications>=1.0.8
+#6 132.3   Downloading Keras_Applications-1.0.8-py3-none-any.whl (50 kB)
+#6 132.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.7/50.7 kB 1.6 MB/s eta 0:00:00
+#6 132.4 Collecting gast==0.2.2
+#6 132.6   Downloading gast-0.2.2.tar.gz (10 kB)
+#6 132.6   Preparing metadata (setup.py): started
+#6 132.9   Preparing metadata (setup.py): finished with status 'done'
+#6 133.0 Collecting astor>=0.6.0
+#6 133.1   Downloading astor-0.8.1-py2.py3-none-any.whl (27 kB)
+#6 135.6 Collecting grpcio>=1.8.6
+#6 135.7   Downloading grpcio-1.62.3-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (5.6 MB)
+#6 140.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.6/5.6 MB 1.3 MB/s eta 0:00:00
+#6 140.1 Collecting opt-einsum>=2.3.2
+#6 140.2   Downloading opt_einsum-3.3.0-py3-none-any.whl (65 kB)
+#6 140.2      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 5.2 MB/s eta 0:00:00
+#6 140.3 Collecting six>=1.10.0
+#6 140.4   Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+#6 140.5 Collecting absl-py>=0.7.0
+#6 140.6   Downloading absl_py-2.1.0-py3-none-any.whl (133 kB)
+#6 140.6      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.7/133.7 kB 88.0 MB/s eta 0:00:00
+#6 142.2 Collecting wrapt>=1.11.1
+#6 142.3   Downloading wrapt-1.16.0-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (77 kB)
+#6 142.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 77.5/77.5 kB 6.2 MB/s eta 0:00:00
+#6 142.5 Requirement already satisfied: setuptools in /usr/local/lib/python3.7/site-packages (from wandb==0.15.8) (57.5.0)
+#6 142.7 Collecting appdirs>=1.4.3
+#6 142.8   Downloading appdirs-1.4.4-py2.py3-none-any.whl (9.6 kB)
+#6 143.0 Collecting PyYAML
+#6 143.1   Downloading PyYAML-6.0.1-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (670 kB)
+#6 143.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 670.1/670.1 kB 3.3 MB/s eta 0:00:00
+#6 143.6 Collecting setproctitle
+#6 143.7   Downloading setproctitle-1.3.3-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (30 kB)
+#6 143.8 Collecting pathtools
+#6 143.9   Downloading pathtools-0.1.2.tar.gz (11 kB)
+#6 143.9   Preparing metadata (setup.py): started
+#6 144.2   Preparing metadata (setup.py): finished with status 'done'
+#6 144.4 Collecting requests<3,>=2.0.0
+#6 144.4   Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+#6 144.5      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.6/62.6 kB 2.4 MB/s eta 0:00:00
+#6 144.6 Collecting typing-extensions
+#6 144.7   Downloading typing_extensions-4.7.1-py3-none-any.whl (33 kB)
+#6 145.1 Collecting sentry-sdk>=1.0.0
+#6 145.2   Downloading sentry_sdk-2.70.0-py3-none-any.whl (531 kB)
+#6 145.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 531.8/531.8 kB 4.9 MB/s eta 0:00:00
+#6 145.9 Collecting psutil>=5.0.0
+#6 146.0   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+#6 146.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 155.6/155.6 kB 5.7 MB/s eta 0:00:00
+#6 146.4 Collecting GitPython!=3.1.29,>=1.0.0
+#6 146.5   Downloading gitpython-3.1.62-py3-none-any.whl (222 kB)
+#6 146.5      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 222.8/222.8 kB 4.7 MB/s eta 0:00:00
+#6 146.6 Collecting docker-pycreds>=0.4.0
+#6 146.7   Downloading docker_pycreds-0.4.0-py2.py3-none-any.whl (9.0 kB)
+#6 146.9 Collecting Click!=8.0.0,>=7.1
+#6 146.9   Downloading click-8.1.8-py3-none-any.whl (98 kB)
+#6 147.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.2/98.2 kB 4.0 MB/s eta 0:00:00
+#6 147.2 Collecting packaging>=20.0
+#6 147.3   Downloading packaging-24.0-py3-none-any.whl (53 kB)
+#6 147.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 53.5/53.5 kB 8.2 MB/s eta 0:00:00
+#6 147.4 Collecting cycler>=0.10
+#6 147.5   Downloading cycler-0.11.0-py3-none-any.whl (6.4 kB)
+#6 148.1 Collecting kiwisolver>=1.0.1
+#6 148.2   Downloading kiwisolver-1.4.5-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl (1.1 MB)
+#6 148.7      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 2.8 MB/s eta 0:00:00
+#6 149.8 Collecting fonttools>=4.22.0
+#6 149.9   Downloading fonttools-4.38.0-py3-none-any.whl (965 kB)
+#6 150.2      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 965.4/965.4 kB 3.2 MB/s eta 0:00:00
+#6 151.8 Collecting pillow>=6.2.0
+#6 151.9   Downloading Pillow-9.5.0-cp37-cp37m-manylinux_2_28_x86_64.whl (3.4 MB)
+#6 152.8      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.4/3.4 MB 3.5 MB/s eta 0:00:00
+#6 153.1 Collecting pyparsing>=2.2.1
+#6 153.2   Downloading pyparsing-3.1.4-py3-none-any.whl (104 kB)
+#6 153.2      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.1/104.1 kB 9.4 MB/s eta 0:00:00
+#6 153.7 Collecting importlib_metadata
+#6 153.7   Downloading importlib_metadata-6.7.0-py3-none-any.whl (22 kB)
+#6 154.2 Collecting gitdb<5,>=4.0.1
+#6 154.3   Downloading gitdb-4.0.12-py3-none-any.whl (62 kB)
+#6 154.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.8/62.8 kB 13.8 MB/s eta 0:00:00
+#6 155.9 Collecting charset-normalizer<4,>=2
+#6 156.0   Downloading charset_normalizer-3.5.1-cp37-abi3-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (253 kB)
+#6 156.1      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 253.1/253.1 kB 5.5 MB/s eta 0:00:00
+#6 156.4 Collecting certifi>=2017.4.17
+#6 156.5   Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+#6 156.5      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 137.0/137.0 kB 3.9 MB/s eta 0:00:00
+#6 156.8 Collecting idna<4,>=2.5
+#6 156.9   Downloading idna-3.10-py3-none-any.whl (70 kB)
+#6 156.9      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 70.4/70.4 kB 6.0 MB/s eta 0:00:00
+#6 157.2 Collecting urllib3<3,>=1.21.1
+#6 157.2   Downloading urllib3-2.0.7-py3-none-any.whl (124 kB)
+#6 157.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.2/124.2 kB 3.1 MB/s eta 0:00:00
+#6 158.0 Collecting werkzeug>=0.11.15
+#6 158.1   Downloading Werkzeug-2.2.3-py3-none-any.whl (233 kB)
+#6 158.1      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 233.6/233.6 kB 3.9 MB/s eta 0:00:00
+#6 158.3 Collecting markdown>=2.6.8
+#6 158.4   Downloading Markdown-3.4.4-py3-none-any.whl (94 kB)
+#6 158.5      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 94.2/94.2 kB 3.6 MB/s eta 0:00:00
+#6 158.8 Collecting zipp>=0.5
+#6 158.9   Downloading zipp-3.15.0-py3-none-any.whl (6.8 kB)
+#6 159.2 Collecting smmap<6,>=3.0.1
+#6 159.3   Downloading smmap-5.0.3-py3-none-any.whl (24 kB)
+#6 160.0 Collecting MarkupSafe>=2.1.1
+#6 160.1   Downloading MarkupSafe-2.1.5-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (25 kB)
+#6 160.4 Building wheels for collected packages: lmdb, gast, pathtools
+#6 160.4   Building wheel for lmdb (setup.py): started
+#6 169.8   Building wheel for lmdb (setup.py): finished with status 'done'
+#6 169.8   Created wheel for lmdb: filename=lmdb-0.98-cp37-cp37m-linux_x86_64.whl size=273817 sha256=fce1762265738f4df954ddec1c8061f640a6084ab2476ccad66ba3ce2accc249
+#6 169.8   Stored in directory: /tmp/pip-ephem-wheel-cache-m7w3_ufr/wheels/9e/24/96/783d4dddcf63e3f8cc92db8b3af3c70cf6d76398bff77f1d5e
+#6 169.8   Building wheel for gast (setup.py): started
+#6 170.3   Building wheel for gast (setup.py): finished with status 'done'
+#6 170.3   Created wheel for gast: filename=gast-0.2.2-py3-none-any.whl size=7554 sha256=65ac14c57c214642d81d62decc33bc8b8ea0ba790b000a0f249fca04d491bbda
+#6 170.3   Stored in directory: /tmp/pip-ephem-wheel-cache-m7w3_ufr/wheels/21/7f/02/420f32a803f7d0967b48dd823da3f558c5166991bfd204eef3
+#6 170.3   Building wheel for pathtools (setup.py): started
+#6 170.9   Building wheel for pathtools (setup.py): finished with status 'done'
+#6 170.9   Created wheel for pathtools: filename=pathtools-0.1.2-py3-none-any.whl size=8807 sha256=b1f9cd137c82dec405f2b65e58fed6a17065805c78ae72087472fe23a37bd5b0
+#6 170.9   Stored in directory: /tmp/pip-ephem-wheel-cache-m7w3_ufr/wheels/3e/31/09/fa59cef12cdcfecc627b3d24273699f390e71828921b2cbba2
+#6 170.9 Successfully built lmdb gast pathtools
+#6 172.3 Installing collected packages: tensorflow-estimator, pytz, pathtools, lmdb, appdirs, zipp, wrapt, urllib3, typing-extensions, threadpoolctl, termcolor, smmap, six, setproctitle, PyYAML, pyparsing, psutil, protobuf, pillow, packaging, numpy, networkx, MarkupSafe, joblib, idna, grpcio, gast, fonttools, cycler, charset-normalizer, certifi, astor, absl-py, werkzeug, sentry-sdk, scipy, requests, python-dateutil, pyarrow, opt-einsum, kiwisolver, keras-preprocessing, importlib_metadata, h5py, google-pasta, gitdb, docker-pycreds, tqdm, scikit-learn, pandas, matplotlib, markdown, keras-applications, GitPython, Click, wandb, tensorboard, tensorflow
+#6 222.0 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#6 222.0 Successfully installed Click-8.1.8 GitPython-3.1.62 MarkupSafe-2.1.5 PyYAML-6.0.1 absl-py-2.1.0 appdirs-1.4.4 astor-0.8.1 certifi-2026.7.22 charset-normalizer-3.5.1 cycler-0.11.0 docker-pycreds-0.4.0 fonttools-4.38.0 gast-0.2.2 gitdb-4.0.12 google-pasta-0.2.0 grpcio-1.62.3 h5py-2.10.0 idna-3.10 importlib_metadata-6.7.0 joblib-1.3.2 keras-applications-1.0.8 keras-preprocessing-1.1.2 kiwisolver-1.4.5 lmdb-0.98 markdown-3.4.4 matplotlib-3.5.3 networkx-2.6.3 numpy-1.18.5 opt-einsum-3.3.0 packaging-24.0 pandas-1.3.5 pathtools-0.1.2 pillow-9.5.0 protobuf-3.19.0 psutil-7.2.2 pyarrow-12.0.1 pyparsing-3.1.4 python-dateutil-2.9.0.post0 pytz-2026.3.post1 requests-2.31.0 scikit-learn-1.0.2 scipy-1.7.3 sentry-sdk-2.70.0 setproctitle-1.3.3 six-1.17.0 smmap-5.0.3 tensorboard-1.15.0 tensorflow-1.15.5 tensorflow-estimator-1.15.1 termcolor-2.3.0 threadpoolctl-3.1.0 tqdm-4.68.2 typing-extensions-4.7.1 urllib3-2.0.7 wandb-0.15.8 werkzeug-2.2.3 wrapt-1.16.0 zipp-3.15.0
+#6 223.8 
+#6 223.8 [notice] A new release of pip is available: 23.0.1 -> 24.0
+#6 223.8 [notice] To update, run: pip install --upgrade pip
+#6 226.2 Looking in links: https://download.pytorch.org/whl/torch_stable.html
+#6 242.5 Collecting torch==1.5.0+cpu
+#6 243.2   Downloading https://download.pytorch.org/whl/cpu/torch-1.5.0%2Bcpu-cp37-cp37m-linux_x86_64.whl (127.3 MB)
+#6 286.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 127.3/127.3 MB 1.2 MB/s eta 0:00:00
+#6 286.8 Requirement already satisfied: numpy in /usr/local/lib/python3.7/site-packages (from torch==1.5.0+cpu) (1.18.5)
+#6 288.3 Collecting future
+#6 289.0   Downloading future-1.0.0-py3-none-any.whl (491 kB)
+#6 289.5      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 491.3/491.3 kB 1.0 MB/s eta 0:00:00
+#6 290.7 Installing collected packages: future, torch
+#6 297.4 Successfully installed future-1.0.0 torch-1.5.0+cpu
+#6 297.4 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#6 301.7 
+#6 301.7 [notice] A new release of pip is available: 23.0.1 -> 24.0
+#6 301.7 [notice] To update, run: pip install --upgrade pip
+#6 302.9 Looking in links: https://data.pyg.org/whl/torch-1.5.0+cpu.html
+#6 311.2 Collecting torch-scatter==2.0.4
+#6 311.9   Downloading https://data.pyg.org/whl/torch-1.5.0%2Bcpu/torch_scatter-2.0.4-cp37-cp37m-linux_x86_64.whl (9.8 MB)
+#6 317.5      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.8/9.8 MB 1.7 MB/s eta 0:00:00
+#6 318.5 Collecting torch-sparse==0.6.4
+#6 319.3   Downloading https://data.pyg.org/whl/torch-1.5.0%2Bcpu/torch_sparse-0.6.4-cp37-cp37m-linux_x86_64.whl (23.2 MB)
+#6 327.2      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.2/23.2 MB 2.6 MB/s eta 0:00:00
+#6 328.0 Collecting torch-cluster==1.5.4
+#6 328.7   Downloading https://data.pyg.org/whl/torch-1.5.0%2Bcpu/torch_cluster-1.5.4-cp37-cp37m-linux_x86_64.whl (15.3 MB)
+#6 333.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.3/15.3 MB 3.6 MB/s eta 0:00:00
+#6 333.8 Collecting torch-spline-conv==1.2.0
+#6 334.3   Downloading https://data.pyg.org/whl/torch-1.5.0%2Bcpu/torch_spline_conv-1.2.0-cp37-cp37m-linux_x86_64.whl (6.0 MB)
+#6 335.8      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.0/6.0 MB 4.1 MB/s eta 0:00:00
+#6 335.8 Requirement already satisfied: scipy in /usr/local/lib/python3.7/site-packages (from torch-sparse==0.6.4) (1.7.3)
+#6 335.9 Requirement already satisfied: numpy<1.23.0,>=1.16.5 in /usr/local/lib/python3.7/site-packages (from scipy->torch-sparse==0.6.4) (1.18.5)
+#6 337.1 Installing collected packages: torch-spline-conv, torch-scatter, torch-sparse, torch-cluster
+#6 338.8 Successfully installed torch-cluster-1.5.4 torch-scatter-2.0.4 torch-sparse-0.6.4 torch-spline-conv-1.2.0
+#6 338.8 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#6 342.2 
+#6 342.2 [notice] A new release of pip is available: 23.0.1 -> 24.0
+#6 342.2 [notice] To update, run: pip install --upgrade pip
+#6 349.6 Collecting torch-geometric==1.5.0
+#6 351.0   Downloading torch_geometric-1.5.0.tar.gz (153 kB)
+#6 351.9      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 153.6/153.6 kB 170.2 kB/s eta 0:00:00
+#6 352.0   Preparing metadata (setup.py): started
+#6 361.4   Preparing metadata (setup.py): finished with status 'done'
+#6 362.7 Collecting dgl==0.4.3post2
+#6 363.4   Downloading dgl-0.4.3.post2-cp37-cp37m-manylinux1_x86_64.whl (3.0 MB)
+#6 364.8      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 2.1 MB/s eta 0:00:00
+#6 364.9 Requirement already satisfied: torch in /usr/local/lib/python3.7/site-packages (from torch-geometric==1.5.0) (1.5.0+cpu)
+#6 364.9 Requirement already satisfied: numpy in /usr/local/lib/python3.7/site-packages (from torch-geometric==1.5.0) (1.18.5)
+#6 364.9 Requirement already satisfied: tqdm in /usr/local/lib/python3.7/site-packages (from torch-geometric==1.5.0) (4.68.2)
+#6 364.9 Requirement already satisfied: scipy in /usr/local/lib/python3.7/site-packages (from torch-geometric==1.5.0) (1.7.3)
+#6 364.9 Requirement already satisfied: networkx in /usr/local/lib/python3.7/site-packages (from torch-geometric==1.5.0) (2.6.3)
+#6 364.9 Requirement already satisfied: scikit-learn in /usr/local/lib/python3.7/site-packages (from torch-geometric==1.5.0) (1.0.2)
+#6 367.0 Collecting numba
+#6 367.3   Downloading numba-0.56.4-cp37-cp37m-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.5 MB)
+#6 368.8      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 2.3 MB/s eta 0:00:00
+#6 368.9 Requirement already satisfied: requests in /usr/local/lib/python3.7/site-packages (from torch-geometric==1.5.0) (2.31.0)
+#6 369.3 Collecting plyfile
+#6 369.7   Downloading plyfile-0.9-py3-none-any.whl (30 kB)
+#6 369.7 Requirement already satisfied: pandas in /usr/local/lib/python3.7/site-packages (from torch-geometric==1.5.0) (1.3.5)
+#6 370.2 Collecting rdflib
+#6 370.5   Downloading rdflib-6.3.2-py3-none-any.whl (528 kB)
+#6 370.8      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 528.1/528.1 kB 2.5 MB/s eta 0:00:00
+#6 370.8 Requirement already satisfied: h5py in /usr/local/lib/python3.7/site-packages (from torch-geometric==1.5.0) (2.10.0)
+#6 371.3 Collecting googledrivedownloader
+#6 371.7   Downloading googledrivedownloader-0.4-py2.py3-none-any.whl (3.9 kB)
+#6 372.2 Collecting ase
+#6 372.7   Downloading ase-3.22.1-py3-none-any.whl (2.2 MB)
+#6 373.5      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 2.8 MB/s eta 0:00:00
+#6 373.6 Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.7/site-packages (from requests->torch-geometric==1.5.0) (2.0.7)
+#6 373.6 Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.7/site-packages (from requests->torch-geometric==1.5.0) (3.10)
+#6 373.6 Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.7/site-packages (from requests->torch-geometric==1.5.0) (2026.7.22)
+#6 373.6 Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.7/site-packages (from requests->torch-geometric==1.5.0) (3.5.1)
+#6 373.7 Requirement already satisfied: matplotlib>=3.1.0 in /usr/local/lib/python3.7/site-packages (from ase->torch-geometric==1.5.0) (3.5.3)
+#6 373.7 Requirement already satisfied: six in /usr/local/lib/python3.7/site-packages (from h5py->torch-geometric==1.5.0) (1.17.0)
+#6 373.7 Requirement already satisfied: setuptools in /usr/local/lib/python3.7/site-packages (from numba->torch-geometric==1.5.0) (57.5.0)
+#6 373.7 Requirement already satisfied: importlib-metadata in /usr/local/lib/python3.7/site-packages (from numba->torch-geometric==1.5.0) (6.7.0)
+#6 374.8 Collecting llvmlite<0.40,>=0.39.0dev0
+#6 375.4   Downloading llvmlite-0.39.1-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (34.6 MB)
+#6 390.7      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 34.6/34.6 MB 1.9 MB/s eta 0:00:00
+#6 390.9 Requirement already satisfied: python-dateutil>=2.7.3 in /usr/local/lib/python3.7/site-packages (from pandas->torch-geometric==1.5.0) (2.9.0.post0)
+#6 390.9 Requirement already satisfied: pytz>=2017.3 in /usr/local/lib/python3.7/site-packages (from pandas->torch-geometric==1.5.0) (2026.3.post1)
+#6 391.0 Requirement already satisfied: pyparsing<4,>=2.1.0 in /usr/local/lib/python3.7/site-packages (from rdflib->torch-geometric==1.5.0) (3.1.4)
+#6 391.4 Collecting isodate<0.7.0,>=0.6.0
+#6 392.0   Downloading isodate-0.6.1-py2.py3-none-any.whl (41 kB)
+#6 392.1      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 41.7/41.7 kB 1.6 MB/s eta 0:00:00
+#6 392.9 Collecting importlib-metadata
+#6 393.4   Downloading importlib_metadata-4.13.0-py3-none-any.whl (23 kB)
+#6 393.5 Requirement already satisfied: threadpoolctl>=2.0.0 in /usr/local/lib/python3.7/site-packages (from scikit-learn->torch-geometric==1.5.0) (3.1.0)
+#6 393.5 Requirement already satisfied: joblib>=0.11 in /usr/local/lib/python3.7/site-packages (from scikit-learn->torch-geometric==1.5.0) (1.3.2)
+#6 393.5 Requirement already satisfied: future in /usr/local/lib/python3.7/site-packages (from torch->torch-geometric==1.5.0) (1.0.0)
+#6 393.7 Requirement already satisfied: zipp>=0.5 in /usr/local/lib/python3.7/site-packages (from importlib-metadata->numba->torch-geometric==1.5.0) (3.15.0)
+#6 393.7 Requirement already satisfied: typing-extensions>=3.6.4 in /usr/local/lib/python3.7/site-packages (from importlib-metadata->numba->torch-geometric==1.5.0) (4.7.1)
+#6 393.8 Requirement already satisfied: pillow>=6.2.0 in /usr/local/lib/python3.7/site-packages (from matplotlib>=3.1.0->ase->torch-geometric==1.5.0) (9.5.0)
+#6 393.8 Requirement already satisfied: fonttools>=4.22.0 in /usr/local/lib/python3.7/site-packages (from matplotlib>=3.1.0->ase->torch-geometric==1.5.0) (4.38.0)
+#6 393.8 Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.7/site-packages (from matplotlib>=3.1.0->ase->torch-geometric==1.5.0) (0.11.0)
+#6 393.8 Requirement already satisfied: kiwisolver>=1.0.1 in /usr/local/lib/python3.7/site-packages (from matplotlib>=3.1.0->ase->torch-geometric==1.5.0) (1.4.5)
+#6 393.8 Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.7/site-packages (from matplotlib>=3.1.0->ase->torch-geometric==1.5.0) (24.0)
+#6 394.2 Building wheels for collected packages: torch-geometric
+#6 394.2   Building wheel for torch-geometric (setup.py): started
+#6 395.2   Building wheel for torch-geometric (setup.py): finished with status 'done'
+#6 395.2   Created wheel for torch-geometric: filename=torch_geometric-1.5.0-py3-none-any.whl size=267928 sha256=56e77f2da21bb07d4323a2cbcdd25a44ff539ba4dceeb179da597a550efba592
+#6 395.2   Stored in directory: /tmp/pip-ephem-wheel-cache-ko7eqm4x/wheels/87/09/84/1d026c4e02fc66af6224faaa7c35db83a178ec6593e69baf06
+#6 395.2 Successfully built torch-geometric
+#6 396.1 Installing collected packages: googledrivedownloader, plyfile, llvmlite, isodate, importlib-metadata, rdflib, numba, dgl, ase, torch-geometric
+#6 397.0   Attempting uninstall: importlib-metadata
+#6 397.1     Found existing installation: importlib-metadata 6.7.0
+#6 397.1     Uninstalling importlib-metadata-6.7.0:
+#6 397.1       Successfully uninstalled importlib-metadata-6.7.0
+#6 402.1 Successfully installed ase-3.22.1 dgl-0.4.3.post2 googledrivedownloader-0.4 importlib-metadata-4.13.0 isodate-0.6.1 llvmlite-0.39.1 numba-0.56.4 plyfile-0.9 rdflib-6.3.2 torch-geometric-1.5.0
+#6 402.1 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#6 404.1 
+#6 404.1 [notice] A new release of pip is available: 23.0.1 -> 24.0
+#6 404.1 [notice] To update, run: pip install --upgrade pip
+#6 DONE 404.7s
+
+#7 [4/4] WORKDIR /work
+#7 DONE 0.4s
+
+#8 exporting to image
+#8 exporting layers
+#8 exporting layers 126.9s done
+#8 exporting manifest sha256:8440bba9d132e1b313e09f64754e3e59e81abfa6e6930d1acb4dde02cd4f8cc0 done
+#8 exporting config sha256:fe94aec38a1fbd9dcbf65199f183d150f69bb881adf5a77ab256e7a94630a877 done
+#8 exporting attestation manifest sha256:89c78ad92bd11094f52e32f17dc08c935aa69d019ac114c4507da75885851ac0 done
+#8 exporting manifest list sha256:df842a44a856e5dffb62d4e8aae81e1440dc93677507744f25817e3afbdaf44e done
+#8 naming to docker.io/library/slb-feng:cpu done
+#8 unpacking to docker.io/library/slb-feng:cpu
+#8 unpacking to docker.io/library/slb-feng:cpu 25.1s done
+#8 DONE 152.1s

@@ -5,6 +5,7 @@
     slpbench compare A_PREDS B_PREDS --split dev [--boot 200]
     slpbench check-leakage TRAIN_PAIRS [--allow-dev]
     slpbench baseline NAME --split dev [--out preds.parquet]
+    slpbench battery [--split dev] [--boot N]     # score the SL model battery -> MODELS.md
 """
 
 from __future__ import annotations
@@ -41,6 +42,13 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("card", help="regenerate DATA_CARD.md from the built benchmark")
     sub.add_parser("leaderboard", help="regenerate LEADERBOARD.md from leaderboard.yaml")
     sub.add_parser("audit", help="re-run label reproducibility checks, write REPLICATION.md")
+    vf = sub.add_parser("verify", help="check artifact hashes and row counts against manifest.json")
+    vf.add_argument("--raw", action="store_true", help="also hash all pinned raw source files")
+    ep = sub.add_parser("export-public", help="copy model inputs without private test labels or propensities")
+    ep.add_argument("out", type=Path)
+    bt = sub.add_parser("battery", help="score every model in models/battery.yaml, write MODELS.md")
+    bt.add_argument("--split", default="dev", choices=["dev", "dev_semi", "test", "test_semi"])
+    bt.add_argument("--boot", type=int, default=0)
 
     bl = sub.add_parser("baseline")
     bl.add_argument("name")
@@ -55,6 +63,7 @@ def main(argv: list[str] | None = None) -> None:
     elif a.cmd == "eval":
         from slpbench import evaluate
         res = evaluate.evaluate(evaluate.read_predictions(a.preds), a.split, a.boot, a.allow_missing)
+        res["predictions_sha256"] = evaluate.file_sha256(a.preds)
         print(evaluate.format_report(res))
         if a.out:
             evaluate.save(res, a.out)
@@ -70,12 +79,22 @@ def main(argv: list[str] | None = None) -> None:
     elif a.cmd == "audit":
         from slpbench import audit
         audit.main()
+    elif a.cmd in {"verify", "export-public"}:
+        import json
+        from slpbench import evaluate, release
+        result = (release.verify_benchmark(evaluate.BENCH, a.raw) if a.cmd == "verify" else
+                  release.export_public(evaluate.BENCH, a.out))
+        print(json.dumps(result, indent=2))
     elif a.cmd == "leaderboard":
         from slpbench import leaderboard
         leaderboard.main()
     elif a.cmd == "card":
         from slpbench import card
         card.main()
+    elif a.cmd == "battery":
+        from slpbench import battery
+        battery.run(a.split, a.boot)
+        print(Path("MODELS.md").read_text())
     elif a.cmd == "baseline":
         from slpbench import baselines
         out = a.out or Path(f"results/{a.name}_{a.split}.parquet")

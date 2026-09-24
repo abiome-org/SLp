@@ -22,6 +22,7 @@ SLB score, the one headline number:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -33,6 +34,7 @@ from slpbench.metrics import average_precision, stratified_auc
 
 BENCH = Path(os.environ.get("SLB_BENCH", "data/bench/slb1.3"))
 MIN_GROUP_POS = 20
+SCORER_VERSION = "1.3.1"
 SPECIES_NAMES = {"human": "H. sapiens", "scer": "S. cerevisiae", "spom": "S. pombe", "spne": "S. pneumoniae",
                  "dmel": "D. melanogaster", "cele": "C. elegans", "mmus": "M. musculus", "bsub": "B. subtilis",
                  "ecol": "E. coli"}
@@ -68,6 +70,38 @@ def read_predictions(path: str | Path) -> pl.DataFrame:
     return df.select("example_id", pl.col("score").cast(pl.Float64))
 
 
+def file_sha256(path: str | Path) -> str:
+    h = hashlib.sha256()
+    with Path(path).open("rb") as f:
+        for block in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def validated_join(gold: pl.DataFrame, preds: pl.DataFrame, allow_missing: bool = False) -> tuple[pl.DataFrame, int]:
+    """Validate a submission before joining, so it cannot change the evaluated row set."""
+    if preds["example_id"].null_count():
+        raise ValueError("prediction example_id contains null values")
+    if preds["example_id"].n_unique() != preds.height:
+        raise ValueError("prediction example_id contains duplicates")
+    unknown = preds.join(gold.select("example_id"), on="example_id", how="anti")
+    if unknown.height:
+        raise ValueError(f"predictions contain {unknown.height:,} unknown example_id values")
+    if np.isinf(preds["score"].to_numpy()).any():
+        raise ValueError("predictions contain infinite scores")
+    df = gold.join(preds, on="example_id", how="left", maintain_order="left", validate="1:1")
+    if df.height != gold.height or not df["example_id"].equals(gold["example_id"]):
+        raise ValueError("prediction join changed the gold row set")
+    missing = int(df["score"].null_count() + df["score"].is_nan().sum())
+    if missing and not allow_missing:
+        raise ValueError(f"{missing:,} of {df.height:,} examples have no finite score (use --allow-missing)")
+    if missing > df.height / 2:
+        raise ValueError(f"{missing:,} of {df.height:,} examples have no score; check the benchmark version")
+    if missing:
+        df = df.with_columns(pl.col("score").fill_nan(None).fill_null(pl.col("score").median()))
+    return df, missing
+
+
 def _codes(*cols: pl.Series) -> np.ndarray:
     key = pl.DataFrame(list(cols)).select(pl.concat_str(pl.all(), separator="\x1f").alias("k"))["k"]
     return key.cast(pl.Categorical).to_physical().to_numpy()
@@ -96,6 +130,8 @@ def species_score(d: pl.DataFrame, sp: str, w: np.ndarray | None = None) -> floa
         return _auc(d, w)[0] if (d["label"] == 1).sum() >= MIN_GROUP_POS else float("nan")
     groups = []
     for g, dg in d.with_row_index("_r").partition_by("ancestry_group", as_dict=True).items():
+        if g[0] == "unknown":
+            continue
         if (dg["label"] == 1).sum() >= MIN_GROUP_POS:
             groups.append(_auc(dg, w[dg["_r"].to_numpy()] if w is not None else None)[0])
     return float(np.nanmean(groups))
@@ -134,6 +170,11 @@ def _family_index(df: pl.DataFrame) -> tuple[np.ndarray, np.ndarray, int]:
     return np.array([idx[f] for f in key["fa"]]), np.array([idx[f] for f in key["fb"]]), len(uf)
 
 
+def _family_weights(counts: np.ndarray, ia: np.ndarray, ib: np.ndarray) -> np.ndarray:
+    """Resample a same-family pair once, rather than squaring its family count."""
+    return np.where(ia == ib, counts[ia], counts[ia] * counts[ib]).astype(float)
+
+
 def bootstrap(df: pl.DataFrame, reps: int, seed: int = 0) -> tuple[float, float]:
     """Cluster bootstrap over gene families: an example's weight is the product of its two
     families' (Poisson) resample counts."""
@@ -142,17 +183,15 @@ def bootstrap(df: pl.DataFrame, reps: int, seed: int = 0) -> tuple[float, float]
     vals = []
     for _ in range(reps):
         c = rng.poisson(1.0, n)
-        vals.append(headline(df, (c[ia] * c[ib]).astype(float))[0])
+        vals.append(headline(df, _family_weights(c, ia, ib))[0])
     return float(np.nanpercentile(vals, 2.5)), float(np.nanpercentile(vals, 97.5))
 
 
 def compare(pa: pl.DataFrame, pb: pl.DataFrame, split: str, reps: int = 200, seed: int = 0) -> dict:
     """Paired family-cluster bootstrap of SLB(B) - SLB(A) on the same resamples."""
     gold = load_gold(split)
-    da = gold.join(pa, on="example_id", how="left", maintain_order="left")
-    db = gold.join(pb, on="example_id", how="left", maintain_order="left")
-    if da["score"].null_count() or db["score"].null_count():
-        raise SystemExit("both prediction files must score every example")
+    da, _ = validated_join(gold, pa)
+    db, _ = validated_join(gold, pb)
     sa, pa_parts = headline(da)
     sb, pb_parts = headline(db)
     ia, ib, n = _family_index(gold)
@@ -160,7 +199,7 @@ def compare(pa: pl.DataFrame, pb: pl.DataFrame, split: str, reps: int = 200, see
     deltas = []
     for _ in range(reps):
         c = rng.poisson(1.0, n)
-        w = (c[ia] * c[ib]).astype(float)
+        w = _family_weights(c, ia, ib)
         deltas.append(headline(db, w)[0] - headline(da, w)[0])
     deltas = np.array(deltas)
     return {"split": split, "a": sa, "b": sb, "delta": sb - sa,
@@ -170,23 +209,16 @@ def compare(pa: pl.DataFrame, pb: pl.DataFrame, split: str, reps: int = 200, see
 
 
 def evaluate(preds: pl.DataFrame, split: str, boot: int = 0, allow_missing: bool = False) -> dict:
-    df = load_gold(split).join(preds, on="example_id", how="left", maintain_order="left")
-    missing = df["score"].null_count() + df["score"].is_nan().sum()
-    if missing:
-        if missing > df.height / 2:
-            raise SystemExit(f"{missing:,} of {df.height:,} {split} examples have no score: these predictions are "
-                             f"probably for a different benchmark version than {BENCH} (set SLB_BENCH)")
-        if not allow_missing:
-            raise SystemExit(f"{missing:,} of {df.height:,} {split} examples have no score (use --allow-missing)")
-        df = df.with_columns(pl.col("score").fill_nan(None).fill_null(pl.col("score").median()))
+    df, missing = validated_join(load_gold(split), preds, allow_missing)
     score, parts = headline(df)
     aux = headline(df, species=species_tiers()[1])[1]
-    res = {"benchmark": BENCH.name, "split": split, "slb_score": score, "species_scores": parts,
+    res = {"benchmark": BENCH.name, "manifest_sha256": file_sha256(BENCH / "manifest.json"),
+           "scorer_version": SCORER_VERSION, "split": split, "slb_score": score, "species_scores": parts,
            "auxiliary_species_scores": aux, "n": df.height, "missing_filled": int(missing), "strata": []}
     if boot:
         res["slb_score_ci95"] = bootstrap(df, boot)
     res["strata"].append(_row("ALL (flat)", df))
-    for sp in sum(species_tiers(), []):
+    for sp in (*species_tiers()[0], *species_tiers()[1]):
         d = df.filter(pl.col("species") == sp)
         if d.height:
             res["strata"].append(_row(f"species={sp}", d))

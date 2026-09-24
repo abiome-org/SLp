@@ -9,11 +9,11 @@ Leaky models were fitted on SL labels or screens involving held-out genes and ar
 
 | # | model | SLB score (95% CI) | human | scer | spom | *bsub* | *cele* | *dmel* | *mmus* | trained on | leaky |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **paralog_identity** — Ensembl 116 paralog protein identity | 0.552 (0.500–0.601) | 0.653 | 0.503 | 0.501 | 0.500 | 0.500 | n/a | n/a | none | no |
-| 2 | **lgbm** — gradient boosting on single-gene fitness, paralog identity, DepMap co-dependency | 0.551 (0.517–0.605) | 0.610 | 0.518 | 0.526 | 0.575 | 0.503 | n/a | n/a | SLB-1.3 train | no |
-| 3 | **codependency** — DepMap gene-effect profile correlation (human only) | 0.524 (0.469–0.573) | 0.571 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | none (single-gene data) | no |
-| 4 | **fitness_lgbm** — gradient boosting on the single-loss covariates only (probe of residual fitness signal) | 0.521 (0.478–0.563) | 0.521 | 0.515 | 0.526 | 0.571 | 0.503 | n/a | n/a | SLB-1.3 train | no |
-| 5 | **fitness** — sickness of the two single mutants, -(f_a + f_b) | 0.498 (0.460–0.541) | 0.490 | 0.501 | 0.502 | 0.527 | 0.503 | n/a | n/a | none (single-gene data) | no |
-| 6 | **random** — uniform noise | 0.492 (0.460–0.517) | 0.494 | 0.490 | 0.492 | 0.450 | 0.578 | n/a | n/a | none | no |
-| – | **SLp-1.1 (decoder)** — prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 39% of human test pairs in vocabulary (rest tied) | 0.526 (0.478–0.578) | 0.578 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | MuSL/SynLethDB SL labels; DepMap; Costanzo yeast (25% sample) | yes |
-| – | **SLp-1.1 (label-free)** — prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 39% coverage | 0.503 (0.450–0.549) | 0.510 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap; Costanzo yeast (25% sample); Perturb-seq | yes |
+| 1 | **paralog_identity** — Ensembl 116 paralog protein identity | 0.552 (0.510–0.582) | 0.653 | 0.503 | 0.501 | 0.500 | 0.500 | n/a | n/a | none | no |
+| 2 | **lgbm** — gradient boosting on single-gene fitness, paralog identity, DepMap co-dependency | 0.551 (0.511–0.590) | 0.610 | 0.518 | 0.526 | 0.575 | 0.503 | n/a | n/a | SLB-1.3 train | no |
+| 3 | **codependency** — DepMap gene-effect profile correlation (human only) | 0.524 (0.487–0.558) | 0.571 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | none (single-gene data) | no |
+| 4 | **fitness_lgbm** — gradient boosting on the single-loss covariates only (probe of residual fitness signal) | 0.521 (0.484–0.557) | 0.521 | 0.515 | 0.526 | 0.571 | 0.503 | n/a | n/a | SLB-1.3 train | no |
+| 5 | **fitness** — sickness of the two single mutants, -(f_a + f_b) | 0.498 (0.471–0.527) | 0.490 | 0.501 | 0.502 | 0.527 | 0.503 | n/a | n/a | none (single-gene data) | no |
+| 6 | **random** — uniform noise | 0.492 (0.466–0.513) | 0.494 | 0.490 | 0.492 | 0.450 | 0.578 | n/a | n/a | none | no |
+| – | **SLp-1.1 (decoder)** — prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 39% of human test pairs in vocabulary (rest tied) | 0.526 (0.497–0.556) | 0.578 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | MuSL/SynLethDB SL labels; DepMap; Costanzo yeast (25% sample) | yes |
+| – | **SLp-1.1 (label-free)** — prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 39% coverage | 0.503 (0.462–0.540) | 0.510 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap; Costanzo yeast (25% sample); Perturb-seq | yes |

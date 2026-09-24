@@ -1,0 +1,61 @@
+# SL model battery: which prediction files `slpbench battery` scores, and how to label them.
+# Predictions live in results/models/<benchmark>/<model>[__<variant>]_<split>.parquet (reference
+# baselines in results/<benchmark>/). Adapters: scripts/models/<model>/run.sh; notes: notes/models/<model>.md.
+#
+# family: baseline | graph (graph / knowledge-graph / matrix factorisation) | feature (feature-based,
+#   statistical, sequence / foundation-model, LLM) | mechanistic (FBA, ontology networks, cross-species)
+# adapter: scripts/models/<adapter>/run.sh when it is not scripts/models/<model>/run.sh
+# leaky: variants fitted on SL / GI labels outside SLB train, or whose inputs carry them. Leaky rows
+#   are reported but not ranked. `possibly` = unresolved (reason given).
+models:
+  # reference baselines (src/slpbench/baselines.py)
+  random: {family: baseline}
+  fitness: {family: baseline}
+  fitness_lgbm: {family: baseline}
+  paralog_identity: {family: baseline}
+  codependency: {family: baseline}
+  lgbm: {family: baseline}
+  # graph / KG / MF (models-graph; Feng et al. 2024 suite + others)
+  cmfw: {family: graph}
+  ddgcn: {family: graph}
+  gcatsl: {family: graph}
+  grsmf: {family: graph}
+  kg4sl: {family: graph}
+  kr4sl: {family: graph}
+  lukepi: {family: graph, leaky: possibly, why: "PrimeKG PPI integrates STRING (incl. GI-bearing channels); GO edges not evidence-filtered"}
+  mlec_isl: {family: graph}
+  msgt_sl: {family: graph}
+  mvgcn_isl: {family: graph}
+  nsf4sl: {family: graph}
+  ptgnn: {family: graph}
+  sl2mf: {family: graph}
+  slgnn: {family: graph}
+  slmgae: {family: graph}
+  struct2sl: {family: graph, leaky_variants: {released: "released weights trained on SynLethDB labels"}}
+  # feature-based / statistical / foundation-model / LLM (models-features)
+  cilantro_sl: {family: feature}
+  daisy: {family: feature, adapter: statsl}
+  dekegel2021: {family: feature}
+  deltadep: {family: feature}
+  dennler2025: {family: feature}
+  depmap_ols: {family: feature, adapter: deltadep}
+  discoversl: {family: feature, leaky_variants: {released: "released RF trained on literature SL labels"}}
+  elisl: {family: feature}
+  esm4sl: {family: feature}
+  exp2sl: {family: feature}
+  genept: {family: feature}
+  isle: {family: feature, adapter: statsl}
+  llmsynthlet: {family: feature, leaky: true, why: "zero-shot LLMs pretrained on the SL literature, including SLB's own screens"}
+  musl: {family: feature}
+  ryan2026_context: {family: feature, leaky_variants: {released_ctx: "released models trained on GEMINI screens incl. Parrish 2021 / Harle 2025"}}
+  sbsl: {family: feature}
+  sinatra: {family: feature, leaky: true, why: "trained on yeast SL labels incl. pairs from held-out ortholog families"}
+  slidr: {family: feature}
+  statsl: {family: feature}
+  synleaf: {family: feature}
+  # mechanistic / cross-species (models-mechanistic)
+  dcell: {family: mechanistic}
+  fba: {family: mechanistic}
+  go_ppi_gbm: {family: mechanistic}
+  ontotype: {family: mechanistic}
+  ortholog_gi_transfer: {family: mechanistic, leaky: true, why: "transfers GI labels from orthologs that share held-out families"}

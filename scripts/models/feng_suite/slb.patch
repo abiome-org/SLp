@@ -1,0 +1,963 @@
+diff --git a/src/config.py b/src/config.py
+index a77d0a3..ee7a49f 100644
+--- a/src/config.py
++++ b/src/config.py
+@@ -1,7 +1,7 @@
+ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+     parameter_set = {
+                     'DDGCN': {
+-                        'KFold': 5,
++                        'KFold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'num_node': num_node,
+                         'EPOCH': 2000,
+                         'KERNAL_SIZE1': 512,
+@@ -22,7 +22,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'KG4SL': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'n_epochs': 30,
+                         'batch_size': 2048,
+                         'earlystop_flag': True,
+@@ -38,7 +38,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'SLGNN': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'n_epochs': 100,
+                         'batch_size': 4096,
+                         'earlystop_flag': True,
+@@ -61,7 +61,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'NSF4SL': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'aug_ratio': 0.1,
+                         'batch_size': 256,
+                         'early_stop': 5,
+@@ -80,7 +80,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+ 
+                     },
+                     'GCATSL': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'batch_size': 1,
+                         'l2_coef': 0.0005,
+                         'hid_units': [8],
+@@ -96,7 +96,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'SLMGAE': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'num_node': num_node,
+                         'pos_neg': p_n,
+                         'division_strategy': d_s,
+@@ -115,7 +115,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'PiLSL': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'num_epochs':30,
+                         'eval_every':3,
+                         'eval_every_iter':200,
+@@ -136,7 +136,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'PTGNN': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'epochs': 200,
+                         'num_node': num_node,
+                         'pos_neg': p_n,
+@@ -145,7 +145,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'MGE4SL': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'model_name': 'MGE_CNN',
+                         'epochs': 20,
+                         'lr': 0.01,
+@@ -156,7 +156,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'SL2MF': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'num_node': num_node,
+                         'pos_neg': p_n,
+                         'division_strategy': d_s,
+@@ -164,7 +164,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'GRSMF': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'num_node': num_node,
+                         'pos_neg': p_n,
+                         'division_strategy': d_s,
+@@ -172,7 +172,7 @@ def get_config_dict(model_name, num_node,p_n,d_s, n_s):
+                         'p_name':f"SLbench_{model_name}_{d_s}_{n_s}_{p_n}",
+                     },
+                     'CMFW': {
+-                        'kfold': 5,
++                        'kfold': int(__import__('os').environ.get('SLB_KFOLD', '5')),
+                         'num_node': num_node,
+                         'pos_neg': p_n,
+                         'division_strategy': d_s,
+diff --git a/src/main.py b/src/main.py
+index f4723a2..0c2188d 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -1,3 +1,5 @@
++import os as _os
++NUM_NODE = int(_os.environ.get('SLB_NUM_NODE', '9845'))
+ from config import get_config_dict
+ import copy
+ import random
+@@ -11,9 +13,20 @@ import torch
+ import numpy as np
+ import tensorflow as tf
+ import os
+-# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
++# os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ # os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
+ 
++# SLB: cap TF1 session thread pools (default = all host cores, which oversubscribes a shared machine)
++_slb_threads = int(os.environ.get('SLB_THREADS', '0'))
++if _slb_threads:
++    _SlbSession = tf.compat.v1.Session
++    class _CappedSession(_SlbSession):
++        def __init__(self, target='', graph=None, config=None):
++            config = config if config is not None else tf.compat.v1.ConfigProto()
++            config.intra_op_parallelism_threads = _slb_threads
++            config.inter_op_parallelism_threads = 2
++            super().__init__(target, graph, config)
++    tf.compat.v1.Session = _CappedSession
+ gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
+ for gpu in gpus:
+     tf.config.experimental.set_memory_growth(gpu, True)
+@@ -143,7 +156,7 @@ def main(params_main):
+                 # Loading data
+                 print(f'Loading data ... (pos/neg={p_n}, division_strategy: {d_s}, negative_strategy: {n_s})')
+                 num_node, _ = preprocess.get_id_map()
+-                num_node=9845
++                num_node=NUM_NODE
+                 print(num_node)
+                 pos_samples, neg_samples = preprocess.get_kfold_data_pos_neg(5, num_node, 0.8, 0, 0.2, 1, p_n, d_s, n_s, params_main.ex_compt, params_main.indep_test,params_main.cell_line)
+                 # continue
+@@ -159,7 +172,7 @@ def main(params_main):
+                 # DDGCN
+                 if 'DDGCN' in which_model:
+                     from train.train_ddgcn import train_ddgcn
+-                    parameter_set = get_config_dict('DDGCN', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('DDGCN', NUM_NODE, p_n, d_s, n_s)
+                     print(f'DDGCN starting ...')
+                     res_name = build_res_df('DDGCN')
+                     ddgcn_metrics = train_ddgcn(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -171,7 +184,7 @@ def main(params_main):
+                 # KG4SL
+                 if 'KG4SL' in which_model:
+                     from train.train_kg4sl import train_kg4sl
+-                    parameter_set = get_config_dict('KG4SL', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('KG4SL', NUM_NODE, p_n, d_s, n_s)
+                     print(f'KG4SL starting ...')
+                     res_name = build_res_df('KG4SL')
+                     kg4sl_metrics = train_kg4sl(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -183,7 +196,7 @@ def main(params_main):
+                 # SLGNN
+                 if 'SLGNN' in which_model:
+                     from train.train_slgnn import train_slgnn
+-                    parameter_set = get_config_dict('SLGNN', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('SLGNN', NUM_NODE, p_n, d_s, n_s)
+                     print(f'SLGNN starting ...')
+                     res_name = build_res_df('SLGNN')
+                     slgnn_metrics = train_slgnn(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -195,7 +208,7 @@ def main(params_main):
+                 # NSF4SL
+                 if 'NSF4SL' in which_model:
+                     from train.train_nsf4sl import train_nsf4sl
+-                    parameter_set = get_config_dict('NSF4SL', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('NSF4SL', NUM_NODE, p_n, d_s, n_s)
+                     print(f'NSF4SL starting ...')
+                     res_name = build_res_df('NSF4SL')
+                     nsf4sl_metrics = train_nsf4sl(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -207,7 +220,7 @@ def main(params_main):
+                 # GCATSL
+                 if 'GCATSL' in which_model:
+                     from train.train_gcatsl import train_gcatsl
+-                    parameter_set = get_config_dict('GCATSL', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('GCATSL', NUM_NODE, p_n, d_s, n_s)
+                     print(f'GCATSL starting ...')
+                     res_name = build_res_df('GCATSL')
+                     gcatsl_metrics = train_gcatsl(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -219,7 +232,7 @@ def main(params_main):
+                 # SLMGAE
+                 if 'SLMGAE' in which_model:
+                     from train.train_slmgae import train_slmgae
+-                    parameter_set = get_config_dict('SLMGAE', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('SLMGAE', NUM_NODE, p_n, d_s, n_s)
+                     print(f'SLMGAE starting ...')
+                     res_name = build_res_df('SLMGAE')
+                     slmgae_metrics = train_slmgae(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -231,7 +244,7 @@ def main(params_main):
+                 # PiLSL
+                 if 'PiLSL' in which_model:
+                     from train.train_pilsl import train_pilsl
+-                    parameter_set = get_config_dict('PiLSL', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('PiLSL', NUM_NODE, p_n, d_s, n_s)
+                     print(f'PiLSL starting ...')
+                     res_name = build_res_df('PiLSL')
+                     pilsl_metrics = train_pilsl(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -243,7 +256,7 @@ def main(params_main):
+                 # PTGNN
+                 if 'PTGNN' in which_model:
+                     from train.train_ptgnn import train_ptgnn, train_ptgnn_pre
+-                    parameter_set = get_config_dict('PTGNN', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('PTGNN', NUM_NODE, p_n, d_s, n_s)
+                     if PTGNN_init == 0:
+                         print(f'PTGNN pretraining ...')
+                         train_ptgnn_pre()
+@@ -261,7 +274,7 @@ def main(params_main):
+                 # MGE4SL
+                 if 'MGE4SL' in which_model:
+                     from train.train_mge4sl import train_mge4sl
+-                    parameter_set = get_config_dict('MGE4SL', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('MGE4SL', NUM_NODE, p_n, d_s, n_s)
+                     print(f'MGE4SL starting ...')
+                     res_name = build_res_df('MGE4SL')
+                     mge4sl_metrics = train_mge4sl(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -273,7 +286,7 @@ def main(params_main):
+                 # SL2MF
+                 if 'SL2MF' in which_model:
+                     from train.train_sl2mf import train_sl2mf
+-                    parameter_set = get_config_dict('SL2MF', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('SL2MF', NUM_NODE, p_n, d_s, n_s)
+                     print(f'SL2MF starting ...')
+                     res_name = build_res_df('SL2MF')
+                     sl2mf_metrics = train_sl2mf(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -285,7 +298,7 @@ def main(params_main):
+                 # GRSMF
+                 if 'GRSMF' in which_model:
+                     from train.train_grsmf import train_grsmf
+-                    parameter_set = get_config_dict('GRSMF', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('GRSMF', NUM_NODE, p_n, d_s, n_s)
+                     print(f'GRSMF starting ...')
+                     res_name = build_res_df('GRSMF')
+                     grsmf_metrics = train_grsmf(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+@@ -297,7 +310,7 @@ def main(params_main):
+                 # CMFW
+                 if 'CMFW' in which_model:
+                     from train.train_cmfw import train_cmfw
+-                    parameter_set = get_config_dict('CMFW', 9845, p_n, d_s, n_s)
++                    parameter_set = get_config_dict('CMFW', NUM_NODE, p_n, d_s, n_s)
+                     print(f'CMFW starting ...')
+                     res_name = build_res_df('CMFW')
+                     cmfw_metrics = train_cmfw(parameter_set, pos_samples, neg_samples, params_main.mode, params_main.save_mat, params_main.ex_compt, params_main.indep_test)
+diff --git a/src/models/mge4sl.py b/src/models/mge4sl.py
+index ab279ec..1cdfa05 100644
+--- a/src/models/mge4sl.py
++++ b/src/models/mge4sl.py
+@@ -7,7 +7,7 @@ from torch_geometric.nn import GCNConv, GATConv, SAGEConv, GINConv
+ from torch_geometric.data import Data
+ 
+ os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+-cuda_device=torch.device('cuda:0')
++cuda_device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+ # random.seed(123)
+ np.random.seed(456)
+ # tf.compat.v1.set_random_seed(123)
+diff --git a/src/models/nsf4sl.py b/src/models/nsf4sl.py
+index d4006c0..5e30d92 100644
+--- a/src/models/nsf4sl.py
++++ b/src/models/nsf4sl.py
+@@ -17,7 +17,7 @@ np.random.seed(456)
+ torch.manual_seed(456)
+ torch.cuda.manual_seed_all(456)
+ 
+-cuda_device=torch.device('cuda:0')
++cuda_device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+ def xavier_init(module):
+     r""" using `xavier_normal_`_ in PyTorch to initialize the parameters in
+     nn.Embedding and nn.Linear layers. For bias in nn.Linear layers,
+diff --git a/src/models/pilsl.py b/src/models/pilsl.py
+index 86f64ba..5d68849 100644
+--- a/src/models/pilsl.py
++++ b/src/models/pilsl.py
+@@ -1,3 +1,5 @@
++import os as _os
++NUM_NODE = int(_os.environ.get('SLB_NUM_NODE', '9845'))
+ 
+ import os
+ import abc
+@@ -350,7 +352,7 @@ class Evaluator():
+                     
+                     new_bar.set_description('test batchs: ' + str(b_idx + 1) + '/'+str(tt_batch))
+ 
+-                score_mat = sp.csr_matrix((y_preds, (self.used_pairs[:, 0], self.used_pairs[:, 1])), shape=(9845,9845))
++                score_mat = sp.csr_matrix((y_preds, (self.used_pairs[:, 0], self.used_pairs[:, 1])), shape=(NUM_NODE, NUM_NODE))
+         else:
+             dataloader = DataLoader(self.data, batch_size=self.params['batch_size'], shuffle=False,
+                                     num_workers=self.params['num_workers'], collate_fn=self.params['collate_fn'])
+@@ -393,7 +395,7 @@ class Evaluator():
+                 all_aupr.append(aupr)
+                 all_f1.append(f1)
+ 
+-                score_mat = sp.csr_matrix((y_preds, (self.used_pairs[:, 0], self.used_pairs[:, 1])), shape=(9845,9845))
++                score_mat = sp.csr_matrix((y_preds, (self.used_pairs[:, 0], self.used_pairs[:, 1])), shape=(NUM_NODE, NUM_NODE))
+ 
+ 
+         return {'loss': all_loss / b_idx, 'auc': np.mean(all_auc), 'aupr': np.mean(all_aupr),
+diff --git a/src/models/ptgnn.py b/src/models/ptgnn.py
+index 61e028b..1a3cd5a 100644
+--- a/src/models/ptgnn.py
++++ b/src/models/ptgnn.py
+@@ -1,3 +1,5 @@
++import os as _os
++NUM_NODE = int(_os.environ.get('SLB_NUM_NODE', '9845'))
+ import tensorflow as tf
+ import numpy as np
+ 
+@@ -127,7 +129,7 @@ class Model:
+             self.num_nodes = 20398
+             # self.num_nodes = 20375
+         else:
+-            self.num_nodes = 9845
++            self.num_nodes = NUM_NODE
+             # self.num_nodes = 6375
+         self.entry_size = self.num_nodes ** 2
+ 
+diff --git a/src/models/slgnn.py b/src/models/slgnn.py
+index b06e477..dcf779e 100644
+--- a/src/models/slgnn.py
++++ b/src/models/slgnn.py
+@@ -7,7 +7,7 @@ from torch_scatter import scatter_mean
+ import dgl
+ from utils.slgnn_utils import DistanceCorrelation
+ 
+-device = 'cuda:0'
++device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+ 
+ 
+ class GAT(nn.Module):
+diff --git a/src/preprocess.py b/src/preprocess.py
+index 51afda7..2f19628 100644
+--- a/src/preprocess.py
++++ b/src/preprocess.py
+@@ -1,3 +1,5 @@
++import os as _os
++NUM_NODE = int(_os.environ.get('SLB_NUM_NODE', '9845'))
+ import copy
+ import os
+ 
+@@ -61,9 +63,11 @@ class ChecktoSave():
+             return True
+ 
+     def update_indep_test_classify(self, fold, epoch, metrics):
++        fold = min(fold, len(self.indep_test_classify) - 1)  # SLB: SLMGAE passes a 1-based fold index
+         self.indep_test_classify[fold] = metrics
+         
+     def update_indep_test_ranking(self, fold, epoch, metrics):
++        fold = min(fold, len(self.indep_test_ranking) - 1)  # SLB: SLMGAE passes a 1-based fold index
+         self.indep_test_ranking[fold] = metrics
+         
+     def get_best_classify(self):
+@@ -578,6 +582,8 @@ def get_kfold_data_pos_neg(kfold: int, num_node: int, train_rat: float, valid_ra
+             suf = '_indep_test'
+         elif cell_line=='kr4sl':
+             suf = '_kr4sl'
++        elif cell_line in ('slb', 'slbbal'):
++            suf = '_' + cell_line
+         elif 'nsf4sl' in cell_line:
+             suf = '_'+cell_line
+         if ex_compt:
+@@ -837,7 +843,7 @@ def cal_metrics(score_mat, pos_index, neg_index, seen_index=None):
+     precision, recall, _ = precision_recall_curve(y_true, y_pred_score)
+     aupr_p = auc(recall, precision)
+     auroc_p = roc_auc_score(y_true, y_pred_score)
+-    f1_p = max(2 * precision * recall / (precision + recall))
++    f1_p = np.nanmax(2 * precision * recall / (precision + recall))  # SLB: original max() returns nan when P+R=0 at any threshold
+     
+     score_matrix_ndcg = copy.deepcopy(score_mat)
+     score_matrix_ndcg[range(n_gene), range(n_gene)] = 0
+@@ -899,8 +905,8 @@ def load_kg(neighbor_sample_size):
+     n_node_a = len(set(sl_pairs['unified_id_A']))
+     n_node_b = len(set(sl_pairs['unified_id_B']))
+ 
+-    n_entity = len(set(kg_wo_sl['unified_id_A']) | set(kg_wo_sl['unified_id_B']))
+-    n_relations = len(set(kg_wo_sl['type(r)']))
++    n_entity = int(max(kg_wo_sl['unified_id_A'].max(), kg_wo_sl['unified_id_B'].max(), NUM_NODE - 1)) + 1  # SLB: ids may be non-contiguous
++    n_relations = int(kg_wo_sl['type(r)'].max()) + 1  # SLB: relation ids are 4..27 (24 types); original len(set)=24 made ids>=24 out of range (silently zero on TF-GPU, error on CPU)
+ 
+     kg2id_np = np.asarray(kg_wo_sl.values)
+ 
+@@ -925,7 +931,7 @@ def load_kg(neighbor_sample_size):
+         isolated_point = []
+         adj_entity = np.zeros([n_entity, neighbor_sample_size], dtype=np.int64)
+         adj_relation = np.zeros([n_entity, neighbor_sample_size], dtype=np.int64)
+-        for entity, entity_name in enumerate(kg2dict.keys()):
++        for entity in range(n_entity):  # SLB: original enumerated dict keys (order != id)
+             if (entity in kg2dict.keys()):
+                 neighbors = kg2dict[entity]
+             else:
+diff --git a/src/train/train_cmfw.py b/src/train/train_cmfw.py
+index 864cc1b..43bf02a 100644
+--- a/src/train/train_cmfw.py
++++ b/src/train/train_cmfw.py
+@@ -1,3 +1,5 @@
++import os as _os
++NUM_NODE = int(_os.environ.get('SLB_NUM_NODE', '9845'))
+ import copy
+ import tensorflow as tf
+ import numpy as np
+@@ -9,7 +11,7 @@ import wandb
+ import torch
+ from preprocess import cal_metrics, ChecktoSave
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ np.random.seed(456)
+ tf.compat.v1.set_random_seed(456)
+ 
+@@ -38,7 +40,7 @@ def train_cmfw(parameters, pos_samples, neg_samples, mode=None, save_mat=False,
+     p_n = parameters['pos_neg']
+     d_s = parameters['division_strategy']
+     n_s = parameters['negative_strategy']
+-    train_size = 9845
++    train_size = NUM_NODE
+     du1 = 50
+     du2 = 10
+     lambda1 = 1e-4
+@@ -93,7 +95,7 @@ def train_cmfw(parameters, pos_samples, neg_samples, mode=None, save_mat=False,
+         best_result_ith=np.zeros((1,12))
+ 
+         sess = tf.compat.v1.InteractiveSession()
+-        with tf.device(f'/gpu:{which_gpu}'):
++        with tf.device(f'/gpu:{which_gpu}' if tf.test.is_gpu_available() else '/cpu:0'):
+             sess.run(tf.compat.v1.global_variables_initializer())
+ 
+         # Input placeholders
+@@ -109,20 +111,20 @@ def train_cmfw(parameters, pos_samples, neg_samples, mode=None, save_mat=False,
+ 
+         print('svd ...')
+         # # initialize all factors by svd, you can choose other way to initialize all the variables
+-        # with tf.device(f'/gpu:{which_gpu}'):
++        # with tf.device(f'/gpu:{which_gpu}' if tf.test.is_gpu_available() else '/cpu:0'):
+         #     with tf.name_scope('svd'):
+         #         udti_svd1, _, _ = np.linalg.svd(xi_data, full_matrices=False)
+         #         udti_svd2, _, _ = np.linalg.svd(udti_svd1, full_matrices=False)
+ 
+         #         u1dti = udti_svd2[:, 0:du2]
+         starttime=time.time()
+-        A=torch.tensor(xi_data).to('cuda:0')
++        A=torch.tensor(xi_data).to('cuda:0' if torch.cuda.is_available() else 'cpu')
+         udti_svd1, _, _ = torch.svd(A)
+         udti_svd2, _, _ = torch.svd(udti_svd1)
+         u1dti = udti_svd2.cpu().numpy()[:, 0:du2]
+         print(f'SVD use {time.time()-starttime} seconds')
+         del A
+-        torch.cuda.empty_cache()
++        torch.cuda.empty_cache() if torch.cuda.is_available() else None
+ 
+         print('svd finish ...')
+ 
+@@ -173,13 +175,13 @@ def train_cmfw(parameters, pos_samples, neg_samples, mode=None, save_mat=False,
+ 
+         print('Training ...')
+         funval = []
+-        with tf.device(f'/gpu:{which_gpu}'):
++        with tf.device(f'/gpu:{which_gpu}' if tf.test.is_gpu_available() else '/cpu:0'):
+             _, loss_iter = sess.run([train_step, loss], feed_dict=feed_dict(True, 0.8))
+         funval.append(loss_iter)
+ 
+         for i in range(max_steps):
+             print(f'step {i}')
+-            with tf.device(f'/gpu:{which_gpu}'):
++            with tf.device(f'/gpu:{which_gpu}' if tf.test.is_gpu_available() else '/cpu:0'):
+                 _, loss_iter = sess.run([train_step, loss], feed_dict=feed_dict(True, 0.8))
+             funval.append(loss_iter)
+             run.log({
+@@ -194,7 +196,7 @@ def train_cmfw(parameters, pos_samples, neg_samples, mode=None, save_mat=False,
+             print(f'loss {loss_iter}')
+ 
+         print('Testing ...')
+-        with tf.device(f'/gpu:{which_gpu}'):
++        with tf.device(f'/gpu:{which_gpu}' if tf.test.is_gpu_available() else '/cpu:0'):
+             pred_conf = sess.run([y_conf], feed_dict=feed_dict(False, 1.0))
+ 
+         score_mat = np.reshape(np.array(pred_conf), (train_size, train_size))
+diff --git a/src/train/train_ddgcn.py b/src/train/train_ddgcn.py
+index e30a057..9499e17 100644
+--- a/src/train/train_ddgcn.py
++++ b/src/train/train_ddgcn.py
+@@ -8,12 +8,12 @@ import wandb
+ from preprocess import cal_metrics, ChecktoSave
+ from utils.ddgcn_utils import normalize_mat, scipy_sparse_mat_to_torch_sparse_tensor, feature_loader
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ 
+ torch.manual_seed(456)
+ torch.cuda.manual_seed_all(456)
+ 
+-cuda_device = torch.device('cuda:0')
++cuda_device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+ 
+ 
+ def train_ddgcn(parameters, pos_samples, neg_samples, mode=None, save_mat=False, ex_compt=None, indep_test=None):
+diff --git a/src/train/train_gcatsl.py b/src/train/train_gcatsl.py
+index b071013..8ef1390 100644
+--- a/src/train/train_gcatsl.py
++++ b/src/train/train_gcatsl.py
+@@ -10,14 +10,14 @@ from preprocess import cal_metrics, load_gcatsl_features, ChecktoSave
+ from models.gcatsl import GAT
+ from utils.gcatsl_utils import ROC, masked_accuracy, sparse_to_tuple, random_walk_with_restart, extract_global_neighbors
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
+ 
+ random.seed(456)
+ np.random.seed(456)
+ tf.compat.v1.set_random_seed(456)
+ 
+-cuda_device='/gpu:0'
++cuda_device='/gpu:0' if tf.test.is_gpu_available() else '/cpu:0'
+ 
+ def train_gcatsl(parameters, pos_samples, neg_samples, mode=None, save_mat=False, ex_compt=None, indep_test=None):
+     if indep_test:
+diff --git a/src/train/train_grsmf.py b/src/train/train_grsmf.py
+index dfaa065..7e7527a 100644
+--- a/src/train/train_grsmf.py
++++ b/src/train/train_grsmf.py
+@@ -7,7 +7,7 @@ import wandb
+ from preprocess import cal_metrics, ChecktoSave
+ from models.grsmf import GRSMF
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ 
+ np.random.seed(456)
+ 
+diff --git a/src/train/train_kg4sl.py b/src/train/train_kg4sl.py
+index 5673bd0..243e7ef 100644
+--- a/src/train/train_kg4sl.py
++++ b/src/train/train_kg4sl.py
+@@ -11,7 +11,7 @@ from preprocess import load_kg, cal_metrics, ChecktoSave
+ from models.kg4sl import *
+ from utils.kg4sl_utils import eval_all_data, get_feed_dict
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
+ 
+ random.seed(456)
+diff --git a/src/train/train_mge4sl.py b/src/train/train_mge4sl.py
+index 02db948..5076c05 100644
+--- a/src/train/train_mge4sl.py
++++ b/src/train/train_mge4sl.py
+@@ -12,13 +12,13 @@ from models.mge4sl import MultiGraphEnsembleFC, MultiGraphEnsembleFC_SUM, MultiG
+ from utils.mge4sl_utils import get_k_fold_data_random_neg, construct_kg_sldb, train, test, cal_confidence_interval, get_all_score_mat
+ from torch_geometric.utils import to_undirected
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ 
+ np.random.seed(456)
+ torch.manual_seed(456)
+ torch.cuda.manual_seed_all(456)
+ 
+-cuda_device=torch.device('cuda:0')
++cuda_device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+ 
+ def train_mge4sl(parameters, pos_samples, neg_samples, mode=None, save_mat=False, ex_compt=None,indep_test=None):
+     data_path = '../data/preprocessed_data/mge4sl_processed_data.csv'
+diff --git a/src/train/train_nsf4sl.py b/src/train/train_nsf4sl.py
+index 8c4c70b..63054b1 100644
+--- a/src/train/train_nsf4sl.py
++++ b/src/train/train_nsf4sl.py
+@@ -19,7 +19,7 @@ from torch.optim.lr_scheduler import StepLR
+ from preprocess import cal_metrics, ChecktoSave
+ import wandb
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ # os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2"
+ 
+ random.seed(456)
+@@ -29,7 +29,7 @@ np.random.seed(456)
+ torch.manual_seed(456)
+ torch.cuda.manual_seed_all(456)
+ 
+-cuda_device=torch.device('cuda:0')
++cuda_device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+ 
+ def train_nsf4sl(parameters, pos_samples, neg_samples, mode=None, save_mat=False, ex_compt=None,indep_test=None):
+     
+@@ -100,7 +100,7 @@ def train_nsf4sl(parameters, pos_samples, neg_samples, mode=None, save_mat=False
+         scheduler = StepLR(optimizer, step_size=10, gamma=0.1)  # every 10 steps, lr=gamma*lr
+ 
+         train_dataset = SLDataset(train_pos_kfold[fold_num], gene_kgemb, gene_id, aug_ratio)
+-        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
++        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, drop_last=True)  # SLB: a final batch of 1 breaks BatchNorm
+         
+         early_stop_cnt = 0
+         total_step = 0
+diff --git a/src/train/train_pilsl.py b/src/train/train_pilsl.py
+index 032cb1e..81ee3c4 100644
+--- a/src/train/train_pilsl.py
++++ b/src/train/train_pilsl.py
+@@ -69,7 +69,7 @@ def train_pilsl(parameters, pos_samples, neg_samples, mode=None, save_mat=False,
+     pilsl_paras_dict['kge_model']='TransE'
+     pilsl_paras_dict['model_type']='dgl'
+     pilsl_paras_dict['constrained_neg_prob']=0.0
+-    pilsl_paras_dict['num_workers']=10
++    pilsl_paras_dict['num_workers']=min(10, int(os.environ.get('SLB_THREADS', '10')))
+     pilsl_paras_dict['add_traspose_rels']=False
+     pilsl_paras_dict['enclosing_sub_graph']=True
+     pilsl_paras_dict['rel_emb_dim']=64
+@@ -108,6 +108,8 @@ def train_pilsl(parameters, pos_samples, neg_samples, mode=None, save_mat=False,
+     pilsl_paras_dict['file_paths'] = {
+         'train': '../data/preprocessed_data/pilsl_data/all_pairs_used_9845.npy',
+     }
++    if os.path.exists('../data/preprocessed_data/pilsl_data/pilsl_graph_pairs.npy'):  # SLB
++        pilsl_paras_dict['file_paths']['graph'] = '../data/preprocessed_data/pilsl_data/pilsl_graph_pairs.npy'
+ 
+     if not os.path.isdir(pilsl_paras_dict['db_path']):
+         print('preprocessing...')
+@@ -145,6 +147,10 @@ def train_pilsl(parameters, pos_samples, neg_samples, mode=None, save_mat=False,
+             valid_neg=np.hstack([valid_neg_kfold[fold_num], np.zeros((valid_neg_kfold[fold_num].shape[0], 1))])
+             
+             test_pairs=np.vstack([train_neg,train_pos,valid_neg,valid_pos,test_neg,test_pos])
++            _pp = '../data/preprocessed_data/pilsl_data/slb_predict_pairs.npy'  # SLB: unlabeled pairs to score (dev/test inputs)
++            if os.path.exists(_pp):
++                _pp = np.load(_pp)
++                test_pairs = np.vstack([test_pairs, np.hstack([_pp, np.zeros((len(_pp), 1))])])
+             print('valid set done.')
+         else:
+             test_pairs=np.vstack([train_neg,train_pos,test_neg,test_pos])
+@@ -158,7 +164,7 @@ def train_pilsl(parameters, pos_samples, neg_samples, mode=None, save_mat=False,
+         pilsl_paras_dict['aug_num_rels']=train.aug_num_rels
+         pilsl_paras_dict['inp_dim']=train.n_feat_dim
+         pilsl_paras_dict['train_rels']=pilsl_paras_dict['num_rels'] - 1
+-        pilsl_paras_dict['num_nodes']=54012
++        pilsl_paras_dict['num_nodes']=int(max(train.graph.number_of_nodes(), 54012))  # SLB: remapped KG may have more entities
+ 
+         # Log the max label value to save it in the model. This will be used to cap the labels generated on test set.
+         pilsl_paras_dict['max_label_value'] = train.max_n_label
+diff --git a/src/train/train_ptgnn.py b/src/train/train_ptgnn.py
+index fca8d01..df01c2a 100644
+--- a/src/train/train_ptgnn.py
++++ b/src/train/train_ptgnn.py
+@@ -9,13 +9,13 @@ from models.ptgnn import Model
+ from utils.ptgnn_utils import preprocess_graph, train_negative_sample, load_data
+ from preprocess import cal_metrics, ChecktoSave
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ pretrain_epochs=200
+ 
+ np.random.seed(456)
+ tf.compat.v1.set_random_seed(456)
+ 
+-cuda_device='/gpu:0'
++cuda_device='/gpu:0' if tf.test.is_gpu_available() else '/cpu:0'
+ 
+ def train_ptgnn(parameters,pos_samples, neg_samples, mode=None, save_mat=False, ex_compt=None,indep_test=None):
+     if indep_test:
+@@ -43,7 +43,7 @@ def train_ptgnn(parameters,pos_samples, neg_samples, mode=None, save_mat=False,
+     # tensorflow config
+     config = tf.compat.v1.ConfigProto()
+     config.gpu_options.allow_growth = True
+-    config.allow_soft_placement = False
++    config.allow_soft_placement = True
+     
+     wandb.init(
+         # set the wandb project where this run will be logged
+diff --git a/src/train/train_sl2mf.py b/src/train/train_sl2mf.py
+index 70de5f6..7ac7991 100644
+--- a/src/train/train_sl2mf.py
++++ b/src/train/train_sl2mf.py
+@@ -7,7 +7,7 @@ from preprocess import cal_metrics, ChecktoSave
+ from models.sl2mf import LMF
+ from utils.sl2mf_utils import mean_confidence_interval, evalution_bal
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ 
+ np.random.seed(456)
+ 
+diff --git a/src/train/train_slgnn.py b/src/train/train_slgnn.py
+index ed6e081..ccf8dd6 100644
+--- a/src/train/train_slgnn.py
++++ b/src/train/train_slgnn.py
+@@ -16,13 +16,13 @@ from models.slgnn import SLModel
+ from utils.slgnn_utils import load_data, KGCNDataset, SLDataset
+ 
+ 
+-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ 
+ random.seed(456)
+ np.random.seed(456)
+ torch.manual_seed(123)
+ torch.cuda.manual_seed_all(123)
+-cuda_device = torch.device('cuda:0')
++cuda_device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+ 
+ def train_slgnn(parameters, pos_samples, neg_samples, mode=None, save_mat=False, ex_compt=None,indep_test=None):
+     if indep_test:
+@@ -305,6 +305,10 @@ def final_test(model, batch_size, num_node):
+     
+     with torch.no_grad():
+         rol, col = np.triu_indices(num_node, k=1)
++        import os as _o
++        _pp = '../data/preprocessed_data/slb_score_pairs.npy'
++        if _o.path.exists(_pp):  # SLB: score only the pairs that are evaluated (train/valid/dev/test) instead of all N^2/2
++            _p = np.load(_pp); rol, col = _p[:, 0], _p[:, 1]
+ 
+         data = np.vstack([rol, col, np.zeros(len(rol))]).T
+         test_dataset = KGCNDataset(data)
+diff --git a/src/train/train_slmgae.py b/src/train/train_slmgae.py
+index b73da1f..a7e24d9 100644
+--- a/src/train/train_slmgae.py
++++ b/src/train/train_slmgae.py
+@@ -1,5 +1,7 @@
+ from __future__ import division
+ from __future__ import print_function
++import os as _os
++NUM_NODE = int(_os.environ.get('SLB_NUM_NODE', '9845'))
+ import time
+ import numpy as np
+ import scipy.sparse as sp
+@@ -10,12 +12,12 @@ from utils.slmgae_utils import load_data, sparse_to_tuple, preprocess_graph, con
+ from preprocess import cal_metrics, ChecktoSave
+ import os
+ import wandb
+-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+ 
+ np.random.seed(456)
+ tf.compat.v1.set_random_seed(456)
+ 
+-cuda_device='/gpu:0'
++cuda_device='/gpu:0' if tf.test.is_gpu_available() else '/cpu:0'
+ 
+ def train_slmgae(parameters, pos_samples, neg_samples, mode=None, save_mat=False, ex_compt=None,indep_test=None):
+     if indep_test:
+@@ -64,14 +66,14 @@ def train_slmgae(parameters, pos_samples, neg_samples, mode=None, save_mat=False
+     # tensorflow config
+     config = tf.compat.v1.ConfigProto()
+     config.gpu_options.allow_growth = True
+-    config.allow_soft_placement = False
++    config.allow_soft_placement = True
+ 
+     adjs_orig = load_data(knn=True, nnSize=nn_size)
+     pos_edge = np.vstack([train_pos_kfold[0], test_pos_kfold[0]])
+     neg_edge = np.vstack([train_neg_kfold[0], test_neg_kfold[0]])
+ 
+     # Store original adjacency matrix (without diagonal entries) for later
+-    adj_orig = sp.csr_matrix((np.ones(len(pos_edge)), (pos_edge[:, 0], pos_edge[:, 1])), shape=(9845, 9845))
++    adj_orig = sp.csr_matrix((np.ones(len(pos_edge)), (pos_edge[:, 0], pos_edge[:, 1])), shape=(NUM_NODE, NUM_NODE))
+     adj_orig = adj_orig - sp.dia_matrix((adj_orig.diagonal()[np.newaxis, :], [0]), shape=adj_orig.shape)
+     adj_orig.eliminate_zeros()
+     
+@@ -85,7 +87,7 @@ def train_slmgae(parameters, pos_samples, neg_samples, mode=None, save_mat=False
+         row = train_pos[:, 0]
+         col = train_pos[:, 1]
+         val = np.ones(train_pos.shape[0])
+-        adj = sp.csr_matrix((val, (row, col)), shape=(9845, 9845))
++        adj = sp.csr_matrix((val, (row, col)), shape=(NUM_NODE, NUM_NODE))
+         adj = adj + adj.T
+ 
+         adjs = adjs_orig[0: 3]
+diff --git a/src/utils/gcatsl_utils.py b/src/utils/gcatsl_utils.py
+index af22bb9..fa1a627 100644
+--- a/src/utils/gcatsl_utils.py
++++ b/src/utils/gcatsl_utils.py
+@@ -49,18 +49,25 @@ def sparse_to_tuple(sparse_mx):
+ 
+ 
+ def random_walk_with_restart(interaction):
++    # SLB: same fixed-point iteration as the original (p=0.9, up to 1000 steps) but with a sparse transition matrix
++    # and early exit once converged (the error shrinks by (1-p)=0.1 per step, so ~16 steps reach float64 precision);
++    # the original dense 1000-step loop takes ~11 h for 12.5k genes on 8 CPU threads.
++    import scipy.sparse as _sp
+     p = 0.9  # 0.9
+     iter_max = 1000  # 1000
+     origi_matrix = np.identity(interaction.shape[0])
+     sum_col = interaction.sum(axis=0)
+     sum_col[sum_col == 0.] = 2
+-    interaction = np.divide(interaction, sum_col)
++    interaction = _sp.csr_matrix(np.divide(interaction, sum_col))
+     pre_t = origi_matrix
+ 
+     for i in range(iter_max):
+-        print("i:", i)
+-        t = (1 - p) * (np.dot(interaction, pre_t)) + p * origi_matrix
++        t = (1 - p) * (interaction @ pre_t) + p * origi_matrix
++        delta = np.abs(t - pre_t).max()
+         pre_t = t
++        if delta < 1e-12:
++            print("rwr converged at iteration", i)
++            break
+     return t
+ 
+ 
+diff --git a/src/utils/mge4sl_utils.py b/src/utils/mge4sl_utils.py
+index bf928a2..f16a68c 100644
+--- a/src/utils/mge4sl_utils.py
++++ b/src/utils/mge4sl_utils.py
+@@ -14,7 +14,7 @@ import torch.nn.functional as F
+ from torch_geometric.utils import to_undirected
+ 
+ os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+-cuda_device=torch.device('cuda:0')
++cuda_device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+ # random.seed(123)
+ np.random.seed(456)
+ # tf.compat.v1.set_random_seed(123)
+diff --git a/src/utils/nsf4sl_utils.py b/src/utils/nsf4sl_utils.py
+index 6127b64..2dd9a2f 100644
+--- a/src/utils/nsf4sl_utils.py
++++ b/src/utils/nsf4sl_utils.py
+@@ -1,3 +1,5 @@
++import os as _os
++NUM_NODE = int(_os.environ.get('SLB_NUM_NODE', '9845'))
+ # Ref: https://github.com/donalee/BUIR/blob/main/Utils/evaluation.py
+ 
+ import copy
+@@ -15,7 +17,7 @@ np.random.seed(456)
+ torch.manual_seed(456)
+ torch.cuda.manual_seed_all(456)
+ 
+-cuda_device=torch.device('cuda:0')
++cuda_device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+ 
+ def loadKGData():
+     print('Loading TransE data...')
+@@ -34,6 +36,9 @@ def map_genes():
+     set_IDa = set(sl_df['unified_id_A'])
+     set_IDb = set(sl_df['unified_id_B'])
+     list_all = sorted(list(set_IDa | set_IDb))
++    # SLB: the score matrix is indexed by unified id downstream, which only works when every node appears in
++    # human_sl_9845.csv (true for Feng's data, where the node set is defined by the SL pairs). Use all nodes.
++    list_all = list(range(NUM_NODE))
+     id2orig = {}
+     orig2id = {}
+     for i in range(len(list_all)):
+diff --git a/src/utils/pilsl_utils.py b/src/utils/pilsl_utils.py
+index e8321c6..73ca39b 100644
+--- a/src/utils/pilsl_utils.py
++++ b/src/utils/pilsl_utils.py
+@@ -1,3 +1,5 @@
++import os as _os
++NUM_NODE = int(_os.environ.get('SLB_NUM_NODE', '9845'))
+ import time
+ 
+ import lmdb
+@@ -163,11 +165,14 @@ def process_files(files, triple_file, saved_relation2id=None, keeptrainone=False
+     id2relation = {v: k for k, v in relation2id.items()}
+ 
+     # Construct the list of adjacency matrix each corresponding to eeach relation. Note that this is constructed only from the train data.
++    # SLB: if files contains 'graph' (training SL pairs), relation-0 edges come from it (original PiLSL design);
++    # 'train' then only lists the pairs whose enclosing subgraphs are extracted (fit, valid and to-be-scored pairs).
++    adj_src = triplets['graph'] if 'graph' in triplets else triplets['train']
+     adj_list = []
+     for i in range(rel):
+-        idx = np.argwhere(triplets['train'][:, 2] == i)
++        idx = np.argwhere(adj_src[:, 2] == i)
+         adj_list.append(sp.csc_matrix((np.ones(len(idx), dtype=np.uint8),
+-                                    (triplets['train'][:, 0][idx].squeeze(1), triplets['train'][:, 1][idx].squeeze(1))),
++                                    (adj_src[:, 0][idx].squeeze(1), adj_src[:, 1][idx].squeeze(1))),
+                                    shape=(len(entity2id), len(entity2id))))
+     for i in range(rel, len(relation2id)):
+         idx = np.argwhere(kg_triple[:, 2] == i - rel)
+@@ -252,7 +257,7 @@ def links2subgraphs(A, graphs, params, max_label_value=None):
+         # args_ = zip(range(len(links)), links, g_labels)
+         # datum_dict=dict()
+         # extract the node subgraph
+-        with mp.Pool(processes=80, initializer=intialize_worker_feng, initargs=(A, params, max_label_value, gene_neib)) as p:
++        with mp.Pool(processes=int(os.environ.get('SLB_THREADS', '8')), initializer=intialize_worker_feng, initargs=(A, params, max_label_value, gene_neib)) as p:
+         # with mp.Pool(processes=None, initializer=intialize_worker, initargs=(A, params, max_label_value)) as p:
+             args_ = zip(range(len(links)), links, g_labels)
+             for (idx, datum) in tqdm(p.imap_unordered(extract_save_subgraph_feng, args_), total=len(links)):
+@@ -288,7 +293,7 @@ def links2subgraphs(A, graphs, params, max_label_value=None):
+         A_incidence += A_incidence.T
+ 
+         # gene_set is the set of the unified kg_id of the genes (kg_id less than about 54000)
+-        gene_set = list(range(9845))
++        gene_set = list(range(NUM_NODE))
+         if not os.path.exists(f'../data/preprocessed_data/pilsl_data/pilsl_3hop_neib.npy'):
+             n_hop_gene_nei_set = {}
+             index = 1
+@@ -303,6 +308,12 @@ def links2subgraphs(A, graphs, params, max_label_value=None):
+         print('extraction_helper running')
+ 
+         pairs = extraction_helper(A, split['pairs'], labels, split_env, split_name)
++        # SLB: the released code never writes pilsl_pair_to_dbindex.npy; record db index of every extracted pair
++        p2i = {}
++        for k, pr in enumerate(pairs):
++            p2i.setdefault(int(pr[0]), {})[int(pr[1])] = k
++            p2i.setdefault(int(pr[1]), {})[int(pr[0])] = k
++        np.save('../data/preprocessed_data/pilsl_data/pilsl_pair_to_dbindex.npy', p2i)
+ 
+     max_n_label['value'] = max_label_value if max_label_value is not None else max_n_label['value']
+     print('start import to database')
+diff --git a/src/utils/ptgnn_utils.py b/src/utils/ptgnn_utils.py
+index 67e14c5..97d6cc7 100644
+--- a/src/utils/ptgnn_utils.py
++++ b/src/utils/ptgnn_utils.py
+@@ -1,3 +1,5 @@
++import os as _os
++NUM_NODE = int(_os.environ.get('SLB_NUM_NODE', '9845'))
+ import numpy as np
+ import pandas as pd
+ import scipy.io as sio
+@@ -134,7 +136,7 @@ def load_data_for_fine_tuning(train_arr, test_arr):
+     labels = pd.read_csv('../data/preprocessed_data/human_sl_9845.csv')
+     labels = np.asarray(labels[['unified_id_A','unified_id_B']])
+     labels = np.hstack([labels, np.ones((labels.shape[0], 1))])
+-    num_node = 9845
++    num_node = NUM_NODE
+ 
+     logits_test = sp.csr_matrix((labels[test_arr, 2], (labels[test_arr, 0], labels[test_arr, 1])),
+                                 shape=(num_node, num_node)).toarray()
+diff --git a/src/utils/slgnn_utils.py b/src/utils/slgnn_utils.py
+index a2648a2..16efc55 100644
+--- a/src/utils/slgnn_utils.py
++++ b/src/utils/slgnn_utils.py
+@@ -15,7 +15,7 @@ from scipy.sparse import csr_matrix
+ import scipy.sparse as sp
+ from time import time
+ 
+-device = 'cuda:0'
++device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+ 
+ 
+ def DistanceCorrelation(tensor_1, tensor_2):
+diff --git a/src/utils/slmgae_utils.py b/src/utils/slmgae_utils.py
+index fe88a34..676ddaf 100644
+--- a/src/utils/slmgae_utils.py
++++ b/src/utils/slmgae_utils.py
+@@ -196,13 +196,9 @@ def build_KNN_mateix(S, nn_size):
+ 
+ 
+ def array2coo(S, t=0):
++    # SLB: vectorised, identical output to the original double loop over the upper triangle (incl. diagonal)
+     m, n = np.shape(S)
+-    row, col = [], []
+-    for i in range(len(S)):
+-        for j in range(i, len(S[i])):
+-            if S[i][j] > t:
+-                row.append(i)
+-                col.append(j)
++    row, col = np.nonzero(np.triu(np.asarray(S) > t))
+ 
+     coo_matrix = sp.coo_matrix((np.ones(len(row)), (row, col)), shape=(m, n))
+     coo_matrix = coo_matrix + coo_matrix.T

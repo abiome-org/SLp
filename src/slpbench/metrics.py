@@ -49,7 +49,10 @@ def average_precision(y: np.ndarray, s: np.ndarray) -> float:
     if y.sum() == 0:
         return float("nan")
     order = np.argsort(-s, kind="stable")
-    y = y[order]
-    tp = np.cumsum(y)
-    prec = tp / np.arange(1, len(y) + 1)
-    return float((prec * y).sum() / y.sum())
+    y, s = y[order], s[order]
+    # Precision is evaluated once per score threshold. Row-wise ranks give
+    # different AP values when an input file permutes tied examples.
+    ends = np.r_[np.flatnonzero(np.diff(s)) + 1, len(s)]
+    tp = np.cumsum(y)[ends - 1]
+    increments = np.diff(np.r_[0, tp])
+    return float(np.sum(increments * tp / ends) / tp[-1])

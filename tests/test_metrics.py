@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import average_precision_score, roc_auc_score
 
 from slpbench.metrics import average_precision, stratified_auc
 
@@ -37,3 +37,12 @@ def test_integer_weights_equal_duplication():
 
 def test_average_precision_perfect():
     assert average_precision(np.array([1, 0, 1, 0]), np.array([0.9, 0.1, 0.8, 0.2])) == 1.0
+
+
+def test_average_precision_ties_are_order_independent():
+    y = np.array([1, 0, 1, 0, 0, 1])
+    s = np.array([0.8, 0.8, 0.4, 0.4, 0.4, 0.1])
+    expected = average_precision_score(y, s)
+    for order in (np.arange(6), np.arange(6)[::-1], np.array([4, 1, 5, 0, 2, 3])):
+        assert np.isclose(average_precision(y[order], s[order]), expected)
+    assert average_precision(y, np.zeros(6)) == y.mean()

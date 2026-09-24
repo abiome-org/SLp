@@ -25,7 +25,7 @@ import polars as pl
 RAW = Path("data/raw")
 PARALOG_MIN_IDENTITY = 0.30
 ORTHOLOG_MIN_ALGORITHMS = 3
-MAX_FAMILY = 400  # components larger than this are broken up (see _cap)
+MAX_FAMILY = 400  # fail if a component exceeds this; never break homology edges
 
 NAMING_SPECIES = ("human", "scer", "spom", "dmel", "spne")
 
@@ -116,7 +116,6 @@ def assign(genes: pl.DataFrame) -> pl.DataFrame:
     for n in nodes:
         dsu.find(n)
     e = edges()
-    node_set = set(nodes)
     # Only edges touching at least one benchmark gene matter; keep bridges through other genes
     # (e.g. a human gene linking two yeast paralogs) since they carry homology information.
     for u, v, kind, w in e.iter_rows():
@@ -127,31 +126,15 @@ def assign(genes: pl.DataFrame) -> pl.DataFrame:
         if n.split(":", 1)[0] in NAMING_SPECIES and (r not in label or n < label[r]):
             label[r] = n
     fam = {n: label.get(dsu.find(n), dsu.find(n)) for n in nodes}
-    fam = _cap(fam, e, node_set)
+    _check_family_size(fam)
     return pl.DataFrame({"species": genes["species"], "gene": genes["gene"], "family": [fam[n] for n in nodes]})
 
 
-def _cap(fam: dict[str, str], e: pl.DataFrame, node_set: set[str]) -> dict[str, str]:
-    """Split oversized components by re-running union-find with orthologs + tighter paralogs."""
+def _check_family_size(fam: dict[str, str]) -> None:
+    """Keep every qualifying homology edge inside a family, including large components."""
     from collections import Counter
 
     sizes = Counter(fam.values())
-    big = {f for f, n in sizes.items() if n > MAX_FAMILY}
-    if not big:
-        return fam
-    members = [n for n, f in fam.items() if f in big]
-    for thresh in (0.4, 0.5, 0.6, 0.8, 1.01):
-        dsu = DSU()
-        for n in members:
-            dsu.find(n)
-        sub = e.filter((pl.col("kind") == "ortholog") | (pl.col("weight") >= thresh))
-        mset = set(members)
-        for u, v, kind, w in sub.iter_rows():
-            if u in mset or v in mset:
-                dsu.union(u, v)
-        new = {n: "cap:" + dsu.find(n) for n in members}
-        if max(Counter(new.values()).values()) <= MAX_FAMILY:
-            break
-    fam = dict(fam)
-    fam.update(new)
-    return fam
+    big = [(f, n) for f, n in sizes.items() if n > MAX_FAMILY]
+    if big:
+        raise ValueError(f"homology component exceeds MAX_FAMILY={MAX_FAMILY}: {big[:5]}")

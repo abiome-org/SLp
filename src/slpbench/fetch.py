@@ -16,6 +16,13 @@ import time
 from pathlib import Path
 
 RAW = Path("data/raw")
+PINS = Path("reference/raw_sha256sums.txt")
+
+
+def pinned_hashes() -> dict[str, str]:
+    if not PINS.exists():
+        return {}
+    return {name: digest for digest, name in (line.split("  ./", 1) for line in PINS.read_text().splitlines())}
 
 # source -> list of (filename, url)
 SOURCES: dict[str, list[tuple[str, str]]] = {
@@ -160,9 +167,13 @@ def fetch(source: str, force: bool = False) -> None:
     out_dir = RAW / source
     out_dir.mkdir(parents=True, exist_ok=True)
     manifest = RAW / "MANIFEST.tsv"
+    pins = pinned_hashes()
     for name, url in SOURCES[source]:
         dest = out_dir / name
+        expected = pins.get(f"{source}/{name}")
         if dest.exists() and not force:
+            if expected and sha256(dest) != expected:
+                raise ValueError(f"existing raw file differs from pinned sha256: {dest}")
             print(f"skip {dest}")
             continue
         tmp = dest.with_suffix(dest.suffix + ".part")
@@ -171,6 +182,9 @@ def fetch(source: str, force: bool = False) -> None:
             ["curl", "-fL", "--retry", "5", "--retry-delay", "5", "-sS", "-A", "slpbench/0.1", "-o", str(tmp), url],
             check=True,
         )
+        if expected and sha256(tmp) != expected:
+            tmp.unlink()
+            raise ValueError(f"download differs from pinned sha256: {dest}")
         tmp.rename(dest)
         with manifest.open("a") as m:
             m.write(f"{source}\t{name}\t{dest.stat().st_size}\t{sha256(dest)}\t{url}\t{time.strftime('%Y-%m-%d')}\n")
