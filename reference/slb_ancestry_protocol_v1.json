@@ -1,0 +1,37 @@
+{
+  "version": "SLB-ANC-1.0",
+  "status": "retrospective protocol written after the SLB-1.3 test readout; prospective template for new donors",
+  "split": "test",
+  "ancestry_basis": "genotype",
+  "reference_group": "EUR",
+  "target_groups": ["AFR", "EAS"],
+  "majority_fraction": 0.5,
+  "sensitivity_fractions": [0.75, 0.9],
+  "match_key": ["cancer_site", "sources", "gene_a", "gene_b"],
+  "matching_scope": "each retained pair appears in at least one line per ancestry group; complete-case sensitivity requires every line in a block",
+  "blocks": ["cancer_site", "sources"],
+  "primary_metric": "equal-block mean of equal-cell-line fitness-balanced AUROC",
+  "secondary_metric": "equal-block mean of equal-cell-line precision at 10 measured pairs",
+  "top_k": 10,
+  "primary_model": "SLP Fusion (loss)",
+  "reference_margin_auroc": 0.05,
+  "adequacy_gate": {
+    "min_shared_blocks": 2,
+    "min_distinct_lines_per_group": 20,
+    "min_qualified_lines_per_group_per_block": 5,
+    "min_measured_pairs_per_line_block": 100,
+    "min_sl_pairs_per_line_block": 10,
+    "min_complete_case_pairs_per_block": 100,
+    "require_donor_disjoint_training": true,
+    "require_variant_aware_guide_qc": true,
+    "max_gap_interval_halfwidth": 0.05
+  },
+  "inference": {
+    "unit": "cell line",
+    "bootstrap_reps": 2000,
+    "seed": 20260924,
+    "familywise_alpha": 0.05,
+    "comparisons": 2,
+    "interval": "Bonferroni-adjusted percentile interval; resample cell lines within ancestry, preserving repeated line appearances across blocks"
+  }
+}

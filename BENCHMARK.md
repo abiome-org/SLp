@@ -200,6 +200,9 @@ Use `--boot N` for a gene-family cluster-bootstrap 95% CI. Use `slpbench compare
 bootstrap of the difference. Use `compare` on dev to decide whether a change helped.
 The frozen test-prediction [ancestry audit](ANCESTRY_AUDIT.md) reports group-specific scores,
 support counts, uncertainty and sensitivity to individual cell lines.
+The stricter [matched ancestry benchmark](ANCESTRY_BENCHMARK.md) restricts to genotype-based
+assignments, cancer-site/screen/pair overlap, and equal-cell-line scores. Its adequacy gate
+withholds population-level fairness verdicts on the current donor-limited screens.
 
 ### How the fitness balancing works
 

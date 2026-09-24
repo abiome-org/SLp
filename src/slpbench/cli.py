@@ -29,6 +29,10 @@ def main(argv: list[str] | None = None) -> None:
     e.add_argument("--allow-missing", action="store_true")
     e.add_argument("--out", type=Path)
 
+    ae = sub.add_parser("ancestry-eval", help="matched human cell-line ancestry diagnostic")
+    ae.add_argument("preds", help="complete SLB-1.3 test predictions")
+    ae.add_argument("--out", type=Path, help="write the full line-level JSON scorecard")
+
     c = sub.add_parser("compare", help="paired bootstrap: is B better than A?")
     c.add_argument("a")
     c.add_argument("b")
@@ -68,6 +72,33 @@ def main(argv: list[str] | None = None) -> None:
         print(evaluate.format_report(res))
         if a.out:
             evaluate.save(res, a.out)
+    elif a.cmd == "ancestry-eval":
+        import json
+
+        import polars as pl
+
+        from slpbench import ancestry, evaluate
+
+        gold = evaluate.load_gold("test")
+        scored, missing = evaluate.validated_join(gold, evaluate.read_predictions(a.preds))
+        if missing:
+            raise ValueError("ancestry evaluation requires complete test predictions")
+        contexts = pl.read_parquet(evaluate.BENCH / "contexts.parquet")
+        ancestry.verify_dutil_annotations(contexts)
+        bench = ancestry.AncestryBenchmark(gold, contexts)
+        res = {"protocol": bench.cfg, "benchmark": evaluate.BENCH.name, "split": "test",
+               "manifest_sha256": evaluate.file_sha256(evaluate.BENCH / "manifest.json"),
+               "predictions_sha256": evaluate.file_sha256(a.preds),
+               "panel_support": bench.support,
+               "complete_case_panel_support": bench.complete_case_support,
+               "comparisons": bench.evaluate(scored),
+               "complete_case_comparisons": bench.evaluate(scored, complete_case=True)}
+        for group, row in res["comparisons"].items():
+            print(f"{group} vs EUR: AUROC {row['auroc'][group]:.3f} vs {row['auroc']['EUR']:.3f}; "
+                  f"gap {row['gap_auroc']:+.3f}; {row['verdict']}")
+        if a.out:
+            a.out.parent.mkdir(parents=True, exist_ok=True)
+            a.out.write_text(json.dumps(res, indent=2, sort_keys=True, allow_nan=False) + "\n")
     elif a.cmd == "compare":
         from slpbench import evaluate
         r = evaluate.compare(evaluate.read_predictions(a.a), evaluate.read_predictions(a.b), a.split, a.boot)

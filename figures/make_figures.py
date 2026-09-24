@@ -323,9 +323,126 @@ def figure_4() -> None:
     save(fig, "04_human_ancestry")
 
 
+def _ancestry_benchmark() -> dict:
+    return json.loads((ROOT / "reference/slb1.3_ancestry_benchmark.json").read_text())
+
+
+def _block_label(block: dict) -> str:
+    site = block["cancer_site"].replace("_", " ").title()
+    source = "Flister" if block["sources"] == "flister2025" else "Harle"
+    return f"{site} · {source}"
+
+
+def figure_5() -> None:
+    """Matched support exposes the donor count behind ancestry point estimates."""
+    if not (ROOT / "reference/slb1.3_ancestry_benchmark.json").exists():
+        return
+    result = _ancestry_benchmark()
+    fig, axes = plt.subplots(1, 2, figsize=(14.5, 7.2), gridspec_kw={"wspace": .20})
+    fig.subplots_adjust(left=.12, right=.97, top=.73, bottom=.15)
+    fig.text(.055, .95, "One African-ancestry donor per matched block",
+             fontsize=22, fontweight="bold", color=INK)
+    fig.text(.055, .89, "SLB-ANC-1.0  ·  Same cancer site, screen and gene pair  ·  Gene-family-held-out test",
+             fontsize=11, color=MUTED)
+    fig.text(.055, .84, "Bars count evaluable cell lines. Dashed lines mark the five-line minimum; pair-count and SL-count gates are additional.",
+             fontsize=10, color=MUTED)
+    for ax, target, color in zip(axes, ("AFR", "EAS"), (PURPLE, TEAL)):
+        blocks = [b for b in result["panel_support"][target]["blocks"] if b["scorable"]]
+        y = np.arange(len(blocks))[::-1]
+        for i, (b, yi) in enumerate(zip(blocks, y)):
+            for group, offset, c in ((target, .17, color), ("EUR", -.17, "#a6b7bf")):
+                n = b["evaluable_lines"][group]
+                positive = sum(r["sl"] for r in b["lines"] if r["group"] == group)
+                ax.barh(yi + offset, n, height=.27, color=c, edgecolor=PAPER, linewidth=1, zorder=3)
+                ax.text(n + .13, yi + offset, f"{n} {'line' if n == 1 else 'lines'} · {positive} SL", va="center",
+                        color=INK if group == target else MUTED, fontsize=9.2,
+                        fontweight="bold" if group == target else "normal")
+        ax.axvline(5, color=CORAL, ls=(0, (3, 3)), lw=1.3, zorder=1)
+        ax.text(5.08, len(blocks) - .36, "gate: 5", color=CORAL, fontsize=9, va="top")
+        ax.set_yticks(y, [_block_label(b) for b in blocks], fontsize=10.5)
+        ax.set_xlim(0, 11.7)
+        ax.set_ylim(-.65, len(blocks) - .25)
+        ax.set_xticks([0, 2, 4, 6, 8, 10])
+        ax.grid(axis="x", color=GRID, linewidth=.7, zorder=0)
+        ax.set_axisbelow(True)
+        ax.tick_params(axis="y", length=0, pad=8)
+        ax.tick_params(axis="x", length=0)
+        ax.set_title(f"{target} versus EUR  ·  {len(blocks)} scorable blocks",
+                     loc="left", fontsize=12, fontweight="bold", pad=17)
+        ax.set_xlabel("Evaluable cell lines", fontsize=10.5, labelpad=10)
+    legend = [Line2D([0], [0], color=PURPLE, lw=7, label="AFR"),
+              Line2D([0], [0], color=TEAL, lw=7, label="EAS"),
+              Line2D([0], [0], color="#a6b7bf", lw=7, label="EUR comparator")]
+    fig.legend(handles=legend, ncol=3, loc="upper right", bbox_to_anchor=(.97, .81),
+               frameon=False, fontsize=9.5)
+    fig.text(.055, .055, "SL counts refer to retained matched test pairs. The two panels use different pair panels."
+             " Cell lines are donor proxies, not independent gene-pair rows.", color=MUTED, fontsize=9.2)
+    save(fig, "05_ancestry_support")
+
+
+def figure_6() -> None:
+    """Primary-model cell-line scores on matched panels, without false donor CIs."""
+    if not (ROOT / "reference/slb1.3_ancestry_benchmark.json").exists():
+        return
+    result = _ancestry_benchmark()
+    primary = next(m for m in result["models"] if m["name"] == result["protocol"]["primary_model"])
+    fig, axes = plt.subplots(1, 2, figsize=(14.2, 7.4), gridspec_kw={"wspace": .21})
+    fig.subplots_adjust(left=.13, right=.97, top=.72, bottom=.17)
+    fig.text(.055, .95, "Matched-panel scores change the ancestry contrast",
+             fontsize=21.5, fontweight="bold", color=INK)
+    fig.text(.055, .89, "Frozen SLp Fusion  ·  Fitness-balanced AUROC within each cell line and screen",
+             fontsize=11.2, color=MUTED)
+    fig.text(.055, .835, "Small dots are cell lines; diamonds average cell lines within each site × screen block.",
+             fontsize=10.2, color=MUTED)
+    for ax, target, color in zip(axes, ("AFR", "EAS"), (PURPLE, TEAL)):
+        rec = primary["comparisons"][target]
+        blocks = [b for b in rec["blocks"] if b["scorable"]]
+        y = np.arange(len(blocks))[::-1]
+        for b, yi in zip(blocks, y):
+            for group, offset, c in ((target, .17, color), ("EUR", -.17, "#a6b7bf")):
+                vals = [r for r in b["lines"] if r["group"] == group and r["auroc"] is not None]
+                if not vals:
+                    continue
+                xs = np.array([r["auroc"] for r in vals])
+                # Deterministic spread keeps coincident donors visible.
+                jitter = np.linspace(-.045, .045, len(vals)) if len(vals) > 1 else np.zeros(1)
+                ax.scatter(xs, yi + offset + jitter, s=37, color=c, alpha=.75,
+                           edgecolors=PAPER, linewidths=.7, zorder=3)
+                ax.scatter([xs.mean()], [yi + offset], s=102, marker="D", color=c,
+                           edgecolors=INK if group == target else "#8299a5", linewidths=.85, zorder=4)
+        ax.axvline(.5, color=MUTED, ls=(0, (3, 4)), lw=1.1, zorder=1)
+        ax.set_xlim(.33, 1.035)
+        ax.set_ylim(-.58, len(blocks) - .28)
+        ax.set_yticks(y, [_block_label(b) for b in blocks], fontsize=10.5)
+        ax.set_xticks([.4, .5, .6, .7, .8, .9, 1.0])
+        ax.grid(axis="x", color=GRID, linewidth=.8, zorder=0)
+        ax.set_axisbelow(True)
+        ax.tick_params(axis="y", length=0, pad=8)
+        ax.tick_params(axis="x", length=0)
+        ax.set_xlabel("Per-line balanced AUROC", fontsize=10.5, labelpad=10)
+        ax.set_title(f"{target} − EUR  ·  point gap {rec['gap_auroc']:+.3f}",
+                     loc="left", fontsize=12, fontweight="bold", pad=17)
+    legend = [Line2D([0], [0], marker="o", color="none", markerfacecolor=PURPLE,
+                     markeredgecolor=PAPER, markersize=8, label="AFR line"),
+              Line2D([0], [0], marker="o", color="none", markerfacecolor=TEAL,
+                     markeredgecolor=PAPER, markersize=8, label="EAS line"),
+              Line2D([0], [0], marker="o", color="none", markerfacecolor="#a6b7bf",
+                     markeredgecolor=PAPER, markersize=8, label="EUR line"),
+              Line2D([0], [0], marker="D", color="none", markerfacecolor=INK,
+                     markeredgecolor=INK, markersize=7, label="block mean")]
+    fig.legend(handles=legend, ncol=4, loc="upper right", bbox_to_anchor=(.97, .805),
+               frameon=False, fontsize=9)
+    fig.text(.055, .065, "The matched AFR panel has RKO (19 SL) and NCI-H23 (4 SL): one line in each block."
+             " Population-level intervals and fairness verdicts are withheld by the adequacy gate.",
+             color=MUTED, fontsize=9.15)
+    save(fig, "06_ancestry_line_scores")
+
+
 if __name__ == "__main__":
     theme()
     figure_1()
     figure_2()
     figure_3()
     figure_4()
+    figure_5()
+    figure_6()

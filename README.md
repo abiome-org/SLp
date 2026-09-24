@@ -22,6 +22,7 @@ measured-pair benchmark, a published-method battery, and a dev-selected ensemble
 - [CLIMB.md](CLIMB.md): frozen grader checks, model-selection ledger and held-out comparison.
 - [GENERALIZATION.md](GENERALIZATION.md): interpretation of CV1/CV2/CV3, the 2026 cold-start results and the production setting.
 - [ANCESTRY_AUDIT.md](ANCESTRY_AUDIT.md): frozen human test scores by cell-line genetic ancestry, with support counts, uncertainty and sensitivity to individual cell lines.
+- [ANCESTRY_BENCHMARK.md](ANCESTRY_BENCHMARK.md): stricter genotype-only, cancer-site/screen/pair-matched ancestry evaluation of all 24 clean ranked models, with equal-cell-line scores, complete-case sensitivity, assay-quality checks and a donor-adequacy gate.
 - [figures/README.md](figures/README.md): downloadable CV1/CV2/CV3 and SLB test figures, with rebuild commands and captions.
 - [notes/models/2026_landscape.md](notes/models/2026_landscape.md): dated audit of 2026 papers, preprints and code, with each method's SLB status.
 - [data/README.md](data/README.md): private build and public bundle usage.
@@ -42,6 +43,8 @@ uv run slpbench export-public data/release/slb1.3
 bash scripts/package_public.sh          # deterministic public archive + SHA-256 pin
 uv run slpbench battery --split dev # regenerate MODELS.md
 SLB_BENCH=data/bench/slb1.3 uv run python scripts/audit_ancestry.py
+SLB_BENCH=data/bench/slb1.3 uv run python scripts/benchmark_ancestry.py
+SLB_BENCH=data/bench/slb1.3 uv run slpbench ancestry-eval results/models/slb1.3/slp_fusion__loss_test.parquet
 uv run pytest -q
 ```
 
