@@ -230,6 +230,10 @@ Checks (`tests/test_benchmark.py` asserts the first):
   scores 0.49–0.50, and `fitness_lgbm` (gradient boosting on the fitness covariates, trained on
   train) scores 0.52–0.53. On *B. subtilis*, `fitness_lgbm` reaches 0.57, but with 55 positives the
   random baseline itself lands anywhere from 0.45 to 0.58.
+- Across the 5 family splits in [ROBUSTNESS.md](ROBUSTNESS.md), `fitness_lgbm` keeps a small,
+  consistent residual on the yeasts: 0.505–0.515 on *S. cerevisiae* and 0.512–0.526 on *S. pombe*,
+  where *S. pombe*'s only covariate is a 3-level viability class. So compare yeast gains against
+  `fitness_lgbm`, not against 0.5.
 - A species split with only one class (a tiny auxiliary species) gets a constant propensity. There is
   nothing to balance, and it isn't scored.
 
