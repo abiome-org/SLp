@@ -1,7 +1,7 @@
 {
   "benchmark": "slb1.3",
   "manifest_sha256": "b1ac12d961b80d917b518d96834acd8289b954751f61833d37d26738631b41a9",
-  "scorer_version": "1.3.1",
+  "scorer_version": "1.3.2",
   "source_predictions_sha256": {
     "go": "c52c04438cdf9b7e70b3cf3351a63810a264d44eb9276c27c018c4ad3a3ecde8",
     "onto": "425905bbaa46e1a3d3b53ed1ff55556b2abd77952c6d476410ca0eb6699f2cba",

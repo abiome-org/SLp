@@ -69,6 +69,15 @@ acquired: yes | env built: yes | ran original: no (the original notebooks need t
 | SLB-1.3 | 0.5173 | 0.5519 | 0.5327 | AFR 0.556, EAS 0.540, EUR 0.560, unknown 0.307 |
 | SLB-1.2 | 0.5158 | 0.5634 | 0.5469 | AFR 0.585, EAS 0.580, EUR 0.526, unknown 0.703 |
 scer / spom (and spne, bsub, cele, dmel, mmus) = 0.500 by construction (not scored).
+
+The held-out SLB-1.3 **test** score is **0.5329** (family-bootstrap 95% CI
+0.5034–0.5628); its human component is **0.5987**. Native human coverage is
+11,065/20,210 (55%); the remaining human rows receive the benchmark's
+recorded within-species median fill. All five pair-classifier folds were
+trained before this test readout. Their random train-pair calibration AUROCs
+were 0.848, 0.827, 0.835, 0.844 and 0.814, illustrating how much easier
+shared-gene pair folds are; those calibration AUROCs use a different metric
+and sample distribution from the family-held-out SLB score.
 Diagnostics: Geneformer deltas for 54,543 (SLB-1.3) / 54,407 (SLB-1.2) (context, gene) combos, 97% with a Gene2vec
 vector; viability FiLM fit to DepMap gene effect r = 0.956 (in-sample, as in the original which trains on all
 rows); SL classifier fold-calibration AUROC 0.81-0.85 on random train-pair folds (random pair CV is optimistic:

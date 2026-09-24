@@ -21,16 +21,31 @@ listed in those notes with the reason.
 | 4 | **ontotype** | pooled | mechanistic | 0.632 | 0.639 | 0.581 | 0.674 | 0.469 | 0.542 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 5 | **go_ppi_gbm** | - | mechanistic | 0.625 | 0.663 | 0.590 | 0.621 | 0.565 | 0.537 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 6 | **go_ppi_gbm** | pooled | mechanistic | 0.624 | 0.660 | 0.589 | 0.622 | 0.570 | 0.570 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 7 | **dekegel2021** | allspecies | feature | 0.602 | 0.699 | 0.552 | 0.557 | 0.535 | 0.617 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 7 | **dekegel2021** | allspecies | feature | 0.603 | 0.699 | 0.552 | 0.557 | 0.535 | 0.617 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 8 | **musl** | allspecies | feature | 0.593 | 0.636 | 0.553 | 0.592 | 0.545 | 0.562 | n/a | n/a | human 100%, scer 100%, spom 99%, bsub 98%, cele 98%, dmel 100%, mmus 100% | 0 |
-| 9 | **synleaf** | allspecies | feature | 0.554 | 0.537 | 0.523 | 0.602 | 0.517 | 0.364 | n/a | n/a | human 100%, scer 90%, spom 98%, bsub 98%, cele 96%, dmel 100%, mmus 100% | 0 |
-| 10 | **paralog_identity** | - | baseline | 0.552 | 0.653 | 0.503 | 0.501 | 0.500 | 0.500 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 11 | **lgbm** | - | baseline | 0.551 | 0.610 | 0.518 | 0.526 | 0.575 | 0.503 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 12 | **depmap_ols** | loss | feature | 0.550 | 0.650 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 99% | 0 |
-| 13 | **musl** | human | feature | 0.549 | 0.646 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100% | 0 |
-| 14 | **deltadep** | mut | feature | 0.535 | 0.605 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 68% | 0 |
-| 15 | **codependency** | - | baseline | 0.524 | 0.571 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 16 | **fitness_lgbm** | - | baseline | 0.521 | 0.521 | 0.515 | 0.526 | 0.571 | 0.503 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 17 | **synleaf** | human | feature | 0.515 | 0.546 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100% | 0 |
-| 18 | **fitness** | - | baseline | 0.498 | 0.490 | 0.501 | 0.502 | 0.527 | 0.503 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 19 | **random** | - | baseline | 0.492 | 0.494 | 0.490 | 0.492 | 0.450 | 0.578 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 9 | **dekegel2021** | slbtrain | feature | 0.582 | 0.747 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100% | 0 |
+| 10 | **dekegel2021** | pretrained | feature | 0.580 | 0.741 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100% | 0 |
+| 11 | **sl_predict_2026** | mae | feature | 0.575 | 0.724 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 99% | 0 |
+| 12 | **ryan2026_context** | slbtrain_full | feature | 0.571 | 0.712 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 77% | 0 |
+| 13 | **ryan2026_context** | slbtrain_ctx | feature | 0.561 | 0.682 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 77% | 0 |
+| 14 | **synleaf** | allspecies | feature | 0.554 | 0.537 | 0.523 | 0.602 | 0.517 | 0.364 | n/a | n/a | human 100%, scer 90%, spom 98%, bsub 98%, cele 96%, dmel 100%, mmus 100% | 0 |
+| 15 | **paralog_identity** | - | baseline | 0.552 | 0.653 | 0.503 | 0.501 | 0.500 | 0.500 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 16 | **lgbm** | - | baseline | 0.551 | 0.610 | 0.518 | 0.526 | 0.575 | 0.503 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 17 | **depmap_ols** | loss | feature | 0.550 | 0.650 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 99% | 0 |
+| 18 | **musl** | human | feature | 0.549 | 0.646 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100% | 0 |
+| 19 | **deltadep** | mut | feature | 0.535 | 0.605 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 68% | 0 |
+| 20 | **cilantro_sl** | - | feature | 0.533 | 0.599 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 55% | 0 |
+| 21 | **codependency** | - | baseline | 0.524 | 0.571 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 22 | **gigcn** | binary_go | graph | 0.523 | 0.569 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100% | 0 |
+| 23 | **fitness_lgbm** | - | baseline | 0.521 | 0.521 | 0.515 | 0.526 | 0.571 | 0.503 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 24 | **pagan** | clean_n2p | graph | 0.520 | 0.591 | 0.469 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100%, scer 100% | 0 |
+| 25 | **synleaf** | human | feature | 0.515 | 0.546 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 100% | 0 |
+| 26 | **fitness** | - | baseline | 0.498 | 0.490 | 0.501 | 0.502 | 0.527 | 0.503 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 27 | **random** | - | baseline | 0.492 | 0.494 | 0.490 | 0.492 | 0.450 | 0.578 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| – | **ryan2026_context** ⚠ leaky | released_ctx | feature | 0.535 | 0.606 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 77% | 0 |
+| – | **slxgo2026** ⚠ possibly leaky | go_pca | feature | 0.519 | 0.556 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | human 99% | 0 |
+
+Leaky or possibly leaky rows (not ranked):
+
+- **ryan2026_context** released_ctx: released models trained on GEMINI screens incl. Parrish 2021 / Harle 2025
+- **slxgo2026** go_pca: authors' PANTHER/GO BioBERT embeddings lack GO evidence provenance; full SLant-derived ANN branch omitted

@@ -34,7 +34,7 @@ from slpbench.metrics import average_precision, stratified_auc
 
 BENCH = Path(os.environ.get("SLB_BENCH", "data/bench/slb1.3"))
 MIN_GROUP_POS = 20
-SCORER_VERSION = "1.3.1"
+SCORER_VERSION = "1.3.2"
 SPECIES_NAMES = {"human": "H. sapiens", "scer": "S. cerevisiae", "spom": "S. pombe", "spne": "S. pneumoniae",
                  "dmel": "D. melanogaster", "cele": "C. elegans", "mmus": "M. musculus", "bsub": "B. subtilis",
                  "ecol": "E. coli"}
@@ -168,7 +168,9 @@ def _family_index(df: pl.DataFrame) -> tuple[np.ndarray, np.ndarray, int]:
         .join(fams.rename({"gene": "gene_a", "family": "fa"}), on=["species", "gene_a"], how="left", maintain_order="left") \
         .join(fams.rename({"gene": "gene_b", "family": "fb"}), on=["species", "gene_b"], how="left", maintain_order="left")
     assert key["example_id"].equals(df["example_id"])
-    uf = pl.concat([key["fa"], key["fb"]]).unique().to_list()
+    # `unique()` has process-dependent order. Assign family indices canonically
+    # so the fixed bootstrap seed selects the same families on every run.
+    uf = pl.concat([key["fa"], key["fb"]]).unique().sort().to_list()
     idx = {f: i for i, f in enumerate(uf)}
     return np.array([idx[f] for f in key["fa"]]), np.array([idx[f] for f in key["fb"]]), len(uf)
 

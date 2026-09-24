@@ -29,71 +29,75 @@ listed in those notes with the reason.
 | 12 | **depmap_ols** | loss | feature | 0.558 | 0.673 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 99% | 0 |
 | 13 | **dekegel2021** | slbtrain | feature | 0.557 | 0.672 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
 | 14 | **dennler2025** | released | feature | 0.554 | 0.662 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 15 | **dennler2025** | slbtrain_all58 | feature | 0.553 | 0.660 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 16 | **statsl** | ess_crispr_expr | feature | 0.553 | 0.658 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 99% | 0 |
-| 17 | **dekegel2021** | pretrained | feature | 0.552 | 0.657 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 18 | **ryan2026_context** | slbtrain_full | feature | 0.544 | 0.632 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 87% | 0 |
-| 19 | **esm4sl** | allspecies | feature | 0.543 | 0.553 | 0.547 | 0.528 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 94%, cele 95%, dmel 100%, mmus 100% | 0 |
-| 20 | **synleaf** | human | feature | 0.541 | 0.624 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 21 | **paralog_identity** | - | baseline | 0.539 | 0.608 | 0.507 | 0.503 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 22 | **isle** | - | feature | 0.539 | 0.617 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 23 | **statsl** | coexp_ccle | feature | 0.539 | 0.616 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 24 | **elisl** | slbtrain | feature | 0.537 | 0.611 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 25 | **ryan2026_context** | slbtrain_ctx | feature | 0.534 | 0.601 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 87% | 0 |
-| 26 | **ddgcn** | - | graph | 0.533 | 0.600 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 27 | **daisy** | - | feature | 0.532 | 0.597 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 28 | **statsl** | phylo_neg_dist | feature | 0.532 | 0.597 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 98% | 0 |
-| 29 | **deltadep** | mut | feature | 0.532 | 0.595 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 75% | 0 |
-| 30 | **lgbm** | - | baseline | 0.532 | 0.558 | 0.514 | 0.522 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 31 | **statsl** | ess_crispr_cn | feature | 0.531 | 0.593 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 99% | 0 |
-| 32 | **mvgcn_isl** | - | graph | 0.530 | 0.590 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 33 | **sl2mf** | - | graph | 0.530 | 0.589 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 34 | **discoversl** | slbtrain | feature | 0.529 | 0.588 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 97% | 0 |
-| 35 | **mlec_isl** | - | graph | 0.529 | 0.587 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 36 | **statsl** | ess_crispr_mut | feature | 0.526 | 0.577 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 75% | 0 |
-| 37 | **struct2sl** | - | graph | 0.524 | 0.571 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 179698 |
-| 38 | **dennler2025** | slbtrain | feature | 0.523 | 0.570 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 39 | **genept** | slbtrain | feature | 0.522 | 0.565 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 99% | 0 |
-| 40 | **musl** | human | feature | 0.522 | 0.565 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 41 | **esm4sl** | human | feature | 0.520 | 0.561 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 42 | **fitness_lgbm** | - | baseline | 0.518 | 0.525 | 0.508 | 0.521 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 43 | **cilantro_sl** | - | feature | 0.517 | 0.552 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 63% | 0 |
-| 44 | **nsf4sl** | - | graph | 0.517 | 0.551 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 45 | **msgt_sl** | - | graph | 0.517 | 0.550 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 46 | **statsl** | coexp_tcga | feature | 0.516 | 0.549 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 47 | **exp2sl** | pancell | feature | 0.516 | 0.547 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 42% | 0 |
-| 48 | **codependency** | - | baseline | 0.515 | 0.545 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 49 | **sbsl** | rf | feature | 0.513 | 0.538 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 50 | **statsl** | ess_rnai_expr | feature | 0.512 | 0.536 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 51 | **fba** | - | mechanistic | 0.510 | 0.524 | 0.503 | 0.502 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 52 | **statsl** | ess_rnai_mut | feature | 0.510 | 0.529 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 63% | 0 |
-| 53 | **sbsl** | en | feature | 0.509 | 0.528 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 54 | **fba** | mult | mechanistic | 0.508 | 0.523 | 0.501 | 0.500 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 55 | **cmfw** | - | graph | 0.508 | 0.524 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 56 | **slidr** | crispr | feature | 0.507 | 0.520 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 57 | **dcell** | tied | mechanistic | 0.507 | 0.443 | 0.556 | 0.521 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 58 | **kr4sl** | - | graph | 0.507 | 0.520 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 59 | **statsl** | surv_expr | feature | 0.505 | 0.515 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 60 | **statsl** | sof_cna | feature | 0.505 | 0.515 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 61 | **statsl** | ess_rnai_cn | feature | 0.502 | 0.507 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 62 | **ptgnn** | - | graph | 0.501 | 0.502 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 63 | **fitness** | - | baseline | 0.501 | 0.495 | 0.503 | 0.503 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 64 | **exp2sl** | cellline | feature | 0.499 | 0.498 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 3% | 0 |
-| 65 | **grsmf** | - | graph | 0.499 | 0.498 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 66 | **statsl** | sof_expr | feature | 0.499 | 0.496 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 67 | **dcell** | faithful | mechanistic | 0.499 | 0.439 | 0.522 | 0.534 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 68 | **slidr** | rnai | feature | 0.495 | 0.486 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 98% | 0 |
-| 69 | **slidr** | crispr_lossexpr | feature | 0.490 | 0.471 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 70 | **gcatsl** | - | graph | 0.489 | 0.466 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 71 | **slmgae** | - | graph | 0.487 | 0.460 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 72 | **random** | - | baseline | 0.485 | 0.472 | 0.493 | 0.491 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 73 | **statsl** | surv_cna | feature | 0.485 | 0.455 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
-| 74 | **sl2mf** | allspecies | graph | 0.471 | 0.455 | 0.494 | 0.466 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 75 | **slgnn** | - | graph | 0.469 | 0.408 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
-| 76 | **kg4sl** | - | graph | 0.468 | 0.405 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 15 | **sl_predict_2026** | mae | feature | 0.553 | 0.660 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 98% | 0 |
+| 16 | **dennler2025** | slbtrain_all58 | feature | 0.553 | 0.660 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 17 | **pagan** | clean_n2p | graph | 0.553 | 0.609 | 0.550 | 0.500 | n/a | n/a | n/a | n/a | human 100%, scer 100% | 0 |
+| 18 | **statsl** | ess_crispr_expr | feature | 0.553 | 0.658 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 99% | 0 |
+| 19 | **dekegel2021** | pretrained | feature | 0.552 | 0.657 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 20 | **ryan2026_context** | slbtrain_full | feature | 0.544 | 0.632 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 87% | 0 |
+| 21 | **esm4sl** | allspecies | feature | 0.543 | 0.553 | 0.547 | 0.528 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 94%, cele 95%, dmel 100%, mmus 100% | 0 |
+| 22 | **synleaf** | human | feature | 0.541 | 0.624 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 23 | **paralog_identity** | - | baseline | 0.539 | 0.608 | 0.507 | 0.503 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 24 | **isle** | - | feature | 0.539 | 0.617 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 25 | **statsl** | coexp_ccle | feature | 0.539 | 0.616 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 26 | **elisl** | slbtrain | feature | 0.537 | 0.611 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 27 | **ryan2026_context** | slbtrain_ctx | feature | 0.534 | 0.601 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 87% | 0 |
+| 28 | **ddgcn** | - | graph | 0.533 | 0.600 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 29 | **daisy** | - | feature | 0.532 | 0.597 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 30 | **statsl** | phylo_neg_dist | feature | 0.532 | 0.597 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 98% | 0 |
+| 31 | **deltadep** | mut | feature | 0.532 | 0.595 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 75% | 0 |
+| 32 | **lgbm** | - | baseline | 0.532 | 0.558 | 0.514 | 0.522 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 33 | **statsl** | ess_crispr_cn | feature | 0.531 | 0.593 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 99% | 0 |
+| 34 | **mvgcn_isl** | - | graph | 0.530 | 0.590 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 35 | **sl2mf** | - | graph | 0.530 | 0.589 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 36 | **discoversl** | slbtrain | feature | 0.529 | 0.588 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 97% | 0 |
+| 37 | **mlec_isl** | - | graph | 0.529 | 0.587 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 38 | **statsl** | ess_crispr_mut | feature | 0.526 | 0.577 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 75% | 0 |
+| 39 | **struct2sl** | - | graph | 0.524 | 0.571 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 179698 |
+| 40 | **dennler2025** | slbtrain | feature | 0.523 | 0.570 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 41 | **genept** | slbtrain | feature | 0.522 | 0.565 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 99% | 0 |
+| 42 | **musl** | human | feature | 0.522 | 0.565 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 43 | **esm4sl** | human | feature | 0.520 | 0.561 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 44 | **gigcn** | binary_go | graph | 0.520 | 0.559 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 45 | **fitness_lgbm** | - | baseline | 0.518 | 0.525 | 0.508 | 0.521 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 46 | **cilantro_sl** | - | feature | 0.517 | 0.552 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 63% | 0 |
+| 47 | **nsf4sl** | - | graph | 0.517 | 0.551 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 48 | **msgt_sl** | - | graph | 0.517 | 0.550 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 49 | **statsl** | coexp_tcga | feature | 0.516 | 0.549 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 50 | **exp2sl** | pancell | feature | 0.516 | 0.547 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 42% | 0 |
+| 51 | **codependency** | - | baseline | 0.515 | 0.545 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 52 | **sbsl** | rf | feature | 0.513 | 0.538 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 53 | **statsl** | ess_rnai_expr | feature | 0.512 | 0.536 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 54 | **fba** | - | mechanistic | 0.510 | 0.524 | 0.503 | 0.502 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 55 | **statsl** | ess_rnai_mut | feature | 0.510 | 0.529 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 63% | 0 |
+| 56 | **sbsl** | en | feature | 0.509 | 0.528 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 57 | **fba** | mult | mechanistic | 0.508 | 0.523 | 0.501 | 0.500 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 58 | **cmfw** | - | graph | 0.508 | 0.524 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 59 | **slidr** | crispr | feature | 0.507 | 0.520 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 60 | **dcell** | tied | mechanistic | 0.507 | 0.443 | 0.556 | 0.521 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 61 | **kr4sl** | - | graph | 0.507 | 0.520 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 62 | **statsl** | surv_expr | feature | 0.505 | 0.515 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 63 | **statsl** | sof_cna | feature | 0.505 | 0.515 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 64 | **statsl** | ess_rnai_cn | feature | 0.502 | 0.507 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 65 | **ptgnn** | - | graph | 0.501 | 0.502 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 66 | **fitness** | - | baseline | 0.501 | 0.495 | 0.503 | 0.503 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 67 | **exp2sl** | cellline | feature | 0.499 | 0.498 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 3% | 0 |
+| 68 | **grsmf** | - | graph | 0.499 | 0.498 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 69 | **statsl** | sof_expr | feature | 0.499 | 0.496 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 70 | **dcell** | faithful | mechanistic | 0.499 | 0.439 | 0.522 | 0.534 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 71 | **slidr** | rnai | feature | 0.495 | 0.486 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 98% | 0 |
+| 72 | **slidr** | crispr_lossexpr | feature | 0.490 | 0.471 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 73 | **gcatsl** | - | graph | 0.489 | 0.466 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 74 | **slmgae** | - | graph | 0.487 | 0.460 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 75 | **random** | - | baseline | 0.485 | 0.472 | 0.493 | 0.491 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 76 | **statsl** | surv_cna | feature | 0.485 | 0.455 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 0 |
+| 77 | **sl2mf** | allspecies | graph | 0.471 | 0.455 | 0.494 | 0.466 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 78 | **slgnn** | - | graph | 0.469 | 0.408 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
+| 79 | **kg4sl** | - | graph | 0.468 | 0.405 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 177374 |
 | – | **ryan2026_context** ⚠ leaky | released_ctx | feature | 0.532 | 0.595 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 87% | 0 |
 | – | **ortholog_gi_transfer** ⚠ leaky | - | mechanistic | 0.531 | 0.553 | 0.507 | 0.535 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | – | **sinatra** ⚠ leaky | released | feature | 0.520 | 0.561 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 92% | 0 |
+| – | **slxgo2026** ⚠ possibly leaky | go_pca | feature | 0.512 | 0.536 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 99% | 0 |
 | – | **llmsynthlet** ⚠ leaky | released | feature | 0.500 | 0.499 | 0.500 | 0.500 | n/a | n/a | n/a | n/a |  | 0 |
 | – | **struct2sl** ⚠ leaky | released | graph | 0.491 | 0.473 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 100% | 179640 |
 | – | **discoversl** ⚠ leaky | released | feature | 0.489 | 0.468 | 0.500 | 0.500 | n/a | n/a | n/a | n/a | human 97% | 0 |
@@ -104,6 +108,7 @@ Leaky or possibly leaky rows (not ranked):
 - **ryan2026_context** released_ctx: released models trained on GEMINI screens incl. Parrish 2021 / Harle 2025
 - **ortholog_gi_transfer** -: transfers GI labels from orthologs that share held-out families
 - **sinatra** released: trained on yeast SL labels incl. pairs from held-out ortholog families
+- **slxgo2026** go_pca: authors' PANTHER/GO BioBERT embeddings lack GO evidence provenance; full SLant-derived ANN branch omitted
 - **llmsynthlet** released: zero-shot LLMs pretrained on the SL literature, including SLB's own screens
 - **struct2sl** released: released weights trained on SynLethDB labels
 - **discoversl** released: released RF trained on literature SL labels

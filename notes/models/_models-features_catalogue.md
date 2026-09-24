@@ -21,4 +21,4 @@ sinatra, slidr, deltadep, exp2sl, llmsynthlet, misl, slant; sub-agent notes: eli
 | SL-DeployBench | sl_deploybench, 38b95d5 | see repo | deployment-oriented audit of SL pipelines (not a model) | n/a | acquired for reference. |
 | Dandage & Landry 2019 | dandage_landry2019, 4d1da07 | none | analysis of paralog dependency robustness (not a predictor) | n/a | acquired for reference. |
 | Struct2SL, MiT4SL | (models-graph clones Struct2SL, MiT4SL) | | | | handed to models-graph (board #9). |
-| Medea (mims-harvard) | not cloned | | therapeutic-reasoning agent | | out of scope (no SL pair predictor). |
+| Medea (mims-harvard, 2026) | medea (acquired) | see repo | LLM agent with `main.py --task sl` for human/yeast pairs | literature and MedeaDB can contain published SL pairs, including held-out benchmark pairs | acquired; requires external LLM APIs and a provenance-safe knowledge source, so no ranked SLB prediction. The previous claim that it lacked an SL task was wrong. |

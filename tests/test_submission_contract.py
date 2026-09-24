@@ -42,6 +42,19 @@ def test_same_family_bootstrap_counts_once():
     assert _family_weights(counts, ia, ib).tolist() == [2, 6, 15, 5]
 
 
+def test_bootstrap_family_indices_are_canonical(tmp_path, monkeypatch):
+    from slpbench import evaluate as E
+
+    fam = pl.DataFrame({"species": ["human"] * 3,
+                        "gene": ["g1", "g2", "g3"], "family": ["z", "a", "m"]})
+    fam.write_parquet(tmp_path / "held_out_families.parquet")
+    monkeypatch.setattr(E, "BENCH", tmp_path)
+    pairs = pl.DataFrame({"example_id": ["p1", "p2"], "species": ["human"] * 2,
+                          "gene_a": ["g1", "g3"], "gene_b": ["g2", "g1"]})
+    ia, ib, n = E._family_index(pairs)
+    assert (ia.tolist(), ib.tolist(), n) == ([2, 1], [0, 2], 3)
+
+
 def test_unknown_ancestry_is_excluded_from_human_headline():
     d = pl.DataFrame({
         "context_id": ["eur"] * 40 + ["unknown"] * 40,

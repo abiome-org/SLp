@@ -20,6 +20,9 @@ measured-pair benchmark, a published-method battery, and a dev-selected ensemble
   from `models/battery.yaml`; re-run its adapters with `scripts/models/run_battery.sh`.
 - [MODELS_TEST.md](MODELS_TEST.md): the selected methods evaluated on the held-out test split.
 - [CLIMB.md](CLIMB.md): frozen grader checks, model-selection ledger and held-out comparison.
+- [GENERALIZATION.md](GENERALIZATION.md): interpretation of CV1/CV2/CV3, the 2026 cold-start results and the production setting.
+- [figures/README.md](figures/README.md): downloadable CV1/CV2/CV3 and SLB test figures, with rebuild commands and captions.
+- [notes/models/2026_landscape.md](notes/models/2026_landscape.md): dated audit of 2026 papers, preprints and code, with each method's SLB status.
 - [data/README.md](data/README.md): private build and public bundle usage.
 - `notes/data/`, `notes/models/`: per-source data notes and per-model notes for the SL model battery
   (`scripts/models/<name>/run.sh`). Agent brief: `notes/AGENT_BRIEF.md`.

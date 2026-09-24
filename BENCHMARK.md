@@ -330,7 +330,7 @@ pinned raw file. `slpbench export-public data/release/slb1.3` creates a model-fa
 with dev labels and dev propensity weights for public scoring, but no test labels or test propensity
 files. It writes `release.lock.json` with hashes; `SLB_BENCH=data/release/slb1.3 slpbench verify`
 checks the exported bundle. The private
-benchmark directory is kept by the evaluator. Scorer 1.3.1 requires unique known IDs and finite
+benchmark directory is kept by the evaluator. Scorer 1.3.2 requires unique known IDs and finite
 scores, fixes tied-score AP and same-family bootstrap weights, and excludes unknown ancestry
 explicitly from the human headline. The SLB point score on this release is unchanged.
 

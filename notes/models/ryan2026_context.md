@@ -30,3 +30,19 @@ Headline = mean of human/scer/spom; auxiliary columns are the per-species strata
 | ryan2026_context__slbtrain_full | 0.5439 | 0.6317 | 0.5000 | 0.5000 | 0.5000 | 0.5000 | 0.5000 | 0.6178 | human |
 
 Reference on SLB-1.3 dev: lgbm 0.5315 (human 0.558), paralog_identity 0.5392 (human 0.608), codependency 0.5149, random 0.4854.
+
+## SLB-1.3 held-out test
+
+The refitted models were scored once on the family-held-out test. Their native
+coverage is 15,522 / 20,210 human pairs; the remaining human rows use the
+benchmark's species-median fill. Yeasts are tied at 0.500.
+
+| Variant | SLB (95% family-bootstrap CI) | Human | Ranking status |
+|---|---:|---:|---|
+| `slbtrain_full` | 0.571 (0.543–0.597) | 0.712 | clean adaptation |
+| `slbtrain_ctx` | 0.561 (0.530–0.590) | 0.682 | clean adaptation |
+| `released_ctx` | 0.535 (0.508–0.561) | 0.606 | unranked: released weights trained on overlapping GEMINI labels |
+
+The stronger human result is still a paralog-focused, partially covered
+prediction. The high original random-pair validation scores do not establish
+performance on unseen gene families.

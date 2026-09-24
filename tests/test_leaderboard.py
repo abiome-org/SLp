@@ -50,3 +50,19 @@ def test_leaderboard_rejects_tampered_ci_and_nonfinite_scores(tmp_path, monkeypa
     record["auxiliary_species_scores"] = {"bsub": 0.5}
     with pytest.raises(ValueError, match="auxiliary_species_scores"):
         leaderboard._verified_result(entry())
+
+
+def test_exploratory_test_read_is_registered_but_unranked(monkeypatch):
+    monkeypatch.setattr(leaderboard, "species_tiers", lambda: (["human"], []))
+    monkeypatch.setattr(leaderboard, "_verified_result", lambda e: {
+        "slb_score": e["score"], "slb_score_ci95": [e["score"] - .01, e["score"] + .01],
+        "species_scores": {"human": e["score"]}, "auxiliary_species_scores": {},
+    })
+    rendered = leaderboard.render([
+        {"name": "unresolved", "score": .9, "leaky": "possibly"},
+        {"name": "diagnostic", "score": .8, "ranked": False, "leaky": False},
+        {"name": "finalist", "score": .7, "leaky": False},
+    ])
+    assert "| 1 | **finalist**" in rendered
+    assert "| – | **diagnostic**" in rendered
+    assert "| – | **unresolved**" in rendered and "| possible |" in rendered
