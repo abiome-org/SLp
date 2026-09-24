@@ -1,41 +1,41 @@
-# Test-split entries. Evaluate with: slpbench eval PREDS --split test --boot 200 --out results/NAME_test.json
+# Test-split entries. Evaluate with: slpbench eval PREDS --split test --boot 200 --out results/slb1.3/NAME_test.json
 - name: lgbm
-  result: results/lgbm_test.json
+  result: results/slb1.3/lgbm_test.json
   description: gradient boosting on single-gene fitness, paralog identity, DepMap co-dependency
-  trained_on: SLB-1.2 train
+  trained_on: SLB-1.3 train
   leaky: false
 - name: fitness_lgbm
-  result: results/fitness_lgbm_test.json
+  result: results/slb1.3/fitness_lgbm_test.json
   description: gradient boosting on the single-loss covariates only (probe of residual fitness signal)
-  trained_on: SLB-1.2 train
+  trained_on: SLB-1.3 train
   leaky: false
 - name: fitness
-  result: results/fitness_test.json
+  result: results/slb1.3/fitness_test.json
   description: sickness of the two single mutants, -(f_a + f_b)
   trained_on: none (single-gene data)
   leaky: false
 - name: paralog_identity
-  result: results/paralog_identity_test.json
+  result: results/slb1.3/paralog_identity_test.json
   description: Ensembl 116 paralog protein identity
   trained_on: none
   leaky: false
 - name: codependency
-  result: results/codependency_test.json
+  result: results/slb1.3/codependency_test.json
   description: DepMap gene-effect profile correlation (human only)
   trained_on: none (single-gene data)
   leaky: false
 - name: random
-  result: results/random_test.json
+  result: results/slb1.3/random_test.json
   description: uniform noise
   trained_on: none
   leaky: false
 - name: SLp-1.1 (decoder)
-  result: results/slp11_sl_score_test.json
-  description: prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 45% of human test pairs in vocabulary (rest tied)
+  result: results/slb1.3/slp11_sl_score_test.json
+  description: prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 39% of human test pairs in vocabulary (rest tied)
   trained_on: MuSL/SynLethDB SL labels; DepMap; Costanzo yeast (25% sample)
   leaky: true
 - name: SLp-1.1 (label-free)
-  result: results/slp11_label_free_test.json
-  description: prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 45% coverage
+  result: results/slb1.3/slp11_label_free_test.json
+  description: prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 39% coverage
   trained_on: DepMap; Costanzo yeast (25% sample); Perturb-seq
   leaky: true

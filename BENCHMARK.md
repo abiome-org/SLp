@@ -1,4 +1,4 @@
-# SLB-1.2: a held-out, reproducibility-checked, fitness-balanced synthetic-lethality benchmark
+# SLB-1.3: a held-out, reproducibility-checked, fitness-balanced synthetic-lethality benchmark
 
 **Task.** Given a genetic context (species + cell line or strain) and a gene pair, score how likely
 losing both genes is synthetically lethal or sick: a strong negative genetic interaction beyond the
@@ -8,17 +8,40 @@ two single-loss effects.
 negatives were both tested. There are no "unknown = negative" pairs, no literature-mined labels and no
 synthetic data. Every source that supplies labels passed a reproducibility check (next section).
 
-The v1.2 build covers:
-- **Human:** 50 cell lines from 8 studies, annotated with genetic ancestry.
-- ***S. cerevisiae***, ***S. pombe*** and ***S. pneumoniae***: one source each.
+The v1.3 build has two tiers of species:
+- **Headline species** (averaged into the SLB score). Their labels are backed by cross-study
+  replication, and each has hundreds of test positives:
+  - **Human:** 50 cell lines from 8 studies, annotated with genetic ancestry.
+  - ***S. cerevisiae***: 5 sources (Costanzo 2016, Kuzmin 2018 and 2020, Costanzo 2021, 9 merged E-MAPs).
+  - ***S. pombe***: 2 sources (Ryan 2012, Frost 2012).
+- **Auxiliary species** (held out, scored and reported the same way, but not averaged in). They have
+  few test positives, or labels verified only within their own study:
+  - ***B. subtilis*** (Koo 2025 dual CRISPRi)
+  - ***C. elegans*** (Byrne 2007)
+  - ***D. melanogaster*** (Horn 2011)
+  - ***M. musculus*** (Roguev 2013)
+
+  A species is scored only when the split has at least 20 positives. On test that covers *B. subtilis*
+  (55) and *C. elegans* (38); fly and mouse only add training data.
+
+*S. pneumoniae* and *E. coli* are measured but supply no labels. Their screens contradict each other
+(see Excluded sources).
 
 Counts are in [DATA_CARD.md](DATA_CARD.md). The replication evidence for every source, included or
 not, is in [REPLICATION.md](REPLICATION.md).
 
 **Held out.** Genes are grouped into families: paralogs with ≥ 30% protein identity, plus orthologs
-across human, both yeasts and fly (reciprocal best hits, or ones supported by at least 3 prediction
-methods). Whole families are hashed into train, dev or test. In a test pair, neither gene has a
-paralog above 30% identity or any ortholog in train, in any species.
+across 12 proteomes. The proteomes are human, mouse, worm, fly, both yeasts, *C. albicans*, and five
+bacteria (*S. pneumoniae*, *E. coli*, *B. subtilis*, *M. tuberculosis*, *S. aureus*). Orthologs come
+from three sources:
+- the Alliance (reciprocal best hits, or ones supported by at least 3 methods)
+- PomBase curated orthologs
+- reciprocal best DIAMOND hits between every pair of proteomes
+
+Details are in [notes/data/orthology.md](notes/data/orthology.md). Whole families are hashed into
+train, dev or test. In a test pair, neither gene has a paralog above 30% identity or any ortholog in
+train, in any species, bacteria included. A family is named after its smallest gene from a species
+already in SLB-1.2, so new species don't re-bucket existing families.
 
 There is only one evaluation: both genes held out. Splits that hold out a pair but let its genes
 appear in training (sometimes called CV1/CV2) are not offered. Models can memorise which genes have
@@ -33,7 +56,7 @@ uv run slpbench compare results/fitness_dev.parquet results/lgbm_dev.parquet --s
 uv run slpbench check-leakage my_training_pairs.parquet
 ```
 
-A model reads `data/bench/slb1.2/{split}.parquet` (or `test_inputs.parquet`) and writes one `score`
+A model reads `data/bench/slb1.3/{split}.parquet` (or `test_inputs.parquet`) and writes one `score`
 per `example_id`. Higher means more likely SL.
 
 ## Label quality
@@ -62,9 +85,25 @@ benchmark therefore admits a source's labels only if they reproduce.
 | Parrish 2021 | Own replicates | 0.90–0.95 |
 | Zhao 2018 | Own replicates | 0.69–0.72 |
 | SPIDR 2025 | Own replicates, after re-scoring | 0.86 |
-| Costanzo 2016 (*S. cerevisiae*) | Opposite orientation, at the SLB cut-off | 0.74 |
-| Ryan 2012 (*S. pombe*) | Independent alleles or orientation, at the SLB cut-off | 0.76 |
-| Dual CRISPRi-seq 2025 (*S. pneumoniae*) | Own replicates | 0.95 |
+| Costanzo 2016 (*S. cerevisiae*) | Cross-study, 4 independent re-measurements; own orientation 0.74 | 0.74–0.93 |
+| Kuzmin 2018 (*S. cerevisiae*) | Cross-study vs Costanzo 2016 | 0.89 |
+| Kuzmin 2020 (*S. cerevisiae*) | Cross-study vs Costanzo 2016 and Kuzmin 2018 | 0.80–0.89 |
+| Costanzo 2021, reference condition (*S. cerevisiae*) | Cross-study vs Costanzo 2016; own replicates 0.94 | 0.95 |
+| 9 *S. cerevisiae* E-MAPs, merged as one source¹ | Cross-study vs Costanzo 2016 (each map 0.71–0.87) | 0.77 |
+| Ryan 2012 (*S. pombe*) | Cross-study vs Frost 2012; own alleles/orientation 0.76 | 0.79 |
+| Frost 2012 (*S. pombe*) | Cross-study vs Ryan 2012²; own orientation/alleles 0.80 | 0.67 |
+| Koo 2025 (*B. subtilis*, auxiliary) | Own sgRNA orientation swap, at the SLB cut-off | 0.87–0.89 |
+| Byrne 2007 (*C. elegans*, auxiliary) | Pairs measured twice; Lehner 2006 hits recovered at 0.70 | 0.87–0.93 |
+| Horn 2011 (*D. melanogaster*, auxiliary) | Replicate screens; vs Heigwer 2023 0.72 | 0.92–0.93 |
+| Roguev 2013 (*M. musculus*, auxiliary) | Own orientations | 0.73 |
+
+¹ The E-MAPs (Schuldiner 2005, Collins 2007, Wilmes 2008, Fiedler 2009, Zheng 2010, Aguilar 2010,
+Hoppins 2011, Guénolé 2013, Surma 2013) share many measurements. Listed separately, they would look
+like independent confirmations of each other.
+
+² Frost's positive cut-off (S < −4) was tightened after seeing its S < −3 calls replicate in Ryan 2012
+at only 0.64. It is the same kind of stricter cut the other yeast sources use, but it was chosen with
+the cross-study number in view.
 
 **Excluded sources.** Their measurements are kept in `data/interim/measurements` as optional training
 data, but they supply no benchmark labels.
@@ -75,8 +114,16 @@ data, but they supply no benchmark labels.
 | Thompson 2021 | Cross-study 0.60; its calls are largely predictable from single-gene fitness (0.87) |
 | Shen 2017 | Its own replicates don't recover its labels (0.56–0.72) |
 | Han 2017, Wong 2016, CHyMErA 2020 | Unverifiable: no usable replicate counts and no overlap with other studies |
-| Fischer 2015, Heigwer 2023 (fly) | The two studies contradict each other (0.57 / 0.41). Same lab, same cell line |
+| Fischer 2015, Heigwer 2023 (fly) | The two studies contradict each other (0.57 / 0.41). Same lab, same cell line. Horn 2011 sides with Heigwer (0.72 / 0.70) against Fischer (0.30), but on 5–36 positives |
+| Billmann 2016 (fly) | No replicates and ≤ 5 positives shared with other maps: unverifiable |
+| Dual CRISPRi-seq 2025, Dual Tn-seq 2025 (Zik), CRISPRi-TnSeq 2024 (*S. pneumoniae*) | Each replicates internally (0.79–0.99), but none reproduces another. Dual Tn-seq recovers dual CRISPRi-seq's labels at 0.51 (95% CI 0.43–0.59, 69 positives), and dual CRISPRi-seq recovers CRISPRi-TnSeq's at 0.50 (0.44–0.57, 87). Single-gene fitness agrees across all three, so it is not an ID-mapping error |
+| Babu 2011, Gagarinova 2016, Kumar 2016, Côté 2016 (*E. coli*) | Every cross-study comparison sits at 0.46–0.51, with every CI including 0.5 |
+| Lehner 2006 (*C. elegans*) | Hit list only: negatives would be inferred, not measured |
+| Gier 2020 (mouse) | 56% of labelled pairs called SL; calls are indistinguishable from pairs with non-expressed control genes (0.47) |
 | Diehl 2021, Tang 2022 | Implausible hit rates: 63% and 22% of tested pairs called SL |
+
+Dual CRISPRi-seq was the *S. pneumoniae* source in SLB-1.2. It was included on its own replicates,
+and SLB-1.3 found independent screens that contradict it.
 
 **Where published calls were replaced:**
 - **Budding and fission yeast:** stronger interactions replicate better, so the positive cut-offs are
@@ -84,9 +131,9 @@ data, but they supply no benchmark labels.
 - **SPIDR:** its published GEMINI calls are recovered by its own replicates at only 0.62. Its raw
   counts are therefore re-scored with the same additive zdLFC recipe as the other paralog screens.
 
-Remaining disagreement: where two included studies measured the same pair in the same cell line and
-at least one called SL, all of them agreed 43% of the time. The earlier set, with the non-replicating
-sources included, managed 20%.
+Remaining disagreement: where two included studies measured the same pair in the same context and at
+least one called SL, all of them agreed 35% of the time. Most such pairs are in the yeasts. In SLB-1.1
+the figure was 43% for human alone, and 20% before the audit.
 
 ## Label rules
 
@@ -105,7 +152,15 @@ sources included, managed 20%.
 | Harle 2025 | Author binary hit matrix | Not a hit, FDR > 0.25, \|GI\| < median for that line |
 | Costanzo 2016 SGA | ε < −0.2 and p < 0.05 | p > 0.25 and \|ε\| < median |
 | Ryan 2012 *S. pombe* E-MAP | S < −3 | \|S\| < 1 |
-| Dual CRISPRi-seq 2025 (*S. pneumoniae*) | Authors' "Negative" call; single-gene sgRNAs, essential × essential pairs dropped | "Neutral", \|ε\| < median |
+| Kuzmin 2018/2020, Costanzo 2021 (reference condition) SGA | ε < −0.2 and p < 0.05 | p > 0.25 and \|ε\| < median |
+| *S. cerevisiae* E-MAPs (merged) | S < −3 | \|S\| < 1 |
+| Frost 2012 *S. pombe* E-MAP | S < −4 | \|S\| < 1 |
+| Koo 2025 *B. subtilis* dual CRISPRi | GI ≤ −1.5 | see `bacteria_extra.koo2025` |
+| Byrne 2007 *C. elegans* | In the authors' SGI network, strength ≥ 2 | Not in the network, weak |
+| Horn 2011 fly | q < 0.05 and π < 0 | q > 0.25, small \|π\| |
+| Roguev 2013 mouse E-MAP | S < −3 | \|S\| < 1 |
+
+Per-source detail and rationale: `notes/data/<source>.md`.
 
 ## Metric
 
@@ -118,7 +173,7 @@ separate "adjusted" score to read alongside it.
    scores exactly 0.500.
 2. **Balance single-gene fitness.** SL calls concentrate on genes that are already sick on their own.
    That is real biology, but a model that only predicts sickness would climb an unadjusted AUROC
-   (to 0.70–0.75 on this data). So each pair gets a propensity *e* = P(SL | both genes' single-loss
+   (to 0.70–0.75 on SLB-1.2). So each pair gets a propensity *e* = P(SL | both genes' single-loss
    effects, screen, context), fitted on the evaluation split itself. SL pairs are then weighted
    1 − *e* and non-SL pairs *e* (overlap weights; Li, Morgan & Zaslavsky 2018), and the weights are
    rescaled per stratum and class. After weighting, SL and non-SL pairs in each stratum have the
@@ -128,7 +183,10 @@ separate "adjusted" score to read alongside it.
    split. Ancestry is the donor's genotype-inferred majority super-population from Cellosaurus
    (Kessler et al. 2019), with more than 50% as the cut-off. Lines with no estimate (hTERT-RPE1, C092)
    are reported but not averaged in. Each ancestry group counts equally, however many cell lines it has.
-4. **SLB score** = the mean of the species scores. Each species counts equally.
+4. **SLB score** = the mean of the headline species' scores (human, *S. cerevisiae*, *S. pombe*). Each
+   counts equally. The auxiliary species are scored the same way and reported separately. A species
+   score needs at least 20 positives in the split, otherwise it is n/a. The tiers are recorded in
+   `manifest.json`.
 
 `eval` reports every species, ancestry group, cell line and paralog/non-paralog stratum:
 - **SLB AUROC** (the balanced AUROC the score uses).
@@ -149,7 +207,10 @@ The reference single-loss effect per gene (`gene_single_effects.parquet`, a perm
 | Human | DepMap 24Q4 Chronos effect in that cell line where DepMap screened it, plus the pan-line mean |
 | *S. cerevisiae* | SGA single-mutant fitness − 1 (Costanzo 2016) |
 | *S. pombe* | PomBase deletion viability: inviable −1, slow growth −0.5, viable 0 |
-| *S. pneumoniae* | Single-sgRNA knockdown log2FC (dual CRISPRi-seq reference arm) |
+| *B. subtilis* | CRISPRi single-knockdown fitness (Koo 2025) |
+| *C. elegans* | WormBase WS298 phenotypes: lethal or larval arrest −1, sterile or slow −0.5, else 0 |
+| *D. melanogaster* | Single-dsRNA main effect on cell count (Heigwer 2023) |
+| *M. musculus* | DepMap pan-line mean of the one-to-one human ortholog (no genome-wide mouse screen exists) |
 
 The propensity model (`fitness.propensity`) is a lightly penalised logistic regression per species.
 Its inputs are cubic splines of each gene's context and pan-context effect (lower and higher of the
@@ -162,14 +223,15 @@ pair), their product, screen and context intercepts, and screen × effect intera
   values. A gradient-boosted propensity with odds weights left *S. pneumoniae* with an effective
   sample of 6 negatives.
 
-Checks, all on dev and test (`tests/test_benchmark.py` asserts the first):
+Checks (`tests/test_benchmark.py` asserts the first):
 - Within-stratum standardised mean differences of all four fitness covariates fall from up to 1.4
-  to ≤ 0.015 in every species.
-- Fitness-only predictors score about 0.5: the propensity itself, −(f_a + f_b), and `fitness_lgbm`
-  (gradient boosting on the fitness covariates, trained on train). On *S. pneumoniae*, `fitness_lgbm`
-  ranges from 0.42 to 0.65 across the 5 family splits in [ROBUSTNESS.md](ROBUSTNESS.md), with a mean
-  of 0.53. That is noise around 0.5, not a systematic leak.
-- Effective sample sizes stay large: human 3.5k of 15k negatives on dev, *S. pneumoniae* 130–450 negatives.
+  to below 0.03 in every species with at least 20 positives.
+- Fitness-only predictors score about 0.5 on the headline species. On SLB-1.3 test, −(f_a + f_b)
+  scores 0.49–0.50, and `fitness_lgbm` (gradient boosting on the fitness covariates, trained on
+  train) scores 0.52–0.53. On *B. subtilis*, `fitness_lgbm` reaches 0.57, but with 55 positives the
+  random baseline itself lands anywhere from 0.45 to 0.58.
+- A species split with only one class (a tiny auxiliary species) gets a constant propensity. There is
+  nothing to balance, and it isn't scored.
 
 The propensities are stored under `hidden/`. They are evaluation machinery built from the split's
 labels, never a model input.
@@ -193,12 +255,12 @@ held-out families, including genes absent from the benchmark that are paralogs o
 held-out genes. Add `--allow-dev` for final models trained on train + dev. Models fitted on public SL
 databases without this filter are listed as `leaky` and not ranked.
 
-What "held out" leaves behind:
-- 31% of human test genes (15% in *S. cerevisiae*, 19% in *S. pombe*) have a distant paralog in
-  train, always below 30% identity (median 23%).
-- No test gene has an ortholog in train at any level of algorithm support.
+What "held out" leaves behind: distant paralogs below 30% identity (in SLB-1.2, 31% of human test genes
+had one in train, median 23% identity), and orthologs too distant to be a reciprocal best hit (e.g.
+bacterial rplJ and human MRPL10). No test gene has a curated, Alliance or reciprocal-best-hit ortholog
+in train.
 
-## Files (`data/bench/slb1.2/`)
+## Files (`data/bench/slb1.3/`)
 
 | File | Contents |
 |---|---|
@@ -210,7 +272,7 @@ What "held out" leaves behind:
 | `contexts.parquet` | Per context: Cellosaurus accession, DepMap ID, disease, sex, ancestry group and fractions. |
 | `held_out_families.parquet` | Gene → family → bucket. Used by the leakage checker. |
 | `gene_single_effects.parquet` | Reference (pan-context) single-loss effect per gene. A permitted input. |
-| `manifest.json` | Build parameters, excluded sources, row counts, sha256 of every file. |
+| `manifest.json` | Build parameters, headline and auxiliary species, excluded sources, row counts, sha256 of every file. |
 
 Example columns: `example_id, species, context_id, ancestry_group, gene_a, gene_b, same_family,
 sources, label`. Gene IDs:
@@ -220,36 +282,64 @@ sources, label`. Gene IDs:
 | Human | HGNC symbol |
 | *S. cerevisiae* | SGD systematic ORF |
 | *S. pombe* | PomBase systematic ID |
-| *S. pneumoniae* | D39V gene name or locus tag |
+| *B. subtilis* | BSU locus tag (BSU00010) |
+| *C. elegans* | WormBase gene ID (WBGene…) |
+| *D. melanogaster* | FlyBase gene ID (FBgn…) |
+| *M. musculus* | MGI symbol |
 
-`slpbench.ids.resolve` maps other names.
+`slpbench.ids.resolve` and `slpbench.ids_extra.resolve` map other names (including *S. pneumoniae*
+and *E. coli*, which are measurements only).
 
 ## Known limitations
 
 - **Ancestry coverage is thin.** European 38 lines, East Asian 7, African 3 (RKO, HeLa, NCI-H23),
   with 30 test positives for the African group. This reflects the public screens. New screens in
   non-European lines are the highest-value additions.
-- **No fly or other metazoan besides human.** The only two fly GI maps contradict each other.
+- **Few non-human metazoan labels.** Fly and mouse contribute a few hundred labelled pairs and can't be
+  scored on test. *C. elegans* (38 test positives) and *B. subtilis* (55) are scored, but they are noisy
+  and stay out of the headline.
+- **No bacterium in the headline.** Every bacterial species with more than one pairwise screen
+  (*S. pneumoniae*, *E. coli*) has screens that contradict each other. *B. subtilis* has a single
+  screen, verified only against itself. SLB-1.3 found that own-replicate evidence alone missed the
+  *S. pneumoniae* contradiction.
 - **Human screens mostly test paralog pairs,** so same-family pairs are overrepresented.
-- ***S. pneumoniae* is the noisiest species.** It has 49 test positives, and after balancing only a few
-  hundred effective negatives, because its SL calls sit almost entirely on the sickest genes. Its
-  species score moves by about ±0.08 between family splits, and it counts for a quarter of the headline.
-  Check per-species `compare` output before crediting a gain that comes only from *S. pneumoniae*.
-- **Current baselines are close to 0.5.** Once fitness is balanced out they span 0.48–0.55, closer
-  together than the split-to-split noise, so their ranking is not stable
-  ([ROBUSTNESS.md](ROBUSTNESS.md)). Human carries the real signal: paralog identity scores 0.70, and
-  lgbm scores 0.53–0.58 against 0.48–0.52 for fitness alone. The yeasts sit at 0.50–0.51 for every
-  baseline, which leaves the most headroom.
+- **Current baselines are close to 0.5.** Once fitness is balanced out they span 0.49–0.55 on test.
+  Human carries their signal: paralog identity scores 0.65 and lgbm 0.61. Both yeasts sit at 0.50–0.53
+  for every baseline here. But models that use functional annotation, such as GO/PPI features and
+  ontotype, reach 0.61–0.71 on the yeasts in the model battery (`notes/models/`), so the yeast labels
+  can be learned.
 - **Inclusion is binary.** Every included source cleared the bar, but not equally: Dede 0.93 versus
   Zhao 0.69. Labels are not weighted by source reliability.
 
 ## Rebuilding
 
-`uv run python -m slpbench.fetch` downloads the raw sources. `uv run slpbench build` parses, audits
-decisions, merges and splits. Then run `uv run slpbench audit` and `uv run slpbench card`.
+`uv run python -m slpbench.fetch` downloads the SLB-1.2 raw sources. The sources added in SLB-1.3
+list their URLs and retrieval steps in `notes/data/*.fetch.tsv`. A few need manual steps: Europe PMC
+supplement zips, and Dryad's bot gate, handled by `scripts/dryad_anubis_fetch.py`. `fetch.py` does
+not automate these yet. `uv run slpbench build` parses, audits decisions, merges and splits. Then run `uv run slpbench audit` and `uv run slpbench card`.
 `reference/raw_sha256sums.txt` pins the raw inputs. The split depends only on `SALT`, the family
 graph and the bucket fractions (all in `manifest.json`). A robustness study across 4 alternative
 salts is in [ROBUSTNESS.md](ROBUSTNESS.md).
+
+## Changes from SLB-1.2
+
+- **New label sources:**
+  - *S. cerevisiae*: Kuzmin 2018 and 2020, Costanzo 2021 (reference condition), 9 E-MAPs merged
+  - *S. pombe*: Frost 2012
+  - new auxiliary species: *B. subtilis* (Koo 2025), *C. elegans* (Byrne 2007), fly (Horn 2011), mouse (Roguev 2013)
+- **New measurements-only sources** (no labels): 3 *S. pneumoniae* screens, 4 *E. coli* maps,
+  Billmann 2016, Lehner 2006, Gier 2020.
+- ***S. pneumoniae* is out of the labels,** including dual CRISPRi-seq, which SLB-1.2 used. Independent
+  screens contradict it.
+- **Species tiers:** the SLB score averages human, *S. cerevisiae* and *S. pombe*. Auxiliary species are
+  reported separately and need at least 20 positives to be scored.
+- **Families include DIAMOND reciprocal-best-hit orthologs across 12 proteomes,** bacteria included,
+  with stable family naming. About 1,200 genes changed bucket, so SLB-1.3 scores are not comparable
+  with 1.2.
+- **Evaluator:** reads the species tiers from the manifest, and refuses predictions that miss more than
+  half of the split (a version-mismatch guard).
+- **Baselines:** `lgbm` one-hot encodes every species present in train.
+- **Audit:** reruns the checks for every new source. REPLICATION.md lists them all.
 
 ## Changes from SLB-1.1
 

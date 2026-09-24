@@ -24,11 +24,12 @@ def test_no_example_in_two_splits():
     assert allids.n_unique() == allids.len()
 
 
-def test_both_classes_every_species_in_test():
-    from slpbench.evaluate import load_split
+def test_both_classes_every_headline_species_in_test():
+    from slpbench.evaluate import MIN_GROUP_POS, load_split, species_tiers
     t = load_split("test")
     c = t.group_by("species").agg((pl.col("label") == 1).sum().alias("p"), (pl.col("label") == 0).sum().alias("n"))
-    assert c.height == 4 and (c["p"] > 0).all() and (c["n"] > 0).all()
+    c = c.filter(pl.col("species").is_in(species_tiers()[0]))
+    assert c.height == len(species_tiers()[0]) and (c["p"] >= MIN_GROUP_POS).all() and (c["n"] > 0).all()
 
 
 def test_leakage_catches_paralog_of_heldout_gene():
@@ -54,6 +55,8 @@ def test_balance_weights_equalise_single_gene_fitness():
     d = covariates(load_gold("dev"), pl.read_parquet(BENCH / "contexts.parquet"))
     pos, w = pl.col("label") == 1, pl.col("_bw")
     for (sp,), g in d.group_by(["species"]):
+        if (g["label"] == 1).sum() < 20:
+            continue
         for c in COVARIATES:
             x = pl.col(c)
             t = g.drop_nulls(c).group_by("context_id", "sources").agg(

@@ -16,12 +16,17 @@ from pathlib import Path
 import polars as pl
 
 from slpbench import contexts, families
-from slpbench.sources import bacteria, dmel, human, yeast
+from slpbench.sources import bacteria, bacteria_extra, dmel, eukaryotes_extra, human, yeast
 
-VERSION = "slb1.2"
+VERSION = "slb1.3"
 SALT = os.environ.get("SLB_SALT", "slb1-2026-09-22")  # unchanged from SLB-1 so family buckets stay identical
 INTERIM = Path("data/interim")
 OUT = Path(os.environ.get("SLB_OUT", f"data/bench/{VERSION}"))  # overrides are for robustness studies only
+
+# Species in the SLB score: cross-study-verified labels and enough test positives. Auxiliary species
+# are held out, scored and reported the same way, but not averaged into the headline.
+HEADLINE_SPECIES = ["human", "scer", "spom"]
+AUXILIARY_SPECIES = ["bsub", "cele", "dmel", "mmus"]
 
 # fraction of families per bucket
 TEST_FRAC, DEV_FRAC = 0.20, 0.15
@@ -39,6 +44,19 @@ EXCLUDED_SOURCES = {
     "chymera2020": "not in SLKB (no counts) and 1 overlapping positive: unverifiable",
     "fischer2015": "the two fly GI maps contradict each other (cross-study AUROC 0.57 / 0.41)",
     "heigwer2023": "the two fly GI maps contradict each other (cross-study AUROC 0.57 / 0.41)",
+    "billmann2016": "no replicates and <= 5 shared positives with other fly maps: unverifiable",
+    "lehner2006": "hit list only: negatives are inferred (not in the list), not scored",
+    "gier2020": "56% of labelled pairs called SL; calls indistinguishable from non-expressed control pairs (0.47)",
+    "dualcrispri2025": "S. pneumoniae screens contradict each other: Dual Tn-seq recovers its labels at 0.51 "
+                       "(95% CI 0.43-0.59, 69 pos)",
+    "dualtnseq2025": "S. pneumoniae screens contradict each other (dual CRISPRi-seq recovers its labels at 0.61, "
+                     "CI 0.49-0.72; and vice versa at 0.51)",
+    "crisprtnseq2024": "S. pneumoniae screens contradict each other: dual CRISPRi-seq recovers its labels at 0.50 "
+                       "(CI 0.44-0.57, 87 pos)",
+    "babu2011": "E. coli eSGA/GIANT-coli maps contradict each other (cross-study 0.46-0.51 in all 8 directions)",
+    "gagarinova2016": "E. coli eSGA/GIANT-coli maps contradict each other (cross-study 0.46-0.51 in all 8 directions)",
+    "kumar2016": "E. coli eSGA/GIANT-coli maps contradict each other (cross-study 0.46-0.51 in all 8 directions)",
+    "cote2016": "E. coli eSGA/GIANT-coli maps contradict each other (cross-study 0.46-0.51 in all 8 directions)",
 }
 
 PARSERS = {
@@ -53,6 +71,25 @@ PARSERS = {
     "fischer2015": dmel.fischer2015,
     "heigwer2023": dmel.heigwer2023,
     "dualcrispri2025": bacteria.dualcrispri2025,
+    # SLB-1.3 additions (notes/data/<source>.md)
+    "kuzmin2018": eukaryotes_extra.kuzmin2018,
+    "kuzmin2020": eukaryotes_extra.kuzmin2020,
+    "costanzo2021": lambda: eukaryotes_extra.costanzo2021().filter(pl.col("context") == "S288C"),  # reference condition
+    "scer_emaps": eukaryotes_extra.scer_emaps,
+    "frost2012": eukaryotes_extra.frost2012,
+    "horn2011": eukaryotes_extra.horn2011,
+    "billmann2016": eukaryotes_extra.billmann2016,
+    "byrne2007": eukaryotes_extra.byrne2007,
+    "lehner2006": eukaryotes_extra.lehner2006,
+    "roguev2013": eukaryotes_extra.roguev2013,
+    "gier2020": eukaryotes_extra.gier2020,
+    "koo2025": bacteria_extra.koo2025,
+    "dualtnseq2025": bacteria_extra.dualtnseq2025,
+    "crisprtnseq2024": bacteria_extra.crisprtnseq2024,
+    "babu2011": bacteria_extra.babu2011,
+    "gagarinova2016": bacteria_extra.gagarinova2016,
+    "kumar2016": bacteria_extra.kumar2016,
+    "cote2016": bacteria_extra.cote2016,
 }
 
 
@@ -191,7 +228,8 @@ def stage_splits() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "hidden").mkdir(exist_ok=True)
     manifest = {"version": VERSION, "salt": SALT, "excluded_sources": EXCLUDED_SOURCES, "test_frac": TEST_FRAC, "dev_frac": DEV_FRAC,
-                "paralog_min_identity": families.PARALOG_MIN_IDENTITY, "built": time.strftime("%Y-%m-%d"), "files": {}}
+                "paralog_min_identity": families.PARALOG_MIN_IDENTITY,
+                "headline_species": HEADLINE_SPECIES, "auxiliary_species": AUXILIARY_SPECIES, "built": time.strftime("%Y-%m-%d"), "files": {}}
     from slpbench.fitness import propensity
 
     for split in ["train", "dev", "dev_semi", "test", "test_semi"]:

@@ -15,7 +15,9 @@ SLB score, the one headline number:
      single-gene fitness profile, so predicting "sick genes are SL" scores 0.5: only information
      beyond the two genes' fitness earns credit.
   3. Species score = that balanced AUROC; for human, the mean over ancestry groups with at least
-     MIN_GROUP_POS positives. SLB score = mean over species.
+     MIN_GROUP_POS positives. SLB score = mean over the benchmark's headline species (manifest.json
+     "headline_species"). Auxiliary species ("auxiliary_species": too few test positives or labels
+     verified only within their own study) are scored and reported the same way, but not averaged in.
 """
 
 from __future__ import annotations
@@ -29,10 +31,17 @@ import polars as pl
 
 from slpbench.metrics import average_precision, stratified_auc
 
-BENCH = Path(os.environ.get("SLB_BENCH", "data/bench/slb1.2"))
+BENCH = Path(os.environ.get("SLB_BENCH", "data/bench/slb1.3"))
 MIN_GROUP_POS = 20
-SPECIES = ["human", "scer", "spom", "spne"]
-SPECIES_NAMES = {"human": "H. sapiens", "scer": "S. cerevisiae", "spom": "S. pombe", "spne": "S. pneumoniae"}
+SPECIES_NAMES = {"human": "H. sapiens", "scer": "S. cerevisiae", "spom": "S. pombe", "spne": "S. pneumoniae",
+                 "dmel": "D. melanogaster", "cele": "C. elegans", "mmus": "M. musculus", "bsub": "B. subtilis",
+                 "ecol": "E. coli"}
+
+
+def species_tiers() -> tuple[list[str], list[str]]:
+    """(headline, auxiliary) species of the current benchmark. SLB-1.2 manifests predate the field."""
+    m = json.loads((BENCH / "manifest.json").read_text())
+    return m.get("headline_species", ["human", "scer", "spom", "spne"]), m.get("auxiliary_species", [])
 
 
 def load_split(split: str) -> pl.DataFrame:
@@ -81,23 +90,26 @@ def _within_gene_auc(df: pl.DataFrame) -> tuple[float, float]:
                           both["score"].to_numpy(), both["_bw"].to_numpy())
 
 
-def headline(df: pl.DataFrame, w: np.ndarray | None = None) -> tuple[float, dict]:
+def species_score(d: pl.DataFrame, sp: str, w: np.ndarray | None = None) -> float:
+    """Balanced AUROC; human = mean over ancestry groups. NaN when fewer than MIN_GROUP_POS positives."""
+    if sp != "human":
+        return _auc(d, w)[0] if (d["label"] == 1).sum() >= MIN_GROUP_POS else float("nan")
+    groups = []
+    for g, dg in d.with_row_index("_r").partition_by("ancestry_group", as_dict=True).items():
+        if (dg["label"] == 1).sum() >= MIN_GROUP_POS:
+            groups.append(_auc(dg, w[dg["_r"].to_numpy()] if w is not None else None)[0])
+    return float(np.nanmean(groups))
+
+
+def headline(df: pl.DataFrame, w: np.ndarray | None = None, species: list[str] | None = None) -> tuple[float, dict]:
+    """Mean species score over `species` (default: the headline species)."""
     parts = {}
-    if w is not None:
-        df = df.with_columns(pl.Series("_w", w))
-    for sp in SPECIES:
-        d = df.filter(pl.col("species") == sp)
-        if d.height == 0:
-            continue
-        if sp == "human":
-            groups = []
-            for g, dg in d.partition_by("ancestry_group", as_dict=True).items():
-                if (dg["label"] == 1).sum() >= MIN_GROUP_POS:
-                    groups.append(_auc(dg, dg["_w"].to_numpy() if w is not None else None)[0])
-            parts[sp] = float(np.nanmean(groups))
-        else:
-            parts[sp] = _auc(d, d["_w"].to_numpy() if w is not None else None)[0]
-    return float(np.nanmean(list(parts.values()))), parts
+    for sp in species if species is not None else species_tiers()[0]:
+        m = (df["species"] == sp).to_numpy()
+        if m.any():
+            parts[sp] = species_score(df.filter(pl.Series(m)), sp, w[m] if w is not None else None)
+    vals = [v for v in parts.values() if not np.isnan(v)]
+    return (float(np.mean(vals)) if vals else float("nan")), parts
 
 
 def _row(name: str, d: pl.DataFrame) -> dict:
@@ -161,16 +173,20 @@ def evaluate(preds: pl.DataFrame, split: str, boot: int = 0, allow_missing: bool
     df = load_gold(split).join(preds, on="example_id", how="left", maintain_order="left")
     missing = df["score"].null_count() + df["score"].is_nan().sum()
     if missing:
+        if missing > df.height / 2:
+            raise SystemExit(f"{missing:,} of {df.height:,} {split} examples have no score: these predictions are "
+                             f"probably for a different benchmark version than {BENCH} (set SLB_BENCH)")
         if not allow_missing:
             raise SystemExit(f"{missing:,} of {df.height:,} {split} examples have no score (use --allow-missing)")
         df = df.with_columns(pl.col("score").fill_nan(None).fill_null(pl.col("score").median()))
     score, parts = headline(df)
-    res = {"benchmark": BENCH.name, "split": split, "slb_score": score, "species_scores": parts, "n": df.height,
-           "missing_filled": int(missing), "strata": []}
+    aux = headline(df, species=species_tiers()[1])[1]
+    res = {"benchmark": BENCH.name, "split": split, "slb_score": score, "species_scores": parts,
+           "auxiliary_species_scores": aux, "n": df.height, "missing_filled": int(missing), "strata": []}
     if boot:
         res["slb_score_ci95"] = bootstrap(df, boot)
     res["strata"].append(_row("ALL (flat)", df))
-    for sp in SPECIES:
+    for sp in sum(species_tiers(), []):
         d = df.filter(pl.col("species") == sp)
         if d.height:
             res["strata"].append(_row(f"species={sp}", d))
@@ -193,6 +209,10 @@ def format_report(res: dict) -> str:
     ci = res.get("slb_score_ci95")
     lines.append(f"SLB score: {res['slb_score']:.4f}" + (f"  (95% CI {ci[0]:.4f}–{ci[1]:.4f})" if ci else ""))
     lines.append("  " + "  ".join(f"{SPECIES_NAMES[k]}={v:.4f}" for k, v in res["species_scores"].items()))
+    if res.get("auxiliary_species_scores"):
+        lines.append("auxiliary (not in SLB score): " + "  ".join(
+            f"{SPECIES_NAMES[k]}=" + ("n/a (<20 pos)" if np.isnan(v) else f"{v:.4f}")
+            for k, v in res["auxiliary_species_scores"].items()))
     if res["missing_filled"]:
         lines.append(f"  WARNING: {res['missing_filled']:,} missing scores filled with the median")
     lines.append("\nper stratum: SLB = fitness-balanced AUROC (what the score uses); wg = within-gene SLB;"

@@ -18,6 +18,59 @@ from slpbench.build import EXCLUDED_SOURCES, INTERIM, _context_table
 
 MIN_AUROC = 0.65
 
+# Checks for sources added in SLB-1.3 (implemented next to their parsers).
+NEW_CHECKS = [
+    "eukaryotes_extra.kuzmin2018_checks", "eukaryotes_extra.kuzmin2020_checks", "eukaryotes_extra.costanzo2021_checks",
+    "eukaryotes_extra.scer_emaps_checks", "eukaryotes_extra.frost2012_checks", "eukaryotes_extra.horn2011_checks",
+    "eukaryotes_extra.billmann2016_checks", "eukaryotes_extra.byrne2007_checks", "eukaryotes_extra.roguev2013_checks",
+    "eukaryotes_extra.gier2020_checks", "bacteria_extra.koo2025_checks", "bacteria_extra.dualtnseq2025_checks",
+    "bacteria_extra.crisprtnseq2024_checks", "bacteria_extra.spne_cross_checks", "bacteria_extra.ecoli_array_checks",
+]
+# Which of those rows summarise each source in the decisions table: {source: {kind: regex on `check`}}
+_EC = {s: {"within": rf"^within-study .*: {s} ", "cross": rf"^cross-study: {s} labels"}
+       for s in ("babu2011", "gagarinova2016", "kumar2016", "cote2016")}
+SUMMARY = {
+    "kuzmin2018": {"cross": r"^kuzmin2018 labels scored by costanzo2016"},
+    "kuzmin2020": {"cross": r"^kuzmin2020 labels scored by (costanzo2016|kuzmin2018)"},
+    "costanzo2021": {"within": r"^costanzo2021 reference epsilon", "cross": r"^costanzo2021 reference labels scored"},
+    "scer_emaps": {"within": r"^hoppins2011 individual crosses.*S<-3\.0", "cross": r"^scer_emaps labels scored"},
+    "frost2012": {"within": r"orientation/allele, pos S<-4\.0", "cross": r"^frost2012 labels \(S<-4\.0\)"},
+    "horn2011": {"within": r"^horn2011 replicate screen .*2% tail", "cross": r"^horn2011 labels scored by heigwer2023"},
+    "billmann2016": {"cross": r"^billmann2016 labels scored"},
+    "byrne2007": {"within": r"^byrne2007 duplicate", "cross": r"^(byrne2007 labels scored by lehner|lehner2006 labels scored by byrne)"},
+    "lehner2006": {"cross": r"^lehner2006 labels scored by byrne2007"},
+    "roguev2013": {"within": r"^roguev2013 orientation split, pos S<-3\.0"},
+    "gier2020": {"within": r"^AUROC of diff"},
+    "koo2025": {"within": r"mean GI <= -1\.5\)"},
+    "dualtnseq2025": {"within": r"^within-study: labels from run", "cross": r"^cross-study: dualtnseq2025 labels"},
+    "crisprtnseq2024": {"within": r"median over", "cross": r"^cross-study: crisprtnseq2024 labels scored by dualcrispri"},
+    "dualcrispri2025": {"cross": r"^cross-study: dualcrispri2025 labels"},
+    "costanzo2016": {"cross": r"^costanzo2016 labels scored by"},
+    "ryan2012": {"cross": r"^ryan2012 labels scored by frost2012"},
+    "heigwer2023": {"cross": r"^heigwer2023 labels scored by (horn2011|billmann2016)"},
+    "fischer2015": {"cross": r"^fischer2015 labels scored by (horn2011|heigwer2023)"},
+    **_EC,
+}
+
+
+def _new_check(name: str) -> list[dict]:
+    import importlib
+
+    mod, fn = name.split(".")
+    rows = getattr(importlib.import_module(f"slpbench.sources.{mod}"), fn)()
+    return [{"function": fn, "check": r.get("check"), "auroc": r.get("auroc"), "pos": r.get("pos"),
+             "ci95": "–".join(f"{x:.2f}" for x in r["ci95"]) if r.get("ci95") else None} for r in rows]
+
+
+def _summarise(new: pl.DataFrame) -> dict[tuple[str, str], str]:
+    out = {}
+    for src, kinds in SUMMARY.items():
+        for kind, rx in kinds.items():
+            v = new.filter(pl.col("check").str.contains(rx) & pl.col("auroc").is_not_null())["auroc"].unique()
+            if v.len():
+                out[(src, kind)] = f"{v.min():.2f}" if v.len() == 1 else f"{v.min():.2f}–{v.max():.2f}"
+    return out
+
 
 def _md(df: pl.DataFrame) -> str:
     cols = df.columns
@@ -33,7 +86,7 @@ def run() -> dict:
     m = pl.concat([pl.read_parquet(p) for p in sorted((INTERIM / "measurements").glob("*.parquet"))])
     ctx = _context_table(m)
     m = m.join(ctx.select("species", "source", "context", "context_id"), on=["species", "source", "context"])
-    hm = m.filter(pl.col("species").is_in(["human", "dmel"]))
+    hm = m.filter(pl.col("species").is_in(["human"]))
     cross = R.cross_study(hm)
     inc = R.cross_study(hm.filter(~pl.col("source").is_in(list(EXCLUDED_SOURCES)))).select(
         "source", pl.col("overlap_pos").alias("pos_vs_included"), pl.col("cross_study_auroc").alias("auroc_vs_included"))
@@ -41,11 +94,13 @@ def run() -> dict:
 
     with ProcessPoolExecutor(8, mp_context=mp.get_context("spawn")) as ex:
         slkb = pl.DataFrame(list(ex.map(R.slkb_job, R.SLKB_JOBS)), infer_schema_length=None)
+        new = pl.DataFrame([r for rows in ex.map(_new_check, NEW_CHECKS) for r in rows], infer_schema_length=None,
+                           schema_overrides={"auroc": pl.Float64, "pos": pl.Int64})
     within = pl.DataFrame(
         R.costanzo_orientation() + R.ryan_alleles() + R.spne_replicates() + R.spidr_checks() + R.heigwer_split_half(),
         infer_schema_length=None)
     fit = R.fitness_diagnostic()
-    return {"cross": cross, "slkb": slkb, "within": within, "fitness": fit,
+    return {"cross": cross, "slkb": slkb, "within": within, "fitness": fit, "new": new,
             "sources": pl.DataFrame({"source": sorted(m["source"].unique().to_list())})}
 
 
@@ -59,10 +114,13 @@ def decisions(res: dict) -> pl.DataFrame:
     for r in res["within"].filter(pl.col("slb_rule")).iter_rows(named=True):
         rep[r["source"]] = f"{r['auroc']:.2f}"
     fit = dict(res["fitness"].iter_rows())
+    summ = _summarise(res["new"])
     rows = []
     for s in srcs:
-        rows.append({"source": s, "cross-study AUROC": cross.get(s), "vs included studies": cross_inc.get(s),
-                     "within-study AUROC": rep.get(s),
+        cs = cross.get(s)
+        rows.append({"source": s, "cross-study AUROC": f"{cs:.3f}" if cs is not None else summ.get((s, "cross")),
+                     "vs included studies": cross_inc.get(s),
+                     "within-study AUROC": rep.get(s) or summ.get((s, "within")),
                      "fitness-only AUROC": fit.get(s),
                      "in benchmark": "no" if s in EXCLUDED_SOURCES else "yes",
                      "reason": EXCLUDED_SOURCES.get(s, "")})
@@ -73,7 +131,7 @@ def write(res: dict) -> None:
     dec = decisions(res)
     slkb = res["slkb"].select([c for c in ["source", "context", "pairs", "replicates", "spearman", "tail_2pct_in_10pct",
                                            "labelled", "pos", "auroc_single_replicate", "error"] if c in res["slkb"].columns])
-    text = f"""# Label reproducibility (SLB-1.2)
+    text = f"""# Label reproducibility (SLB-1.3)
 
 Generated by `slpbench audit`. Do not edit by hand.
 
@@ -100,7 +158,7 @@ AUROC ≥ {MIN_AUROC}, they are not contradicted by the cross-study consensus, a
 
 Also excluded before this audit: Diehl 2021 (63% of tested pairs called SL) and Tang 2022 (22%).
 
-## Cross-study replication (human, fly)
+## Cross-study replication (human cell lines)
 
 {_md(res['cross'])}
 
@@ -116,6 +174,14 @@ from pooled replicates).
 ## Within-study checks: other sources
 
 {_md(res['within'].select('source', 'check', 'slb_rule', 'pos', 'auroc'))}
+
+## Checks for sources added in SLB-1.3
+
+Each function lives next to its parser (`sources/eukaryotes_extra.py`, `sources/bacteria_extra.py`);
+details and rationale per source are in `notes/data/<source>.md`. "X labels scored by Y" = AUROC of
+study Y's score for study X's labels on the pairs both measured.
+
+{_md(res['new'].select('function', 'check', 'pos', 'auroc', 'ci95'))}
 
 Stronger positive thresholds replicate better in both yeasts, which is why SLB uses ε < −0.2 (not the
 authors' −0.12) for *S. cerevisiae* and S < −3 (not −2.3) for *S. pombe*. SPIDR's published GEMINI

@@ -5,8 +5,14 @@ A family is a connected component of a graph whose nodes are "species:gene" and 
     kept when max protein sequence identity >= PARALOG_MIN_IDENTITY;
   * orthologs across human, S. cerevisiae and D. melanogaster (Alliance combined) that are reciprocal
     best hits or supported by >= ORTHOLOG_MIN_ALGORITHMS prediction methods;
-  * curated S. pombe orthologs to human and S. cerevisiae (PomBase).
+  * curated S. pombe orthologs to human and S. cerevisiae (PomBase);
+  * families_extra: DIAMOND reciprocal-best-hit orthologs across 12 proteomes (5 bacteria, yeasts,
+    C. albicans, worm, fly, mouse, human), Alliance orthologs for mouse/worm, and paralogs >= 30%
+    identity for mouse, worm, C. albicans and the bacteria (notes/data/orthology.md).
 Holding out a whole family holds out a gene, its close paralogs and its orthologs in every species.
+
+A family is named after its smallest node from a species already in SLB-1.2 (NAMING_SPECIES), so
+adding genes from new species does not rename, and thereby re-bucket, an existing family.
 """
 
 from __future__ import annotations
@@ -20,6 +26,8 @@ RAW = Path("data/raw")
 PARALOG_MIN_IDENTITY = 0.30
 ORTHOLOG_MIN_ALGORITHMS = 3
 MAX_FAMILY = 400  # components larger than this are broken up (see _cap)
+
+NAMING_SPECIES = ("human", "scer", "spom", "dmel", "spne")
 
 ALLIANCE_TAXA = {"NCBITaxon:9606": "human", "NCBITaxon:559292": "scer", "NCBITaxon:7227": "dmel"}
 
@@ -85,7 +93,10 @@ def edges() -> pl.DataFrame:
         a, b = spom(a), sgd(b)
         if a and b:
             out.append((f"spom:{a}", f"scer:{b}", "ortholog", 1.0))
-    return pl.DataFrame(out, schema=["u", "v", "kind", "weight"], orient="row").unique()
+    from slpbench.families_extra import extra_edges
+
+    base = pl.DataFrame(out, schema=["u", "v", "kind", "weight"], orient="row")
+    return pl.concat([base, extra_edges()]).unique()
 
 
 def _alliance_id(gid: str, species: str, hgnc: dict, sgd) -> str | None:
@@ -110,7 +121,12 @@ def assign(genes: pl.DataFrame) -> pl.DataFrame:
     # (e.g. a human gene linking two yeast paralogs) since they carry homology information.
     for u, v, kind, w in e.iter_rows():
         dsu.union(u, v)
-    fam = {n: dsu.find(n) for n in nodes}
+    label: dict[str, str] = {}
+    for n in list(dsu.p):
+        r = dsu.find(n)
+        if n.split(":", 1)[0] in NAMING_SPECIES and (r not in label or n < label[r]):
+            label[r] = n
+    fam = {n: label.get(dsu.find(n), dsu.find(n)) for n in nodes}
     fam = _cap(fam, e, node_set)
     return pl.DataFrame({"species": genes["species"], "gene": genes["gene"], "family": [fam[n] for n in nodes]})
 

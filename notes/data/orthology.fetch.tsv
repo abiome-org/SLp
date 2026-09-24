@@ -1,0 +1,19 @@
+orthology_extra/proteomes/human.pep.fa.gz	https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz
+orthology_extra/proteomes/mmus.pep.fa.gz	https://ftp.ensembl.org/pub/release-116/fasta/mus_musculus/pep/Mus_musculus.GRCm39.pep.all.fa.gz
+orthology_extra/proteomes/cele.pep.fa.gz	https://ftp.ensembl.org/pub/release-116/fasta/caenorhabditis_elegans/pep/Caenorhabditis_elegans.WBcel235.pep.all.fa.gz
+orthology_extra/proteomes/dmel.pep.fa.gz	https://ftp.ensembl.org/pub/release-116/fasta/drosophila_melanogaster/pep/Drosophila_melanogaster.BDGP6.54.pep.all.fa.gz
+orthology_extra/proteomes/scer.pep.fa.gz	https://ftp.ensembl.org/pub/release-116/fasta/saccharomyces_cerevisiae/pep/Saccharomyces_cerevisiae.R64-1-1.pep.all.fa.gz
+orthology_extra/proteomes/spom.pep.fa.gz	https://www.pombase.org/data/genome_sequence_and_features/feature_sequences/peptide.fa.gz
+orthology_extra/proteomes/calb.pep.fa.gz	http://www.candidagenome.org/download/sequence/C_albicans_SC5314/Assembly22/current/C_albicans_SC5314_A22_current_default_protein.fasta.gz
+orthology_extra/proteomes/spne_D39V_CP027540.1.gb	https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&rettype=gbwithparts&retmode=text&id=CP027540.1
+orthology_extra/proteomes/ecol_MG1655_U00096.3.gb	https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&rettype=gbwithparts&retmode=text&id=U00096.3
+orthology_extra/proteomes/bsub_168_AL009126.3.gb	https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&rettype=gbwithparts&retmode=text&id=AL009126.3
+orthology_extra/proteomes/mtub_H37Rv_AL123456.3.gb	https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&rettype=gbwithparts&retmode=text&id=AL123456.3
+orthology_extra/proteomes/saur_NCTC8325_CP000253.1.gb	https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&rettype=gbwithparts&retmode=text&id=CP000253.1
+orthology_extra/eggnog5_1_members.tsv.gz	http://eggnog5.embl.de/download/eggnog_5.0/per_tax_level/1/1_members.tsv.gz
+ids/MRK_List2.rpt	https://www.informatics.jax.org/downloads/reports/MRK_List2.rpt
+ids/c_elegans.WS298.geneIDs.txt.gz	https://ftp.ebi.ac.uk/pub/databases/wormbase/releases/WS298/species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS298.geneIDs.txt.gz
+ids/c_elegans.WS298.geneOtherIDs.txt.gz	https://ftp.ebi.ac.uk/pub/databases/wormbase/releases/WS298/species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS298.geneOtherIDs.txt.gz
+ids/C_albicans_SC5314_A22_chromosomal_feature.tab	http://www.candidagenome.org/download/chromosomal_feature_files/C_albicans_SC5314/C_albicans_SC5314_A22_current_chromosomal_feature.tab
+orthology_extra/ensembl_mmusculus_paralogs.tsv	https://useast.ensembl.org/biomart/martservice (POST, slpbench.fetch.biomart_query('mmusculus'))
+orthology_extra/ensembl_celegans_paralogs.tsv	https://useast.ensembl.org/biomart/martservice (POST, slpbench.fetch.biomart_query('celegans'))

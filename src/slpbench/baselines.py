@@ -94,7 +94,7 @@ def _lgbm(f: pl.DataFrame, feats: list[str]) -> np.ndarray:
     tr = features(pl.read_parquet(BENCH / "train.parquet"))
     # balance species so yeast's 2M rows do not dominate
     tr = pl.concat([d.sample(min(d.height, 150_000), seed=0) for d in tr.partition_by("species")])
-    sp = ["human", "scer", "spom", "spne"]
+    sp = sorted(tr["species"].unique().to_list())
 
     def mat(d):
         cols = [d[c].cast(pl.Float64).fill_null(np.nan).to_numpy() for c in feats]

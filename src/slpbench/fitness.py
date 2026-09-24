@@ -6,7 +6,10 @@ Reference single-loss effect per species:
   scer    Costanzo 2016 SGA single-mutant fitness - 1 (0 = wild type)
   spom    PomBase deletion viability: inviable -1, slow/decreased growth -0.5, viable 0
   spne    dual CRISPRi-seq single-sgRNA log2FC
-  dmel    single-dsRNA main effect on cell count (Heigwer 2023); fly is not in SLB, this serves the audit
+  dmel    single-dsRNA main effect on cell count (Heigwer 2023)
+  bsub    CRISPRi single-knockdown fitness (sources.bacteria_extra.bsub_single)
+  cele    WormBase RNAi/allele phenotypes: lethal/arrest -1, sterile/slow -0.5, else 0 (eukaryotes_extra.cele_single)
+  mmus    DepMap pan-line mean of the one-to-one human ortholog (eukaryotes_extra.mmus_single)
 These are single-gene measurements, so they are permitted model inputs.
 
 `propensity()` estimates P(SL | the two genes' single-loss effects, screen) per species within an
@@ -117,6 +120,11 @@ def gene_effects() -> pl.DataFrame:
              pombe_viability().with_columns(pl.lit("spom").alias("species")),
              spne_single().with_columns(pl.lit("spne").alias("species")),
              fly_main().with_columns(pl.lit("dmel").alias("species"))]
+    from slpbench.sources import bacteria_extra, eukaryotes_extra
+
+    for sp, fn in (("bsub", bacteria_extra.bsub_single), ("cele", eukaryotes_extra.cele_single),
+                   ("mmus", eukaryotes_extra.mmus_single)):
+        parts.append(fn().select("gene", "effect").with_columns(pl.lit(sp).alias("species")))
     return pl.concat([p.select("species", "gene", pl.col("effect").cast(pl.Float64)) for p in parts])
 
 
@@ -186,6 +194,10 @@ def propensity(ex: pl.DataFrame, contexts: pl.DataFrame) -> pl.Series:
     x = covariates(ex.with_row_index("_i"), contexts)
     out = np.full(ex.height, np.nan)
     for _, d in x.group_by(["species"]):
-        m = LogisticRegression(C=1.0, max_iter=5000).fit(_design(d), d["label"].to_numpy())
+        y = d["label"].to_numpy()
+        if y.min() == y.max():  # one class only (tiny species in a small split): no AUROC to balance
+            out[d["_i"].to_numpy()] = float(y.mean())
+            continue
+        m = LogisticRegression(C=1.0, max_iter=5000).fit(_design(d), y)
         out[d["_i"].to_numpy()] = m.predict_proba(_design(d))[:, 1]
     return pl.Series("propensity", out)

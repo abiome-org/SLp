@@ -1,0 +1,4 @@
+CP027540.1.gb	https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=CP027540.1&rettype=gbwithparts&retmode=text
+NZ_CP027540.1.gb	https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NZ_CP027540.1&rettype=gbwithparts&retmode=text
+NC_003028.3.gb	https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_003028.3&rettype=gbwithparts&retmode=text
+NC_008533.2.gb	https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_008533.2&rettype=gbwithparts&retmode=text
