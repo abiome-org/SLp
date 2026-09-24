@@ -1,7 +1,7 @@
 """Cell-line context metadata, including inferred genetic ancestry from Cellosaurus.
 
 Cellosaurus "Genome ancestry" comments carry per-line ancestry fractions inferred from
-genotypes (Kessler et al. 2019, PubMed 30894373). We collapse them to 1000 Genomes-style
+genotypes (Dutil et al. 2019, PubMed 30894373). We collapse them to 1000 Genomes-style
 super-populations and call a line's ancestry group the majority component if it is at
 more than ANCESTRY_MAJORITY (a strict majority), otherwise "admixed". Lines with no genotype-based estimate fall
 back to the self-reported Cellosaurus "Population" field, flagged as such.

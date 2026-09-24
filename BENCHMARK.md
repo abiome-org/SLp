@@ -181,8 +181,9 @@ separate "adjusted" score to read alongside it.
    control measures that residual on each split.
 3. **Human species score:** the mean over genetic-ancestry groups with at least 20 positives in the
    split. Ancestry is the donor's genotype-inferred majority super-population from Cellosaurus
-   (Kessler et al. 2019), with more than 50% as the cut-off. Lines with no estimate (hTERT-RPE1, C092)
-   are reported but not averaged in. Each ancestry group counts equally, however many cell lines it has.
+   ([Dutil et al. 2019](https://doi.org/10.1158/0008-5472.CAN-18-2747)), with more than 50% as the
+   cut-off. Lines with no estimate (hTERT-RPE1, C092) are reported but not averaged in. Each ancestry
+   group counts equally, however many cell lines it has.
 4. **SLB score** = the mean of the headline species' scores (human, *S. cerevisiae*, *S. pombe*). Each
    counts equally. The auxiliary species are scored the same way and reported separately. A species
    score needs at least 20 positives in the split, otherwise it is n/a. The tiers are recorded in
@@ -197,6 +198,8 @@ separate "adjusted" score to read alongside it.
 
 Use `--boot N` for a gene-family cluster-bootstrap 95% CI. Use `slpbench compare A B` for a paired
 bootstrap of the difference. Use `compare` on dev to decide whether a change helped.
+The frozen test-prediction [ancestry audit](ANCESTRY_AUDIT.md) reports group-specific scores,
+support counts, uncertainty and sensitivity to individual cell lines.
 
 ### How the fitness balancing works
 

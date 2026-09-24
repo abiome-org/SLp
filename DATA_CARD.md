@@ -100,7 +100,8 @@ families; `*_semi` hold pairs with one held-out and one train gene. Pairs spanni
 
 ## Human genetic ancestry
 
-Ancestry is the donor's genotype-inferred super-population from Cellosaurus (Kessler et al. 2019):
+Ancestry is the donor's genotype-inferred super-population from Cellosaurus
+([Dutil et al. 2019](https://doi.org/10.1158/0008-5472.CAN-18-2747)):
 the majority component (> 50%), otherwise `admixed`; `self_reported` marks lines with only a reported
 population; `unknown` lines have neither and are not averaged into the human score.
 European-ancestry lines dominate the public screens.

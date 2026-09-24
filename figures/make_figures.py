@@ -64,6 +64,7 @@ def theme() -> None:
         "axes.facecolor": PAPER,
         "savefig.facecolor": PAPER,
         "svg.fonttype": "none",
+        "svg.hashsalt": "slb1.3",
         "pdf.fonttype": 42,
     })
 
@@ -71,7 +72,10 @@ def theme() -> None:
 def save(fig: plt.Figure, stem: str) -> None:
     for suffix in ("svg", "png", "pdf"):
         path = OUT / f"{stem}.{suffix}"
-        fig.savefig(path, dpi=220, bbox_inches="tight", pad_inches=.22)
+        metadata = {"Date": None} if suffix == "svg" else (
+            {"CreationDate": None} if suffix == "pdf" else None)
+        fig.savefig(path, dpi=220, bbox_inches="tight", pad_inches=.22,
+                    metadata=metadata)
         if suffix == "svg":
             # Matplotlib emits spaces before path-command newlines. They have
             # no rendering role and make the generated asset fail git's check.
@@ -263,8 +267,65 @@ def figure_3() -> None:
     save(fig, "03_species_signal")
 
 
+def figure_4() -> None:
+    """Exploratory cell-line ancestry readout of frozen human predictions."""
+    path = ROOT / "reference/slb1.3_ancestry_audit.json"
+    if not path.exists():
+        return
+    audit = json.loads(path.read_text())
+    records = {m["name"]: m for m in audit["models"]}
+    selected = [
+        ("SL-Predict 2026 (MAE branch)", "SL-Predict 2026 · MAE"),
+        ("Ryan 2026 (full clean refit)", "Ryan 2026 · paralog RF"),
+        ("SLP Fusion (loss)", "SLp Fusion"),
+        ("GO/PPI GBM", "GO/PPI GBM"),
+        ("Ontotype", "Ontotype"),
+        ("SynLeaF (all-species)", "SynLeaF 2026"),
+    ]
+    groups = [("AFR", PURPLE), ("EAS", TEAL), ("EUR", CORAL)]
+    fig, axes = plt.subplots(1, 3, figsize=(13.4, 6.8), sharey=True,
+                             gridspec_kw={"wspace": .08})
+    fig.subplots_adjust(left=.235, right=.965, top=.76, bottom=.20)
+    fig.text(.04, .945, "Held-out human SL screens by cell-line ancestry",
+             color=INK, fontsize=20, fontweight="bold")
+    fig.text(.04, .885, "Frozen SLB-1.3 test predictions  ·  Fitness-balanced AUROC within cell line and screen",
+             color=MUTED, fontsize=11)
+    fig.text(.04, .825, "Points show scores; whiskers are 95% gene-family bootstrap intervals.",
+             color=MUTED, fontsize=10)
+    ys = np.arange(len(selected))[::-1]
+    for ax, (group, color) in zip(axes, groups):
+        s = audit["support"][group]
+        ax.set_title(f"{group}  ·  {s['cell_lines']} lines, {s['sl']} SL pairs",
+                     loc="left", fontsize=11.5, color=INK, fontweight="bold", pad=20)
+        ax.set_xlim(.35, 1.07)
+        ax.set_ylim(-.5, len(selected) - .5)
+        ax.set_xticks([.4, .5, .6, .7, .8, .9])
+        ax.grid(axis="x", color=GRID, linewidth=.8, zorder=0)
+        ax.axvline(.5, ls="--", lw=1.1, color=MUTED, zorder=1)
+        ax.tick_params(axis="y", length=0, pad=11)
+        ax.tick_params(axis="x", length=0, pad=7)
+        for (name, _), y in zip(selected, ys):
+            rec = records[name]["by_group"][group]
+            score, (lo, hi) = rec["score"], rec["ci95"]
+            ax.plot([lo, hi], [y, y], color=color, lw=2.6, solid_capstyle="round", zorder=2)
+            ax.plot([lo, lo], [y - .10, y + .10], color=color, lw=1.5, zorder=2)
+            ax.plot([hi, hi], [y - .10, y + .10], color=color, lw=1.5, zorder=2)
+            ax.scatter([score], [y], s=66, color=color, edgecolors=PAPER, linewidths=1.5, zorder=3)
+            ax.text(1.03, y, f"{score:.3f}", ha="right", va="center",
+                    color=color, fontsize=9.5, fontweight="bold")
+    axes[0].set_yticks(ys, [label for _, label in selected], fontsize=10.5)
+    for ax in axes[1:]:
+        ax.tick_params(labelleft=False)
+    fig.text(.04, .105, "AFR has 3 cell lines and 32 positive pairs; groups use different cancer types, screens and pair panels.",
+             color=MUTED, fontsize=9.5)
+    fig.text(.04, .065, "Genotype estimates: Dutil et al. (2019) via Cellosaurus; one EAS line is self-reported. Cell lines, not patients.",
+             color=MUTED, fontsize=9.5)
+    save(fig, "04_human_ancestry")
+
+
 if __name__ == "__main__":
     theme()
     figure_1()
     figure_2()
     figure_3()
+    figure_4()

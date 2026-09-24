@@ -21,6 +21,7 @@ measured-pair benchmark, a published-method battery, and a dev-selected ensemble
 - [MODELS_TEST.md](MODELS_TEST.md): the selected methods evaluated on the held-out test split.
 - [CLIMB.md](CLIMB.md): frozen grader checks, model-selection ledger and held-out comparison.
 - [GENERALIZATION.md](GENERALIZATION.md): interpretation of CV1/CV2/CV3, the 2026 cold-start results and the production setting.
+- [ANCESTRY_AUDIT.md](ANCESTRY_AUDIT.md): frozen human test scores by cell-line genetic ancestry, with support counts, uncertainty and sensitivity to individual cell lines.
 - [figures/README.md](figures/README.md): downloadable CV1/CV2/CV3 and SLB test figures, with rebuild commands and captions.
 - [notes/models/2026_landscape.md](notes/models/2026_landscape.md): dated audit of 2026 papers, preprints and code, with each method's SLB status.
 - [data/README.md](data/README.md): private build and public bundle usage.
@@ -40,6 +41,7 @@ uv run slpbench verify              # check built artifact hashes and row counts
 uv run slpbench export-public data/release/slb1.3
 bash scripts/package_public.sh          # deterministic public archive + SHA-256 pin
 uv run slpbench battery --split dev # regenerate MODELS.md
+SLB_BENCH=data/bench/slb1.3 uv run python scripts/audit_ancestry.py
 uv run pytest -q
 ```
 
