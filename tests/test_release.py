@@ -25,9 +25,16 @@ def test_public_export_excludes_answers_and_checks_hashes(tmp_path):
     out = tmp_path / "public"
     lock = export_public(bench, out)
     assert lock["public_files"]["test_inputs.parquet"] == file_sha256(out / "test_inputs.parquet")
-    assert not (out / "hidden").exists()
-    assert not (out / "test_labels.parquet").exists()
-    assert set(p.name for p in out.iterdir()) == set(PUBLIC_FILES) | {"release.lock.json"}
+    assert (out / "hidden/dev_propensity.parquet").is_file()
+    assert not (out / "hidden/test_labels.parquet").exists()
+    assert not (out / "hidden/test_propensity.parquet").exists()
+    assert {p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()} == (
+        set(PUBLIC_FILES) | {"release.lock.json"})
+    assert verify_benchmark(out)["public_verified"] is True
+    assert export_public(bench, out) == lock
+    (out / "hidden/dev_propensity.parquet").write_bytes(b"tampered")
+    with pytest.raises(ValueError, match="sha256 mismatch"):
+        verify_benchmark(out)
     (bench / "hidden/test_labels.parquet").write_bytes(b"tampered")
     with pytest.raises(ValueError, match="sha256 mismatch"):
         verify_benchmark(bench)

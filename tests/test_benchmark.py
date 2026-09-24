@@ -1,10 +1,9 @@
 """Integration checks on the built benchmark (skipped if the current benchmark version is not built)."""
-from pathlib import Path
-
 import polars as pl
 import pytest
 
-from slpbench.evaluate import BENCH  # noqa: E402
+from slpbench.evaluate import BENCH
+
 pytestmark = pytest.mark.skipif(not (BENCH / "manifest.json").exists(), reason="benchmark not built")
 
 
@@ -15,6 +14,19 @@ def test_splits_are_family_disjoint():
         for col in ("gene_a", "gene_b"):
             b = d.join(fam.rename({"gene": col}), on=["species", col], how="left")["bucket"]
             assert set(b.unique().to_list()) <= allowed, (split, col)
+
+
+def test_qualifying_homology_edges_never_cross_family_buckets():
+    from slpbench.families import edges
+
+    fam = pl.read_parquet(BENCH / "held_out_families.parquet").with_columns(
+        pl.concat_str("species", "gene", separator=":").alias("node"))
+    left = fam.select(pl.col("node").alias("u"), pl.col("family").alias("fa"), pl.col("bucket").alias("ba"))
+    right = fam.select(pl.col("node").alias("v"), pl.col("family").alias("fb"), pl.col("bucket").alias("bb"))
+    linked = edges().select("u", "v").join(left, on="u", how="inner").join(right, on="v", how="inner")
+    assert linked.height > 0
+    assert (linked["fa"] == linked["fb"]).all()
+    assert (linked["ba"] == linked["bb"]).all()
 
 
 def test_no_example_in_two_splits():

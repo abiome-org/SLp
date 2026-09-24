@@ -34,6 +34,7 @@ def main(argv: list[str] | None = None) -> None:
     c.add_argument("b")
     c.add_argument("--split", default="dev", choices=["dev", "dev_semi", "test", "test_semi"])
     c.add_argument("--boot", type=int, default=200)
+    c.add_argument("--out", type=Path, help="write the paired comparison as JSON")
 
     lk = sub.add_parser("check-leakage")
     lk.add_argument("records")
@@ -70,9 +71,14 @@ def main(argv: list[str] | None = None) -> None:
     elif a.cmd == "compare":
         from slpbench import evaluate
         r = evaluate.compare(evaluate.read_predictions(a.a), evaluate.read_predictions(a.b), a.split, a.boot)
+        r.update({"benchmark": evaluate.BENCH.name, "manifest_sha256": evaluate.file_sha256(evaluate.BENCH / "manifest.json"),
+                  "scorer_version": evaluate.SCORER_VERSION,
+                  "a_predictions_sha256": evaluate.file_sha256(a.a), "b_predictions_sha256": evaluate.file_sha256(a.b)})
         print(f"A={r['a']:.4f}  B={r['b']:.4f}  B-A={r['delta']:+.4f}  95% CI [{r['delta_ci95'][0]:+.4f}, "
               f"{r['delta_ci95'][1]:+.4f}]  P(B<=A)={r['p_b_not_better']:.3f}")
         print("  per species: " + "  ".join(f"{k}={v:+.4f}" for k, v in r["species_delta"].items()))
+        if a.out:
+            evaluate.save(r, a.out)
     elif a.cmd == "check-leakage":
         from slpbench import leakage
         sys.exit(leakage.main(a.records, a.allow_dev))
@@ -81,6 +87,7 @@ def main(argv: list[str] | None = None) -> None:
         audit.main()
     elif a.cmd in {"verify", "export-public"}:
         import json
+
         from slpbench import evaluate, release
         result = (release.verify_benchmark(evaluate.BENCH, a.raw) if a.cmd == "verify" else
                   release.export_public(evaluate.BENCH, a.out))
@@ -94,7 +101,7 @@ def main(argv: list[str] | None = None) -> None:
     elif a.cmd == "battery":
         from slpbench import battery
         battery.run(a.split, a.boot)
-        print(Path("MODELS.md").read_text())
+        print(battery.report_path(a.split).read_text())
     elif a.cmd == "baseline":
         from slpbench import baselines
         out = a.out or Path(f"results/{a.name}_{a.split}.parquet")

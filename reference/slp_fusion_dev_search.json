@@ -1,0 +1,642 @@
+{
+  "benchmark": "slb1.3",
+  "manifest_sha256": "b1ac12d961b80d917b518d96834acd8289b954751f61833d37d26738631b41a9",
+  "scorer_version": "1.3.1",
+  "source_predictions_sha256": {
+    "go": "c52c04438cdf9b7e70b3cf3351a63810a264d44eb9276c27c018c4ad3a3ecde8",
+    "onto": "425905bbaa46e1a3d3b53ed1ff55556b2abd77952c6d476410ca0eb6699f2cba",
+    "syn": "87e659b44f3d6f56eb53d3482b117de0cd1a607c4d1925b59c5817f54c4b5571",
+    "deK": "1f33ea2100685a504e83de499aa1b4ef9a5b000e237fd63bdc463fcefb65478e",
+    "musl": "56d2599d67159d7650ee996ca2b43b186e124a9c720cb3ab426f88dbe74fbe06",
+    "slm": "3b2454e3c16d9537ab85925645b64f722255533f6666c7673d88abfedb63d7e8",
+    "mvg": "fc3e7d222fff55240607c24a5feb2520623ff092e6eb9658dcce52fe6f0b275b",
+    "esm": "741e915f8f6cb5207600c00b63cfcf0139f3ea007c870a9e02a90f193e19f7c9",
+    "dep": "748a96b77982aa1e357caa82fb93b835ab82a6dc787db6d5ec610ee4b96d7f55"
+  },
+  "attempts": [
+    {
+      "name": "go",
+      "parent": "",
+      "weights": {
+        "go": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.625643248919486,
+      "species": {
+        "human": 0.6369512065152424,
+        "scer": 0.6019263550238332,
+        "spom": 0.6380521852193821
+      }
+    },
+    {
+      "name": "onto",
+      "parent": "",
+      "weights": {
+        "onto": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.616254884874747,
+      "species": {
+        "human": 0.5805602567882646,
+        "scer": 0.6213397328936474,
+        "spom": 0.6468646649423291
+      }
+    },
+    {
+      "name": "syn",
+      "parent": "",
+      "weights": {
+        "syn": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.5999236495193789,
+      "species": {
+        "human": 0.6135715642720395,
+        "scer": 0.5801287643349808,
+        "spom": 0.6060706199511163
+      }
+    },
+    {
+      "name": "deK",
+      "parent": "",
+      "weights": {
+        "deK": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.5864860919953393,
+      "species": {
+        "human": 0.6324672620879672,
+        "scer": 0.5636221704483605,
+        "spom": 0.5633688434496901
+      }
+    },
+    {
+      "name": "musl",
+      "parent": "",
+      "weights": {
+        "musl": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.5802034953438282,
+      "species": {
+        "human": 0.6000185588534498,
+        "scer": 0.5884297914275795,
+        "spom": 0.5521621357504553
+      }
+    },
+    {
+      "name": "slm",
+      "parent": "",
+      "weights": {
+        "slm": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.5614922812494876,
+      "species": {
+        "human": 0.5043332311280516,
+        "scer": 0.576051232008838,
+        "spom": 0.6040923806115731
+      }
+    },
+    {
+      "name": "mvg",
+      "parent": "",
+      "weights": {
+        "mvg": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.559646173547985,
+      "species": {
+        "human": 0.5442371028078546,
+        "scer": 0.5450124488949297,
+        "spom": 0.5896889689411704
+      }
+    },
+    {
+      "name": "esm",
+      "parent": "",
+      "weights": {
+        "esm": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.5425881306156389,
+      "species": {
+        "human": 0.5527432159220417,
+        "scer": 0.5474671777276464,
+        "spom": 0.5275539981972288
+      }
+    },
+    {
+      "name": "go1+onto",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "onto": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6391951794363198,
+      "species": {
+        "human": 0.6269512539710526,
+        "scer": 0.6239651992077627,
+        "spom": 0.666669085130144
+      }
+    },
+    {
+      "name": "go2+onto",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "onto": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.639244310160796,
+      "species": {
+        "human": 0.6354755274555556,
+        "scer": 0.6203048244267686,
+        "spom": 0.6619525786000635
+      }
+    },
+    {
+      "name": "go1+syn",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "syn": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6456865059729023,
+      "species": {
+        "human": 0.6753002022136173,
+        "scer": 0.6020774635438477,
+        "spom": 0.6596818521612418
+      }
+    },
+    {
+      "name": "go2+syn",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "syn": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6462644169561363,
+      "species": {
+        "human": 0.6757498187276928,
+        "scer": 0.6045169941343098,
+        "spom": 0.6585264380064062
+      }
+    },
+    {
+      "name": "go1+deK",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "deK": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6242804301592056,
+      "species": {
+        "human": 0.6624139982560368,
+        "scer": 0.5919831184136829,
+        "spom": 0.6184441738078973
+      }
+    },
+    {
+      "name": "go2+deK",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "deK": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6291469501914587,
+      "species": {
+        "human": 0.6569074587506081,
+        "scer": 0.5994476255821986,
+        "spom": 0.6310857662415696
+      }
+    },
+    {
+      "name": "go1+musl",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "musl": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6239205808490649,
+      "species": {
+        "human": 0.6503504732537588,
+        "scer": 0.6079090037269522,
+        "spom": 0.6135022655664836
+      }
+    },
+    {
+      "name": "go2+musl",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "musl": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6284157729706877,
+      "species": {
+        "human": 0.6480688814568104,
+        "scer": 0.609930248510194,
+        "spom": 0.6272481889450586
+      }
+    },
+    {
+      "name": "go1+onto+syn",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "onto": 1,
+        "syn": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6502843593011453,
+      "species": {
+        "human": 0.6588645435945611,
+        "scer": 0.6193549220580042,
+        "spom": 0.6726336122508704
+      }
+    },
+    {
+      "name": "go2+onto+syn",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "syn": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6506190184703605,
+      "species": {
+        "human": 0.6608029694537924,
+        "scer": 0.6188411086199329,
+        "spom": 0.6722129773373562
+      }
+    },
+    {
+      "name": "go1+onto+deK",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "onto": 1,
+        "deK": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6429038985933021,
+      "species": {
+        "human": 0.6625460181127458,
+        "scer": 0.6116271605076926,
+        "spom": 0.6545385171594679
+      }
+    },
+    {
+      "name": "go2+onto+deK",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "deK": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6422062247247927,
+      "species": {
+        "human": 0.6573978567246758,
+        "scer": 0.6138797978566551,
+        "spom": 0.6553410195930474
+      }
+    },
+    {
+      "name": "go1+onto+musl",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "onto": 1,
+        "musl": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6357464205818203,
+      "species": {
+        "human": 0.6365254750887391,
+        "scer": 0.6230448023490033,
+        "spom": 0.6476689843077185
+      }
+    },
+    {
+      "name": "go2+onto+musl",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "musl": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6381162860876904,
+      "species": {
+        "human": 0.6403716903853183,
+        "scer": 0.6223411345095603,
+        "spom": 0.6516360333681928
+      }
+    },
+    {
+      "name": "go1+syn+deK",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6512700047223168,
+      "species": {
+        "human": 0.6961609208981625,
+        "scer": 0.6050166066200894,
+        "spom": 0.6526324866486986
+      }
+    },
+    {
+      "name": "go2+syn+deK",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6531265001854282,
+      "species": {
+        "human": 0.6955935535992426,
+        "scer": 0.6087624149204192,
+        "spom": 0.655023532036623
+      }
+    },
+    {
+      "name": "go1+onto+syn+deK",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6546354940251312,
+      "species": {
+        "human": 0.6789341087130611,
+        "scer": 0.6160865997353301,
+        "spom": 0.6688857736270026
+      }
+    },
+    {
+      "name": "go2+onto+syn+deK",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "finalist",
+      "dev_score": 0.6549911041222898,
+      "species": {
+        "human": 0.6782549333376857,
+        "scer": 0.617704265994118,
+        "spom": 0.6690141130350654
+      }
+    },
+    {
+      "name": "go1+onto+syn+deK+musl",
+      "parent": "go",
+      "weights": {
+        "go": 1,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1,
+        "musl": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6472513545271802,
+      "species": {
+        "human": 0.6690467467343374,
+        "scer": 0.6174996413940018,
+        "spom": 0.6552076754532015
+      }
+    },
+    {
+      "name": "go2+onto+syn+deK+musl",
+      "parent": "go",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1,
+        "musl": 1
+      },
+      "extra": null,
+      "hypothesis": "the added predictor provides complementary pair ranking",
+      "selection": "screened",
+      "dev_score": 0.6497183776746155,
+      "species": {
+        "human": 0.6696534067811369,
+        "scer": 0.6193962144016167,
+        "spom": 0.660105511841093
+      }
+    },
+    {
+      "name": "core+dep0.5",
+      "parent": "core",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": {
+        "model": "dep",
+        "species": "human",
+        "weight": 0.5
+      },
+      "hypothesis": "dep adds ranking signal in human",
+      "selection": "screened",
+      "dev_score": 0.662290662846008,
+      "species": {
+        "human": 0.7001536095088405,
+        "scer": 0.617704265994118,
+        "spom": 0.6690141130350654
+      }
+    },
+    {
+      "name": "core+dep1.0",
+      "parent": "core",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": {
+        "model": "dep",
+        "species": "human",
+        "weight": 1.0
+      },
+      "hypothesis": "dep adds ranking signal in human",
+      "selection": "finalist",
+      "dev_score": 0.6662523210571677,
+      "species": {
+        "human": 0.7120385841423196,
+        "scer": 0.617704265994118,
+        "spom": 0.6690141130350654
+      }
+    },
+    {
+      "name": "core+slm0.5",
+      "parent": "core",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": {
+        "model": "slm",
+        "species": "scer,spom",
+        "weight": 0.5
+      },
+      "hypothesis": "slm adds ranking signal in scer,spom",
+      "selection": "screened",
+      "dev_score": 0.6548481275362762,
+      "species": {
+        "human": 0.6782549333376857,
+        "scer": 0.6156343049409757,
+        "spom": 0.6706551443301675
+      }
+    },
+    {
+      "name": "core+slm1.0",
+      "parent": "core",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": {
+        "model": "slm",
+        "species": "scer,spom",
+        "weight": 1.0
+      },
+      "hypothesis": "slm adds ranking signal in scer,spom",
+      "selection": "screened",
+      "dev_score": 0.6536970679334481,
+      "species": {
+        "human": 0.6782549333376857,
+        "scer": 0.6128155944884742,
+        "spom": 0.6700206759741842
+      }
+    },
+    {
+      "name": "core+mvg0.5",
+      "parent": "core",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": {
+        "model": "mvg",
+        "species": "scer,spom",
+        "weight": 0.5
+      },
+      "hypothesis": "mvg adds ranking signal in scer,spom",
+      "selection": "screened",
+      "dev_score": 0.6552865828655092,
+      "species": {
+        "human": 0.6782549333376857,
+        "scer": 0.6147061130994349,
+        "spom": 0.6728987021594071
+      }
+    },
+    {
+      "name": "core+mvg1.0",
+      "parent": "core",
+      "weights": {
+        "go": 2,
+        "onto": 1,
+        "syn": 1,
+        "deK": 1
+      },
+      "extra": {
+        "model": "mvg",
+        "species": "scer,spom",
+        "weight": 1.0
+      },
+      "hypothesis": "mvg adds ranking signal in scer,spom",
+      "selection": "screened",
+      "dev_score": 0.6544837394904067,
+      "species": {
+        "human": 0.6782549333376857,
+        "scer": 0.611231969289868,
+        "spom": 0.6739643158436663
+      }
+    }
+  ]
+}

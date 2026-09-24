@@ -4,6 +4,7 @@
 #
 # family: baseline | graph (graph / knowledge-graph / matrix factorisation) | feature (feature-based,
 #   statistical, sequence / foundation-model, LLM) | mechanistic (FBA, ontology networks, cross-species)
+#   | ensemble (our dev-selected combination)
 # adapter: scripts/models/<adapter>/run.sh when it is not scripts/models/<model>/run.sh
 # leaky: variants fitted on SL / GI labels outside SLB train, or whose inputs carry them. Leaky rows
 #   are reported but not ranked. `possibly` = unresolved (reason given).
@@ -31,6 +32,7 @@ models:
   sl2mf: {family: graph}
   slgnn: {family: graph}
   slmgae: {family: graph}
+  slp_fusion: {family: ensemble}
   struct2sl: {family: graph, leaky_variants: {released: "released weights trained on SynLethDB labels"}}
   # feature-based / statistical / foundation-model / LLM (models-features)
   cilantro_sl: {family: feature}

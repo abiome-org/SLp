@@ -176,9 +176,9 @@ separate "adjusted" score to read alongside it.
    (to 0.70–0.75 on SLB-1.2). So each pair gets a propensity *e* = P(SL | both genes' single-loss
    effects, screen, context), fitted on the evaluation split itself. SL pairs are then weighted
    1 − *e* and non-SL pairs *e* (overlap weights; Li, Morgan & Zaslavsky 2018), and the weights are
-   rescaled per stratum and class. After weighting, SL and non-SL pairs in each stratum have the
-   same single-gene fitness profile, so predicting "sick genes are SL" scores 0.5. Only information
-   beyond the two genes' fitness earns credit.
+   rescaled per stratum and class. The fitted fitness design columns balance in their weighted
+   means; arbitrary nonlinear functions of fitness can retain residual signal. The `fitness_lgbm`
+   control measures that residual on each split.
 3. **Human species score:** the mean over genetic-ancestry groups with at least 20 positives in the
    split. Ancestry is the donor's genotype-inferred majority super-population from Cellosaurus
    (Kessler et al. 2019), with more than 50% as the cut-off. Lines with no estimate (hTERT-RPE1, C092)
@@ -324,6 +324,15 @@ not automate these yet. `uv run slpbench build` parses, audits decisions, merges
 `reference/raw_sha256sums.txt` pins the raw inputs. The split depends only on `SALT`, the family
 graph and the bucket fractions (all in `manifest.json`). A robustness study across 4 alternative
 salts is in [ROBUSTNESS.md](ROBUSTNESS.md).
+
+`slpbench verify` checks every built artifact against `manifest.json`; `--raw` also checks every
+pinned raw file. `slpbench export-public data/release/slb1.3` creates a model-facing input bundle
+with dev labels and dev propensity weights for public scoring, but no test labels or test propensity
+files. It writes `release.lock.json` with hashes; `SLB_BENCH=data/release/slb1.3 slpbench verify`
+checks the exported bundle. The private
+benchmark directory is kept by the evaluator. Scorer 1.3.1 requires unique known IDs and finite
+scores, fixes tied-score AP and same-family bootstrap weights, and excludes unknown ancestry
+explicitly from the human headline. The SLB point score on this release is unchanged.
 
 ## Changes from SLB-1.2
 

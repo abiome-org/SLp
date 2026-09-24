@@ -22,7 +22,7 @@ import numpy as np
 import polars as pl
 
 from slpbench import fitness, ids
-from slpbench.evaluate import BENCH, load_split
+from slpbench.evaluate import BENCH
 from slpbench.homology import identity_lookup
 
 RAW = Path("data/raw")
@@ -68,7 +68,8 @@ FEATURES = ["f_lo", "f_hi", "pan_lo", "pan_hi", "codependency", "paralog_identit
 
 
 def run(name: str, split: str) -> pl.DataFrame:
-    df = load_split(split).drop("label", strict=False)
+    path = BENCH / (f"{split}_inputs.parquet" if split.startswith("test") else f"{split}.parquet")
+    df = pl.read_parquet(path).drop("label", strict=False)
     if name == "random":
         s = np.random.default_rng(0).random(df.height)
     else:

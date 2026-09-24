@@ -1,41 +1,141 @@
 # Test-split entries. Evaluate with: slpbench eval PREDS --split test --boot 200 --out results/slb1.3/NAME_test.json
 - name: lgbm
   result: results/slb1.3/lgbm_test.json
+  result_sha256: e2aafb63885ef5344a0783d73e4dbe789a9ca2fb2e1aa84487a6618ffb840e50
+  predictions: results/slb1.3/lgbm_test.parquet
   description: gradient boosting on single-gene fitness, paralog identity, DepMap co-dependency
   trained_on: SLB-1.3 train
   leaky: false
 - name: fitness_lgbm
   result: results/slb1.3/fitness_lgbm_test.json
+  result_sha256: a60e4b7c963ce0d523fbb5f0bfe48f5955208d21c39001c02e7d8da707a90c1b
+  predictions: results/slb1.3/fitness_lgbm_test.parquet
   description: gradient boosting on the single-loss covariates only (probe of residual fitness signal)
   trained_on: SLB-1.3 train
   leaky: false
 - name: fitness
   result: results/slb1.3/fitness_test.json
+  result_sha256: b816cb63f094278abc32f20fd603fffd0dfd1c41b084854385a1b1ac0fe35eb5
+  predictions: results/slb1.3/fitness_test.parquet
   description: sickness of the two single mutants, -(f_a + f_b)
   trained_on: none (single-gene data)
   leaky: false
 - name: paralog_identity
   result: results/slb1.3/paralog_identity_test.json
+  result_sha256: 1808126442daca09a5e4726c25fe0781ee0ca9145598e5c2b05ad18165f56733
+  predictions: results/slb1.3/paralog_identity_test.parquet
   description: Ensembl 116 paralog protein identity
   trained_on: none
   leaky: false
 - name: codependency
   result: results/slb1.3/codependency_test.json
+  result_sha256: beeaa5524cc92936ec52a21810fac3783c5210e0271a89abf8b902cd9fc0cd9a
+  predictions: results/slb1.3/codependency_test.parquet
   description: DepMap gene-effect profile correlation (human only)
   trained_on: none (single-gene data)
   leaky: false
 - name: random
   result: results/slb1.3/random_test.json
+  result_sha256: d25cbc4481dd2ea231ce3baf14661258ef443be1b0503b796452063fce662df3
+  predictions: results/slb1.3/random_test.parquet
   description: uniform noise
   trained_on: none
   leaky: false
 - name: SLp-1.1 (decoder)
   result: results/slb1.3/slp11_sl_score_test.json
+  result_sha256: 24e70592ce35cb21c698039f32dda4f146c05ffcd271e7f91a1f3fba56cc11d2
+  predictions: results/slb1.3/slp11_sl_score_test.parquet
   description: prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 39% of human test pairs in vocabulary (rest tied)
   trained_on: MuSL/SynLethDB SL labels; DepMap; Costanzo yeast (25% sample)
   leaky: true
 - name: SLp-1.1 (label-free)
   result: results/slb1.3/slp11_label_free_test.json
+  result_sha256: 42c5ff793c39b48cdb4aab175b1a487ac4fbd44510883f09be891e2bad638b5b
+  predictions: results/slb1.3/slp11_label_free_test.parquet
   description: prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 39% coverage
   trained_on: DepMap; Costanzo yeast (25% sample); Perturb-seq
   leaky: true
+- name: GO/PPI GBM
+  result: results/models/slb1.3/go_ppi_gbm_test.json
+  result_sha256: 891c35ade065f6621854e71d907f3c9425da69d73d934ea26e3cbe5939527009
+  predictions: results/models/slb1.3/go_ppi_gbm_test.parquet
+  description: multi-network feature model, trained separately by species
+  trained_on: SLB-1.3 train + filtered GO/PPI/fitness
+  leaky: false
+- name: GO/PPI GBM (pooled)
+  result: results/models/slb1.3/go_ppi_gbm__pooled_test.json
+  result_sha256: 058ac9b0330d6509232410e5da762264a8c862c9f30d611905abb2c16251aab9
+  predictions: results/models/slb1.3/go_ppi_gbm__pooled_test.parquet
+  description: one multi-species model on filtered networks
+  trained_on: SLB-1.3 train + filtered GO/PPI/fitness
+  leaky: false
+- name: Ontotype
+  result: results/models/slb1.3/ontotype_test.json
+  result_sha256: b938ff22a84df60db4daf29dbcbf3e8431f53e8281214ce4ab39603a7a2ce1cc
+  predictions: results/models/slb1.3/ontotype_test.parquet
+  description: ontology-based model retrained by species
+  trained_on: SLB-1.3 train + filtered GO
+  leaky: false
+- name: Ontotype (pooled)
+  result: results/models/slb1.3/ontotype__pooled_test.json
+  result_sha256: 0c12a10257d4a1f34c4805d06c81e53a0e35a8edaddd6bd84a3512a61b828065
+  predictions: results/models/slb1.3/ontotype__pooled_test.parquet
+  description: one ontology model across species
+  trained_on: SLB-1.3 train + filtered GO
+  leaky: false
+- name: SynLeaF (all-species)
+  result: results/models/slb1.3/synleaf__allspecies_test.json
+  result_sha256: 83465bac723522ae4a31569a76643c6bff931e32ab93ba87636be6f0bd0dd3a3
+  predictions: results/models/slb1.3/synleaf__allspecies_test.parquet
+  description: KG/RGCN branch retrained on the filtered multi-species bundle
+  trained_on: SLB-1.3 train + filtered GO/PPI
+  leaky: false
+- name: SynLeaF (human)
+  result: results/models/slb1.3/synleaf__human_test.json
+  result_sha256: 8aec72a59ba954912dba4cd07a9a6d35684d0b4a2c5c2baf1c4be8b1afb2675f
+  predictions: results/models/slb1.3/synleaf__human_test.parquet
+  description: dual-stage omics and KG model; other species tied
+  trained_on: SLB-1.3 train + filtered KG/TCGA omics
+  leaky: false
+- name: De Kegel 2021 (all-species)
+  result: results/models/slb1.3/dekegel2021__allspecies_test.json
+  result_sha256: dbced22532faf57ba56e592e4df37c6d8fc7ad0e0f07f82dd48c65a8325d5d6d
+  predictions: results/models/slb1.3/dekegel2021__allspecies_test.parquet
+  description: paralog feature RF adapted across species
+  trained_on: SLB-1.3 train + filtered GO/PPI/ESM2
+  leaky: false
+- name: MuSL (all-species)
+  result: results/models/slb1.3/musl__allspecies_test.json
+  result_sha256: 160ac78c769383bff7df48aaba75238533c0d61dcb30dd3b72abefa0a4a6c96d
+  predictions: results/models/slb1.3/musl__allspecies_test.parquet
+  description: GNN branch retrained across species
+  trained_on: SLB-1.3 train + filtered PPI/ESM2
+  leaky: false
+- name: MuSL (human)
+  result: results/models/slb1.3/musl__human_test.json
+  result_sha256: 8c32684722e931ea2d149bce6bdb573060b9a5795a0f4eb6273b180555254189
+  predictions: results/models/slb1.3/musl__human_test.parquet
+  description: full multimodal model; other species tied
+  trained_on: SLB-1.3 train + BioGRID physical/ESM2/TCGA
+  leaky: false
+- name: DepMap OLS (loss)
+  result: results/models/slb1.3/depmap_ols__loss_test.json
+  result_sha256: 10e283fc4e6fa125f049b47a709246f28ae88eeca9520fbbe8b22704577c6650
+  predictions: results/models/slb1.3/depmap_ols__loss_test.parquet
+  description: human single-gene dependency scan; other species tied
+  trained_on: DepMap single-gene/omics only
+  leaky: false
+- name: SLP Fusion (core)
+  result: results/models/slb1.3/slp_fusion__core_test.json
+  result_sha256: 953b23bc3308aaf42e3de8357d4b0e297360047d8e39648423442c476421fec8
+  predictions: results/models/slb1.3/slp_fusion__core_test.parquet
+  description: dev-selected rank blend of GO/PPI, Ontotype, SynLeaF and De Kegel
+  trained_on: SLB-1.3 train; blend selected on dev
+  leaky: false
+- name: SLP Fusion (loss)
+  result: results/models/slb1.3/slp_fusion__loss_test.json
+  result_sha256: 3057c12385bb163c0c823147c445a16d8f63fb64a2fb7845a722ba76a11580ad
+  predictions: results/models/slb1.3/slp_fusion__loss_test.parquet
+  description: core blend plus human DepMap OLS
+  trained_on: SLB-1.3 train; blend selected on dev
+  leaky: false

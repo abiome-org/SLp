@@ -12,8 +12,8 @@ SLB score, the one headline number:
   2. Fitness-balanced: e = P(SL | both genes' single-loss effects, screen, context), fitted within
      the split (fitness.propensity). SL pairs are weighted 1 - e and non-SL pairs e (overlap
      weights), rescaled per stratum and class. Weighted SL and non-SL pairs then have the same
-     single-gene fitness profile, so predicting "sick genes are SL" scores 0.5: only information
-     beyond the two genes' fitness earns credit.
+     fitted single-gene fitness design means; a flexible fitness-only model can retain residual
+     signal, measured by the fitness_lgbm control.
   3. Species score = that balanced AUROC; for human, the mean over ancestry groups with at least
      MIN_GROUP_POS positives. SLB score = mean over the benchmark's headline species (manifest.json
      "headline_species"). Auxiliary species ("auxiliary_species": too few test positives or labels
@@ -78,7 +78,8 @@ def file_sha256(path: str | Path) -> str:
     return h.hexdigest()
 
 
-def validated_join(gold: pl.DataFrame, preds: pl.DataFrame, allow_missing: bool = False) -> tuple[pl.DataFrame, int]:
+def validated_join(gold: pl.DataFrame, preds: pl.DataFrame, allow_missing: bool = False,
+                   max_missing_fraction: float = 0.5) -> tuple[pl.DataFrame, int]:
     """Validate a submission before joining, so it cannot change the evaluated row set."""
     if preds["example_id"].null_count():
         raise ValueError("prediction example_id contains null values")
@@ -95,8 +96,10 @@ def validated_join(gold: pl.DataFrame, preds: pl.DataFrame, allow_missing: bool 
     missing = int(df["score"].null_count() + df["score"].is_nan().sum())
     if missing and not allow_missing:
         raise ValueError(f"{missing:,} of {df.height:,} examples have no finite score (use --allow-missing)")
-    if missing > df.height / 2:
+    if missing > df.height * max_missing_fraction:
         raise ValueError(f"{missing:,} of {df.height:,} examples have no score; check the benchmark version")
+    if missing == df.height:
+        raise ValueError("predictions contain no finite scores")
     if missing:
         df = df.with_columns(pl.col("score").fill_nan(None).fill_null(pl.col("score").median()))
     return df, missing
@@ -257,4 +260,15 @@ def format_report(res: dict) -> str:
 
 
 def save(res: dict, path: Path) -> None:
-    path.write_text(json.dumps(res, indent=2, default=float))
+    def clean(value):
+        if isinstance(value, np.generic):
+            return clean(value.item())
+        if isinstance(value, float):
+            return value if np.isfinite(value) else None
+        if isinstance(value, dict):
+            return {k: clean(v) for k, v in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [clean(v) for v in value]
+        return value
+
+    path.write_text(json.dumps(clean(res), indent=2, allow_nan=False))

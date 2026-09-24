@@ -1,0 +1,11 @@
+{
+  "label_oracle_accept": 1.0000000000000266,
+  "inverse_oracle_reject": 0.0,
+  "constant_reject": 0.5000000000000133,
+  "random_mean": 0.4991873023883492,
+  "random_sd": 0.01059089258046894,
+  "random_min": 0.48408841277022313,
+  "random_max": 0.5184589398431195,
+  "stratum_hit_rate_prior_reject": 0.5000000000000133,
+  "fitness_only_probe": 0.5179245012509975
+}
