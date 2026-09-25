@@ -1,9 +1,9 @@
-/data/*
-!/data/README.md
+# SLB: raw data, built benchmark, model repos and run outputs stay local
+/slb/data/
+/slb/external/
+/slb/results/
 .venv/
 __pycache__/
 *.pyc
 .pytest_cache/
-results/
-external/
-logs/
+.ruff_cache/
