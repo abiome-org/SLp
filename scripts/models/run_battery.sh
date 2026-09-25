@@ -9,7 +9,7 @@ export SLB_BENCH=${SLB_BENCH:-data/bench/slb1.3} SLB_SPLIT=${SLB_SPLIT:-dev}
 source scripts/models/_common/threads.sh
 log=results/models/$(basename "$SLB_BENCH")/battery_run_${SLB_SPLIT}.log
 mkdir -p "$(dirname "$log")"
-models=${*:-$(uv run python -c "import yaml; r=yaml.safe_load(open('models/battery.yaml'))['models']; print(' '.join([*dict.fromkeys(e.get('adapter', m) for m, e in r.items() if e['family'] not in ('baseline', 'ensemble')), 'slp_fusion']))")}
+models=${*:-$(uv run python -c "import yaml; r=yaml.safe_load(open('models/battery.yaml'))['models']; print(' '.join([*dict.fromkeys(e.get('adapter', m) for m, e in r.items() if e['family'] not in ('baseline', 'ensemble')), 'dev_rank_ensemble']))")}
 failed=0
 for m in $models; do
   [ -f scripts/models/$m/run.sh ] || { echo "$m: no adapter" | tee -a "$log"; failed=1; continue; }

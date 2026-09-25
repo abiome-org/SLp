@@ -12,9 +12,9 @@ Exploratory test ablations after an earlier test readout are also listed unranke
 
 | # | model | SLB score (95% CI) | human | scer | spom | *bsub* | *cele* | *dmel* | *mmus* | trained on | leaky |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **SLP Fusion (loss)** — core blend plus human DepMap OLS | 0.645 (0.595–0.684) | 0.684 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | SLB-1.3 train; blend selected on dev | no |
+| 1 | **Dev Rank Ensemble (loss)** — core blend plus human DepMap OLS | 0.645 (0.595–0.684) | 0.684 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | SLB-1.3 train; blend selected on dev | no |
 | 2 | **Ontotype** — ontology-based model retrained by species | 0.640 (0.597–0.673) | 0.625 | 0.589 | 0.708 | 0.514 | 0.618 | n/a | n/a | SLB-1.3 train + filtered GO | no |
-| 3 | **SLP Fusion (core)** — dev-selected rank blend of GO/PPI, Ontotype, SynLeaF and De Kegel | 0.639 (0.588–0.680) | 0.668 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | SLB-1.3 train; blend selected on dev | no |
+| 3 | **Dev Rank Ensemble (core)** — dev-selected rank blend of GO/PPI, Ontotype, SynLeaF and De Kegel | 0.639 (0.588–0.680) | 0.668 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | SLB-1.3 train; blend selected on dev | no |
 | 4 | **Ontotype (pooled)** — one ontology model across species | 0.632 (0.591–0.666) | 0.639 | 0.581 | 0.674 | 0.469 | 0.542 | n/a | n/a | SLB-1.3 train + filtered GO | no |
 | 5 | **GO/PPI GBM** — multi-network feature model, trained separately by species | 0.625 (0.576–0.660) | 0.663 | 0.590 | 0.621 | 0.565 | 0.537 | n/a | n/a | SLB-1.3 train + filtered GO/PPI/fitness | no |
 | 6 | **GO/PPI GBM (pooled)** — one multi-species model on filtered networks | 0.624 (0.581–0.659) | 0.660 | 0.589 | 0.622 | 0.570 | 0.570 | n/a | n/a | SLB-1.3 train + filtered GO/PPI/fitness | no |

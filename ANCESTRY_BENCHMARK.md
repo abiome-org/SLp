@@ -2,7 +2,7 @@
 
 **Question.** Do frozen synthetic-lethality predictors rank *measured* gene pairs as well in cancer cell lines of African or East Asian genetic ancestry as in European-ancestry lines, on the same cancer-site, screen and pair panel?
 
-**Result.** The matched African–European comparison contains 2 AFR lines (23 SL pairs) and 14 EUR lines (76 SL pairs) across two scorable site × screen blocks. Each AFR block has **one** cell line. Frozen SLp Fusion's equal-cell-line, equal-block AUROC is 0.705 versus 0.790 (gap -0.085). The predeclared adequacy gate fails, so the benchmark issues **no population-level disparity or parity verdict**. The East Asian comparison also fails the gate; Fusion scores 0.838 versus 0.698 on its own matched blocks. These are retrospective diagnostic scores.
+**Result.** The matched African–European comparison contains 2 AFR lines (23 SL pairs) and 14 EUR lines (76 SL pairs) across two scorable site × screen blocks. Each AFR block has **one** cell line. The frozen Dev Rank Ensemble's equal-cell-line, equal-block AUROC is 0.705 versus 0.790 (gap -0.085). The predeclared adequacy gate fails, so the benchmark issues **no population-level disparity or parity verdict**. The East Asian comparison also fails the gate; the ensemble scores 0.838 versus 0.698 on its own matched blocks. These are retrospective diagnostic scores.
 
 The ancestry annotations are genome-wide genotype estimates from [Dutil et al. 2019](https://pubmed.ncbi.nlm.nih.gov/30894373/) through the checksum-pinned Cellosaurus file. Dutil's resource supplies ancestry metadata, **not** SL labels. The SL labels come from the dual-perturbation screens described in [BENCHMARK.md](BENCHMARK.md#label-rules); all included sources passed [REPLICATION.md](REPLICATION.md). Cell-line ancestry is not patient race or clinical treatment response.
 
@@ -13,7 +13,7 @@ The scorable matched rows come from [Flister et al. 2025](https://doi.org/10.101
 - Include only genotype-inferred majority groups (fraction >0.50); exclude the self-reported PC-9 annotation. The exact genotype fractions remain visible below.
 - Match **cancer site + exact merged source set + exact ordered gene pair** across each target group and EUR: each retained pair occurs in at least one line of each group. A complete-case sensitivity uses only pairs with usable labels in every line of a block. Cancer site is a coarse mapping of the pinned Cellosaurus disease; histology and molecular subtype are not matched.
 - Recompute the existing SLB fitness-overlap weights after panel restriction. Compute AUROC separately per cell line × screen, average cell lines equally in each site × screen block, then average scorable blocks equally. The secondary metric is tie-aware precision among the top 10 pairs per line.
-- Treat a cell line as the independent sampling unit. The only primary model for a future disparity decision is the previously dev-selected SLp Fusion; every other clean ranked model is descriptive. The matching rule uses assay availability rather than model scores or SL calls.
+- Treat a cell line as the independent sampling unit. The only primary model for a future disparity decision is the previously dev-selected rank ensemble; every other clean ranked model is descriptive. The matching rule uses assay availability rather than model scores or SL calls.
 - The adequacy gate requires at least 20 distinct lines per group, two shared blocks, five qualified lines per group in every block (each with ≥100 pairs and ≥10 SL pairs), ≥100 complete-case pairs per block, donor-disjoint training, and variant-aware guide QC. It then requires a donor-bootstrap gap interval half-width ≤0.05. Two ancestry comparisons use Bonferroni-adjusted 97.5% intervals; a gap below −0.05 is the practical-disadvantage margin. The exact machine-readable contract is [`reference/slb_ancestry_protocol_v1.json`](reference/slb_ancestry_protocol_v1.json).
 
 This protocol was written **after** the SLB-1.3 test readout; it is a retrospective diagnostic and a fixed template for newly collected donors, not a claim of prospective preregistration. Original SLB test genes are family-held-out; cell lines were present in SLB training and therefore do not meet donor-disjoint training for supervised entries.
@@ -52,9 +52,9 @@ AUROC values are equal-cell-line and equal-block means. `Δ` is target minus EUR
 | SL-Predict 2026 (MAE branch) | 0.686 | 0.775 | -0.088 | 0.808 | 0.747 | +0.061 |
 | Ryan 2026 (full clean refit) | 0.768 | 0.838 | -0.070 | 0.842 | 0.781 | +0.062 |
 | De Kegel 2021 (all-species) | 0.693 | 0.680 | +0.013 | 0.818 | 0.680 | +0.138 |
-| SLP Fusion (loss) | 0.705 | 0.790 | -0.085 | 0.838 | 0.698 | +0.140 |
+| Dev Rank Ensemble (loss) | 0.705 | 0.790 | -0.085 | 0.838 | 0.698 | +0.140 |
 | Ryan 2026 (context clean refit) | 0.805 | 0.861 | -0.056 | 0.864 | 0.776 | +0.088 |
-| SLP Fusion (core) | 0.698 | 0.772 | -0.074 | 0.807 | 0.679 | +0.128 |
+| Dev Rank Ensemble (core) | 0.698 | 0.772 | -0.074 | 0.807 | 0.679 | +0.128 |
 | GO/PPI GBM | 0.693 | 0.773 | -0.079 | 0.743 | 0.651 | +0.092 |
 | GO/PPI GBM (pooled) | 0.652 | 0.683 | -0.031 | 0.777 | 0.658 | +0.119 |
 | paralog_identity | 0.619 | 0.681 | -0.062 | 0.805 | 0.644 | +0.161 |
@@ -78,7 +78,7 @@ The table is ordered by each model's original human SLB score, not by the ancest
 
 | Model | AFR complete-case | EUR | Δ | EAS complete-case | EUR | Δ |
 |---|---:|---:|---:|---:|---:|---:|
-| SLP Fusion (loss) | 0.418 | 0.788 | -0.370 | 0.931 | 0.571 | +0.360 |
+| Dev Rank Ensemble (loss) | 0.418 | 0.788 | -0.370 | 0.931 | 0.571 | +0.360 |
 | SL-Predict 2026 (MAE branch) | 0.419 | 0.901 | -0.482 | 0.778 | 0.695 | +0.083 |
 | Ryan 2026 (full clean refit) | 0.737 | 0.789 | -0.052 | 0.937 | 0.520 | +0.417 |
 | SynLeaF (human) | 0.488 | 0.786 | -0.298 | 0.824 | 0.485 | +0.339 |
@@ -91,7 +91,7 @@ Tie-aware precision@10 counts hits among up to ten proposed measurements per lin
 
 | Model | AFR P@10 | EUR P@10 (AFR panel) | EAS P@10 | EUR P@10 (EAS panel) |
 |---|---:|---:|---:|---:|
-| SLP Fusion (loss) | 0.400 | 0.245 | 0.463 | 0.321 |
+| Dev Rank Ensemble (loss) | 0.400 | 0.245 | 0.463 | 0.321 |
 | SL-Predict 2026 (MAE branch) | 0.250 | 0.254 | 0.363 | 0.289 |
 | Ryan 2026 (full clean refit) | 0.550 | 0.273 | 0.500 | 0.348 |
 | SynLeaF (human) | 0.200 | 0.123 | 0.300 | 0.231 |
@@ -111,7 +111,7 @@ The actual gate results for the primary model are:
 
 Both comparisons fail the donor-count, within-block pair/positive-count, complete-case pair, donor-disjoint training and variant-aware guide-QC requirements. The JSON lists every exact gate failure. No population interval is emitted from one AFR donor per block.
 
-For collection planning, the two EUR comparator blocks have donor-level Fusion AUROC SDs of 0.135 (colorectal) and 0.112 (lung). A normal approximation for two balanced blocks and a familywise 97.5% half-width of 0.05 suggests roughly 31 independent lines **per ancestry, per block** if the SD is similar. The observed donor-bootstrap precision gate determines the actual requirement; this 13-line EUR pilot is only a planning estimate.
+For collection planning, the two EUR comparator blocks have donor-level Dev Rank Ensemble AUROC SDs of 0.135 (colorectal) and 0.112 (lung). A normal approximation for two balanced blocks and a familywise 97.5% half-width of 0.05 suggests roughly 31 independent lines **per ancestry, per block** if the SD is similar. The observed donor-bootstrap precision gate determines the actual requirement; this 13-line EUR pilot is only a planning estimate.
 
 The SLB training split contains labelled rows from every AFR test cell line. For example, HeLa has 804 train pairs, NCI-H23 99, and RKO 2,441. This does not prove that every method used those labels, but the current frozen battery is not certified donor-disjoint. A new evaluation must hold donor lines out *before* fitting or feature selection and publish per-model training-context provenance.
 

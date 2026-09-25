@@ -869,7 +869,7 @@
         "AFR": 0.6868059240419171,
         "EUR": 0.642325075525742
       },
-      "name": "SLP Fusion (core)",
+      "name": "Dev Rank Ensemble (core)",
       "predictions_sha256": "ab1308df1c44a9e4dc0f06b24f8cb1e3da179108eec7619ccedf9d2eaa603fa6"
     },
     {
@@ -918,7 +918,7 @@
         "AFR": 0.7119115032562018,
         "EUR": 0.6571989033202243
       },
-      "name": "SLP Fusion (loss)",
+      "name": "Dev Rank Ensemble (loss)",
       "predictions_sha256": "c6c3b55888c990feccf1e1f49d7792f85efa314a577f9dc103d3ca7d8a57f644"
     },
     {

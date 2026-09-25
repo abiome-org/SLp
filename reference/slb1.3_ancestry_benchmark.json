@@ -17948,7 +17948,7 @@
         }
       },
       "human_score": 0.667825141109764,
-      "name": "SLP Fusion (core)",
+      "name": "Dev Rank Ensemble (core)",
       "predictions_sha256": "ab1308df1c44a9e4dc0f06b24f8cb1e3da179108eec7619ccedf9d2eaa603fa6",
       "result_sha256": "3b3d30a1938e181a7ee3b4a320bfdb1b5441b7b74a3dde0d21f2f6a87a529ddd",
       "slb_score": 0.6394219321279534
@@ -18947,7 +18947,7 @@
         }
       },
       "human_score": 0.6840195185447132,
-      "name": "SLP Fusion (loss)",
+      "name": "Dev Rank Ensemble (loss)",
       "predictions_sha256": "c6c3b55888c990feccf1e1f49d7792f85efa314a577f9dc103d3ca7d8a57f644",
       "result_sha256": "7a39656d90d55a8d27d415efb3c2d1c60622a162e9b25f6e8a30d02687617e7e",
       "slb_score": 0.6448200579396031
@@ -25383,7 +25383,7 @@
     ],
     "matching_scope": "each retained pair appears in at least one line per ancestry group; complete-case sensitivity requires every line in a block",
     "primary_metric": "equal-block mean of equal-cell-line fitness-balanced AUROC",
-    "primary_model": "SLP Fusion (loss)",
+    "primary_model": "Dev Rank Ensemble (loss)",
     "reference_group": "EUR",
     "reference_margin_auroc": 0.05,
     "secondary_metric": "equal-block mean of equal-cell-line precision at 10 measured pairs",
@@ -25406,12 +25406,12 @@
     "cellosaurus_raw_sha256": "b225da548b65e8db10597759bc152c78b1b9d23e123494744510d7569cf4ab3b",
     "contexts_sha256": "d1039ab306502af94ebfbdb5fe3fd994b33c655549d26307a7ff913bf3201d15",
     "dutil_genotype_lines_verified": 47,
-    "figures_code_sha256": "6f300ff869bdadf3560590b3f0d2033327cc46b5d87c37ee1a34071ab67284ed",
-    "leaderboard_sha256": "d0e3444aaddc4f5f22499a6625bf57c67c5d383c673a0b3024a9881bbc4ebae1",
+    "figures_code_sha256": "48d5c00a998398e4ccbdbbb788d7305ed30b26c113f71f21ad498b6f128ce094",
+    "leaderboard_sha256": "2c2a909406a4235d9988ea56d2d3abaac08b7590a38003ec02c82cee28b73704",
     "manifest_sha256": "b1ac12d961b80d917b518d96834acd8289b954751f61833d37d26738631b41a9",
     "numpy": "2.5.3",
     "polars": "1.44.2",
-    "protocol_sha256": "bfdaf2482ec9935d5d86b14edaa9c0b0e28eba5506523825cb318c3bb8a71f2c",
+    "protocol_sha256": "028cd39a781a0fd41f7f6938d587b8929b378fbcecadb4385048971720f1a094",
     "python": "3.12.14",
     "raw_pins_verified": {
       "cellosaurus/cellosaurus.txt": "b225da548b65e8db10597759bc152c78b1b9d23e123494744510d7569cf4ab3b",
@@ -25420,7 +25420,7 @@
       "ids/hgnc_complete_set.txt": "69bb5722d5a42bb355580deb2c9f197ce3d7f7d13807173b9674a7db65e52191"
     },
     "rebuild_command": "SLB_BENCH=data/bench/slb1.3 uv run python scripts/benchmark_ancestry.py",
-    "report_code_sha256": "7a6542951be77d215b8a9ffbabdb443ef59dba18d5c12546758b57a0884b5727",
+    "report_code_sha256": "42e481f85b39165c30c3a247da343a07ee155c4da5e313e2c534a1c97c2b8208",
     "scorer_version": "1.3.2",
     "split": "test",
     "test_inputs_sha256": "f57dda676b0b800dbf34ac1455e7412aea788f9ea3488dfe6d7e49242a593ec7",

@@ -15,8 +15,8 @@ listed in those notes with the reason.
 
 | # | model | variant | family | SLB (dev) | human | scer | spom | *bsub* | *cele* | *dmel* | *mmus* | native coverage | filled |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **slp_fusion** | loss | ensemble | 0.666 | 0.712 | 0.618 | 0.669 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 2 | **slp_fusion** | core | ensemble | 0.655 | 0.678 | 0.618 | 0.669 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 1 | **dev_rank_ensemble** | loss | ensemble | 0.666 | 0.712 | 0.618 | 0.669 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 2 | **dev_rank_ensemble** | core | ensemble | 0.655 | 0.678 | 0.618 | 0.669 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 3 | **go_ppi_gbm** | - | mechanistic | 0.626 | 0.637 | 0.602 | 0.638 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 4 | **go_ppi_gbm** | pooled | mechanistic | 0.617 | 0.614 | 0.601 | 0.637 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 5 | **ontotype** | - | mechanistic | 0.616 | 0.581 | 0.621 | 0.647 | n/a | n/a | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |

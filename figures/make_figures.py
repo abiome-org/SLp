@@ -142,7 +142,7 @@ def read_result(name: str) -> dict:
 def figure_2() -> None:
     """SLB test benchmark: whole-benchmark performance and human-specific score."""
     specs = [
-        ("slp_fusion__loss", "SLp Fusion", "ours", "all"),
+        ("dev_rank_ensemble__loss", "Dev Rank Ensemble", "ensemble", "all"),
         ("ontotype", "Ontotype", "mechanistic", "all"),
         ("go_ppi_gbm", "GO/PPI GBM", "mechanistic", "all"),
         ("dekegel2021__allspecies", "De Kegel 2021", "published", "all"),
@@ -176,7 +176,7 @@ def figure_2() -> None:
     fig.text(.05, .83, "Points show scores; horizontal whiskers are family-bootstrap 95% intervals.",
              fontsize=9.7, color=MUTED)
     yy = np.arange(n)[::-1]
-    colors = {"ours": CORAL, "mechanistic": TEAL, "published": BLUE}
+    colors = {"ensemble": CORAL, "mechanistic": TEAL, "published": BLUE}
     for y, (name, label, kind, scope, r) in zip(yy, rows):
         score = r["slb_score"]
         ci = r["slb_score_ci95"]
@@ -219,7 +219,7 @@ def figure_2() -> None:
 def figure_3() -> None:
     """Where the signal comes from across the three headline species."""
     specs = [
-        ("slp_fusion__loss", "SLp Fusion"),
+        ("dev_rank_ensemble__loss", "Dev Rank Ensemble"),
         ("ontotype", "Ontotype"),
         ("go_ppi_gbm", "GO/PPI GBM"),
         ("dekegel2021__allspecies", "De Kegel 2021"),
@@ -277,7 +277,7 @@ def figure_4() -> None:
     selected = [
         ("SL-Predict 2026 (MAE branch)", "SL-Predict 2026 · MAE"),
         ("Ryan 2026 (full clean refit)", "Ryan 2026 · paralog RF"),
-        ("SLP Fusion (loss)", "SLp Fusion"),
+        ("Dev Rank Ensemble (loss)", "Dev Rank Ensemble"),
         ("GO/PPI GBM", "GO/PPI GBM"),
         ("Ontotype", "Ontotype"),
         ("SynLeaF (all-species)", "SynLeaF 2026"),
@@ -390,7 +390,7 @@ def figure_6() -> None:
     fig.subplots_adjust(left=.13, right=.97, top=.72, bottom=.17)
     fig.text(.055, .95, "Matched-panel scores change the ancestry contrast",
              fontsize=21.5, fontweight="bold", color=INK)
-    fig.text(.055, .89, "Frozen SLp Fusion  ·  Fitness-balanced AUROC within each cell line and screen",
+    fig.text(.055, .89, "Frozen Dev Rank Ensemble  ·  Fitness-balanced AUROC within each cell line and screen",
              fontsize=11.2, color=MUTED)
     fig.text(.055, .835, "Small dots are cell lines; diamonds average cell lines within each site × screen block.",
              fontsize=10.2, color=MUTED)

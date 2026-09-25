@@ -125,17 +125,17 @@
   description: human single-gene dependency scan; other species tied
   trained_on: DepMap single-gene/omics only
   leaky: false
-- name: SLP Fusion (core)
-  result: results/models/slb1.3/slp_fusion__core_test.json
+- name: Dev Rank Ensemble (core)
+  result: results/models/slb1.3/dev_rank_ensemble__core_test.json
   result_sha256: 3b3d30a1938e181a7ee3b4a320bfdb1b5441b7b74a3dde0d21f2f6a87a529ddd
-  predictions: results/models/slb1.3/slp_fusion__core_test.parquet
+  predictions: results/models/slb1.3/dev_rank_ensemble__core_test.parquet
   description: dev-selected rank blend of GO/PPI, Ontotype, SynLeaF and De Kegel
   trained_on: SLB-1.3 train; blend selected on dev
   leaky: false
-- name: SLP Fusion (loss)
-  result: results/models/slb1.3/slp_fusion__loss_test.json
+- name: Dev Rank Ensemble (loss)
+  result: results/models/slb1.3/dev_rank_ensemble__loss_test.json
   result_sha256: 7a39656d90d55a8d27d415efb3c2d1c60622a162e9b25f6e8a30d02687617e7e
-  predictions: results/models/slb1.3/slp_fusion__loss_test.parquet
+  predictions: results/models/slb1.3/dev_rank_ensemble__loss_test.parquet
   description: core blend plus human DepMap OLS
   trained_on: SLB-1.3 train; blend selected on dev
   leaky: false

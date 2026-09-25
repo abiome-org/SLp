@@ -77,7 +77,7 @@ def main() -> None:
     ap.add_argument("--variant", default="core", choices=("core", "loss"))
     a = ap.parse_args()
     pred, recipe = blend(a.split, a.variant)
-    dest = ROOT / "results/models" / BENCH.name / f"slp_fusion__{a.variant}_{a.split}.parquet"
+    dest = ROOT / "results/models" / BENCH.name / f"dev_rank_ensemble__{a.variant}_{a.split}.parquet"
     dest.parent.mkdir(parents=True, exist_ok=True)
     pred.write_parquet(dest)
     dest.with_suffix(".recipe.json").write_text(json.dumps(recipe, indent=2) + "\n")

@@ -44,7 +44,7 @@ then `SLB_BENCH=data/bench/slb1.3 uv run python scripts/benchmark_ancestry.py`.
    ancestry comparison. The red dashed line is only the five-line floor; the protocol also
    requires pair and positive counts, donor-disjoint training and guide-variant QC. Source:
    [matched ancestry benchmark](../ANCESTRY_BENCHMARK.md).
-6. **[Matched line scores](06_ancestry_line_scores.svg).** Frozen SLp Fusion AUROC separately
+6. **[Matched line scores](06_ancestry_line_scores.svg).** Frozen Dev Rank Ensemble AUROC separately
    in each cell line of the matched panels. Diamonds show equal-cell-line block means.
    These are diagnostic points; the donor-adequacy gate withholds population intervals
    and fairness verdicts. Source: [matched ancestry benchmark](../ANCESTRY_BENCHMARK.md).

@@ -19,16 +19,16 @@ The SLB human headline averages AFR, EAS and EUR AUROCs equally, so the 38 EUR l
 
 | Model | AFR (95% CI) | EAS (95% CI) | EUR (95% CI) | AFR − EUR (95% CI) |
 |---|---:|---:|---:|---:|
-| SLP Fusion (loss) | 0.716 (0.560–0.878) | 0.687 (0.553–0.816) | 0.649 (0.566–0.725) | +0.067 (-0.066 to +0.228) |
+| Dev Rank Ensemble (loss) | 0.716 (0.560–0.878) | 0.687 (0.553–0.816) | 0.649 (0.566–0.725) | +0.067 (-0.066 to +0.228) |
 | SL-Predict 2026 (MAE branch) | 0.757 (0.625–0.872) | 0.749 (0.656–0.835) | 0.667 (0.562–0.743) | +0.090 (-0.036 to +0.238) |
 | Ryan 2026 (full clean refit) | 0.768 (0.652–0.882) | 0.728 (0.601–0.852) | 0.641 (0.560–0.721) | +0.127 (+0.020 to +0.245) |
 | Ontotype | 0.677 (0.540–0.784) | 0.603 (0.487–0.701) | 0.595 (0.510–0.669) | +0.083 (-0.036 to +0.192) |
 
-[Figure 4](figures/04_human_ancestry.svg) plots these and two additional reference methods with the same uncertainty intervals. The point estimates do **not** show worse performance on AFR-annotated lines. For Fusion, AFR − EUR is +0.067, with an interval from -0.066 to +0.228. The groups contain different cell lines, cancer types, screens and pair sets, so the contrast is not an isolated effect of donor ancestry.
+[Figure 4](figures/04_human_ancestry.svg) plots these and two additional reference methods with the same uncertainty intervals. The point estimates do **not** show worse performance on AFR-annotated lines. For the dev-selected ensemble, AFR − EUR is +0.067, with an interval from -0.066 to +0.228. The groups contain different cell lines, cancer types, screens and pair sets, so the contrast is not an isolated effect of donor ancestry.
 
 ### African-ancestry cell-line sensitivity
 
-| Cell line omitted | Remaining SL pairs | Fusion | SL-Predict MAE | Ryan full refit |
+| Cell line omitted | Remaining SL pairs | Dev Rank Ensemble | SL-Predict MAE | Ryan full refit |
 |---|---:|---:|---:|---:|
 | HeLa | 23 | 0.712 | 0.753 | 0.791 |
 | NCI-H23 | 28 | 0.716 | 0.758 | 0.768 |
@@ -42,7 +42,7 @@ Only pairs measured in both an AFR-annotated and a EUR-annotated cell line under
 
 | Model | AFR matched AUROC | EUR matched AUROC |
 |---|---:|---:|
-| SLP Fusion (loss) | 0.712 | 0.657 |
+| Dev Rank Ensemble (loss) | 0.712 | 0.657 |
 | SL-Predict 2026 (MAE branch) | 0.753 | 0.732 |
 | Ryan 2026 (full clean refit) | 0.791 | 0.711 |
 | Ontotype | 0.685 | 0.587 |
@@ -58,9 +58,9 @@ Every clean, ranked model is included below. Full precision, intervals, input ha
 | SL-Predict 2026 (MAE branch) | 0.757 | 0.749 | 0.667 | 0.724 |
 | Ryan 2026 (full clean refit) | 0.768 | 0.728 | 0.641 | 0.712 |
 | De Kegel 2021 (all-species) | 0.717 | 0.764 | 0.617 | 0.699 |
-| SLP Fusion (loss) | 0.716 | 0.687 | 0.649 | 0.684 |
+| Dev Rank Ensemble (loss) | 0.716 | 0.687 | 0.649 | 0.684 |
 | Ryan 2026 (context clean refit) | 0.754 | 0.669 | 0.623 | 0.682 |
-| SLP Fusion (core) | 0.689 | 0.672 | 0.642 | 0.668 |
+| Dev Rank Ensemble (core) | 0.689 | 0.672 | 0.642 | 0.668 |
 | GO/PPI GBM | 0.708 | 0.623 | 0.658 | 0.663 |
 | GO/PPI GBM (pooled) | 0.710 | 0.614 | 0.655 | 0.660 |
 | paralog_identity | 0.666 | 0.726 | 0.566 | 0.653 |

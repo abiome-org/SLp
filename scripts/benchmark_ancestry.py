@@ -29,7 +29,7 @@ REPORT = ROOT / "ANCESTRY_BENCHMARK.md"
 HARLE = ROOT / "data/raw/harle2025_calls/MOESM1_additional_file1.xlsx"
 FLISTER = ROOT / "data/raw/flister2025/mmc6.xlsx"
 HGNC = ROOT / "data/raw/ids/hgnc_complete_set.txt"
-FEATURED = ("SLP Fusion (loss)", "SL-Predict 2026 (MAE branch)",
+FEATURED = ("Dev Rank Ensemble (loss)", "SL-Predict 2026 (MAE branch)",
             "Ryan 2026 (full clean refit)", "SynLeaF (human)")
 
 
@@ -220,9 +220,9 @@ def _block_table(result: dict, target: str) -> list[str]:
 def render(result: dict) -> str:
     models = {m["name"]: m for m in result["models"]}
     cfg = result["protocol"]
-    fusion = models[cfg["primary_model"]]
-    fafr = fusion["comparisons"]["AFR"]
-    feas = fusion["comparisons"]["EAS"]
+    ensemble = models[cfg["primary_model"]]
+    fafr = ensemble["comparisons"]["AFR"]
+    feas = ensemble["comparisons"]["EAS"]
     support = result["panel_support"]
     lines = [
         "# SLB-ANC-1.0: matched cell-line ancestry benchmark", "",
@@ -235,11 +235,11 @@ def render(result: dict) -> str:
         f" {support['AFR']['by_group']['EUR']['cell_lines']} EUR lines"
         f" ({support['AFR']['by_group']['EUR']['sl']} SL pairs) across two scorable"
         " site × screen blocks. Each AFR block has **one** cell line."
-        f" Frozen SLp Fusion's equal-cell-line, equal-block AUROC is {_n(fafr['auroc']['AFR'])}"
+        f" The frozen Dev Rank Ensemble's equal-cell-line, equal-block AUROC is {_n(fafr['auroc']['AFR'])}"
         f" versus {_n(fafr['auroc']['EUR'])} (gap {fafr['gap_auroc']:+.3f})."
         " The predeclared adequacy gate fails, so the benchmark issues **no population-level"
         " disparity or parity verdict**. The East Asian comparison also fails the gate;"
-        f" Fusion scores {_n(feas['auroc']['EAS'])} versus {_n(feas['auroc']['EUR'])}"
+        f" the ensemble scores {_n(feas['auroc']['EAS'])} versus {_n(feas['auroc']['EUR'])}"
         " on its own matched blocks. These are retrospective diagnostic scores.", "",
         "The ancestry annotations are genome-wide genotype estimates from"
         " [Dutil et al. 2019](https://pubmed.ncbi.nlm.nih.gov/30894373/) through the"
@@ -267,7 +267,7 @@ def render(result: dict) -> str:
         " in each site × screen block, then average scorable blocks equally. The"
         " secondary metric is tie-aware precision among the top 10 pairs per line.",
         "- Treat a cell line as the independent sampling unit. The only primary model"
-        " for a future disparity decision is the previously dev-selected SLp Fusion;"
+        " for a future disparity decision is the previously dev-selected rank ensemble;"
         " every other clean ranked model is descriptive. The matching rule uses"
         " assay availability rather than model scores or SL calls.",
         "- The adequacy gate requires at least 20 distinct lines per group, two shared"
@@ -372,7 +372,7 @@ def render(result: dict) -> str:
               "| Comparison | Scorable blocks | Target / EUR lines | Gate |",
               "|---|---:|---:|---|"]
     for target in cfg["target_groups"]:
-        gate = fusion["comparisons"][target]["gate"]
+        gate = ensemble["comparisons"][target]["gate"]
         panel = result["panel_support"][target]
         lines.append(f"| {target}–EUR | {gate['scorable_blocks']} | "
                      f"{panel['by_group'][target]['cell_lines']} / {panel['by_group']['EUR']['cell_lines']} | "
@@ -382,7 +382,7 @@ def render(result: dict) -> str:
               " requirements. The JSON lists every exact gate failure. No"
               " population interval is emitted from one AFR donor per block.", "",
               "For collection planning, the two EUR comparator blocks have donor-level"
-              f" Fusion AUROC SDs of {result['planning_pilot']['EUR_line_auroc_sd_by_block']['colorectal:flister2025']:.3f}"
+              f" Dev Rank Ensemble AUROC SDs of {result['planning_pilot']['EUR_line_auroc_sd_by_block']['colorectal:flister2025']:.3f}"
               " (colorectal) and"
               f" {result['planning_pilot']['EUR_line_auroc_sd_by_block']['lung:harle2025']:.3f}"
               " (lung). A normal approximation for two balanced blocks and a"

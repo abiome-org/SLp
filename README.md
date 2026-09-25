@@ -44,7 +44,7 @@ bash scripts/package_public.sh          # deterministic public archive + SHA-256
 uv run slpbench battery --split dev # regenerate MODELS.md
 SLB_BENCH=data/bench/slb1.3 uv run python scripts/audit_ancestry.py
 SLB_BENCH=data/bench/slb1.3 uv run python scripts/benchmark_ancestry.py
-SLB_BENCH=data/bench/slb1.3 uv run slpbench ancestry-eval results/models/slb1.3/slp_fusion__loss_test.parquet
+SLB_BENCH=data/bench/slb1.3 uv run slpbench ancestry-eval results/models/slb1.3/dev_rank_ensemble__loss_test.parquet
 uv run pytest -q
 ```
 

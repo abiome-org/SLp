@@ -13,7 +13,7 @@
   "primary_metric": "equal-block mean of equal-cell-line fitness-balanced AUROC",
   "secondary_metric": "equal-block mean of equal-cell-line precision at 10 measured pairs",
   "top_k": 10,
-  "primary_model": "SLP Fusion (loss)",
+  "primary_model": "Dev Rank Ensemble (loss)",
   "reference_margin_auroc": 0.05,
   "adequacy_gate": {
     "min_shared_blocks": 2,

@@ -27,7 +27,7 @@ OUT = Path("reference/slb1.3_ancestry_audit.json")
 REPORT = Path("ANCESTRY_AUDIT.md")
 CELLOSAURUS = Path("data/raw/cellosaurus/cellosaurus.txt")
 FEATURED = (
-    "SLP Fusion (loss)", "SL-Predict 2026 (MAE branch)",
+    "Dev Rank Ensemble (loss)", "SL-Predict 2026 (MAE branch)",
     "Ryan 2026 (full clean refit)", "Ontotype",
 )
 
@@ -191,7 +191,7 @@ def fmt_ci(record: dict) -> str:
 def render(audit_result: dict) -> str:
     models = {m["name"]: m for m in audit_result["models"]}
     support = audit_result["support"]
-    fusion_gap = models["SLP Fusion (loss)"]["afr_minus_eur"]
+    ensemble_gap = models["Dev Rank Ensemble (loss)"]["afr_minus_eur"]
     ryan = models["Ryan 2026 (full clean refit)"]
     lines = [
         "# Held-out human SL performance by cell-line ancestry", "",
@@ -228,13 +228,13 @@ def render(audit_result: dict) -> str:
                      + f" | {m['afr_minus_eur']['delta']:+.3f} ({ci[0]:+.3f} to {ci[1]:+.3f}) |")
     lines += ["", "[Figure 4](figures/04_human_ancestry.svg) plots these and two additional"
               " reference methods with the same uncertainty intervals. The point estimates"
-              " do **not** show worse performance on AFR-annotated lines. For Fusion,"
-              f" AFR − EUR is {fusion_gap['delta']:+.3f}, with an interval from"
-              f" {fusion_gap['ci95'][0]:+.3f} to {fusion_gap['ci95'][1]:+.3f}."
+              " do **not** show worse performance on AFR-annotated lines. For the dev-selected ensemble,"
+              f" AFR − EUR is {ensemble_gap['delta']:+.3f}, with an interval from"
+              f" {ensemble_gap['ci95'][0]:+.3f} to {ensemble_gap['ci95'][1]:+.3f}."
               " The groups contain different cell lines, cancer types, screens and pair sets,"
               " so the contrast is not an isolated effect of donor ancestry.", "",
               "### African-ancestry cell-line sensitivity", "",
-              "| Cell line omitted | Remaining SL pairs | Fusion | SL-Predict MAE | Ryan full refit |",
+              "| Cell line omitted | Remaining SL pairs | Dev Rank Ensemble | SL-Predict MAE | Ryan full refit |",
               "|---|---:|---:|---:|---:|"]
     afr_contexts = [c for c, s in audit_result["context_support"].items()
                     if s["ancestry_group"] == "AFR"]

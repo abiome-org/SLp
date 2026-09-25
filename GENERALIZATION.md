@@ -22,7 +22,7 @@ SLB-1.3 holds out whole paralog/ortholog families from SL pair-label training,
 uses experimentally measured negatives, and balances single-gene fitness
 within context and screen. [Figure 2](figures/02_slb_held_out_test.svg) shows
 the held-out test score beside the human component. The three-species score
-is **0.645** for SLp Fusion, **0.640** for Ontotype and **0.625** for GO/PPI GBM.
+is **0.645** for the Dev Rank Ensemble, **0.640** for Ontotype and **0.625** for GO/PPI GBM.
 The top confidence intervals overlap. [Figure 3](figures/03_species_signal.svg)
 shows that even these broad methods vary sharply by species.
 

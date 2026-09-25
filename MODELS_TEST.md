@@ -15,9 +15,9 @@ listed in those notes with the reason.
 
 | # | model | variant | family | SLB (test) | human | scer | spom | *bsub* | *cele* | *dmel* | *mmus* | native coverage | filled |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **slp_fusion** | loss | ensemble | 0.645 | 0.684 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 1 | **dev_rank_ensemble** | loss | ensemble | 0.645 | 0.684 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 2 | **ontotype** | - | mechanistic | 0.640 | 0.625 | 0.589 | 0.708 | 0.514 | 0.618 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
-| 3 | **slp_fusion** | core | ensemble | 0.639 | 0.668 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
+| 3 | **dev_rank_ensemble** | core | ensemble | 0.639 | 0.668 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 4 | **ontotype** | pooled | mechanistic | 0.632 | 0.639 | 0.581 | 0.674 | 0.469 | 0.542 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 5 | **go_ppi_gbm** | - | mechanistic | 0.625 | 0.663 | 0.590 | 0.621 | 0.565 | 0.537 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |
 | 6 | **go_ppi_gbm** | pooled | mechanistic | 0.624 | 0.660 | 0.589 | 0.622 | 0.570 | 0.570 | n/a | n/a | human 100%, scer 100%, spom 100%, bsub 100%, cele 100%, dmel 100%, mmus 100% | 0 |

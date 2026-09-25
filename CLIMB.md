@@ -46,10 +46,11 @@ score is deterministic for a fixed file; uncertainty is reported with a family-c
 possibly leaky entries. It includes graph and matrix methods from the [Feng et al. benchmark](https://www.nature.com/articles/s41467-024-52900-7),
 recent [SynLeaF](https://arxiv.org/abs/2603.22369) and [MuSL](https://github.com/JieZheng-ShanghaiTech/MuSL),
 mechanistic and statistical baselines, and our two ensemble finalists. Published architecture
-adaptations are identified in `notes/models/`; only ranked models use permitted inputs. The
-complete dev search, including all 34 scored trials and prediction hashes, is in
-`reference/slp_fusion_dev_search.json` and reproducible with
-`uv run python scripts/models/slp_fusion/search_dev.py`.
+adaptations are identified in `notes/models/`; only ranked models use permitted inputs. These
+rank ensembles are separate from the SLp world-model line. The complete dev search, including
+all 34 scored trials and prediction hashes, is in
+`reference/dev_rank_ensemble_dev_search.json` and reproducible with
+`uv run python scripts/models/dev_rank_ensemble/search_dev.py`.
 
 The working hypothesis was that network/ontology, KG and paralog scores rank different gene
 pairs well. Source scores were converted to within-species percentile ranks before averaging.
@@ -78,8 +79,8 @@ re-checks each result against its prediction file and benchmark digest.
 
 | Model | Dev SLB | Test SLB (95% CI) | Human | *S. cerevisiae* | *S. pombe* |
 |---|---:|---:|---:|---:|---:|
-| **SLP Fusion (loss)** | **0.6663** | **0.6448 (0.5946–0.6837)** | 0.6840 | 0.5810 | 0.6694 |
-| SLP Fusion (core) | 0.6550 | 0.6394 (0.5880–0.6805) | 0.6678 | 0.5810 | 0.6694 |
+| **Dev Rank Ensemble (loss)** | **0.6663** | **0.6448 (0.5946–0.6837)** | 0.6840 | 0.5810 | 0.6694 |
+| Dev Rank Ensemble (core) | 0.6550 | 0.6394 (0.5880–0.6805) | 0.6678 | 0.5810 | 0.6694 |
 | Ontotype | 0.6163 | 0.6405 (0.5975–0.6726) | 0.6250 | 0.5886 | 0.7078 |
 | Ontotype (pooled) | 0.5999 | 0.6315 (0.5905–0.6656) | 0.6395 | 0.5806 | 0.6744 |
 | GO/PPI GBM | 0.6256 | 0.6247 (0.5763–0.6603) | 0.6630 | 0.5902 | 0.6207 |
@@ -88,7 +89,7 @@ re-checks each result against its prediction file and benchmark digest.
 | SynLeaF (all-species) | 0.5999 | 0.5543 (0.5082–0.6048) | 0.5372 | 0.5234 | 0.6024 |
 | Reference LightGBM | 0.5315 | 0.5513 (0.5091–0.5815) | 0.6102 | 0.5176 | 0.5262 |
 
-With 400 paired family-bootstrap replicates, Fusion (loss) exceeds reference LightGBM by
+With 400 paired family-bootstrap replicates, the dev-selected ensemble (loss) exceeds reference LightGBM by
 **0.0935** (95% CI **+0.0562 to +0.1226**). Its difference from Ontotype is **+0.0043**
 (CI **−0.0341 to +0.0426**); these two models are statistically unresolved on this test set.
 Adding the human loss scan to the core changes test score by **+0.0054**
@@ -96,15 +97,15 @@ Adding the human loss scan to the core changes test score by **+0.0054**
 (CI **−0.0071 to +0.0399**). SynLeaF's 0.046 dev-to-test drop illustrates why the final ranking
 uses the held-out set rather than dev alone.
 
-For Fusion (loss), the test diagnostic is 0.651 on same-family pairs and 0.583 on
+For the dev-selected ensemble (loss), the test diagnostic is 0.651 on same-family pairs and 0.583 on
 different-family pairs. Human ancestry strata score 0.716 (AFR, 32 positives), 0.687 (EAS,
 92), and 0.649 (EUR, 442); the headline averages these groups equally.
 
 On 2026-09-24 the Ryan adapter regenerated its De Kegel test dependency from
 the current bundle. De Kegel's point score changed by 0.0002. The frozen
-Fusion formulas were then rerun with the same weights and scorer, and all
+Ensemble formulas were then rerun with the same weights and scorer, and all
 three result files and leaderboard pins were refreshed. No test-label tuning
-or change to the Fusion recipe was made.
+or change to the ensemble recipe was made.
 
 The scorer 1.3.2 maintenance pass subsequently refreshed every test-result
 JSON and public-release lock after fixing nondeterministic bootstrap family
@@ -146,10 +147,10 @@ feature groups, not the effect of MAE pretraining, and its test evaluations
 followed inspection of the full branch's test result. Both are registered
 as exploratory, unranked test reads.
 
-One exploratory dev climb added the MAE branch to the frozen Fusion's human
+One exploratory dev climb added the MAE branch to the frozen ensemble's human
 rank blend at weights 0.25, 0.5, 1 and 2. The best tried weight, 2, raised dev
 SLB from 0.6663 to 0.6729. Its paired 95% interval was −0.0011 to +0.0203,
-so it did not clear the benchmark's noise gate; no new Fusion was promoted or
+so it did not clear the benchmark's noise gate; no new ensemble was promoted or
 tested. This experiment followed the independent MAE branch's test readout,
 so it is recorded as exploratory rather than a new confirmatory finalist.
 
@@ -161,10 +162,10 @@ uv run slpbench verify --raw
 uv run pytest -q
 uv run slpbench export-public data/release/slb1.3
 SLB_BENCH=data/release/slb1.3 uv run slpbench verify
-SLB_BENCH=data/release/slb1.3 uv run slpbench eval results/models/slb1.3/slp_fusion__loss_dev.parquet --split dev
+SLB_BENCH=data/release/slb1.3 uv run slpbench eval results/models/slb1.3/dev_rank_ensemble__loss_dev.parquet --split dev
 uv run slpbench battery --split dev
-SLB_BENCH=data/bench/slb1.3 SLB_SPLIT=test bash scripts/models/slp_fusion/run.sh
-uv run slpbench eval results/models/slb1.3/slp_fusion__loss_test.parquet --split test --boot 200
+SLB_BENCH=data/bench/slb1.3 SLB_SPLIT=test bash scripts/models/dev_rank_ensemble/run.sh
+uv run slpbench eval results/models/slb1.3/dev_rank_ensemble__loss_test.parquet --split test --boot 200
 SLB_BENCH=data/bench/slb1.3 uv run python scripts/refresh_test_results.py
 uv run slpbench leaderboard
 ```

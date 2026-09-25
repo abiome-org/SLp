@@ -85,7 +85,7 @@ def main() -> None:
             print(f"core+{name}{w:24g} {score:.5f}", flush=True)
     out = {"benchmark": E.BENCH.name, "manifest_sha256": E.file_sha256(E.BENCH / "manifest.json"),
            "scorer_version": E.SCORER_VERSION, "source_predictions_sha256": hashes, "attempts": rows}
-    path = ROOT / "reference/slp_fusion_dev_search.json"
+    path = ROOT / "reference/dev_rank_ensemble_dev_search.json"
     path.write_text(json.dumps(out, indent=2) + "\n")
     print(f"wrote {path}")
 

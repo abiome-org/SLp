@@ -33,7 +33,7 @@ models:
   sl2mf: {family: graph}
   slgnn: {family: graph}
   slmgae: {family: graph}
-  slp_fusion: {family: ensemble}
+  dev_rank_ensemble: {family: ensemble}
   struct2sl: {family: graph, leaky_variants: {released: "released weights trained on SynLethDB labels"}}
   # feature-based / statistical / foundation-model / LLM (models-features)
   cilantro_sl: {family: feature}
