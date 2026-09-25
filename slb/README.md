@@ -52,6 +52,7 @@ uv run slbench check-leakage my_training_pairs.parquet   # columns species, gene
 A model trains on `train.parquet`, reads `dev_inputs.parquet` / `test_inputs.parquet`, and writes a
 parquet with one finite `score` per `example_id` for every input row (higher = more likely SL).
 Files under `hidden/` are scoring machinery (labels and balance weights); a model must never read them.
+Keep your own outputs outside `data/release/slb/` (`verify` rejects extra files there).
 
 ## Species
 

@@ -263,6 +263,8 @@ def _log_test_eval(split: str, preds: pl.DataFrame) -> None:
 
 def evaluate(preds: pl.DataFrame, split: str, boot: int = 0, allow_missing: bool = False, log: bool = True) -> dict:
     """log=False only for maintainer re-verification of already-recorded results (leaderboard, refresh)."""
+    if split.startswith("test") and not (BENCH / "hidden" / f"{split}_labels.parquet").exists():
+        raise SystemExit("test labels are private: tune on dev and submit test predictions (README, Submitting test predictions)")
     if split.startswith("test") and log:
         _log_test_eval(split, preds)
     df, missing = validated_join(load_gold(split), preds, allow_missing, inputs=input_ids(split))
