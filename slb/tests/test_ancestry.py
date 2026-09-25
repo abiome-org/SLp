@@ -4,6 +4,7 @@ import numpy as np
 import polars as pl
 import pytest
 
+from slbench import contexts as contexts_mod
 from slbench import ancestry as A
 from slbench import evaluate as E
 
@@ -88,3 +89,12 @@ def test_frozen_matched_support_and_adequacy_gate():
     for target in ("AFR", "EAS"):
         assert list(scores[target]["auroc"].values()) == pytest.approx([.5, .5])
     assert scores["AFR"]["verdict"] == "insufficient_support"
+
+
+@pytest.mark.skipif(not contexts_mod.KESSLER.exists(), reason="Kessler 2019 table not fetched")
+def test_independent_genotype_ancestry_agrees():
+    """Kessler et al. 2019 genotypes cover most human lines and never disagree with the Dutil groups SLB uses."""
+    xc = contexts_mod.kessler_crosscheck(pl.read_parquet(E.BENCH / "contexts.parquet"))
+    covered = xc.filter(pl.col("kessler_group").is_not_null())
+    assert covered.height >= 40
+    assert covered["agree"].all(), covered.filter(~pl.col("agree")).rows()

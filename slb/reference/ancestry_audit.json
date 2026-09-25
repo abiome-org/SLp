@@ -24,6 +24,471 @@
       "sl": 19
     }
   },
+  "independent_ancestry_check": {
+    "lines": [
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:A-375",
+        "kessler_AFR": 0.007,
+        "kessler_AMR": 0.003,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.934,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:A-549",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.946,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:A2058",
+        "kessler_AFR": 0.001,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.924,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:AsPC-1",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.959,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:BxPC-3",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.002,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.97,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:CFPAC-1",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.931,
+        "kessler_SAS": 0.016,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:CHL-1",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.916,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:COLO 678",
+        "kessler_AFR": 0.01,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.924,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:COR-L23",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.865,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:Capan-1",
+        "kessler_AFR": 0.009,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.827,
+        "kessler_SAS": 0.097,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:Detroit 562",
+        "kessler_AFR": 0.003,
+        "kessler_AMR": 0.002,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.93,
+        "kessler_SAS": 0.007,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EAS",
+        "context_id": "human:EBC-1",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.004,
+        "kessler_EAS": 0.937,
+        "kessler_EUR": 0.0,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EAS"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:HPAF-II",
+        "kessler_AFR": 0.006,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.937,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EAS",
+        "context_id": "human:HSC-2",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.853,
+        "kessler_EUR": 0.0,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EAS"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:HT-29",
+        "kessler_AFR": 0.009,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.004,
+        "kessler_EUR": 0.876,
+        "kessler_SAS": 0.06,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "AFR",
+        "context_id": "human:HeLa",
+        "kessler_AFR": 0.622,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.007,
+        "kessler_EUR": 0.309,
+        "kessler_SAS": 0.002,
+        "kessler_group": "AFR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:Jurkat",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.005,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.956,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:K-562",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.927,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:KP-1N",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.007,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.956,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EAS",
+        "context_id": "human:KP-4",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.732,
+        "kessler_EUR": 0.0,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EAS"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:LCLC-97TM1",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.001,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.95,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EAS",
+        "context_id": "human:LK-2",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.007,
+        "kessler_EAS": 0.956,
+        "kessler_EUR": 0.0,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EAS"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:LS180",
+        "kessler_AFR": 0.059,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.008,
+        "kessler_EUR": 0.811,
+        "kessler_SAS": 0.008,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:LS513",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.89,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:MDA-MB-231",
+        "kessler_AFR": 0.028,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.878,
+        "kessler_SAS": 0.06,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:MIA PaCa-2",
+        "kessler_AFR": 0.012,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.009,
+        "kessler_EUR": 0.86,
+        "kessler_SAS": 0.086,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:MeWo",
+        "kessler_AFR": 0.017,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.004,
+        "kessler_EUR": 0.867,
+        "kessler_SAS": 0.05,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:Mel JuSo",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.97,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:NCI-H1299",
+        "kessler_AFR": 0.009,
+        "kessler_AMR": 0.001,
+        "kessler_EAS": 0.002,
+        "kessler_EUR": 0.959,
+        "kessler_SAS": 0.006,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:NCI-H1568",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.954,
+        "kessler_SAS": 0.023,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:NCI-H1975",
+        "kessler_AFR": 0.007,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.898,
+        "kessler_SAS": 0.046,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:NCI-H2087",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.901,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "AFR",
+        "context_id": "human:NCI-H23",
+        "kessler_AFR": 0.658,
+        "kessler_AMR": 0.017,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.255,
+        "kessler_SAS": 0.0,
+        "kessler_group": "AFR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:NCI-H520",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.95,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:OVCAR-8",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.965,
+        "kessler_SAS": 0.004,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "AFR",
+        "context_id": "human:RKO",
+        "kessler_AFR": 0.69,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.071,
+        "kessler_SAS": 0.0,
+        "kessler_group": "AFR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:SK-MEL-2",
+        "kessler_AFR": 0.006,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.021,
+        "kessler_EUR": 0.887,
+        "kessler_SAS": 0.061,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:SK-MEL-28",
+        "kessler_AFR": 0.012,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.01,
+        "kessler_EUR": 0.84,
+        "kessler_SAS": 0.062,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:SK-MEL-5",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.93,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:SK-MES-1",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.945,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EAS",
+        "context_id": "human:SNU-1",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.005,
+        "kessler_EAS": 0.914,
+        "kessler_EUR": 0.0,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EAS"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:SU.86.86",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.006,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.9,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:SW1463",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.809,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:SW837",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.961,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      },
+      {
+        "ancestry_group": "EUR",
+        "context_id": "human:T84",
+        "kessler_AFR": 0.0,
+        "kessler_AMR": 0.0,
+        "kessler_EAS": 0.0,
+        "kessler_EUR": 0.838,
+        "kessler_SAS": 0.0,
+        "kessler_group": "EUR"
+      }
+    ],
+    "lines_agree": 45,
+    "lines_covered": 45,
+    "not_covered": [
+      "human:C092",
+      "human:MKN74",
+      "human:PANC-1",
+      "human:PC-9",
+      "human:hTERT-RPE1"
+    ],
+    "raw_sha256": "861c1f872b60093c7d1bb1197379274d270b8945c2ad0415e74eb51921e93c88",
+    "source": "Kessler et al. 2019, Cancer, doi:10.1002/cncr.32020 (Table S2), matched by COSMIC cell-line ID"
+  },
   "manifest_sha256": "38881890d91413cf69f3c35caf2165067f821746db50971cecd433acb9795704",
   "matched_screen_pair_support": {
     "AFR": {

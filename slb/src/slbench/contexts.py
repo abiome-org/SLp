@@ -52,13 +52,15 @@ def cellosaurus_human() -> pl.DataFrame:
             tag, val = line[:2], line[5:].rstrip("\n")
             if tag == "ID":
                 rec = {"name": val, "synonyms": [], "depmap": None, "ancestry": None, "population": None,
-                       "human": False, "sex": None, "disease": None}
+                       "human": False, "sex": None, "disease": None, "cosmic_clp": None}
             elif tag == "AC":
                 rec["accession"] = val
             elif tag == "SY":
                 rec["synonyms"] = [s.strip() for s in val.split(";") if s.strip()]
             elif tag == "DR" and val.startswith("DepMap;"):
                 rec["depmap"] = val.split(";")[1].strip()
+            elif tag == "DR" and val.startswith("Cosmic-CLP;"):
+                rec["cosmic_clp"] = int(val.split(";")[1].strip())
             elif tag == "OX" and "NCBI_TaxID=9606" in val:
                 rec["human"] = True
             elif tag == "SX":
@@ -95,6 +97,7 @@ def _finish(rec: dict) -> dict:
         fracs = {p: None for p in fracs}
     return {
         "cellosaurus_ac": rec.get("accession"), "cellosaurus_name": rec["name"], "depmap_id": rec["depmap"],
+        "cosmic_clp": rec["cosmic_clp"],
         "synonyms": rec["synonyms"], "sex": rec["sex"], "disease": rec["disease"],
         "population_reported": rec["population"], "ancestry_group": group, "ancestry_basis": basis,
         **{f"anc_{k}": v for k, v in sorted(fracs.items())},
@@ -142,3 +145,30 @@ def lookup(label: str, depmap_id: str | None = None) -> dict | None:
         if len(cand) == 1:
             return df.row(cand[0], named=True)
     return None
+
+
+KESSLER = RAW / "kessler2019/CNCR-125-2076-s002.xlsx"
+KESSLER_GROUPS = {"EUR": "European", "AFR": "African", "EAS": "East_Asian", "SAS": "South_Asian", "AMR": "Native_American"}
+
+
+def kessler_ancestry() -> pl.DataFrame:
+    """Kessler et al. 2019 (Cancer, doi:10.1002/cncr.32020, PMC6541501) genotype ancestry of 1,013 Sanger (COSMIC) lines, Table S2."""
+    import openpyxl
+
+    ws = openpyxl.load_workbook(KESSLER, read_only=True)["Table-S2|CellLineAncestryEstima"]
+    rows = list(ws.iter_rows(values_only=True))
+    k = pl.DataFrame(rows[1:], schema=list(rows[0]), orient="row")
+    k = k.select(pl.col("Cell_Line_Name").alias("kessler_name"), pl.col("Cell_Line_ID").cast(pl.Int64).alias("cosmic_clp"),
+                 *[pl.col(f"{v}_Ancestry_Proportion").cast(pl.Float64).alias(f"kessler_{g}") for g, v in KESSLER_GROUPS.items()])
+    top = pl.concat_list([pl.col(f"kessler_{g}") for g in KESSLER_GROUPS])
+    return k.with_columns(
+        pl.when(top.list.max() > ANCESTRY_MAJORITY)
+        .then(pl.lit(list(KESSLER_GROUPS)).list.get(top.list.arg_max())).otherwise(pl.lit("admixed")).alias("kessler_group"))
+
+
+def kessler_crosscheck(contexts: pl.DataFrame) -> pl.DataFrame:
+    """Human benchmark contexts next to Kessler's independent genotype ancestry, matched by COSMIC cell-line ID."""
+    cells = cellosaurus_human().select("cellosaurus_ac", "cosmic_clp")
+    h = contexts.filter(pl.col("species") == "human").select("context_id", "cellosaurus_ac", "ancestry_group", "ancestry_basis")
+    return h.join(cells, on="cellosaurus_ac", how="left").join(kessler_ancestry(), on="cosmic_clp", how="left") \
+        .with_columns((pl.col("kessler_group") == pl.col("ancestry_group")).alias("agree")).sort("context_id")
