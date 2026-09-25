@@ -1,189 +1,189 @@
 # Test-split entries. Evaluate with: slbench eval PREDS --split test --boot 200 --out results/slb/NAME_test.json
 - name: lgbm
   result: results/slb/lgbm_test.json
-  result_sha256: d0ee610ee5f383e2fb9c72081b5c9b6a4d333cc703769d428ff181d33851d655
+  result_sha256: b4cee31cb0522d365ddd501807e6811f3645b649abf25dd6d6f880b4e623b102
   predictions: results/slb/lgbm_test.parquet
   description: gradient boosting on single-gene fitness, paralog identity, DepMap co-dependency
   trained_on: SLB train
   leaky: false
 - name: fitness_lgbm
   result: results/slb/fitness_lgbm_test.json
-  result_sha256: c1c77e959bc02a0734aeb8aa1922ac06d4a53f285833daf46cbc5ea9592a5de4
+  result_sha256: 4d91ca314611ffe4ee3be6b1041182b4057fdd096bac695daa4200f09e5f44d1
   predictions: results/slb/fitness_lgbm_test.parquet
   description: gradient boosting on the single-loss covariates only (probe of residual fitness signal)
   trained_on: SLB train
   leaky: false
 - name: fitness
   result: results/slb/fitness_test.json
-  result_sha256: ad456c40fffba8d3940cfc3e25e36832dbef1f49d4211120344a324e034c2902
+  result_sha256: a96dca3592838035d852bb65dde7601482c222bcfca0ce534173d7abeb29971c
   predictions: results/slb/fitness_test.parquet
   description: sickness of the two single mutants, -(f_a + f_b)
   trained_on: none (single-gene data)
   leaky: false
 - name: paralog_identity
   result: results/slb/paralog_identity_test.json
-  result_sha256: 4bf08a678dd39cd8596b4eead8ae2a68f9e8d1dff6ae36dd4de4c0478cccfe35
+  result_sha256: 4d84abd915ee2d7e231cfdb78be09fe659196c5265c97a5ef82e7b409887b4df
   predictions: results/slb/paralog_identity_test.parquet
   description: Ensembl 116 paralog protein identity
   trained_on: none
   leaky: false
 - name: codependency
   result: results/slb/codependency_test.json
-  result_sha256: fb3e8a90ba1ba35d03004b33a070a9443af416d95b794d2d323a1fbefda44000
+  result_sha256: 12a0cc80e0f655e004278546680a6664b00efc57b67e3432a376385b30abcc5c
   predictions: results/slb/codependency_test.parquet
   description: DepMap gene-effect profile correlation (human only)
   trained_on: none (single-gene data)
   leaky: false
 - name: random
   result: results/slb/random_test.json
-  result_sha256: b44d745735a53bc70e1bcb49e3591c97bc67f46956597f4d85d540e71401b64c
+  result_sha256: 529b727a4e2c6436d7fe34fcf78b7600421f743fd6b2b48f3a3a47652af26aff
   predictions: results/slb/random_test.parquet
   description: uniform noise
   trained_on: none
   leaky: false
 - name: SLp-1.1 (decoder)
   result: results/slb/slp11_sl_score_test.json
-  result_sha256: 1c3ef406c87cf705be2cdd3580924b84efb90481943a1e8ce2de35fdf6c79ec1
+  result_sha256: 82cc846fc8b342238ee18c40b096dbbfeaa8be128f36dae3c969c7b2c2a47360
   predictions: results/slb/slp11_sl_score_test.parquet
-  description: prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 39% of human test pairs in vocabulary (rest tied)
+  description: prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 43% of human test pairs in vocabulary (rest tied)
   trained_on: MuSL/SynLethDB SL labels; DepMap; Costanzo yeast (25% sample)
   leaky: true
 - name: SLp-1.1 (label-free)
   result: results/slb/slp11_label_free_test.json
-  result_sha256: a45d76dd073f84c098af7298abd11fc6f632ae0cf9604a47a8a565d49f022d8b
+  result_sha256: c145680448d956776f6d5afc58a35c0fa6f8ef89b6349345287dd80122ade849
   predictions: results/slb/slp11_label_free_test.parquet
-  description: prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 39% coverage
+  description: prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 43% coverage
   trained_on: DepMap; Costanzo yeast (25% sample); Perturb-seq
   leaky: true
 - name: GO/PPI GBM
   result: results/models/slb/go_ppi_gbm_test.json
-  result_sha256: 6645d139d6756dd358eb636ce692bd81ec09aedb2c65ae3c292c7201145d30a9
+  result_sha256: 0ffffc1e85965f026c956cb710fd636c73e075e149b8dcb48cc63b859d8b451b
   predictions: results/models/slb/go_ppi_gbm_test.parquet
   description: multi-network feature model, trained separately by species
   trained_on: SLB train + filtered GO/PPI/fitness
   leaky: false
 - name: GO/PPI GBM (pooled)
   result: results/models/slb/go_ppi_gbm__pooled_test.json
-  result_sha256: 43daf9353ee450e6c1ce3999c5d7ec60e09127dcf63b2e95a6d0068f6d9e8d26
+  result_sha256: ceb08d66de85e149a06d940bebacb40597c566fb5f5fd084704a30c07cbd7c9b
   predictions: results/models/slb/go_ppi_gbm__pooled_test.parquet
   description: one multi-species model on filtered networks
   trained_on: SLB train + filtered GO/PPI/fitness
   leaky: false
 - name: Ontotype
   result: results/models/slb/ontotype_test.json
-  result_sha256: 9f8d29c97bde42227f70a5447c8187b411bbc06eb8441681b81b392acef7d001
+  result_sha256: 32c07834403a055fc5740aaa20197456729272bb257b551f3943b1fe11e4395e
   predictions: results/models/slb/ontotype_test.parquet
   description: ontology-based model retrained by species
   trained_on: SLB train + filtered GO
   leaky: false
 - name: Ontotype (pooled)
   result: results/models/slb/ontotype__pooled_test.json
-  result_sha256: a4207fe398faebe0d551864bf8bd355d21731d1c88246484c18a586648a75f5b
+  result_sha256: 5aaf23e60e6db3bb380daa95ff35c99ab18a4a463f0ae6a12af5a3d65ebb1777
   predictions: results/models/slb/ontotype__pooled_test.parquet
   description: one ontology model across species
   trained_on: SLB train + filtered GO
   leaky: false
 - name: SynLeaF (all-species)
   result: results/models/slb/synleaf__allspecies_test.json
-  result_sha256: 560408b1583bc3d9cf0dec9cc3f7515e3ef35c020a1ef24ac747dc3a25ca75fe
+  result_sha256: 15b8ee68621c3fd9c4d9ab7f5ff43b45a40848a25e3f19c5c6c594ecdc1cebe4
   predictions: results/models/slb/synleaf__allspecies_test.parquet
   description: KG/RGCN branch retrained on the filtered multi-species bundle
   trained_on: SLB train + filtered GO/PPI
   leaky: false
 - name: SynLeaF (human)
   result: results/models/slb/synleaf__human_test.json
-  result_sha256: 1964e41fcebd715a87cf5774811ca2e30e6b808e6710454881e0b2b80e618e63
+  result_sha256: f4e75bbe0c51d31880f29a170a512263e9a0fea75e62a1839ff256295f6bbbdf
   predictions: results/models/slb/synleaf__human_test.parquet
   description: dual-stage omics and KG model; other species tied
   trained_on: SLB train + filtered KG/TCGA omics
   leaky: false
 - name: De Kegel 2021 (all-species)
   result: results/models/slb/dekegel2021__allspecies_test.json
-  result_sha256: b644c0c5090924a229ca020cdaf6735ca7eb0d21d5f738ae8ae91700582e7c9c
+  result_sha256: 449e5669f5634a1336a256a5d16f9a539f44351a735e877bdda5733b4399dce2
   predictions: results/models/slb/dekegel2021__allspecies_test.parquet
   description: paralog feature RF adapted across species
   trained_on: SLB train + filtered GO/PPI/ESM2
   leaky: false
 - name: MuSL (all-species)
   result: results/models/slb/musl__allspecies_test.json
-  result_sha256: 855eed9d3752a58f69746fa9c42831a8916a0aee67d6dc13009549ce8918dee5
+  result_sha256: 1628ab60a43ae8cffcaa41b24948c86d2e398a11acfc2a6e03bddc0e07b5604f
   predictions: results/models/slb/musl__allspecies_test.parquet
   description: GNN branch retrained across species
   trained_on: SLB train + filtered PPI/ESM2
   leaky: false
 - name: MuSL (human)
   result: results/models/slb/musl__human_test.json
-  result_sha256: 99e0e47c3fd9129efe282daed49f9c242a6c396cf879cae26daa7b48812bffe4
+  result_sha256: 614a1216ec01594760ff5c5ab4bdef26bdd64a786a3bd44ab243a9f54b407803
   predictions: results/models/slb/musl__human_test.parquet
   description: full multimodal model; other species tied
   trained_on: SLB train + BioGRID physical/ESM2/TCGA
   leaky: false
 - name: DepMap OLS (loss)
   result: results/models/slb/depmap_ols__loss_test.json
-  result_sha256: 84cdc20cd770d398946b353b31434943c5a84d471b47b43017df30dfa05b9e81
+  result_sha256: 14ad73c823dadbf030b97305539aba0ac9df1a2c3bba343d78c5ce33a49f8dbc
   predictions: results/models/slb/depmap_ols__loss_test.parquet
   description: human single-gene dependency scan; other species tied
   trained_on: DepMap single-gene/omics only
   leaky: false
 - name: Dev Rank Ensemble (core)
   result: results/models/slb/dev_rank_ensemble__core_test.json
-  result_sha256: 3b3d30a1938e181a7ee3b4a320bfdb1b5441b7b74a3dde0d21f2f6a87a529ddd
+  result_sha256: 2f9adf349e8ab48bd3925b44819724cd3087bf46e03fb58e099b179a87f96ce4
   predictions: results/models/slb/dev_rank_ensemble__core_test.parquet
   description: dev-selected rank blend of GO/PPI, Ontotype, SynLeaF and De Kegel
   trained_on: SLB train; blend selected on dev
   leaky: false
 - name: Dev Rank Ensemble (loss)
   result: results/models/slb/dev_rank_ensemble__loss_test.json
-  result_sha256: 7a39656d90d55a8d27d415efb3c2d1c60622a162e9b25f6e8a30d02687617e7e
+  result_sha256: 78e612edb4c693df9de34a1ef61da2a4ce0aed4f329fa6bd43dbb5ff8fba4c9a
   predictions: results/models/slb/dev_rank_ensemble__loss_test.parquet
   description: core blend plus human DepMap OLS
   trained_on: SLB train; blend selected on dev
   leaky: false
 - name: SL-Predict 2026 (MAE branch)
   result: results/models/slb/sl_predict_2026__mae_test.json
-  result_sha256: f8f7a284408dc36aeba7365fc0ed4f8d55a8c45254a8e571223e666bb82275f7
+  result_sha256: 25fbbce3a03c1fd6303e3d60cbcffae828676db1d1519b3de9fd0f707f2e59bd
   predictions: results/models/slb/sl_predict_2026__mae_test.parquet
   description: released frozen DepMap 26Q1 MAE gene encoder plus SLB-trained symmetric LightGBM; human only, 99% native coverage
   trained_on: single-gene DepMap 26Q1 unlabeled profiles; SLB train pair labels
   leaky: false
 - name: PAGAN 2026 (genes-to-pairs)
   result: results/models/slb/pagan__clean_n2p_test.json
-  result_sha256: cda9c134c0cb5f6e88bebad529cd892bae7c39f8932b70229e8e12cc541919db
+  result_sha256: eda22b28b96d61660553f9c491e5eaa0d9774c3d68e57e053dbe9837c5b19ec3
   predictions: results/models/slb/pagan__clean_n2p_test.parquet
   description: essentiality-trained genes-to-pairs GraphSAGE on filtered SLB graph; human and budding yeast, fission yeast tied
   trained_on: single-gene essentiality; filtered GO/PPI/paralogs; no SL pair labels
   leaky: false
 - name: GiGCN 2026 (binary GO adaptation)
   result: results/models/slb/gigcn__binary_go_test.json
-  result_sha256: 961fe773c5e9850fbffc9877003891a4729c2c42ff39cc30dcce5d074c1352ef
+  result_sha256: 32468912277eb95dcee8ed50832539461e3fafeadb4f59e3e95455effca2a259
   predictions: results/models/slb/gigcn__binary_go_test.parquet
   description: signed factor graph network refitted on SLB train; binary SL versus neutral with filtered GO features, human only
   trained_on: SLB train pairs; filtered GO annotations, no external GI graph
   leaky: false
 - name: Cilantro-SL 2026 (Geneformer branch)
   result: results/models/slb/cilantro_sl_test.json
-  result_sha256: 56647d9b772a73606e4326e30090afb4215bc5888a428bbb0049f0606d686717
+  result_sha256: cbe89a0cd895308784a7cb5aa09e7227002cd73f092f6a0ff9359a0486dec677
   predictions: results/models/slb/cilantro_sl_test.parquet
   description: Geneformer in-silico-knockout, viability FiLM and five-fold SLNet refit; human only, 55% native coverage
   trained_on: Geneformer/Gene2vec unlabeled pretraining; DepMap single-gene effects; SLB train pairs
   leaky: false
 - name: Ryan 2026 (full clean refit)
   result: results/models/slb/ryan2026_context__slbtrain_full_test.json
-  result_sha256: 12b7cbcf2fa6a63ae29e418eb81eb857f488c7df05b3fd3d8e95cd67e5db5369
+  result_sha256: c2c870a74331d581aa0f4559b24f3ed65c642743d5f9357377355630c796e182
   predictions: results/models/slb/ryan2026_context__slbtrain_full_test.parquet
-  description: context-specific paralog random forest refitted on SLB; human only, 77% native coverage
+  description: context-specific paralog random forest refitted on SLB; human only, 79% native coverage
   trained_on: SLB train; filtered GO/PPI and DepMap single-gene data
   leaky: false
 - name: Ryan 2026 (context clean refit)
   result: results/models/slb/ryan2026_context__slbtrain_ctx_test.json
-  result_sha256: 5d6351f35196659f15b054153bafacc2e01fa1330802f29848ea354f78c339e4
+  result_sha256: fe3d84666f978895981681ccac2a92899bb368c237497214aeb609a2da23d02c
   predictions: results/models/slb/ryan2026_context__slbtrain_ctx_test.parquet
-  description: context-only paralog random forest refitted on SLB; human only, 77% native coverage
+  description: context-only paralog random forest refitted on SLB; human only, 79% native coverage
   trained_on: SLB train; filtered GO/PPI and DepMap single-gene data
   leaky: false
 - name: SL-Predict MAE vectors only (exploratory test ablation)
   result: results/diagnostics/sl_predict_2026/slb/mae_only_test.json
-  result_sha256: 92c1f985e8b2d4e2918e1560f2bfbf2434e35321b3aa959a6a2b8722da2ee962
+  result_sha256: 3aedb706727cd4fc1cf9a3713f9ac57ecec3bfe6416ef726eb05ad6fa19da9f3
   predictions: results/diagnostics/sl_predict_2026/slb/mae_only_test.parquet
   description: feature-group ablation run after full-branch test inspection; human only
   trained_on: DepMap 26Q1 single-gene profiles; SLB train pairs
@@ -191,7 +191,7 @@
   ranked: false
 - name: SL-Predict coessentiality only (exploratory test ablation)
   result: results/diagnostics/sl_predict_2026/slb/coess_only_test.json
-  result_sha256: 1c4fc98e1b2dd0745bae99e243bf00c38b1fc61137590fdaf55296af3d56a598
+  result_sha256: e8c68fbcbf8df78735fb61e01649171ece7c755a13202bc106a290e4646ea918
   predictions: results/diagnostics/sl_predict_2026/slb/coess_only_test.parquet
   description: feature-group ablation run after full-branch test inspection; human only
   trained_on: DepMap 26Q1 single-gene profiles; SLB train pairs
@@ -199,7 +199,7 @@
   ranked: false
 - name: SLxGO 2026 (GO-PCA branch, input provenance unresolved)
   result: results/models/slb/slxgo2026__go_pca_test.json
-  result_sha256: d0340edbb0395045c64f39b9744f45efbd9e63e8d9ab0e991786db2f170567e5
+  result_sha256: 77d00e5234b1fa4a06603244a6556c10d309a0ccc719951309c3dc1bbb3c4788
   predictions: results/models/slb/slxgo2026__go_pca_test.parquet
   description: released GO-PCA embedding branch, refitted on SLB train; GO evidence provenance unavailable
   trained_on: authors' GO-PCA vectors; SLB train pairs
@@ -207,7 +207,7 @@
   ranked: false
 - name: Ryan 2026 (released external-GEMINI weights, leakage diagnostic)
   result: results/models/slb/ryan2026_context__released_ctx_test.json
-  result_sha256: fe607e18dcce5ed76cef7eee71e18e16958a131010f7d9a3eafaee9d6dcd9437
+  result_sha256: da347ad879d3c697c5aa95166ba370f22018d3346a1f81acbcea052112ec700f
   predictions: results/models/slb/ryan2026_context__released_ctx_test.parquet
   description: released classifier trained on external GEMINI SL screens overlapping held-out families
   trained_on: external GEMINI labels, including source screens used by SLB

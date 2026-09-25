@@ -1,17 +1,15 @@
 {
-  "benchmark": "slb1.3",
-  "manifest_sha256": "b1ac12d961b80d917b518d96834acd8289b954751f61833d37d26738631b41a9",
-  "scorer_version": "1.3.2",
+  "benchmark": "slb",
+  "manifest_sha256": "38881890d91413cf69f3c35caf2165067f821746db50971cecd433acb9795704",
+  "scorer_version": "2.0.0",
   "source_predictions_sha256": {
-    "go": "c52c04438cdf9b7e70b3cf3351a63810a264d44eb9276c27c018c4ad3a3ecde8",
-    "onto": "425905bbaa46e1a3d3b53ed1ff55556b2abd77952c6d476410ca0eb6699f2cba",
-    "syn": "87e659b44f3d6f56eb53d3482b117de0cd1a607c4d1925b59c5817f54c4b5571",
-    "deK": "1f33ea2100685a504e83de499aa1b4ef9a5b000e237fd63bdc463fcefb65478e",
-    "musl": "56d2599d67159d7650ee996ca2b43b186e124a9c720cb3ab426f88dbe74fbe06",
-    "slm": "3b2454e3c16d9537ab85925645b64f722255533f6666c7673d88abfedb63d7e8",
-    "mvg": "fc3e7d222fff55240607c24a5feb2520623ff092e6eb9658dcce52fe6f0b275b",
-    "esm": "741e915f8f6cb5207600c00b63cfcf0139f3ea007c870a9e02a90f193e19f7c9",
-    "dep": "748a96b77982aa1e357caa82fb93b835ab82a6dc787db6d5ec610ee4b96d7f55"
+    "go": "b6839cbb63e07aeb262d469dd180cffbb4f1e4aaadde84b8bb3704cd70336121",
+    "onto": "c2d4fbb150d78f70f76ddaa48e3f054faf38a92a13b42767a75c981e519f0f4b",
+    "syn": "fe80fc5a39340a7c17b3dc75536e13b13051e032c878721dd08332d6c897a024",
+    "deK": "f72f7d0c40f03630a740c0a36de5a83d8ff7427a83802bbd6d26c54bcd57d707",
+    "musl": "011eb38600754fc6045d12911dfb88dc82f9feeb3f80d4c98b34c9f69ea8ebc9",
+    "mvg": "453d11853e51eb4853bb494dc9ff79ecfb4e6182c3776c6c979d5a32341b698c",
+    "dep": "89062523519ef8ee3aebfeb0a172622d3bb869a0723816710c234521738a8858"
   },
   "attempts": [
     {
@@ -23,11 +21,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.625643248919486,
+      "dev_score": 0.5951088623669937,
       "species": {
-        "human": 0.6369512065152424,
-        "scer": 0.6019263550238332,
-        "spom": 0.6380521852193821
+        "human": 0.5986006687464605,
+        "scer": 0.5909822722909392,
+        "spom": 0.5957436460635815
       }
     },
     {
@@ -39,11 +37,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.616254884874747,
+      "dev_score": 0.6289362068743064,
       "species": {
-        "human": 0.5805602567882646,
-        "scer": 0.6213397328936474,
-        "spom": 0.6468646649423291
+        "human": 0.6083954672020888,
+        "scer": 0.6376755682847692,
+        "spom": 0.6407375851360612
       }
     },
     {
@@ -55,11 +53,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.5999236495193789,
+      "dev_score": 0.5581394457954479,
       "species": {
-        "human": 0.6135715642720395,
-        "scer": 0.5801287643349808,
-        "spom": 0.6060706199511163
+        "human": 0.4890421495749934,
+        "scer": 0.5819063253482031,
+        "spom": 0.6034698624631475
       }
     },
     {
@@ -71,11 +69,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.5864860919953393,
+      "dev_score": 0.5678575088876848,
       "species": {
-        "human": 0.6324672620879672,
-        "scer": 0.5636221704483605,
-        "spom": 0.5633688434496901
+        "human": 0.5413782459420213,
+        "scer": 0.5871758190267032,
+        "spom": 0.5750184616943299
       }
     },
     {
@@ -87,27 +85,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.5802034953438282,
+      "dev_score": 0.5782856638731673,
       "species": {
-        "human": 0.6000185588534498,
-        "scer": 0.5884297914275795,
-        "spom": 0.5521621357504553
-      }
-    },
-    {
-      "name": "slm",
-      "parent": "",
-      "weights": {
-        "slm": 1
-      },
-      "extra": null,
-      "hypothesis": "the added predictor provides complementary pair ranking",
-      "selection": "screened",
-      "dev_score": 0.5614922812494876,
-      "species": {
-        "human": 0.5043332311280516,
-        "scer": 0.576051232008838,
-        "spom": 0.6040923806115731
+        "human": 0.5889190216321991,
+        "scer": 0.583079190945291,
+        "spom": 0.5628587790420118
       }
     },
     {
@@ -119,27 +101,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.559646173547985,
+      "dev_score": 0.5339269374908873,
       "species": {
-        "human": 0.5442371028078546,
-        "scer": 0.5450124488949297,
-        "spom": 0.5896889689411704
-      }
-    },
-    {
-      "name": "esm",
-      "parent": "",
-      "weights": {
-        "esm": 1
-      },
-      "extra": null,
-      "hypothesis": "the added predictor provides complementary pair ranking",
-      "selection": "screened",
-      "dev_score": 0.5425881306156389,
-      "species": {
-        "human": 0.5527432159220417,
-        "scer": 0.5474671777276464,
-        "spom": 0.5275539981972288
+        "human": 0.47968220524199745,
+        "scer": 0.5541909230929027,
+        "spom": 0.5679076841377615
       }
     },
     {
@@ -152,11 +118,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6391951794363198,
+      "dev_score": 0.6298637774268109,
       "species": {
-        "human": 0.6269512539710526,
-        "scer": 0.6239651992077627,
-        "spom": 0.666669085130144
+        "human": 0.6223576289294045,
+        "scer": 0.6298273885314062,
+        "spom": 0.6374063148196221
       }
     },
     {
@@ -169,11 +135,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.639244310160796,
+      "dev_score": 0.6223869869946485,
       "species": {
-        "human": 0.6354755274555556,
-        "scer": 0.6203048244267686,
-        "spom": 0.6619525786000635
+        "human": 0.6191007825860105,
+        "scer": 0.6211915204023403,
+        "spom": 0.6268686579955944
       }
     },
     {
@@ -186,11 +152,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6456865059729023,
+      "dev_score": 0.5946756398918586,
       "species": {
-        "human": 0.6753002022136173,
-        "scer": 0.6020774635438477,
-        "spom": 0.6596818521612418
+        "human": 0.5563730321837843,
+        "scer": 0.5990852903746312,
+        "spom": 0.6285685971171603
       }
     },
     {
@@ -203,11 +169,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6462644169561363,
+      "dev_score": 0.5976401980435426,
       "species": {
-        "human": 0.6757498187276928,
-        "scer": 0.6045169941343098,
-        "spom": 0.6585264380064062
+        "human": 0.5709075538135114,
+        "scer": 0.599756630310527,
+        "spom": 0.6222564100065894
       }
     },
     {
@@ -220,11 +186,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6242804301592056,
+      "dev_score": 0.6034587750730989,
       "species": {
-        "human": 0.6624139982560368,
-        "scer": 0.5919831184136829,
-        "spom": 0.6184441738078973
+        "human": 0.6059262086948312,
+        "scer": 0.6005039128675836,
+        "spom": 0.6039462036568817
       }
     },
     {
@@ -237,11 +203,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6291469501914587,
+      "dev_score": 0.604400855887635,
       "species": {
-        "human": 0.6569074587506081,
-        "scer": 0.5994476255821986,
-        "spom": 0.6310857662415696
+        "human": 0.6076187874730934,
+        "scer": 0.6016673369565654,
+        "spom": 0.6039164432332466
       }
     },
     {
@@ -254,11 +220,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6239205808490649,
+      "dev_score": 0.6034471199881121,
       "species": {
-        "human": 0.6503504732537588,
-        "scer": 0.6079090037269522,
-        "spom": 0.6135022655664836
+        "human": 0.6174331769273078,
+        "scer": 0.5998538407922894,
+        "spom": 0.5930543422447392
       }
     },
     {
@@ -271,11 +237,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6284157729706877,
+      "dev_score": 0.6043991985339984,
       "species": {
-        "human": 0.6480688814568104,
-        "scer": 0.609930248510194,
-        "spom": 0.6272481889450586
+        "human": 0.614948854655025,
+        "scer": 0.6006471394296212,
+        "spom": 0.5976016015173488
       }
     },
     {
@@ -289,11 +255,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6502843593011453,
+      "dev_score": 0.6182846533178302,
       "species": {
-        "human": 0.6588645435945611,
-        "scer": 0.6193549220580042,
-        "spom": 0.6726336122508704
+        "human": 0.5838817373712938,
+        "scer": 0.6254374877429574,
+        "spom": 0.6455347348392396
       }
     },
     {
@@ -307,11 +273,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6506190184703605,
+      "dev_score": 0.6185134424930481,
       "species": {
-        "human": 0.6608029694537924,
-        "scer": 0.6188411086199329,
-        "spom": 0.6722129773373562
+        "human": 0.5944018820908494,
+        "scer": 0.6213921953560525,
+        "spom": 0.6397462500322423
       }
     },
     {
@@ -325,11 +291,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6429038985933021,
+      "dev_score": 0.6287441147655081,
       "species": {
-        "human": 0.6625460181127458,
-        "scer": 0.6116271605076926,
-        "spom": 0.6545385171594679
+        "human": 0.6206360178398778,
+        "scer": 0.6250709273866847,
+        "spom": 0.6405253990699615
       }
     },
     {
@@ -343,11 +309,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6422062247247927,
+      "dev_score": 0.6254739244645767,
       "species": {
-        "human": 0.6573978567246758,
-        "scer": 0.6138797978566551,
-        "spom": 0.6553410195930474
+        "human": 0.623118442716829,
+        "scer": 0.6214142704244575,
+        "spom": 0.6318890602524435
       }
     },
     {
@@ -361,11 +327,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6357464205818203,
+      "dev_score": 0.6266454322950432,
       "species": {
-        "human": 0.6365254750887391,
-        "scer": 0.6230448023490033,
-        "spom": 0.6476689843077185
+        "human": 0.6270108472961918,
+        "scer": 0.625513994974862,
+        "spom": 0.6274114546140757
       }
     },
     {
@@ -379,11 +345,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6381162860876904,
+      "dev_score": 0.6247466121987597,
       "species": {
-        "human": 0.6403716903853183,
-        "scer": 0.6223411345095603,
-        "spom": 0.6516360333681928
+        "human": 0.6286231474496309,
+        "scer": 0.6217551442773404,
+        "spom": 0.623861544869308
       }
     },
     {
@@ -397,11 +363,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6512700047223168,
+      "dev_score": 0.6056314546940023,
       "species": {
-        "human": 0.6961609208981625,
-        "scer": 0.6050166066200894,
-        "spom": 0.6526324866486986
+        "human": 0.5679605542493145,
+        "scer": 0.611070046446914,
+        "spom": 0.6378637633857783
       }
     },
     {
@@ -415,11 +381,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6531265001854282,
+      "dev_score": 0.6087140827821907,
       "species": {
-        "human": 0.6955935535992426,
-        "scer": 0.6087624149204192,
-        "spom": 0.655023532036623
+        "human": 0.5854743067357719,
+        "scer": 0.610830854384204,
+        "spom": 0.6298370872265961
       }
     },
     {
@@ -434,11 +400,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6546354940251312,
+      "dev_score": 0.6229657403619379,
       "species": {
-        "human": 0.6789341087130611,
-        "scer": 0.6160865997353301,
-        "spom": 0.6688857736270026
+        "human": 0.5901845079018847,
+        "scer": 0.6273463431554007,
+        "spom": 0.6513663700285282
       }
     },
     {
@@ -453,11 +419,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "finalist",
-      "dev_score": 0.6549911041222898,
+      "dev_score": 0.6230830899392589,
       "species": {
-        "human": 0.6782549333376857,
-        "scer": 0.617704265994118,
-        "spom": 0.6690141130350654
+        "human": 0.599758438550425,
+        "scer": 0.6245609974470809,
+        "spom": 0.6449298338202706
       }
     },
     {
@@ -473,11 +439,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6472513545271802,
+      "dev_score": 0.623772107816273,
       "species": {
-        "human": 0.6690467467343374,
-        "scer": 0.6174996413940018,
-        "spom": 0.6552076754532015
+        "human": 0.603403401765392,
+        "scer": 0.6257107540003266,
+        "spom": 0.6422021676831006
       }
     },
     {
@@ -493,11 +459,11 @@
       "extra": null,
       "hypothesis": "the added predictor provides complementary pair ranking",
       "selection": "screened",
-      "dev_score": 0.6497183776746155,
+      "dev_score": 0.6244537010221052,
       "species": {
-        "human": 0.6696534067811369,
-        "scer": 0.6193962144016167,
-        "spom": 0.660105511841093
+        "human": 0.6086358599395445,
+        "scer": 0.624560295523183,
+        "spom": 0.640164947603588
       }
     },
     {
@@ -516,11 +482,11 @@
       },
       "hypothesis": "dep adds ranking signal in human",
       "selection": "screened",
-      "dev_score": 0.662290662846008,
+      "dev_score": 0.6255263250440906,
       "species": {
-        "human": 0.7001536095088405,
-        "scer": 0.617704265994118,
-        "spom": 0.6690141130350654
+        "human": 0.60708814386492,
+        "scer": 0.6245609974470809,
+        "spom": 0.6449298338202706
       }
     },
     {
@@ -539,57 +505,11 @@
       },
       "hypothesis": "dep adds ranking signal in human",
       "selection": "finalist",
-      "dev_score": 0.6662523210571677,
+      "dev_score": 0.6261397319227457,
       "species": {
-        "human": 0.7120385841423196,
-        "scer": 0.617704265994118,
-        "spom": 0.6690141130350654
-      }
-    },
-    {
-      "name": "core+slm0.5",
-      "parent": "core",
-      "weights": {
-        "go": 2,
-        "onto": 1,
-        "syn": 1,
-        "deK": 1
-      },
-      "extra": {
-        "model": "slm",
-        "species": "scer,spom",
-        "weight": 0.5
-      },
-      "hypothesis": "slm adds ranking signal in scer,spom",
-      "selection": "screened",
-      "dev_score": 0.6548481275362762,
-      "species": {
-        "human": 0.6782549333376857,
-        "scer": 0.6156343049409757,
-        "spom": 0.6706551443301675
-      }
-    },
-    {
-      "name": "core+slm1.0",
-      "parent": "core",
-      "weights": {
-        "go": 2,
-        "onto": 1,
-        "syn": 1,
-        "deK": 1
-      },
-      "extra": {
-        "model": "slm",
-        "species": "scer,spom",
-        "weight": 1.0
-      },
-      "hypothesis": "slm adds ranking signal in scer,spom",
-      "selection": "screened",
-      "dev_score": 0.6536970679334481,
-      "species": {
-        "human": 0.6782549333376857,
-        "scer": 0.6128155944884742,
-        "spom": 0.6700206759741842
+        "human": 0.6089283645008858,
+        "scer": 0.6245609974470809,
+        "spom": 0.6449298338202706
       }
     },
     {
@@ -608,11 +528,11 @@
       },
       "hypothesis": "mvg adds ranking signal in scer,spom",
       "selection": "screened",
-      "dev_score": 0.6552865828655092,
+      "dev_score": 0.6225322794319695,
       "species": {
-        "human": 0.6782549333376857,
-        "scer": 0.6147061130994349,
-        "spom": 0.6728987021594071
+        "human": 0.599758438550425,
+        "scer": 0.6214585188566997,
+        "spom": 0.6463798808887838
       }
     },
     {
@@ -631,11 +551,11 @@
       },
       "hypothesis": "mvg adds ranking signal in scer,spom",
       "selection": "screened",
-      "dev_score": 0.6544837394904067,
+      "dev_score": 0.6211020171253777,
       "species": {
-        "human": 0.6782549333376857,
-        "scer": 0.611231969289868,
-        "spom": 0.6739643158436663
+        "human": 0.599758438550425,
+        "scer": 0.6178704385790285,
+        "spom": 0.6456771742466797
       }
     }
   ]

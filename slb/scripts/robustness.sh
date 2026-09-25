@@ -1,7 +1,7 @@
 # Rebuild the splits under 4 alternative salts and score the baselines on each test split.
 # Then: uv run python scripts/robustness.py  (writes results/reports/robustness.md)
 set -e
-export OMP_NUM_THREADS=8 OPENBLAS_NUM_THREADS=8 MKL_NUM_THREADS=8 POLARS_MAX_THREADS=16
+export OMP_NUM_THREADS=8 OPENBLAS_NUM_THREADS=8 MKL_NUM_THREADS=8 POLARS_MAX_THREADS=8
 for salt in alt-a alt-b alt-c alt-d; do
   out=data/robustness/$salt
   SLB_SALT=$salt SLB_OUT=$out uv run python -m slbench.build --stage splits > /dev/null

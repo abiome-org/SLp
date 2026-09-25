@@ -194,6 +194,9 @@ LightGBM 0.509. On test, −(f_a + f_b) scores 0.498, `fitness_lgbm` 0.503 and �
 - **Noise floor.** Scores computed from random per-gene values have SD 0.022 on dev (human alone 0.043)
   and 0.018 on test. Dev differences below about 0.03 are not evidence; use `slbench compare A B
   --split dev`, whose paired family bootstrap gives the CI of the difference.
+- **Split seed.** Rebuilding with 4 other salts (`scripts/robustness.sh`) moves each baseline by SD
+  0.007–0.021; the baselines all sit within 0.49–0.55 and their order is not stable. `fitness_lgbm` on
+  human ranges 0.50–0.55 across salts, so treat human gains under about 0.05 over it with care.
 - **Dev and test are different family sets.** Across the published battery, dev ranks models well
   overall but dev→test shifts of ±0.02–0.05 are common near the top, so a dev-selected winner needs its
   test readout.
@@ -224,9 +227,44 @@ distant paralogs below 30% identity, and orthologs too distant to be reciprocal 
 Test split, fitness-balanced AUROC with family-bootstrap 95% CI. Regenerated from `leaderboard.yaml` by
 `slbench leaderboard`, which re-checks every result hash and re-scores every prediction file. Italic
 columns are auxiliary species; n/a = fewer than 20 test positives. Leaky, possibly leaky and
-exploratory entries are unranked (–).
+exploratory entries are unranked (–). The Dev Rank Ensemble recipe (GO/PPI ×2, Ontotype, SynLeaF and
+De Kegel ranks; the loss variant adds human DepMap OLS) is frozen; re-running its dev search on the current
+split (`reference/dev_rank_ensemble_dev_search.json`) finds no blend more than 0.007 better, a third of
+the dev noise.
 
 <!-- leaderboard:start -->
+| # | model | SLB score (95% CI) | human | scer | spom | *bsub* | *cele* | *dmel* | *mmus* | trained on | leaky |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | **Dev Rank Ensemble (loss)** — core blend plus human DepMap OLS | 0.637 (0.591–0.682) | 0.688 | 0.576 | 0.645 | 0.564 | 0.551 | n/a | n/a | SLB train; blend selected on dev | no |
+| 2 | **Ontotype (pooled)** — one ontology model across species | 0.633 (0.593–0.674) | 0.615 | 0.591 | 0.692 | 0.512 | 0.494 | n/a | n/a | SLB train + filtered GO | no |
+| 3 | **Ontotype** — ontology-based model retrained by species | 0.632 (0.593–0.669) | 0.620 | 0.594 | 0.684 | 0.522 | 0.631 | n/a | n/a | SLB train + filtered GO | no |
+| 4 | **Dev Rank Ensemble (core)** — dev-selected rank blend of GO/PPI, Ontotype, SynLeaF and De Kegel | 0.628 (0.583–0.669) | 0.661 | 0.576 | 0.645 | 0.564 | 0.551 | n/a | n/a | SLB train; blend selected on dev | no |
+| 5 | **GO/PPI GBM (pooled)** — one multi-species model on filtered networks | 0.618 (0.570–0.668) | 0.663 | 0.584 | 0.608 | 0.544 | 0.549 | n/a | n/a | SLB train + filtered GO/PPI/fitness | no |
+| 6 | **GO/PPI GBM** — multi-network feature model, trained separately by species | 0.615 (0.563–0.659) | 0.661 | 0.582 | 0.602 | 0.569 | 0.567 | n/a | n/a | SLB train + filtered GO/PPI/fitness | no |
+| 7 | **De Kegel 2021 (all-species)** — paralog feature RF adapted across species | 0.601 (0.560–0.644) | 0.688 | 0.568 | 0.548 | 0.550 | 0.611 | n/a | n/a | SLB train + filtered GO/PPI/ESM2 | no |
+| 8 | **MuSL (all-species)** — GNN branch retrained across species | 0.573 (0.531–0.614) | 0.576 | 0.565 | 0.580 | 0.520 | 0.547 | n/a | n/a | SLB train + filtered PPI/ESM2 | no |
+| 9 | **Ryan 2026 (full clean refit)** — context-specific paralog random forest refitted on SLB; human only, 79% native coverage | 0.564 (0.535–0.598) | 0.693 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train; filtered GO/PPI and DepMap single-gene data | no |
+| 10 | **SL-Predict 2026 (MAE branch)** — released frozen DepMap 26Q1 MAE gene encoder plus SLB-trained symmetric LightGBM; human only, 99% native coverage | 0.561 (0.531–0.587) | 0.683 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | single-gene DepMap 26Q1 unlabeled profiles; SLB train pair labels | no |
+| 11 | **Ryan 2026 (context clean refit)** — context-only paralog random forest refitted on SLB; human only, 79% native coverage | 0.556 (0.522–0.593) | 0.667 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train; filtered GO/PPI and DepMap single-gene data | no |
+| 12 | **MuSL (human)** — full multimodal model; other species tied | 0.554 (0.519–0.586) | 0.663 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train + BioGRID physical/ESM2/TCGA | no |
+| 13 | **DepMap OLS (loss)** — human single-gene dependency scan; other species tied | 0.553 (0.524–0.584) | 0.659 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap single-gene/omics only | no |
+| 14 | **paralog_identity** — Ensembl 116 paralog protein identity | 0.552 (0.518–0.582) | 0.649 | 0.504 | 0.502 | 0.500 | 0.500 | n/a | n/a | none | no |
+| 15 | **Cilantro-SL 2026 (Geneformer branch)** — Geneformer in-silico-knockout, viability FiLM and five-fold SLNet refit; human only, 55% native coverage | 0.549 (0.523–0.572) | 0.646 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | Geneformer/Gene2vec unlabeled pretraining; DepMap single-gene effects; SLB train pairs | no |
+| 16 | **lgbm** — gradient boosting on single-gene fitness, paralog identity, DepMap co-dependency | 0.541 (0.503–0.580) | 0.611 | 0.509 | 0.503 | 0.558 | 0.503 | n/a | n/a | SLB train | no |
+| 17 | **SynLeaF (all-species)** — KG/RGCN branch retrained on the filtered multi-species bundle | 0.533 (0.488–0.580) | 0.500 | 0.512 | 0.588 | 0.520 | 0.342 | n/a | n/a | SLB train + filtered GO/PPI | no |
+| 18 | **PAGAN 2026 (genes-to-pairs)** — essentiality-trained genes-to-pairs GraphSAGE on filtered SLB graph; human and budding yeast, fission yeast tied | 0.524 (0.493–0.555) | 0.599 | 0.474 | 0.500 | 0.500 | 0.500 | n/a | n/a | single-gene essentiality; filtered GO/PPI/paralogs; no SL pair labels | no |
+| 19 | **codependency** — DepMap gene-effect profile correlation (human only) | 0.521 (0.494–0.559) | 0.563 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | none (single-gene data) | no |
+| 20 | **SynLeaF (human)** — dual-stage omics and KG model; other species tied | 0.503 (0.473–0.535) | 0.510 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train + filtered KG/TCGA omics | no |
+| 21 | **fitness_lgbm** — gradient boosting on the single-loss covariates only (probe of residual fitness signal) | 0.503 (0.469–0.537) | 0.500 | 0.508 | 0.501 | 0.559 | 0.503 | n/a | n/a | SLB train | no |
+| 22 | **GiGCN 2026 (binary GO adaptation)** — signed factor graph network refitted on SLB train; binary SL versus neutral with filtered GO features, human only | 0.499 (0.472–0.526) | 0.498 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train pairs; filtered GO annotations, no external GI graph | no |
+| 23 | **fitness** — sickness of the two single mutants, -(f_a + f_b) | 0.498 (0.467–0.532) | 0.496 | 0.497 | 0.501 | 0.537 | 0.504 | n/a | n/a | none (single-gene data) | no |
+| 24 | **random** — uniform noise | 0.491 (0.467–0.513) | 0.500 | 0.499 | 0.475 | 0.418 | 0.559 | n/a | n/a | none | no |
+| – | **SL-Predict MAE vectors only (exploratory test ablation)** — feature-group ablation run after full-branch test inspection; human only | 0.552 (0.524–0.578) | 0.656 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap 26Q1 single-gene profiles; SLB train pairs | no |
+| – | **SL-Predict coessentiality only (exploratory test ablation)** — feature-group ablation run after full-branch test inspection; human only | 0.510 (0.478–0.543) | 0.529 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap 26Q1 single-gene profiles; SLB train pairs | no |
+| – | **Ryan 2026 (released external-GEMINI weights, leakage diagnostic)** — released classifier trained on external GEMINI SL screens overlapping held-out families | 0.537 (0.512–0.569) | 0.612 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | external GEMINI labels, including source screens used by SLB | yes |
+| – | **SLxGO 2026 (GO-PCA branch, input provenance unresolved)** — released GO-PCA embedding branch, refitted on SLB train; GO evidence provenance unavailable | 0.532 (0.505–0.562) | 0.595 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | authors' GO-PCA vectors; SLB train pairs | possible |
+| – | **SLp-1.1 (decoder)** — prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 43% of human test pairs in vocabulary (rest tied) | 0.528 (0.503–0.564) | 0.585 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | MuSL/SynLethDB SL labels; DepMap; Costanzo yeast (25% sample) | yes |
+| – | **SLp-1.1 (label-free)** — prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 43% coverage | 0.497 (0.453–0.533) | 0.491 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap; Costanzo yeast (25% sample); Perturb-seq | yes |
 <!-- leaderboard:end -->
 
 **Human ancestry.** `scripts/audit_ancestry.py` scores frozen test predictions per cell-line ancestry

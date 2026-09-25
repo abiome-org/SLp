@@ -30,6 +30,9 @@ def main() -> None:
     hashes = {}
     for short, model in BASE.items():
         path = MODEL_DIR / f"{model}_dev.parquet"
+        if not path.exists():
+            print(f"missing {path.name}: candidates using {short} are skipped", flush=True)
+            continue
         pred = E.read_predictions(path)
         joined, _ = E.validated_join(gold.select("example_id"), pred, inputs=E.input_ids("dev"))
         values = joined["score"].to_numpy()
@@ -43,6 +46,8 @@ def main() -> None:
     rows = []
 
     def add(name: str, weights: dict[str, float], parent: str = "", extra: tuple | None = None) -> None:
+        if any(n not in ranks for n in weights) or (extra and extra[0] not in ranks):
+            return
         x = sum(w * ranks[n] for n, w in weights.items()) / sum(weights.values())
         if extra:
             model, sp, w = extra
@@ -69,6 +74,8 @@ def main() -> None:
             add(name, {"go": gw, **{n: 1 for n in os_}}, parent="go")
     core = {"go": 2, "onto": 1, "syn": 1, "deK": 1}
     for name in ("dep", "slm", "mvg"):
+        if name not in ranks or any(n not in ranks for n in core):
+            continue
         for w in (0.5, 1.0):
             sp = "human" if name == "dep" else "scer,spom"
             # For yeast ablations, add the source on both yeast species, leaving human unchanged.

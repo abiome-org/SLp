@@ -122,7 +122,9 @@ def run_species(sp, tr, ev, dev):
             pr_, rc_, _ = precision_recall_curve(dval.labels.numpy(), pv)
             aupr = auc(rc_, pr_)
             sched.step(aupr)
-            print(f"{sp} epoch {ep + 1}: val AUPR {aupr:.4f} AUROC {roc_auc_score(dval.labels.numpy(), pv):.4f} "
+            yv = dval.labels.numpy()
+            auroc = roc_auc_score(yv, pv) if len(np.unique(yv)) > 1 else float("nan")  # tiny species: one class
+            print(f"{sp} epoch {ep + 1}: val AUPR {aupr:.4f} AUROC {auroc:.4f} "
                   f"({time.time() - t0:.0f}s)", file=sys.stderr, flush=True)
             if aupr > best:
                 best, bad = aupr, 0
