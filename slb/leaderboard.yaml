@@ -204,7 +204,6 @@
   description: released GO-PCA embedding branch, refitted on SLB train; GO evidence provenance unavailable
   trained_on: authors' GO-PCA vectors; SLB train pairs
   leaky: possibly
-  ranked: false
 - name: Ryan 2026 (released external-GEMINI weights, leakage diagnostic)
   result: results/models/slb/ryan2026_context__released_ctx_test.json
   result_sha256: da347ad879d3c697c5aa95166ba370f22018d3346a1f81acbcea052112ec700f
@@ -212,4 +211,3 @@
   description: released classifier trained on external GEMINI SL screens overlapping held-out families
   trained_on: external GEMINI labels, including source screens used by SLB
   leaky: true
-  ranked: false

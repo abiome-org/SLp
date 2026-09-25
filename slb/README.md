@@ -226,8 +226,9 @@ distant paralogs below 30% identity, and orthologs too distant to be reciprocal 
 
 Test split, fitness-balanced AUROC with family-bootstrap 95% CI. Regenerated from `leaderboard.yaml` by
 `slbench leaderboard`, which re-checks every result hash and re-scores every prediction file. Italic
-columns are auxiliary species; n/a = fewer than 20 test positives. Leaky, possibly leaky and
-exploratory entries are unranked (–). The Dev Rank Ensemble recipe (GO/PPI ×2, Ontotype, SynLeaF and
+columns are auxiliary species; n/a = fewer than 20 test positives. \* = leaky (trained on SL labels or
+screens involving held-out genes) or of unresolved input provenance: ranked for reference, not a clean
+held-out result. Exploratory post-hoc ablations are unranked (–). The Dev Rank Ensemble recipe (GO/PPI ×2, Ontotype, SynLeaF and
 De Kegel ranks; the loss variant adds human DepMap OLS) is frozen; re-running its dev search on the current
 split (`reference/dev_rank_ensemble_dev_search.json`) finds no blend more than 0.007 better, a third of
 the dev noise.
@@ -251,20 +252,20 @@ the dev noise.
 | 14 | **paralog_identity** — Ensembl 116 paralog protein identity | 0.552 (0.518–0.582) | 0.649 | 0.504 | 0.502 | 0.500 | 0.500 | n/a | n/a | none | no |
 | 15 | **Cilantro-SL 2026 (Geneformer branch)** — Geneformer in-silico-knockout, viability FiLM and five-fold SLNet refit; human only, 55% native coverage | 0.549 (0.523–0.572) | 0.646 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | Geneformer/Gene2vec unlabeled pretraining; DepMap single-gene effects; SLB train pairs | no |
 | 16 | **lgbm** — gradient boosting on single-gene fitness, paralog identity, DepMap co-dependency | 0.541 (0.503–0.580) | 0.611 | 0.509 | 0.503 | 0.558 | 0.503 | n/a | n/a | SLB train | no |
-| 17 | **SynLeaF (all-species)** — KG/RGCN branch retrained on the filtered multi-species bundle | 0.533 (0.488–0.580) | 0.500 | 0.512 | 0.588 | 0.520 | 0.342 | n/a | n/a | SLB train + filtered GO/PPI | no |
-| 18 | **PAGAN 2026 (genes-to-pairs)** — essentiality-trained genes-to-pairs GraphSAGE on filtered SLB graph; human and budding yeast, fission yeast tied | 0.524 (0.493–0.555) | 0.599 | 0.474 | 0.500 | 0.500 | 0.500 | n/a | n/a | single-gene essentiality; filtered GO/PPI/paralogs; no SL pair labels | no |
-| 19 | **codependency** — DepMap gene-effect profile correlation (human only) | 0.521 (0.494–0.559) | 0.563 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | none (single-gene data) | no |
-| 20 | **SynLeaF (human)** — dual-stage omics and KG model; other species tied | 0.503 (0.473–0.535) | 0.510 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train + filtered KG/TCGA omics | no |
-| 21 | **fitness_lgbm** — gradient boosting on the single-loss covariates only (probe of residual fitness signal) | 0.503 (0.469–0.537) | 0.500 | 0.508 | 0.501 | 0.559 | 0.503 | n/a | n/a | SLB train | no |
-| 22 | **GiGCN 2026 (binary GO adaptation)** — signed factor graph network refitted on SLB train; binary SL versus neutral with filtered GO features, human only | 0.499 (0.472–0.526) | 0.498 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train pairs; filtered GO annotations, no external GI graph | no |
-| 23 | **fitness** — sickness of the two single mutants, -(f_a + f_b) | 0.498 (0.467–0.532) | 0.496 | 0.497 | 0.501 | 0.537 | 0.504 | n/a | n/a | none (single-gene data) | no |
-| 24 | **random** — uniform noise | 0.491 (0.467–0.513) | 0.500 | 0.499 | 0.475 | 0.418 | 0.559 | n/a | n/a | none | no |
+| 17 | **Ryan 2026 (released external-GEMINI weights, leakage diagnostic)**\* — released classifier trained on external GEMINI SL screens overlapping held-out families | 0.537 (0.512–0.569) | 0.612 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | external GEMINI labels, including source screens used by SLB | yes |
+| 18 | **SynLeaF (all-species)** — KG/RGCN branch retrained on the filtered multi-species bundle | 0.533 (0.488–0.580) | 0.500 | 0.512 | 0.588 | 0.520 | 0.342 | n/a | n/a | SLB train + filtered GO/PPI | no |
+| 19 | **SLxGO 2026 (GO-PCA branch, input provenance unresolved)**\* — released GO-PCA embedding branch, refitted on SLB train; GO evidence provenance unavailable | 0.532 (0.505–0.562) | 0.595 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | authors' GO-PCA vectors; SLB train pairs | possible |
+| 20 | **SLp-1.1 (decoder)**\* — prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 43% of human test pairs in vocabulary (rest tied) | 0.528 (0.503–0.564) | 0.585 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | MuSL/SynLethDB SL labels; DepMap; Costanzo yeast (25% sample) | yes |
+| 21 | **PAGAN 2026 (genes-to-pairs)** — essentiality-trained genes-to-pairs GraphSAGE on filtered SLB graph; human and budding yeast, fission yeast tied | 0.524 (0.493–0.555) | 0.599 | 0.474 | 0.500 | 0.500 | 0.500 | n/a | n/a | single-gene essentiality; filtered GO/PPI/paralogs; no SL pair labels | no |
+| 22 | **codependency** — DepMap gene-effect profile correlation (human only) | 0.521 (0.494–0.559) | 0.563 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | none (single-gene data) | no |
+| 23 | **SynLeaF (human)** — dual-stage omics and KG model; other species tied | 0.503 (0.473–0.535) | 0.510 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train + filtered KG/TCGA omics | no |
+| 24 | **fitness_lgbm** — gradient boosting on the single-loss covariates only (probe of residual fitness signal) | 0.503 (0.469–0.537) | 0.500 | 0.508 | 0.501 | 0.559 | 0.503 | n/a | n/a | SLB train | no |
+| 25 | **GiGCN 2026 (binary GO adaptation)** — signed factor graph network refitted on SLB train; binary SL versus neutral with filtered GO features, human only | 0.499 (0.472–0.526) | 0.498 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train pairs; filtered GO annotations, no external GI graph | no |
+| 26 | **fitness** — sickness of the two single mutants, -(f_a + f_b) | 0.498 (0.467–0.532) | 0.496 | 0.497 | 0.501 | 0.537 | 0.504 | n/a | n/a | none (single-gene data) | no |
+| 27 | **SLp-1.1 (label-free)**\* — prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 43% coverage | 0.497 (0.453–0.533) | 0.491 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap; Costanzo yeast (25% sample); Perturb-seq | yes |
+| 28 | **random** — uniform noise | 0.491 (0.467–0.513) | 0.500 | 0.499 | 0.475 | 0.418 | 0.559 | n/a | n/a | none | no |
 | – | **SL-Predict MAE vectors only (exploratory test ablation)** — feature-group ablation run after full-branch test inspection; human only | 0.552 (0.524–0.578) | 0.656 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap 26Q1 single-gene profiles; SLB train pairs | no |
 | – | **SL-Predict coessentiality only (exploratory test ablation)** — feature-group ablation run after full-branch test inspection; human only | 0.510 (0.478–0.543) | 0.529 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap 26Q1 single-gene profiles; SLB train pairs | no |
-| – | **Ryan 2026 (released external-GEMINI weights, leakage diagnostic)** — released classifier trained on external GEMINI SL screens overlapping held-out families | 0.537 (0.512–0.569) | 0.612 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | external GEMINI labels, including source screens used by SLB | yes |
-| – | **SLxGO 2026 (GO-PCA branch, input provenance unresolved)** — released GO-PCA embedding branch, refitted on SLB train; GO evidence provenance unavailable | 0.532 (0.505–0.562) | 0.595 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | authors' GO-PCA vectors; SLB train pairs | possible |
-| – | **SLp-1.1 (decoder)** — prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 43% of human test pairs in vocabulary (rest tied) | 0.528 (0.503–0.564) | 0.585 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | MuSL/SynLethDB SL labels; DepMap; Costanzo yeast (25% sample) | yes |
-| – | **SLp-1.1 (label-free)** — prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 43% coverage | 0.497 (0.453–0.533) | 0.491 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap; Costanzo yeast (25% sample); Perturb-seq | yes |
 <!-- leaderboard:end -->
 
 **Human ancestry.** `scripts/audit_ancestry.py` scores frozen test predictions per cell-line ancestry

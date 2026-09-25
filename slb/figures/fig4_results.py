@@ -51,7 +51,9 @@ def main() -> None:
     fam = families()
     lb = lb.with_columns(pl.col("name").replace_strict(fam).alias("family"),
                          pl.col("name").replace(PRETTY).alias("label"),
-                         ((pl.col("leaky") == "False") & (pl.col("ranked").cast(pl.String) != "false")).alias("ranked_"))
+                         (pl.col("ranked").cast(pl.String).str.to_lowercase() != "false").alias("ranked_"))
+    lb = lb.with_columns(pl.when(pl.col("leaky") != "False").then(pl.col("label").str.replace(r" \(leaky\)| \(provenance unclear\)", "") + " *")
+                         .otherwise(pl.col("label")).alias("label"))
     ranked = lb.filter(pl.col("ranked_")).sort("slb", descending=True)
     other = lb.filter(~pl.col("ranked_")).sort("slb", descending=True)
     rows = pl.concat([ranked, other])
@@ -77,7 +79,7 @@ def main() -> None:
                  color=S.INK if ranked_ else S.MUTED, fontweight="semibold" if yi < 3 else "normal")
         axn.add_patch(plt.Rectangle((0.965, yi - 0.28), 0.03, 0.56, color=FAMILY_COLOR[r["family"]],
                                     transform=axn.get_yaxis_transform(), clip_on=False))
-    axn.text(0.075, y[n_r] - 1.15, "unranked: leaky, provenance unresolved, or exploratory", fontsize=6.2,
+    axn.text(0.075, y[n_r] - 1.15, "* leaky or unresolved provenance  ·  unranked: post-hoc ablations", fontsize=6.2,
              color=S.MUTED, style="italic", va="center")
     S.panel(axn, "a", x=0.0, y=1.012)
     axn.texts[-1].set_ha("left")
@@ -103,7 +105,7 @@ def main() -> None:
 
     # heatmap of components
     cols = [("sp_human", "Hsa"), ("sp_scer", "Sce"), ("sp_spom", "Spo"), ("sp_bsub", "Bsu"),
-            ("sp_cele", "Cel"), (None, None), ("paralog", "paralog"), ("nonparalog", "other")]
+            ("sp_cele", "Cel"), (None, None), ("paralog", "para."), ("nonparalog", "other")]
     norm = TwoSlopeNorm(vmin=0.36, vcenter=0.5, vmax=0.74)
     for j, (c, lab) in enumerate(cols):
         if c is None:
@@ -121,7 +123,7 @@ def main() -> None:
                          color="white" if dark else S.INK, fontfamily="IBM Plex Mono")
     axh.set_xlim(-0.55, len(cols) - 0.45)
     axh.set_xticks([j for j, (c, _) in enumerate(cols) if c])
-    axh.set_xticklabels([lab for c, lab in cols if c], fontsize=5.9)
+    axh.set_xticklabels([lab for c, lab in cols if c], fontsize=5.6)
     for t, (c, _) in zip(axh.get_xticklabels(), [x for x in cols if x[0]]):
         if c.startswith("sp_"):
             t.set_fontstyle("italic")

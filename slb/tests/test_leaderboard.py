@@ -67,9 +67,9 @@ def test_exploratory_test_read_is_registered_but_unranked(monkeypatch):
         {"name": "diagnostic", "score": .8, "ranked": False, "leaky": False},
         {"name": "finalist", "score": .7, "leaky": False},
     ])
-    assert "| 1 | **finalist**" in rendered
+    assert "| 1 | **unresolved**\\*" in rendered and "| possible |" in rendered
+    assert "| 2 | **finalist** —" in rendered
     assert "| – | **diagnostic**" in rendered
-    assert "| – | **unresolved**" in rendered and "| possible |" in rendered
 
 
 def test_leaderboard_rechecks_strata_and_bootstrap_ci(tmp_path, monkeypatch):

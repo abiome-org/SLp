@@ -97,22 +97,21 @@ def render(entries: list[dict], verify_ci: bool | None = None) -> str:
         r = _verified_result(e, verify_ci)
         ci = r.get("slb_score_ci95")
         rows.append((e, r, ci))
-    rows.sort(key=lambda t: (2 if t[0].get("leaky") else
-                             1 if t[0].get("ranked") is False else 0,
-                             -t[1]["slb_score"]))
+    rows.sort(key=lambda t: (1 if t[0].get("ranked") is False else 0, -t[1]["slb_score"]))
     main, aux = species_tiers()
     head = ("| # | model | SLB score (95% CI) | " + " | ".join(main) + " | " + " | ".join(f"*{a}*" for a in aux)
             + " | trained on | leaky |\n|" + "---|" * (5 + len(main) + len(aux)))
     lines = [head]
     rank = 0
     for e, r, ci in rows:
-        rank_s = "–" if e.get("leaky") or e.get("ranked") is False else str(rank := rank + 1)
+        rank_s = "–" if e.get("ranked") is False else str(rank := rank + 1)
         sc = {**r["species_scores"], **r.get("auxiliary_species_scores", {})}
         sp = " | ".join("n/a" if sc.get(s) is None or sc[s] != sc[s] else f"{sc[s]:.3f}" for s in main + aux)
         cis = f" ({ci[0]:.3f}–{ci[1]:.3f})" if ci else ""
         leak = e.get("leaky", False)
         leak_label = "possible" if leak == "possibly" else "yes" if leak else "no"
-        lines.append(f"| {rank_s} | **{e['name']}** — {e.get('description', '')} | {r['slb_score']:.3f}{cis} | "
+        star = "\\*" if leak else ""
+        lines.append(f"| {rank_s} | **{e['name']}**{star} — {e.get('description', '')} | {r['slb_score']:.3f}{cis} | "
                      f"{sp} | {e.get('trained_on', '')} | {leak_label} |")
     return (
         "# SLB leaderboard (test split)\n\n"
@@ -124,8 +123,9 @@ def render(entries: list[dict], verify_ci: bool | None = None) -> str:
         "species: scored the same way, not in the SLB score;\n"
         "n/a = fewer than 20 test positives.\n"
         "Every listed result must match the current benchmark and scorer versions.\n"
-        "Leaky models used SL labels or screens involving held-out genes; 'possible' means input provenance is unresolved. Both are unranked.\n"
-        "Exploratory test ablations after an earlier test readout are also listed unranked.\n\n"
+        "\\* Leaky: the model used SL labels or screens involving held-out genes ('possible': input provenance\n"
+        "unresolved). Ranked for reference, but its score is not a clean held-out result.\n"
+        "Exploratory test ablations after an earlier test readout are listed unranked.\n\n"
         + "\n".join(lines) + "\n"
     )
 
