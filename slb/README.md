@@ -318,7 +318,7 @@ src/slbench/        package: build, evaluate, audit, leaderboard, release, ances
 scripts/            ancestry, robustness, release packaging, test-result refresh, grader probe
 scripts/models/     one adapter per published SL model (see scripts/models/README.md)
 tests/              pytest suite
-figures/            publication figures and make_figures.py (see figures/README.md)
+figures/            the four SLB figures, their scripts and data prep (see figures/README.md)
 reference/          checked-in pins: raw_sha256sums.txt, lock.json, public.sha256, fetch/ URLs, ancestry JSON
 battery.yaml        which model prediction files `slbench battery` scores
 leaderboard.yaml    hash-pinned test results
