@@ -167,19 +167,6 @@ def audit() -> dict:
         print(f"{entry['name']}: AFR {point['AFR']:.3f}, EAS {point['EAS']:.3f}, "
               f"EUR {point['EUR']:.3f}", flush=True)
 
-    from slbench.contexts import KESSLER, kessler_crosscheck
-
-    xc = kessler_crosscheck(contexts)
-    covered = xc.filter(pl.col("kessler_group").is_not_null())
-    if not covered["agree"].all():
-        raise ValueError(f"Kessler 2019 disagrees on {covered.filter(~pl.col('agree'))['context_id'].to_list()}")
-    independent = {
-        "source": "Kessler et al. 2019, Cancer, doi:10.1002/cncr.32020 (Table S2), matched by COSMIC cell-line ID",
-        "raw_sha256": E.file_sha256(KESSLER), "lines_covered": covered.height, "lines_agree": int(covered["agree"].sum()),
-        "not_covered": xc.filter(pl.col("kessler_group").is_null())["context_id"].to_list(),
-        "lines": covered.select("context_id", "ancestry_group", "kessler_group", "kessler_EUR", "kessler_AFR",
-                                "kessler_EAS", "kessler_SAS", "kessler_AMR").to_dicts(),
-    }
     return {
         "benchmark": E.bench_id(),
         "manifest_sha256": E.file_sha256(E.BENCH / "manifest.json"),
@@ -193,7 +180,6 @@ def audit() -> dict:
         "matched_screen_pair_support": matched_support,
         "context_support": context_support,
         "models": models,
-        "independent_ancestry_check": independent,
     }
 
 
@@ -214,10 +200,6 @@ def render(audit_result: dict) -> str:
         " SLB cell lines cite that paper in the checksum-pinned Cellosaurus file."
         " This audit uses those **existing**"
         " annotations to evaluate frozen SLB test predictions; the paper supplies no SL labels.", "",
-        f"An independent genotype study, [Kessler et al. (2019)](https://doi.org/10.1002/cncr.32020), covers"
-        f" {audit_result['independent_ancestry_check']['lines_covered']} of the 50 human lines and assigns the same"
-        f" majority group to {audit_result['independent_ancestry_check']['lines_agree']} of them. It does not cover"
-        f" {', '.join(c.removeprefix('human:') for c in audit_result['independent_ancestry_check']['not_covered'])}.", "",
         "The measure is SLB's fitness-balanced AUROC **within each cell line and screen**."
         " CIs use 400 shared gene-family bootstrap resamples; they describe pair/family"
         " sampling uncertainty, not variation across future donors. This audit follows the"

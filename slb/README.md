@@ -149,9 +149,7 @@ Per-source rationale is in the parser docstrings under `src/slbench/sources/`.
 3. **Human species score:** the mean over genetic-ancestry groups with at least 20 positives in the
    split. Ancestry is the donor's majority super-population (> 50%) from Cellosaurus, genotype-inferred
    for every line except PC-9 (self-reported East Asian;
-   [Dutil et al. 2019](https://doi.org/10.1158/0008-5472.CAN-18-2747)). An independent genotype study
-   ([Kessler et al. 2019](https://doi.org/10.1002/cncr.32020)) covers 45 of the 50 lines and agrees on every one;
-   `scripts/audit_ancestry.py` re-checks this. Lines with no estimate
+   [Dutil et al. 2019](https://doi.org/10.1158/0008-5472.CAN-18-2747)). Lines with no estimate
    (hTERT-RPE1, C092) are reported but not averaged in. On test that is AFR (32 positives), EAS (86)
    and EUR (439); on dev AFR has 17 positives, so the dev human score averages EAS and EUR only.
 4. **SLB score** = the mean of the headline species' scores, each counting equally. The tiers are
