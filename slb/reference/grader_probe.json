@@ -1,11 +1,12 @@
 {
-  "label_oracle_accept": 1.0000000000000266,
+  "label_oracle_accept": 1.0000000000000004,
   "inverse_oracle_reject": 0.0,
-  "constant_reject": 0.5000000000000133,
-  "random_mean": 0.4991873023883492,
-  "random_sd": 0.01059089258046894,
-  "random_min": 0.48408841277022313,
-  "random_max": 0.5184589398431195,
-  "stratum_hit_rate_prior_reject": 0.5000000000000133,
-  "fitness_only_probe": 0.5179245012509975
+  "constant_reject": 0.5000000000000002,
+  "random_mean": 0.5011156633772372,
+  "random_sd": 0.007994672218419256,
+  "random_min": 0.4883719577698729,
+  "random_max": 0.5131263609026521,
+  "stratum_hit_rate_prior_reject": 0.5000000000000002,
+  "gene_degree_reject": 0.50055996443486,
+  "fitness_only_probe": 0.5091569460268759
 }

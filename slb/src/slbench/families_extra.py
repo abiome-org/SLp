@@ -10,6 +10,8 @@ Edge sources (built by scripts/orthology_extra/build_edges.py):
   ensembl_biomart  Ensembl 116 paralogs for mouse / worm, max(%id, %id_r1) >= 30% (paralogs, weight = identity)
   diamond_self     DIAMOND within-species hits, nident / min(qlen, slen) >= 30%, for calb, spne and
                    the other bacteria (paralogs, weight = identity)
+  diamond_self_global  DIAMOND within-species hits for human/scer/spom/dmel, nident / max(qlen, slen) >= 30%
+                   (full-length paralogs Ensembl misses)
 """
 
 from __future__ import annotations
@@ -20,7 +22,7 @@ import polars as pl
 
 EDGES = Path("data/interim/orthology_extra/edges.parquet")
 BASE_SPECIES = {"human", "scer", "spom", "dmel"}  # species whose homology families.edges() already covers
-ALL_SOURCES = ("diamond_rbh", "alliance", "ensembl_biomart", "diamond_self")
+ALL_SOURCES = ("diamond_rbh", "alliance", "ensembl_biomart", "diamond_self", "diamond_self_global")
 
 
 def extra_edges_with_source(sources: tuple[str, ...] = ALL_SOURCES, base_pairs: bool = True,

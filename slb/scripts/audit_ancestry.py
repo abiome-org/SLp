@@ -115,7 +115,7 @@ def audit() -> dict:
                 or result["predictions_sha256"] != E.file_sha256(pred_path)
                 or result["missing_filled"] != 0):
             raise ValueError(f"stale test result: {result_path}")
-        scored, missing = E.validated_join(gold, E.read_predictions(pred_path))
+        scored, missing = E.validated_join(gold, E.read_predictions(pred_path), inputs=E.input_ids("test"))
         if missing:
             raise ValueError(f"incomplete predictions: {pred_path}")
         h = scored.filter(pl.col("species") == "human")

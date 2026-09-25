@@ -31,7 +31,7 @@ def main() -> None:
     for short, model in BASE.items():
         path = MODEL_DIR / f"{model}_dev.parquet"
         pred = E.read_predictions(path)
-        joined, _ = E.validated_join(gold.select("example_id"), pred)
+        joined, _ = E.validated_join(gold.select("example_id"), pred, inputs=E.input_ids("dev"))
         values = joined["score"].to_numpy()
         r = np.empty(gold.height, dtype=float)
         for sp in np.unique(species):

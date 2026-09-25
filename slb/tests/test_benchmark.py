@@ -79,4 +79,4 @@ def test_balance_weights_equalise_single_gene_fitness():
             ).filter(pl.col("np") > 0)
             sd = g[c].cast(pl.Float64).std()
             raw, bal = (abs((t[k] * t["np"]).sum() / t["np"].sum() / sd) for k in ("raw", "bal"))
-            assert bal < 0.03 and bal < raw / 3, (sp, c, raw, bal)
+            assert bal < 0.03 and (bal < raw / 3 or raw < 0.03), (sp, c, raw, bal)

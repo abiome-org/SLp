@@ -74,7 +74,7 @@ def scer() -> Resolver:
     df = pl.read_csv(RAW / "ids/SGD_features.tab", separator="\t", has_header=False, new_columns=cols,
                      infer_schema_length=0, quote_char=None)
     df = df.filter(pl.col("type").is_in(["ORF", "tRNA gene", "ncRNA gene", "snoRNA gene", "snRNA gene",
-                                         "transposable_element_gene", "pseudogene", "blocked_reading_frame"]))
+                                         "transposable element gene", "pseudogene", "blocked reading frame"]))
     primary = {o: o for o in df["orf"] if o}
     primary |= {s.upper(): o for s, o in zip(df["std"], df["orf"]) if s}
     primary |= {g: o for g, o in zip(df["sgdid"], df["orf"]) if g}

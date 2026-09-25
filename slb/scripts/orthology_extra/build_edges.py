@@ -11,6 +11,9 @@ Steps:
                      + DIAMOND within-species hits for species without Ensembl paralogs
                        (bacteria, spne, calb): identity = nident / min(qlen, slen) (Ensembl's max(%id, %id_r1)
                        analogue), kept when >= 0.30                                      [source diamond_self]
+                     + DIAMOND within-species hits for the species with Ensembl paralogs (human, scer, spom,
+                       dmel) at global identity nident / max(qlen, slen) >= 0.30: full-length paralogs
+                       Ensembl misses; local identity here chains domain superfamilies  [source diamond_self_global]
 Usage: uv run python scripts/orthology_extra/build_edges.py [--threads N] [--redo-diamond]
 """
 
@@ -42,6 +45,7 @@ BACT = ["spne", "ecol", "bsub", "mtub", "saur"]
 SPECIES = EUK + BACT
 ENSEMBL_PARALOGS = {"mmus": "ensembl_mmusculus_paralogs.tsv", "cele": "ensembl_celegans_paralogs.tsv"}
 DIAMOND_PARALOGS = ["calb"] + BACT   # species with no Ensembl paralog table in SLB
+GLOBAL_PARALOGS = ["human", "scer", "spom", "dmel"]
 ALLIANCE_TAXA = {"NCBITaxon:9606": "human", "NCBITaxon:559292": "scer", "NCBITaxon:7227": "dmel",
                  "NCBITaxon:10090": "mmus", "NCBITaxon:6239": "cele"}
 
@@ -185,13 +189,14 @@ def rbh(h: pl.DataFrame) -> pl.DataFrame:
     return r.with_columns(pl.lit("ortholog").alias("kind"), pl.lit(1.0).alias("weight"), pl.lit("diamond_rbh").alias("source"))
 
 
-def self_paralogs(h: pl.DataFrame, species: list[str]) -> pl.DataFrame:
+def self_paralogs(h: pl.DataFrame, species: list[str], length: str = "min", source: str = "diamond_self") -> pl.DataFrame:
     x = h.filter((pl.col("qsp") == pl.col("ssp")) & pl.col("qsp").is_in(species))
-    x = x.with_columns((pl.col("nident") / pl.min_horizontal("qlen", "slen")).alias("identity"),
+    den = pl.min_horizontal("qlen", "slen") if length == "min" else pl.max_horizontal("qlen", "slen")
+    x = x.with_columns((pl.col("nident") / den).alias("identity"),
                        pl.min_horizontal("q", "s").alias("u"), pl.max_horizontal("q", "s").alias("v"))
     x = x.group_by("u", "v").agg(pl.col("identity").max()).filter(pl.col("identity") >= PARALOG_MIN_IDENTITY)
     return x.select("u", "v", pl.lit("paralog").alias("kind"), pl.col("identity").alias("weight"),
-                    pl.lit("diamond_self").alias("source"))
+                    pl.lit(source).alias("source"))
 
 
 # ---------------------------------------------------------------- curated resources
@@ -267,7 +272,8 @@ def main() -> None:
     stats.write_csv(WORK / "proteome_counts.tsv", separator="\t")
     run_diamond(a.threads, a.redo_diamond)
     h = load_hits()
-    e = pl.concat([rbh(h), self_paralogs(h, DIAMOND_PARALOGS), ensembl_paralogs(), alliance()])
+    e = pl.concat([rbh(h), self_paralogs(h, DIAMOND_PARALOGS),
+                   self_paralogs(h, GLOBAL_PARALOGS, "max", "diamond_self_global"), ensembl_paralogs(), alliance()])
     # canonical orientation, one row per (u, v, kind, source)
     e = e.with_columns(pl.min_horizontal("u", "v").alias("u"), pl.max_horizontal("u", "v").alias("v")) \
         .group_by("u", "v", "kind", "source").agg(pl.col("weight").max()).sort("u", "v", "kind", "source") \

@@ -125,12 +125,12 @@ def chou2025() -> pl.DataFrame:
 def spidr2025() -> pl.DataFrame:
     """Fielden et al. 2025 SPIDR: CRISPRi all-by-all DDR library in RPE1, re-scored from raw counts.
 
-    The published GEMINI sensitive-lethality calls are recovered by a single replicate's additive GI
-    at only AUROC 0.62 (`slbench audit`), so they fail the benchmark's reproducibility bar.
-    The counts themselves replicate well, so SPIDR is scored the same way as the paralog screens
+    The published GEMINI sensitive-lethality calls are much looser (about 2,100 positives), so SPIDR is
+    scored from its counts the same way as the paralog screens
     (Dede et al. zdLFC): per replicate, LFC(d14 vs d0) centred on non-targeting pairs; single
     effect f_g = median LFC of gene x non-targeting; GI = LFC - f_a - f_b, median over guide pairs;
-    z-scored over all gene pairs. `_mis` (attenuated) guides are separate alleles and excluded.
+    z-scored over all gene pairs. Mismatched (attenuated) guides, the numbered `<guide>_<n>` variants that MOESM5 marks `_mis`,
+    are separate alleles and excluded.
     Positive: pooled z <= -3 and GI < 0 in both replicates. Negative: |pooled z| < 1.
     """
     gi = spidr_replicate_gi()
@@ -154,7 +154,7 @@ def spidr_replicate_gi() -> pl.DataFrame:
 
     def gene(c):
         return (pl.when(pl.col(c).str.starts_with("non_targeting")).then(pl.lit("CONTROL"))
-                .when(pl.col(c).str.contains("_mis")).then(pl.lit("MISMATCH"))
+                .when(pl.col(c).str.contains(r"_\d+$")).then(pl.lit("MISMATCH"))  # numbered variants: attenuated guides
                 .otherwise(pl.col(c).str.split("_").list.first()))
 
     d = d.with_columns(gene("sg1").alias("g1"), gene("sg2").alias("g2"))
@@ -224,10 +224,10 @@ def harle2025() -> pl.DataFrame:
 def flister2025() -> pl.DataFrame:
     """Flister et al. 2025 Cell Reports (AbbVie): enCas12a paralog library, ~5.1k pairs x 20 lines.
 
-    Table S5 gives observed/expected LFC, diff and diff_z per line; 11 lines also carry the
-    authors' 'Lethal' call (diff_z <= -2 plus further filters). Positive: 'Lethal' where the
-    call exists, else diff_z <= -2. Negative: |diff_z| < 1. diff_z <= -2 without a 'Lethal'
-    call is ambiguous.
+    Table S5 gives observed/expected LFC, diff and diff_z per line, and every one of the 20 lines carries
+    the authors' 'Lethal' call (diff_z <= -2 plus further filters). Positive: 'Lethal' (diff_z <= -2 is
+    the fallback for a line without calls). Negative: |diff_z| < 1. diff_z <= -2 without a 'Lethal' call
+    is ambiguous.
     """
     wb = openpyxl.load_workbook(RAW / "flister2025/mmc6.xlsx", read_only=True)
     rows = list(wb.worksheets[0].iter_rows(min_row=2, values_only=True))

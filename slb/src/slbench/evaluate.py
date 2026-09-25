@@ -34,7 +34,7 @@ from slbench.metrics import average_precision, stratified_auc
 
 BENCH = Path(os.environ.get("SLB_BENCH", "data/slb"))
 MIN_GROUP_POS = 20
-SCORER_VERSION = "1.3.2"
+SCORER_VERSION = "2.0.0"
 REPORTS = Path("results/reports")  # generated markdown reports (gitignored)
 SPECIES_NAMES = {"human": "H. sapiens", "scer": "S. cerevisiae", "spom": "S. pombe", "spne": "S. pneumoniae",
                  "dmel": "D. melanogaster", "cele": "C. elegans", "mmus": "M. musculus", "bsub": "B. subtilis",
@@ -66,9 +66,10 @@ def load_split(split: str) -> pl.DataFrame:
 
 
 def load_gold(split: str) -> pl.DataFrame:
-    """Split with labels and the SLB balance weight `_bw`: overlap weights (1 - e for SL pairs, e for
-    non-SL pairs, e = fitness.propensity), rescaled so each class's weights in a stratum sum to its count."""
-    d = load_split(split).join(pl.read_parquet(BENCH / "hidden" / f"{split}_propensity.parquet"),
+    """Scored rows of a split with labels and the SLB balance weight `_bw`: overlap weights (1 - e for SL
+    pairs, e for non-SL pairs, e = fitness.propensity), rescaled so each class's weights in a stratum sum to
+    its count. Unscored (measured but ambiguous) rows are inputs only."""
+    d = load_split(split).filter(pl.col("label").is_not_null()).join(pl.read_parquet(BENCH / "hidden" / f"{split}_propensity.parquet"),
                                on="example_id", how="left", maintain_order="left")
     e = pl.col("propensity")
     d = d.with_columns(pl.when(pl.col("label") == 1).then(1 - e).otherwise(e).alias("_bw"))
@@ -91,29 +92,34 @@ def file_sha256(path: str | Path) -> str:
 
 
 def validated_join(gold: pl.DataFrame, preds: pl.DataFrame, allow_missing: bool = False,
-                   max_missing_fraction: float = 0.5) -> tuple[pl.DataFrame, int]:
-    """Validate a submission before joining, so it cannot change the evaluated row set."""
+                   max_missing_fraction: float = 0.5, inputs: pl.Series | None = None) -> tuple[pl.DataFrame, int]:
+    """Validate a submission before joining, so it cannot change the evaluated row set.
+
+    `inputs` is every example_id of the split's inputs (scored and unscored); a submission must score all of
+    them, so neither its coverage nor the error messages depend on which rows are scored. Defaults to gold."""
+    ids = (gold["example_id"] if inputs is None else inputs).to_frame("example_id")
     if preds["example_id"].null_count():
         raise ValueError("prediction example_id contains null values")
     if preds["example_id"].n_unique() != preds.height:
         raise ValueError("prediction example_id contains duplicates")
-    unknown = preds.join(gold.select("example_id"), on="example_id", how="anti")
+    unknown = preds.join(ids, on="example_id", how="anti")
     if unknown.height:
         raise ValueError(f"predictions contain {unknown.height:,} unknown example_id values")
     if np.isinf(preds["score"].to_numpy()).any():
         raise ValueError("predictions contain infinite scores")
-    df = gold.join(preds, on="example_id", how="left", maintain_order="left", validate="1:1")
-    if df.height != gold.height or not df["example_id"].equals(gold["example_id"]):
-        raise ValueError("prediction join changed the gold row set")
-    missing = int(df["score"].null_count() + df["score"].is_nan().sum())
+    full = ids.join(preds, on="example_id", how="left", maintain_order="left", validate="1:1")
+    missing = int(full["score"].null_count() + full["score"].is_nan().sum())
     if missing and not allow_missing:
-        raise ValueError(f"{missing:,} of {df.height:,} examples have no finite score (use --allow-missing)")
-    if missing > df.height * max_missing_fraction:
-        raise ValueError(f"{missing:,} of {df.height:,} examples have no score; check the benchmark version")
-    if missing == df.height:
+        raise ValueError(f"{missing:,} of {full.height:,} input rows have no finite score (use --allow-missing)")
+    if missing > full.height * max_missing_fraction:
+        raise ValueError(f"{missing:,} of {full.height:,} input rows have no score; check the benchmark version")
+    if missing == full.height:
         raise ValueError("predictions contain no finite scores")
     if missing:
-        df = df.with_columns(pl.col("score").fill_nan(None).fill_null(pl.col("score").median()))
+        full = full.with_columns(pl.col("score").fill_nan(None).fill_null(pl.col("score").median()))
+    df = gold.join(full, on="example_id", how="left", maintain_order="left", validate="1:1")
+    if df.height != gold.height or not df["example_id"].equals(gold["example_id"]):
+        raise ValueError("prediction join changed the gold row set")
     return df, missing
 
 
@@ -206,9 +212,12 @@ def bootstrap(df: pl.DataFrame, reps: int, seed: int = 0) -> tuple[float, float]
 
 def compare(pa: pl.DataFrame, pb: pl.DataFrame, split: str, reps: int = 200, seed: int = 0) -> dict:
     """Paired family-cluster bootstrap of SLB(B) - SLB(A) on the same resamples."""
-    gold = load_gold(split)
-    da, _ = validated_join(gold, pa)
-    db, _ = validated_join(gold, pb)
+    if split.startswith("test"):
+        _log_test_eval(split, pa)
+        _log_test_eval(split, pb)
+    gold, ids = load_gold(split), input_ids(split)
+    da, _ = validated_join(gold, pa, inputs=ids)
+    db, _ = validated_join(gold, pb, inputs=ids)
     sa, pa_parts = headline(da)
     sb, pb_parts = headline(db)
     ia, ib, n = _family_index(gold)
@@ -225,8 +234,31 @@ def compare(pa: pl.DataFrame, pb: pl.DataFrame, split: str, reps: int = 200, see
             "species_delta": {k: pb_parts[k] - pa_parts[k] for k in pa_parts}}
 
 
+def input_ids(split: str) -> pl.Series:
+    """Every example_id a submission for this split must score."""
+    name = f"{split}_inputs.parquet" if split.startswith("test") else f"{split}.parquet"
+    return pl.read_parquet(BENCH / name, columns=["example_id"])["example_id"]
+
+
+def _log_test_eval(split: str, preds: pl.DataFrame) -> None:
+    """Append every test-split evaluation to results/test_evals.jsonl: test readouts are auditable."""
+    import datetime
+    import getpass
+    import sys
+
+    log = Path("results/test_evals.jsonl")
+    log.parent.mkdir(parents=True, exist_ok=True)
+    digest = hashlib.sha256(preds.sort("example_id").write_ipc(None).getvalue()).hexdigest()
+    with log.open("a") as f:
+        f.write(json.dumps({"time": datetime.datetime.now().isoformat(timespec="seconds"), "user": getpass.getuser(),
+                            "split": split, "bench": str(BENCH), "predictions_sha256": digest,
+                            "argv": sys.argv}) + "\n")
+
+
 def evaluate(preds: pl.DataFrame, split: str, boot: int = 0, allow_missing: bool = False) -> dict:
-    df, missing = validated_join(load_gold(split), preds, allow_missing)
+    if split.startswith("test"):
+        _log_test_eval(split, preds)
+    df, missing = validated_join(load_gold(split), preds, allow_missing, inputs=input_ids(split))
     score, parts = headline(df)
     aux = headline(df, species=species_tiers()[1])[1]
     res = {"benchmark": bench_id(), "manifest_sha256": file_sha256(BENCH / "manifest.json"),

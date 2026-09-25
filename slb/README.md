@@ -11,17 +11,22 @@ synthetic data. Every source that supplies labels passed a reproducibility check
 **Held out.** Genes are grouped into families: paralogs with ≥ 30% protein identity, plus orthologs
 across 12 proteomes (human, mouse, worm, fly, both yeasts, *C. albicans*, *S. pneumoniae*, *E. coli*,
 *B. subtilis*, *M. tuberculosis*, *S. aureus*). Orthologs come from the Alliance (reciprocal best hits,
-or ones supported by at least 3 methods), PomBase curated orthologs, and reciprocal best DIAMOND hits
-between every pair of proteomes. Whole families are hashed into train, dev or test. In a test pair,
-neither gene has a paralog above 30% identity or any ortholog in train, in any species.
+or ones supported by at least 3 methods), PomBase curated orthologs, HCOP human–yeast orthologs asserted
+by at least 2 databases, and reciprocal best DIAMOND hits between every pair of proteomes. Paralogs come
+from Ensembl, plus DIAMOND within-species hits (≥ 30% global identity for human and the yeasts and fly,
+where Ensembl has paralogs; ≥ 30% of the shorter protein elsewhere). Physically overlapping yeast ORFs
+share a family, because deleting one disrupts the other. Whole families are hashed into train, dev or
+test, except that families of 100 or more genes always go to train so no single component can dominate
+dev or test. In a test pair, neither gene has a paralog above 30% identity, any ortholog, or an
+overlapping ORF in train, in any species.
 
 There is only one evaluation: both genes held out. Splits that hold out a pair but let its genes
 appear in training (CV1/CV2) are not offered: models can memorise which genes have many SL partners,
 so those splits measure training-set lookup, not prediction.
 
-There is one benchmark, built into `data/slb/`. It is updated in place. `manifest.json` records its
-revision (currently `slb1.3`), and results are pinned to the manifest's SHA-256 and the scorer version
-(`1.3.2`).
+There is one benchmark, built into `data/slb/`. It is updated in place. Results are pinned to the
+SHA-256 of its `manifest.json` and to the scorer version (`2.0.0`), so a rebuild invalidates every pinned
+result until it is re-scored.
 
 ## Species
 
@@ -33,7 +38,7 @@ revision (currently `slb1.3`), and results are pinned to the manifest's SHA-256 
 - **Auxiliary** (scored and reported the same way, not averaged in): *B. subtilis* (Koo 2025),
   *C. elegans* (Byrne 2007), *D. melanogaster* (Horn 2011), *M. musculus* (Roguev 2013). A species is
   scored only when the split has at least 20 positives; on test that covers *B. subtilis* (55) and
-  *C. elegans* (38).
+  *C. elegans* (39).
 
 *S. pneumoniae* and *E. coli* are measured but supply no labels: their screens contradict each other.
 
@@ -56,7 +61,7 @@ A source's labels are used only if all three hold:
 | Horlbeck 2018 | Own replicates | 0.71–0.81 |
 | Parrish 2021 | Own replicates | 0.90–0.95 |
 | Zhao 2018 | Own replicates | 0.69–0.72 |
-| SPIDR 2025 | Own replicates, after re-scoring | 0.86 |
+| SPIDR 2025 | Own replicates, after re-scoring | 0.83 |
 | Costanzo 2016 (*S. cerevisiae*) | Cross-study, 4 independent re-measurements; own orientation 0.74 | 0.74–0.93 |
 | Kuzmin 2018 (*S. cerevisiae*) | Cross-study vs Costanzo 2016 | 0.89 |
 | Kuzmin 2020 (*S. cerevisiae*) | Cross-study vs Costanzo 2016 and Kuzmin 2018 | 0.80–0.89 |
@@ -95,23 +100,26 @@ but supply no labels:
 
 **Where published calls were replaced:** the yeast positive cut-offs are stricter than the authors'
 (ε < −0.2 instead of −0.12; S < −3 instead of −2.3), because stronger interactions replicate better.
-SPIDR's published GEMINI calls are recovered by its own replicates at only 0.62, so its raw counts are
-re-scored with the same additive zdLFC recipe as the other paralog screens.
+SPIDR is re-scored from its raw counts with the same additive zdLFC recipe as the other paralog screens
+(its published GEMINI calls are much looser: about 2,100 positive pairs); attenuated mismatch guides are
+excluded.
 
 ## Label rules
 
 - **Negative:** a tested pair that was not called, and whose score falls in that screen's neutral band.
-- **Ambiguous:** anything between positive and negative. It is dropped.
-- **Merging:** the same (species, context, pair) measured by several included sources is merged;
-  conflicting labels are dropped.
+- **Unscored:** every other measured pair: between positive and negative, labelled differently by two
+  included sources for the same (species, context, pair), or a same-chromosome yeast pair less than
+  200 kb apart (genetic linkage distorts double-mutant fitness: E-MAP pairs 50–100 kb apart are 23% SL
+  against a 2% baseline). Unscored pairs stay in the dev and test inputs, so a submission scores every
+  measured pair and the number of rows a gene has reflects the screen design, not its labels.
 
 | Source | Positive | Negative |
 |---|---|---|
-| Horlbeck 2018, Zhao 2018 (SLKB original calls) | Author SL call | Not called, and \|score\| < median for that screen |
+| Horlbeck 2018, Zhao 2018 (via SLKB) | SLKB SL call (SL_score ≤ −3) | Not called, and \|score\| < median for that screen |
 | Dede 2020, Parrish 2021 (Ryan-lab uniform zdLFC) | zdLFC ≤ −3 | \|zdLFC\| < 1 |
 | SPIDR 2025 (RPE1, CRISPRi; re-scored from counts) | z(additive GI) ≤ −3 and GI < 0 in both replicates | \|z\| < 1 |
 | Chou 2025 | ZdLFC < −2 (authors) | \|ZdLFC\| < 1 |
-| Flister 2025 | Author "Lethal" call; diff_z ≤ −2 for lines with no call | \|diff_z\| < 1 |
+| Flister 2025 | Author "Lethal" call (all 20 lines have calls) | \|diff_z\| < 1 |
 | Harle 2025 | Author binary hit matrix | Not a hit, FDR > 0.25, \|GI\| < median for that line |
 | Costanzo 2016 SGA | ε < −0.2 and p < 0.05 | p > 0.25 and \|ε\| < median |
 | Ryan 2012 *S. pombe* E-MAP | S < −3 | \|S\| < 1 |
@@ -133,14 +141,17 @@ Per-source rationale is in the parser docstrings under `src/slbench/sources/`.
    are compared by AUROC only with non-SL pairs from the same stratum, so knowing which cell lines or
    libraries have high hit rates earns nothing: a library-prior baseline scores exactly 0.500.
 2. **Balance single-gene fitness.** SL calls concentrate on genes that are already sick on their own.
-   Each pair gets a propensity *e* = P(SL | both genes' single-loss effects, screen, context), fitted
-   on the evaluation split itself. SL pairs are weighted 1 − *e* and non-SL pairs *e* (overlap weights;
-   Li, Morgan & Zaslavsky 2018), rescaled per stratum and class. The fitted fitness design columns
-   balance in their weighted means; the `fitness_lgbm` control measures any residual nonlinear signal.
+   Heavily screened genes differ in the same way. Each pair gets a propensity *e* = P(SL | both genes'
+   single-loss effects, both genes' row counts in the split's inputs, screen, context), fitted on the
+   evaluation split itself. SL pairs are weighted 1 − *e* and non-SL pairs *e* (overlap weights;
+   Li, Morgan & Zaslavsky 2018), rescaled per stratum and class. The design columns balance in their
+   weighted means; the `fitness_lgbm` control and the row-count probe measure any residual signal.
 3. **Human species score:** the mean over genetic-ancestry groups with at least 20 positives in the
-   split. Ancestry is the donor's genotype-inferred majority super-population (> 50%) from Cellosaurus
-   ([Dutil et al. 2019](https://doi.org/10.1158/0008-5472.CAN-18-2747)). Lines with no estimate
-   (hTERT-RPE1, C092) are reported but not averaged in.
+   split. Ancestry is the donor's majority super-population (> 50%) from Cellosaurus, genotype-inferred
+   for every line except PC-9 (self-reported East Asian;
+   [Dutil et al. 2019](https://doi.org/10.1158/0008-5472.CAN-18-2747)). Lines with no estimate
+   (hTERT-RPE1, C092) are reported but not averaged in. On test that is AFR (32 positives), EAS (86)
+   and EUR (439); on dev AFR has 17 positives, so the dev human score averages EAS and EUR only.
 4. **SLB score** = the mean of the headline species' scores, each counting equally. The tiers are
    recorded in `manifest.json`.
 
@@ -162,18 +173,34 @@ bootstrap of the difference.
 | *D. melanogaster* | Single-dsRNA main effect on cell count (Heigwer 2023) |
 | *M. musculus* | DepMap pan-line mean of the one-to-one human ortholog |
 
-The propensity model (`fitness.propensity`) is a lightly penalised logistic regression per species on
-cubic splines of each gene's context and pan-context effect, their product, screen and context
-intercepts, and screen × effect interactions. It is fitted on the evaluation split because the
+The propensity model (`fitness.propensity`) is a lightly penalised logistic regression, one per screen
+with at least 20 positives and 20 negatives (smaller screens share their species' fit), on cubic splines
+of each gene's context and pan-context effect and of the two genes' log row counts, their products,
+context intercepts, and screen × covariate interactions. It is fitted on the evaluation split because the
 fitness→SL relation differs between held-out family sets, and it is logistic so the smooth design
 cannot memorise individual genes. Within-stratum standardised mean differences of the fitness
-covariates fall from up to 1.4 to below 0.03 (asserted in `tests/test_benchmark.py`). On test,
-−(f_a + f_b) scores 0.49–0.50 and `fitness_lgbm` 0.52–0.53 on the headline species; on the yeasts
-`fitness_lgbm` keeps a small residual (0.505–0.526 across split seeds), so compare yeast gains against
-it, not against 0.5. Propensities live under `hidden/` and are never a model input.
+covariates fall below 0.03 (asserted in `tests/test_benchmark.py`). Reject probes
+(`scripts/grader_probe.py`, `reference/grader_probe.json`), on dev: exact labels 1.000, inverted 0.000,
+constant and per-stratum hit rate 0.500, random 0.501 ± 0.008, −(gene row counts) 0.501, fitness-only
+LightGBM 0.509. On test, −(f_a + f_b) scores 0.498, `fitness_lgbm` 0.503 and −(row counts) 0.512
+(human 0.533, within its noise). Propensities live under `hidden/` and are never a model input.
 
-**Protocol.** Hill-climb on `dev`. Evaluate on `test` only at milestones and record every test
-evaluation in `leaderboard.yaml`.
+## Hill-climbing
+
+- **Work from the public bundle** (`data/release/slb`: train and dev labels, dev weights, test inputs) and
+  select models with `eval` and `compare` on `dev`. Test labels exist only in the private
+  `data/slb/hidden/`; every test evaluation is appended to `results/test_evals.jsonl`. Evaluate on
+  `test` only at milestones and record every test result in `leaderboard.yaml`.
+- **Noise floor.** Scores computed from random per-gene values have SD 0.022 on dev (human alone 0.043)
+  and 0.018 on test. Dev differences below about 0.03 are not evidence; use `slbench compare A B
+  --split dev`, whose paired family bootstrap gives the CI of the difference.
+- **Dev and test are different family sets.** Across the published battery, dev ranks models well
+  overall but dev→test shifts of ±0.02–0.05 are common near the top, so a dev-selected winner needs its
+  test readout.
+- **`dev_semi` pairs share one gene with train and the other with dev.** Training on `dev_semi` labels
+  leaks dev genes into the model; don't use them for anything scored on dev.
+- Predictions must cover every row of the evaluated inputs (scored or not), with unique ids and finite
+  scores.
 
 ## Leakage rules
 
@@ -200,42 +227,10 @@ columns are auxiliary species; n/a = fewer than 20 test positives. Leaky, possib
 exploratory entries are unranked (–).
 
 <!-- leaderboard:start -->
-| # | model | SLB score (95% CI) | human | scer | spom | *bsub* | *cele* | *dmel* | *mmus* | trained on | leaky |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **Dev Rank Ensemble (loss)** — core blend plus human DepMap OLS | 0.645 (0.595–0.684) | 0.684 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | SLB train; blend selected on dev | no |
-| 2 | **Ontotype** — ontology-based model retrained by species | 0.640 (0.597–0.673) | 0.625 | 0.589 | 0.708 | 0.514 | 0.618 | n/a | n/a | SLB train + filtered GO | no |
-| 3 | **Dev Rank Ensemble (core)** — dev-selected rank blend of GO/PPI, Ontotype, SynLeaF and De Kegel | 0.639 (0.588–0.680) | 0.668 | 0.581 | 0.669 | 0.561 | 0.546 | n/a | n/a | SLB train; blend selected on dev | no |
-| 4 | **Ontotype (pooled)** — one ontology model across species | 0.632 (0.591–0.666) | 0.639 | 0.581 | 0.674 | 0.469 | 0.542 | n/a | n/a | SLB train + filtered GO | no |
-| 5 | **GO/PPI GBM** — multi-network feature model, trained separately by species | 0.625 (0.576–0.660) | 0.663 | 0.590 | 0.621 | 0.565 | 0.537 | n/a | n/a | SLB train + filtered GO/PPI/fitness | no |
-| 6 | **GO/PPI GBM (pooled)** — one multi-species model on filtered networks | 0.624 (0.581–0.659) | 0.660 | 0.589 | 0.622 | 0.570 | 0.570 | n/a | n/a | SLB train + filtered GO/PPI/fitness | no |
-| 7 | **De Kegel 2021 (all-species)** — paralog feature RF adapted across species | 0.603 (0.551–0.647) | 0.699 | 0.552 | 0.557 | 0.535 | 0.617 | n/a | n/a | SLB train + filtered GO/PPI/ESM2 | no |
-| 8 | **MuSL (all-species)** — GNN branch retrained across species | 0.593 (0.549–0.634) | 0.636 | 0.553 | 0.592 | 0.545 | 0.562 | n/a | n/a | SLB train + filtered PPI/ESM2 | no |
-| 9 | **SL-Predict 2026 (MAE branch)** — released frozen DepMap 26Q1 MAE gene encoder plus SLB-trained symmetric LightGBM; human only, 99% native coverage | 0.575 (0.547–0.595) | 0.724 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | single-gene DepMap 26Q1 unlabeled profiles; SLB train pair labels | no |
-| 10 | **Ryan 2026 (full clean refit)** — context-specific paralog random forest refitted on SLB; human only, 77% native coverage | 0.571 (0.542–0.597) | 0.712 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train; filtered GO/PPI and DepMap single-gene data | no |
-| 11 | **Ryan 2026 (context clean refit)** — context-only paralog random forest refitted on SLB; human only, 77% native coverage | 0.561 (0.530–0.591) | 0.682 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train; filtered GO/PPI and DepMap single-gene data | no |
-| 12 | **SynLeaF (all-species)** — KG/RGCN branch retrained on the filtered multi-species bundle | 0.554 (0.508–0.605) | 0.537 | 0.523 | 0.602 | 0.517 | 0.364 | n/a | n/a | SLB train + filtered GO/PPI | no |
-| 13 | **paralog_identity** — Ensembl 116 paralog protein identity | 0.552 (0.503–0.584) | 0.653 | 0.503 | 0.501 | 0.500 | 0.500 | n/a | n/a | none | no |
-| 14 | **lgbm** — gradient boosting on single-gene fitness, paralog identity, DepMap co-dependency | 0.551 (0.509–0.581) | 0.610 | 0.518 | 0.526 | 0.575 | 0.503 | n/a | n/a | SLB train | no |
-| 15 | **DepMap OLS (loss)** — human single-gene dependency scan; other species tied | 0.550 (0.516–0.582) | 0.650 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap single-gene/omics only | no |
-| 16 | **MuSL (human)** — full multimodal model; other species tied | 0.549 (0.524–0.576) | 0.646 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train + BioGRID physical/ESM2/TCGA | no |
-| 17 | **Cilantro-SL 2026 (Geneformer branch)** — Geneformer in-silico-knockout, viability FiLM and five-fold SLNet refit; human only, 55% native coverage | 0.533 (0.503–0.563) | 0.599 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | Geneformer/Gene2vec unlabeled pretraining; DepMap single-gene effects; SLB train pairs | no |
-| 18 | **codependency** — DepMap gene-effect profile correlation (human only) | 0.524 (0.489–0.552) | 0.571 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | none (single-gene data) | no |
-| 19 | **GiGCN 2026 (binary GO adaptation)** — signed factor graph network refitted on SLB train; binary SL versus neutral with filtered GO features, human only | 0.523 (0.492–0.549) | 0.569 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train pairs; filtered GO annotations, no external GI graph | no |
-| 20 | **fitness_lgbm** — gradient boosting on the single-loss covariates only (probe of residual fitness signal) | 0.521 (0.485–0.559) | 0.521 | 0.515 | 0.526 | 0.571 | 0.503 | n/a | n/a | SLB train | no |
-| 21 | **PAGAN 2026 (genes-to-pairs)** — essentiality-trained genes-to-pairs GraphSAGE on filtered SLB graph; human and budding yeast, fission yeast tied | 0.520 (0.490–0.547) | 0.591 | 0.469 | 0.500 | 0.500 | 0.500 | n/a | n/a | single-gene essentiality; filtered GO/PPI/paralogs; no SL pair labels | no |
-| 22 | **SynLeaF (human)** — dual-stage omics and KG model; other species tied | 0.515 (0.482–0.550) | 0.546 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | SLB train + filtered KG/TCGA omics | no |
-| 23 | **fitness** — sickness of the two single mutants, -(f_a + f_b) | 0.498 (0.468–0.533) | 0.490 | 0.501 | 0.502 | 0.527 | 0.503 | n/a | n/a | none (single-gene data) | no |
-| 24 | **random** — uniform noise | 0.492 (0.471–0.515) | 0.494 | 0.490 | 0.492 | 0.450 | 0.578 | n/a | n/a | none | no |
-| – | **SL-Predict MAE vectors only (exploratory test ablation)** — feature-group ablation run after full-branch test inspection; human only | 0.563 (0.533–0.585) | 0.688 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap 26Q1 single-gene profiles; SLB train pairs | no |
-| – | **SL-Predict coessentiality only (exploratory test ablation)** — feature-group ablation run after full-branch test inspection; human only | 0.514 (0.479–0.542) | 0.543 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap 26Q1 single-gene profiles; SLB train pairs | no |
-| – | **Ryan 2026 (released external-GEMINI weights, leakage diagnostic)** — released classifier trained on external GEMINI SL screens overlapping held-out families | 0.535 (0.507–0.564) | 0.606 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | external GEMINI labels, including source screens used by SLB | yes |
-| – | **SLp-1.1 (decoder)** — prior abiome world model + LightGBM SL decoders (10 decoders from its MuSL gene-held-out folds, averaged); human only, 39% of human test pairs in vocabulary (rest tied) | 0.526 (0.491–0.555) | 0.578 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | MuSL/SynLethDB SL labels; DepMap; Costanzo yeast (25% sample) | yes |
-| – | **SLxGO 2026 (GO-PCA branch, input provenance unresolved)** — released GO-PCA embedding branch, refitted on SLB train; GO evidence provenance unavailable | 0.519 (0.492–0.545) | 0.556 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | authors' GO-PCA vectors; SLB train pairs | possible |
-| – | **SLp-1.1 (label-free)** — prior abiome world model, fixed excess-fitness-loss readout (no SL labels); human only, 39% coverage | 0.503 (0.465–0.537) | 0.510 | 0.500 | 0.500 | 0.500 | 0.500 | n/a | n/a | DepMap; Costanzo yeast (25% sample); Perturb-seq | yes |
 <!-- leaderboard:end -->
 
 **Human ancestry.** `scripts/audit_ancestry.py` scores frozen test predictions per cell-line ancestry
-(AFR 3 lines / 32 test SL pairs, EAS 7 / 92, EUR 38 / 442). `scripts/benchmark_ancestry.py` runs a
+(AFR 3 lines / 32 test SL pairs, EAS 7 / 86, EUR 38 / 439). `scripts/benchmark_ancestry.py` runs a
 stricter cancer-site/screen/pair-matched comparison under `reference/ancestry_protocol.json`; its
 donor-adequacy gate fails on current public screens (2 matched AFR lines), so it issues no
 population-level verdict. Both write JSON to `reference/` and a report to `results/reports/`.
@@ -244,9 +239,9 @@ population-level verdict. Both write JSON to `reference/` and a report to `resul
 
 | File | Contents |
 |---|---|
-| `train.parquet` | Labelled. Both genes in train families. |
-| `dev.parquet`, `dev_semi.parquet` | Labelled. Hill-climbing and model selection. `*_semi`: one gene held out. |
-| `test_inputs.parquet`, `test_semi_inputs.parquet` | No labels. |
+| `train.parquet` | Scored pairs with both genes in train families. |
+| `dev.parquet`, `dev_semi.parquet` | Every measured pair; `label` is null for unscored pairs. Hill-climbing and model selection. `*_semi`: one gene held out. |
+| `test_inputs.parquet`, `test_semi_inputs.parquet` | Every measured pair, no labels. |
 | `hidden/test*_labels.parquet` | Test labels. Only `slbench eval --split test` reads them. |
 | `hidden/*_propensity.parquet` | Per-example fitness propensity for the balance weights. Not a model input. |
 | `contexts.parquet` | Per context: Cellosaurus accession, DepMap ID, disease, sex, ancestry group and fractions. |
@@ -255,8 +250,9 @@ population-level verdict. Both write JSON to `reference/` and a report to `resul
 | `manifest.json` | Revision, build parameters, species tiers, excluded sources, row counts, sha256 of every file. |
 
 Example columns: `example_id, species, context_id, ancestry_group, gene_a, gene_b, same_family,
-sources, label`. A model reads `{split}.parquet` (or `test_inputs.parquet`) and writes one `score` per
-`example_id`; higher means more likely SL. Gene IDs: HGNC symbol (human), SGD systematic ORF
+sources, label` (`sources` is the labelling screen of a scored pair and the measuring screens of an
+unscored one). A model reads `{split}.parquet` (or `test_inputs.parquet`) and writes one `score` per
+`example_id`, for every row; higher means more likely SL. Gene IDs: HGNC symbol (human), SGD systematic ORF
 (*S. cerevisiae*), PomBase systematic ID (*S. pombe*), BSU locus tag (*B. subtilis*), WBGene
 (*C. elegans*), FBgn (fly), MGI symbol (mouse). `slbench.ids.resolve` and `slbench.ids_extra.resolve`
 map other names.
@@ -271,6 +267,11 @@ map other names.
   that contradict each other; *B. subtilis* has one screen, verified only against itself.
 - **Human screens mostly test paralog pairs,** so same-family pairs are overrepresented.
 - **Inclusion is binary.** Labels are not weighted by source reliability (Dede 0.93 versus Zhao 0.69).
+- **Cross-study agreement is modest.** Where two included studies measured the same pair in the same
+  context and at least one called SL, all agreed 35% of the time. In *S. pombe*, Frost 2012 and Ryan
+  2012 share only 570 positive pairs against 3,142 conflicts (unscored).
+- **Dev is smaller than test** after the large-family rule: 351 human, 1,186 *S. cerevisiae* and 323
+  *S. pombe* dev positives, against 561, 2,100 and 532 on test.
 
 ## Layout
 

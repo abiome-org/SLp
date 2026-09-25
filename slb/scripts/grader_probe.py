@@ -8,6 +8,23 @@ import polars as pl
 
 from slbench import evaluate as E
 
+PUBLIC = {"dev": "dev.parquet", "test": "test_inputs.parquet"}
+
+
+def public_inputs(split: str) -> pl.DataFrame:
+    """The split's public input file, without labels or sources."""
+    return pl.read_parquet(E.BENCH / PUBLIC[split], columns=["example_id", "species", "context_id", "gene_a", "gene_b"])
+
+
+def gene_degree(inputs: pl.DataFrame) -> pl.DataFrame:
+    """score = -(rows in the same context involving gene_a + rows involving gene_b), from inputs only."""
+    k = ["species", "context_id", "gene"]
+    deg = pl.concat([inputs.select("example_id", *k[:2], pl.col(g).alias("gene")) for g in ("gene_a", "gene_b")]) \
+        .unique().group_by(k).agg(pl.len().alias("d"))
+    return inputs.join(deg.rename({"gene": "gene_a", "d": "da"}), on=k[:2] + ["gene_a"], how="left") \
+        .join(deg.rename({"gene": "gene_b", "d": "db"}), on=k[:2] + ["gene_b"], how="left") \
+        .select("example_id", (-(pl.col("da") + pl.col("db")).cast(pl.Float64)).alias("score"))
+
 
 def main() -> None:
     gold = E.load_gold("dev")
@@ -29,6 +46,9 @@ def main() -> None:
     probes["random_max"] = float(np.max(random))
     prior = gold.with_columns(pl.col("label").mean().over("context_id", "sources").alias("prior"))["prior"].to_numpy()
     probes["stratum_hit_rate_prior_reject"] = score(prior)
+    deg = gold.select("example_id").join(gene_degree(public_inputs("dev")), on="example_id", how="left",
+                                         maintain_order="left")["score"].to_numpy()
+    probes["gene_degree_reject"] = score(deg)
     fit = E.read_predictions("results/slb/fitness_lgbm_dev.parquet")
     probes["fitness_only_probe"] = E.evaluate(fit, "dev")["slb_score"]
     assert np.isclose(probes["label_oracle_accept"], 1.0)

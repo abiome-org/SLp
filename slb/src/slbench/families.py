@@ -25,6 +25,7 @@ import polars as pl
 RAW = Path("data/raw")
 PARALOG_MIN_IDENTITY = 0.30
 ORTHOLOG_MIN_ALGORITHMS = 3
+HCOP_MIN_SUPPORT = 2  # HCOP human-yeast orthologs asserted by at least this many databases
 MAX_FAMILY = 400  # fail if a component exceeds this; never break homology edges
 
 NAMING_SPECIES = ("human", "scer", "spom", "dmel", "spne")
@@ -93,10 +94,30 @@ def edges() -> pl.DataFrame:
         a, b = spom(a), sgd(b)
         if a and b:
             out.append((f"spom:{a}", f"scer:{b}", "ortholog", 1.0))
+    for sp, fn, col in (("scer", "hcop_human_scerevisiae.txt.gz", "s.cerevisiae_ensembl_gene"),
+                        ("spom", "hcop_human_spombe.txt.gz", "s.pombe_ensembl_gene")):
+        h = pl.read_csv(RAW / "orthology" / fn, separator="\t", infer_schema_length=0, quote_char=None)
+        h = h.filter(pl.col("support").str.split(",").list.len() >= HCOP_MIN_SUPPORT)
+        res = sgd if sp == "scer" else spom
+        for hid, g in zip(h["hgnc_id"], h[col]):
+            a, b = hgnc.get(hid), res(g)
+            if a and b:
+                out.append((f"human:{a}", f"{sp}:{b}", "ortholog", 1.0))
     from slbench.families_extra import extra_edges
 
     base = pl.DataFrame(out, schema=["u", "v", "kind", "weight"], orient="row")
     return pl.concat([base, extra_edges()]).unique()
+
+
+def overlap_edges(genes: pl.DataFrame) -> pl.DataFrame:
+    """Physically overlapping yeast ORFs: deleting one usually disrupts the other, so they share a family."""
+    from slbench import genome
+
+    out = []
+    for sp in ("scer", "spom"):
+        g = set(genes.filter(pl.col("species") == sp)["gene"])
+        out += [(f"{sp}:{a}", f"{sp}:{b}", "overlap", 1.0) for a, b in genome.overlapping_pairs(sp, g)]
+    return pl.DataFrame(out, schema=["u", "v", "kind", "weight"], orient="row")
 
 
 def _alliance_id(gid: str, species: str, hgnc: dict, sgd) -> str | None:
@@ -115,7 +136,7 @@ def assign(genes: pl.DataFrame) -> pl.DataFrame:
     nodes = [f"{s}:{g}" for s, g in genes.iter_rows()]
     for n in nodes:
         dsu.find(n)
-    e = edges()
+    e = pl.concat([edges(), overlap_edges(genes)])
     # Only edges touching at least one benchmark gene matter; keep bridges through other genes
     # (e.g. a human gene linking two yeast paralogs) since they carry homology information.
     for u, v, kind, w in e.iter_rows():

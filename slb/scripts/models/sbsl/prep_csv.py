@@ -30,7 +30,7 @@ def csv(split):
     X[mx] = X[mx].fillna(0.0)
     lab = C.human(split)
     if "label" in lab:
-        X["SL"] = X.example_id.map(dict(zip(lab.example_id, lab.label))).astype(int)
+        X["SL"] = X.example_id.map(dict(zip(lab.example_id, lab.label))).fillna(0).astype(int)  # unscored dev rows: placeholder
     else:
         X["SL"] = 0
     X[["example_id", "context_id", "SL"] + FEATS].to_csv(WORK / "feat" / C.BENCH.name / f"{split}.csv", index=False)

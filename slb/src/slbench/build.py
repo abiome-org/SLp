@@ -15,10 +15,10 @@ from pathlib import Path
 
 import polars as pl
 
-from slbench import contexts, families
+from slbench import contexts, families, genome
 from slbench.sources import bacteria, bacteria_extra, dmel, eukaryotes_extra, human, yeast
 
-VERSION = "slb1.3"  # revision stamp written to manifest.json; bump when the build changes
+VERSION = "slb"  # benchmark identity in manifest.json; results are pinned to the manifest sha256
 SALT = os.environ.get("SLB_SALT", "slb1-2026-09-22")  # fixed so family buckets stay stable across rebuilds
 INTERIM = Path("data/interim")
 OUT = Path(os.environ.get("SLB_OUT", "data/slb"))  # overrides are for robustness studies only
@@ -28,8 +28,10 @@ OUT = Path(os.environ.get("SLB_OUT", "data/slb"))  # overrides are for robustnes
 HEADLINE_SPECIES = ["human", "scer", "spom"]
 AUXILIARY_SPECIES = ["bsub", "cele", "dmel", "mmus"]
 
-# fraction of families per bucket
+# fraction of families per bucket; families this large always go to train, so no single homology
+# component can dominate dev or test
 TEST_FRAC, DEV_FRAC = 0.20, 0.15
+TRAIN_ONLY_FAMILY_SIZE = 100
 
 # Sources measured and audited but NOT used for benchmark labels, with the evidence (`slbench audit`).
 # Rule: a source's labels enter the benchmark only if an independent re-measurement (another study
@@ -159,35 +161,53 @@ def _context_table(m: pl.DataFrame) -> pl.DataFrame:
 def stage_examples() -> None:
     """Collapse measurements of the same (species, context, pair) across sources.
 
-    label = 1 if every labelled measurement says 1, 0 if every one says 0; pairs with
-    conflicting labels are dropped and counted in the build report.
+    Every measured pair is kept. label = 1 if every labelled measurement says 1, 0 if every one says 0,
+    null (measured but unscored) if none is labelled, the labels conflict, or the yeast pair is
+    genetically linked. Unscored pairs stay in the model inputs so that how often a gene appears in a
+    split reflects the screen design, not its labels. `sources` lists the labelling sources of scored
+    pairs and the measuring sources of unscored ones.
     """
+
     m = pl.concat([pl.read_parquet(p) for p in sorted((INTERIM / "measurements").glob("*.parquet"))])
     m = m.filter(~pl.col("source").is_in(list(EXCLUDED_SOURCES)))
     ctx = _context_table(m)
     m = m.join(ctx.select("species", "source", "context", "context_id"), on=["species", "source", "context"])
-    lab = m.filter(pl.col("label").is_not_null())
-    ex = lab.group_by("species", "context_id", "gene_a", "gene_b").agg(
+    labelled = pl.col("label").is_not_null()
+    ex = m.group_by("species", "context_id", "gene_a", "gene_b").agg(
         pl.col("label").min().alias("lmin"), pl.col("label").max().alias("lmax"),
-        pl.col("source").unique().sort().str.join(",").alias("sources"),
+        pl.col("source").filter(labelled).unique().sort().str.join(",").alias("lsources"),
+        pl.col("source").unique().sort().str.join(",").alias("msources"),
         pl.len().alias("n_measurements"),
     )
-    conflicts = ex.filter(pl.col("lmin") != pl.col("lmax"))
-    ex = ex.filter(pl.col("lmin") == pl.col("lmax")).rename({"lmin": "label"}).drop("lmax")
-    # cross-study replication among multiply-measured pairs (a label-noise floor for the report)
-    multi = lab.group_by("species", "context_id", "gene_a", "gene_b").agg(
-        pl.col("source").n_unique().alias("ns"), pl.col("label").min().alias("lmin"), pl.col("label").max().alias("lmax"),
-        pl.col("label").max().alias("any_pos"),
-    ).filter(pl.col("ns") > 1)
+    conflict = pl.col("lmin") != pl.col("lmax")
+    n_conflicts = ex.filter(conflict).height
+    ex = ex.with_columns(pl.when(conflict).then(None).otherwise(pl.col("lmin")).alias("label"))
+    linked = []
+    for sp in ("scer", "spom"):
+        part = ex.filter(pl.col("species") == sp)
+        near = genome.pair_distance(part, sp) < genome.LINKAGE_KB * 1000
+        linked.append(part.filter(near.fill_null(False)).select("species", "context_id", "gene_a", "gene_b"))
+    linked = pl.concat(linked).with_columns(pl.lit(True).alias("_linked"))
+    ex = ex.join(linked, on=["species", "context_id", "gene_a", "gene_b"], how="left")
+    n_linked = ex.filter(pl.col("_linked").fill_null(False) & pl.col("label").is_not_null()).height
+    ex = ex.with_columns(pl.when(pl.col("_linked").fill_null(False)).then(None).otherwise(pl.col("label")).alias("label"))
+    ex = ex.with_columns(pl.when(pl.col("label").is_not_null()).then(pl.col("lsources")).otherwise(pl.col("msources"))
+                         .alias("sources")).drop("lmin", "lmax", "lsources", "msources", "_linked")
     ctx_meta = ctx.drop("source", "context").unique("context_id").sort("context_id")
     INTERIM.mkdir(exist_ok=True, parents=True)
     ex.write_parquet(INTERIM / "examples.parquet")
     ctx_meta.write_parquet(INTERIM / "contexts.parquet")
+    lab = m.filter(labelled)
+    multi = lab.group_by("species", "context_id", "gene_a", "gene_b").agg(
+        pl.col("source").n_unique().alias("ns"), pl.col("label").min().alias("lmin"), pl.col("label").max().alias("any_pos"),
+    ).filter(pl.col("ns") > 1)
     report = {
         "measurements": m.height,
         "labelled_measurements": lab.height,
         "examples": ex.height,
-        "conflicting_pairs_dropped": conflicts.height,
+        "scored_examples": ex.filter(pl.col("label").is_not_null()).height,
+        "conflicting_pairs_unscored": n_conflicts,
+        "linked_pairs_unscored": n_linked,
         "multi_source_pairs": multi.height,
         "multi_source_positive_pairs": int((multi["any_pos"] == 1).sum()),
         "multi_source_positive_agreement": float(
@@ -209,7 +229,9 @@ def stage_splits() -> None:
         ex.select("species", pl.col("gene_a").alias("gene")), ex.select("species", pl.col("gene_b").alias("gene"))
     ]).unique().sort("species", "gene")
     fam = families.assign(genes)
-    fam = fam.with_columns(pl.col("family").map_elements(bucket, return_dtype=pl.String).alias("bucket"))
+    fam = fam.with_columns(
+        pl.when(pl.len().over("family") >= TRAIN_ONLY_FAMILY_SIZE).then(pl.lit("train"))
+        .otherwise(pl.col("family").map_elements(bucket, return_dtype=pl.String)).alias("bucket"))
     fa = fam.rename({"gene": "gene_a", "family": "family_a", "bucket": "bucket_a"})
     fb = fam.rename({"gene": "gene_b", "family": "family_b", "bucket": "bucket_b"})
     ex = ex.join(fa, on=["species", "gene_a"]).join(fb, on=["species", "gene_b"])
@@ -227,16 +249,21 @@ def stage_splits() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "hidden").mkdir(exist_ok=True)
     manifest = {"version": VERSION, "salt": SALT, "excluded_sources": EXCLUDED_SOURCES, "test_frac": TEST_FRAC, "dev_frac": DEV_FRAC,
-                "paralog_min_identity": families.PARALOG_MIN_IDENTITY,
+                "train_only_family_size": TRAIN_ONLY_FAMILY_SIZE, "paralog_min_identity": families.PARALOG_MIN_IDENTITY,
+                "linkage_kb": genome.LINKAGE_KB, "polars": pl.__version__,
                 "headline_species": HEADLINE_SPECIES, "auxiliary_species": AUXILIARY_SPECIES, "built": time.strftime("%Y-%m-%d"), "files": {}}
-    from slbench.fitness import propensity
+    from slbench.fitness import propensity, with_degree
 
     for split in ["train", "dev", "dev_semi", "test", "test_semi"]:
         part = ex.filter(pl.col("split") == split).select(cols).sort("example_id")
-        if split != "train":
-            # SLB balance weights: fitted within this split (see fitness.propensity), never a model input
-            w = part.select("example_id").with_columns(propensity(part, ctx))
-            _write(w, OUT / "hidden" / f"{split}_propensity.parquet", manifest)
+        if split == "train":  # training labels only; unscored train pairs carry no information for fitting
+            _write(part.filter(pl.col("label").is_not_null()), OUT / "train.parquet", manifest)
+            continue
+        # SLB balance weights: fitted on the scored pairs of this split (see fitness.propensity), with each
+        # gene's row count in the split's inputs as a covariate; never a model input
+        scored = with_degree(part).filter(pl.col("label").is_not_null())
+        w = scored.select("example_id").with_columns(propensity(scored, ctx))
+        _write(w, OUT / "hidden" / f"{split}_propensity.parquet", manifest)
         if split.startswith("test"):
             _write(part.drop("label", "sources"), OUT / f"{split}_inputs.parquet", manifest)
             _write(part.select("example_id", "label", "sources"), OUT / "hidden" / f"{split}_labels.parquet", manifest)
@@ -246,7 +273,8 @@ def stage_splits() -> None:
     _write(_single_effects(genes), OUT / "gene_single_effects.parquet", manifest)
     _write(fam.sort("species", "gene"), OUT / "held_out_families.parquet", manifest)
     counts = ex.group_by("split", "species").agg(
-        pl.len().alias("n"), (pl.col("label") == 1).sum().alias("pos"), pl.col("context_id").n_unique().alias("contexts")
+        pl.len().alias("n"), pl.col("label").is_not_null().sum().alias("scored"), (pl.col("label") == 1).sum().alias("pos"),
+        pl.col("context_id").n_unique().alias("contexts")
     ).sort("split", "species")
     manifest["counts"] = counts.to_dicts()
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2))

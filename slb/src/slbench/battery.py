@@ -56,7 +56,7 @@ def _score(job: tuple) -> dict:
     # The registry fixes the benchmark directory, and validated_join still rejects
     # duplicate/unknown IDs. Some published methods score only human or a small
     # subset of pairs, so the battery permits sparse files and reports the fill.
-    df, missing = E.validated_join(gold, p, allow_missing=True, max_missing_fraction=1.0)
+    df, missing = E.validated_join(gold, p, allow_missing=True, max_missing_fraction=1.0, inputs=E.input_ids(split))
     coverage_path = path.with_suffix(".coverage.json")
     if coverage_path.exists():
         native = json.loads(coverage_path.read_text())

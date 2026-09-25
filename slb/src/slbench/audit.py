@@ -184,9 +184,9 @@ study Y's score for study X's labels on the pairs both measured.
 {_md(res['new'].select('function', 'check', 'pos', 'auroc', 'ci95'))}
 
 Stronger positive thresholds replicate better in both yeasts, which is why SLB uses ε < −0.2 (not the
-authors' −0.12) for *S. cerevisiae* and S < −3 (not −2.3) for *S. pombe*. SPIDR's published GEMINI
-calls are not recovered by its own replicates, while a uniform additive re-scoring of its raw counts
-is (see the SPIDR rows); SLB therefore labels SPIDR from counts.
+authors' −0.12) for *S. cerevisiae* and S < −3 (not −2.3) for *S. pombe*. SPIDR is labelled from its raw
+counts with the same additive recipe as the other paralog screens (see the SPIDR rows); its looser published
+GEMINI calls are shown for comparison.
 """
     from slbench.evaluate import write_report
     write_report("replication.md", text)

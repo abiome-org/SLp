@@ -75,12 +75,12 @@ def test_donor_gate_and_bootstrap_on_adequate_synthetic_cohort():
 @pytest.mark.skipif(not (E.BENCH / "hidden/test_labels.parquet").exists(), reason="private test not built")
 def test_frozen_matched_support_and_adequacy_gate():
     bench = A.AncestryBenchmark(E.load_gold("test"), pl.read_parquet(E.BENCH / "contexts.parquet"))
-    assert bench.support["AFR"]["by_group"]["AFR"] == {"pairs": 626, "sl": 23, "cell_lines": 2}
-    assert bench.support["AFR"]["by_group"]["EUR"] == {"pairs": 3400, "sl": 76, "cell_lines": 14}
+    assert bench.support["AFR"]["by_group"]["AFR"] == {"pairs": 586, "sl": 23, "cell_lines": 2}
+    assert bench.support["AFR"]["by_group"]["EUR"] == {"pairs": 3170, "sl": 76, "cell_lines": 14}
     assert {b["cancer_site"] for b in bench.support["AFR"]["blocks"]} == {"colorectal", "lung"}
     assert {(b["cancer_site"], b["complete_case_pairs"])
-            for b in bench.support["AFR"]["blocks"]} == {("colorectal", 165), ("lung", 0)}
-    assert bench.complete_case_support["AFR"]["by_group"]["AFR"]["pairs"] == 165
+            for b in bench.support["AFR"]["blocks"]} == {("colorectal", 154), ("lung", 0)}
+    assert bench.complete_case_support["AFR"]["by_group"]["AFR"]["pairs"] == 154
     prior = E.load_gold("test").select("example_id", "ancestry_group").with_columns(
         pl.when(pl.col("ancestry_group") == "AFR").then(2.0)
         .when(pl.col("ancestry_group") == "EAS").then(1.0).otherwise(0.0).alias("score"))

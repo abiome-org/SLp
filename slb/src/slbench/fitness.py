@@ -29,6 +29,8 @@ import polars as pl
 RAW = Path("data/raw")
 INTERIM = Path("data/interim")
 COVARIATES = ["f_lo", "f_hi", "pan_lo", "pan_hi"]
+SCREEN_MIN_CLASS = 20  # screens with fewer positives or negatives share their species' propensity fit
+BALANCE_COVARIATES = COVARIATES + ["deg_lo", "deg_hi"]  # + log row count of each gene in the split's inputs
 
 
 @functools.cache
@@ -128,8 +130,19 @@ def gene_effects() -> pl.DataFrame:
     return pl.concat([p.select("species", "gene", pl.col("effect").cast(pl.Float64)) for p in parts])
 
 
+def with_degree(part: pl.DataFrame) -> pl.DataFrame:
+    """Add n_a / n_b: rows of `part` (a whole split, scored and unscored) involving each gene in its context."""
+    long = pl.concat([part.select("context_id", pl.col(c).alias("g")) for c in ("gene_a", "gene_b")])
+    n = long.group_by("context_id", "g").len()
+    for s in "ab":
+        part = part.join(n.rename({"g": f"gene_{s}", "len": f"n_{s}"}), on=["context_id", f"gene_{s}"],
+                         how="left", maintain_order="left")
+    return part
+
+
 def covariates(df: pl.DataFrame, contexts: pl.DataFrame) -> pl.DataFrame:
-    """Add f_lo/f_hi (context-specific where available, else reference) and pan_lo/pan_hi."""
+    """Add f_lo/f_hi (context-specific where available, else reference) and pan_lo/pan_hi; deg_lo/deg_hi
+    (log1p row counts) when `df` carries with_degree's n_a / n_b."""
     ctx = contexts.select("context_id", "depmap_id")
     ids_ = tuple(sorted(i for i in ctx["depmap_id"].drop_nulls().unique().to_list()))
     line, _ = depmap_long(ids_)
@@ -139,20 +152,24 @@ def covariates(df: pl.DataFrame, contexts: pl.DataFrame) -> pl.DataFrame:
         out = out.join(ref.rename({"gene": f"gene_{g}", "effect": f"pan_{g}"}), on=["species", f"gene_{g}"], how="left")
         out = out.join(line.rename({"gene": f"gene_{g}", "effect": f"ctx_{g}"}), on=["depmap_id", f"gene_{g}"], how="left")
         out = out.with_columns(pl.coalesce(f"ctx_{g}", f"pan_{g}").alias(f"f_{g}"))
-    return out.with_columns(
+    out = out.with_columns(
         pl.min_horizontal("f_a", "f_b").alias("f_lo"), pl.max_horizontal("f_a", "f_b").alias("f_hi"),
         pl.min_horizontal("pan_a", "pan_b").alias("pan_lo"), pl.max_horizontal("pan_a", "pan_b").alias("pan_hi"),
     ).drop("depmap_id", "pan_a", "pan_b", "ctx_a", "ctx_b", "f_a", "f_b")
+    if "n_a" in out.columns:
+        out = out.with_columns(pl.min_horizontal("n_a", "n_b").log1p().alias("deg_lo"),
+                               pl.max_horizontal("n_a", "n_b").log1p().alias("deg_hi"))
+    return out
 
 
 def _design(d: pl.DataFrame) -> np.ndarray:
     """Propensity design: cubic splines of each covariate (indicators for categorical ones such as
-    S. pombe viability) + missingness flags + f_lo*f_hi + screen and context intercepts + screen x
+    S. pombe viability) + missingness flags + f_lo*f_hi + deg_lo*deg_hi + screen and context intercepts + screen x
     linear covariates. Standardised columns."""
     from sklearn.preprocessing import SplineTransformer
 
     cols = []
-    for c in COVARIATES:
+    for c in BALANCE_COVARIATES:
         v = d[c].cast(pl.Float64).fill_null(np.nan).to_numpy()
         miss = np.isnan(v)
         if miss.all():
@@ -165,8 +182,9 @@ def _design(d: pl.DataFrame) -> np.ndarray:
             cols.append(SplineTransformer(n_knots=5, degree=3, knots="quantile", include_bias=False).fit_transform(v[:, None]))
         if miss.any():
             cols.append(miss.astype(float)[:, None])
-    lin = np.column_stack([d[c].cast(pl.Float64).fill_null(0).to_numpy() for c in COVARIATES])
+    lin = np.column_stack([d[c].cast(pl.Float64).fill_null(0).to_numpy() for c in BALANCE_COVARIATES])
     cols.append((lin[:, 0] * lin[:, 1])[:, None])
+    cols.append((lin[:, 4] * lin[:, 5])[:, None])
     for key in ("sources", "context_id"):
         k = d[key].to_numpy()
         levels = np.unique(k)
@@ -180,10 +198,11 @@ def _design(d: pl.DataFrame) -> np.ndarray:
 
 
 def propensity(ex: pl.DataFrame, contexts: pl.DataFrame) -> pl.Series:
-    """P(label=1 | the two genes' single-loss effects, screen, context), per species.
+    """P(label=1 | the two genes' single-loss effects, their row counts in the split, screen, context), per species.
 
-    ex needs species, context_id, gene_a, gene_b, sources, label. A lightly penalised logistic
-    regression on a smooth, low-dimensional design (_design) fitted on the evaluation split itself:
+    ex needs species, context_id, gene_a, gene_b, sources, label, and with_degree's n_a / n_b (counted over the
+    whole split, scored and unscored rows). A lightly penalised logistic
+    regression per screen on a smooth, low-dimensional design (_design) fitted on the evaluation split itself:
     the fitness-SL relation differs between held-out family sets, so a model fitted elsewhere does
     not balance this split. Logistic propensity + overlap weights balance every design column in the
     mean (Li, Morgan & Zaslavsky 2018), and the smooth design cannot memorise individual genes. The
@@ -191,9 +210,16 @@ def propensity(ex: pl.DataFrame, contexts: pl.DataFrame) -> pl.Series:
     """
     from sklearn.linear_model import LogisticRegression
 
+    if "n_a" not in ex.columns:
+        raise ValueError("propensity needs with_degree() row counts")
     x = covariates(ex.with_row_index("_i"), contexts)
+    # one fit per screen (`sources`) with enough of both classes, so balance holds within each screen;
+    # smaller screens are pooled per species
+    big = (((pl.col("label") == 1).sum() >= SCREEN_MIN_CLASS) & ((pl.col("label") == 0).sum() >= SCREEN_MIN_CLASS)) \
+        .over("species", "sources")
+    x = x.with_columns(pl.when(big).then(pl.col("sources")).otherwise(pl.lit("")).alias("_screen"))
     out = np.full(ex.height, np.nan)
-    for _, d in x.group_by(["species"]):
+    for _, d in x.group_by(["species", "_screen"]):
         y = d["label"].to_numpy()
         if y.min() == y.max():  # one class only (tiny species in a small split): no AUROC to balance
             out[d["_i"].to_numpy()] = float(y.mean())

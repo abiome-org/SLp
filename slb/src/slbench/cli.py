@@ -3,7 +3,7 @@
     slbench build [--stage ...]
     slbench eval PREDS --split dev|dev_semi|test|test_semi [--boot 200] [--out result.json]
     slbench compare A_PREDS B_PREDS --split dev [--boot 200]
-    slbench check-leakage TRAIN_PAIRS [--allow-dev]
+    slbench check-leakage TRAIN_PAIRS [--allow-dev] [--allow-unknown]
     slbench baseline NAME --split dev [--out preds.parquet]
     slbench battery [--split dev] [--boot N]     # score the SL model battery -> results/reports/models_<split>.md
 """
@@ -43,9 +43,13 @@ def main(argv: list[str] | None = None) -> None:
     lk = sub.add_parser("check-leakage")
     lk.add_argument("records")
     lk.add_argument("--allow-dev", action="store_true", help="only test families are forbidden")
+    lk.add_argument("--allow-unknown", action="store_true",
+                    help="do not fail on genes that cannot be resolved or are absent from the homology graph")
 
     sub.add_parser("card", help="write results/reports/data_card.md from the built benchmark")
-    sub.add_parser("leaderboard", help="verify leaderboard.yaml and update the README leaderboard")
+    lb = sub.add_parser("leaderboard", help="verify leaderboard.yaml and update the README leaderboard")
+    lb.add_argument("--verify-ci", action="store_true",
+                    help="also re-run each entry's bootstrap CI (~15 s per entry; or set SLB_VERIFY_CI=1)")
     sub.add_parser("audit", help="re-run label reproducibility checks, write results/reports/replication.md")
     vf = sub.add_parser("verify", help="check artifact hashes and row counts against manifest.json")
     vf.add_argument("--raw", action="store_true", help="also hash all pinned raw source files")
@@ -80,7 +84,9 @@ def main(argv: list[str] | None = None) -> None:
         from slbench import ancestry, evaluate
 
         gold = evaluate.load_gold("test")
-        scored, missing = evaluate.validated_join(gold, evaluate.read_predictions(a.preds))
+        preds = evaluate.read_predictions(a.preds)
+        evaluate._log_test_eval("test", preds)
+        scored, missing = evaluate.validated_join(gold, preds, inputs=evaluate.input_ids("test"))
         if missing:
             raise ValueError("ancestry evaluation requires complete test predictions")
         contexts = pl.read_parquet(evaluate.BENCH / "contexts.parquet")
@@ -112,7 +118,7 @@ def main(argv: list[str] | None = None) -> None:
             evaluate.save(r, a.out)
     elif a.cmd == "check-leakage":
         from slbench import leakage
-        sys.exit(leakage.main(a.records, a.allow_dev))
+        sys.exit(leakage.main(a.records, a.allow_dev, a.allow_unknown))
     elif a.cmd == "audit":
         from slbench import audit
         audit.main()
@@ -125,7 +131,7 @@ def main(argv: list[str] | None = None) -> None:
         print(json.dumps(result, indent=2))
     elif a.cmd == "leaderboard":
         from slbench import leaderboard
-        leaderboard.main()
+        leaderboard.main(verify_ci=a.verify_ci or None)
     elif a.cmd == "card":
         from slbench import card
         card.main()
