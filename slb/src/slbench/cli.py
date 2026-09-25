@@ -65,6 +65,12 @@ def main(argv: list[str] | None = None) -> None:
     bl.add_argument("--out", type=Path)
 
     a = ap.parse_args(argv)
+    if a.cmd != "build":
+        from slbench.evaluate import BENCH
+
+        if not (BENCH / "manifest.json").exists():
+            raise SystemExit(f"no benchmark at {BENCH}: set SLB_BENCH=data/release/slb to use the public bundle "
+                             "(README, Quickstart), or build the private one with `slbench build`")
     if a.cmd == "build":
         from slbench import build
         sys.argv = ["build", "--stage", a.stage]

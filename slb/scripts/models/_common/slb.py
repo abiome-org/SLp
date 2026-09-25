@@ -30,10 +30,8 @@ RESULTS = ROOT / "results/models" / BENCH.name
 
 
 def load(split: str) -> pd.DataFrame:
-    """train / dev (with labels) or test (inputs only). Never reads hidden/."""
-    if split.startswith("test"):
-        return pd.read_parquet(BENCH / f"{split}_inputs.parquet")
-    return pd.read_parquet(BENCH / f"{split}.parquet")
+    """train (with labels), or the inputs of any other split (no labels). Never reads hidden/."""
+    return pd.read_parquet(BENCH / ("train.parquet" if split == "train" else f"{split}_inputs.parquet"))
 
 
 def contexts() -> pd.DataFrame:

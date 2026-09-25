@@ -34,4 +34,4 @@ def test_gene_degree_probe_is_reported(monkeypatch, tmp_path):
         probe.public_inputs("dev")
     except FileNotFoundError:
         pass
-    assert seen == [("dev.parquet", ["example_id", "species", "context_id", "gene_a", "gene_b"])]
+    assert seen == [("dev_inputs.parquet", ["example_id", "species", "context_id", "gene_a", "gene_b"])]

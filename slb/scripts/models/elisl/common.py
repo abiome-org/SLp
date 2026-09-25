@@ -33,10 +33,8 @@ def log(*a):
 
 
 def load(split: str) -> pd.DataFrame:
-    """train/dev with labels, test* inputs only. Never reads hidden/."""
-    if split.startswith("test"):
-        return pd.read_parquet(BENCH / f"{split}_inputs.parquet")
-    return pd.read_parquet(BENCH / f"{split}.parquet")
+    """train with labels, other splits inputs only. Never reads hidden/."""
+    return pd.read_parquet(BENCH / ("train.parquet" if split == "train" else f"{split}_inputs.parquet"))
 
 
 def human(split: str) -> pd.DataFrame:

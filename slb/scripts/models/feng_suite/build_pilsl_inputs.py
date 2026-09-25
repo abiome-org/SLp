@@ -19,7 +19,7 @@ OUT = FD / "preprocessed_data/pilsl_data"; OUT.mkdir(parents=True, exist_ok=True
 z = np.load(FD / "data_split/slb_split_arrays.npz")
 gi = pd.read_parquet(FD / "slb_gene_index.parquet"); u = dict(zip(gi.gene, gi.unified_id))
 pp = []
-for f in ["dev.parquet", "test_inputs.parquet"]:
+for f in ["dev_inputs.parquet", "test_inputs.parquet"]:
     p = BENCH / f
     if p.exists():
         d = pd.read_parquet(p, columns=["species", "gene_a", "gene_b"]); d = d[d.species == "human"]

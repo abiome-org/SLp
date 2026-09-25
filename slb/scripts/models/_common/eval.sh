@@ -17,7 +17,7 @@ uv run python - "$D/$1_${SPLIT}.parquet" "$SLB_BENCH" "$SPLIT" "$TMP" <<'PY'
 import sys, pandas as pd
 p, bench, split, out = sys.argv[1:]
 d = pd.read_parquet(p)
-ids = pd.read_parquet(f"{bench}/{split}.parquet", columns=["example_id"]).example_id
+ids = pd.read_parquet(f"{bench}/{split}_inputs.parquet", columns=["example_id"]).example_id
 miss = ~ids.isin(d.example_id)
 fill = pd.DataFrame({"example_id": ids[miss].values, "score": d.score.median()})
 pd.concat([d[["example_id", "score"]], fill]).to_parquet(out, index=False)

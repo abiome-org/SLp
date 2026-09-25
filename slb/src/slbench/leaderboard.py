@@ -73,7 +73,7 @@ def _verified_result(entry: dict, verify_ci: bool | None = None) -> dict:
         raise ValueError(f"invalid confidence interval in {result}")
     verify_ci = verify_ci_enabled() if verify_ci is None else verify_ci
     boot = int(entry.get("boot", BOOT)) if verify_ci else 0
-    actual = E.evaluate(E.read_predictions(pred), "test", boot)
+    actual = E.evaluate(E.read_predictions(pred), "test", boot, log=False)
     if not _same_score(actual["slb_score"], r.get("slb_score")) or actual["n"] != r.get("n"):
         raise ValueError(f"score in {result} does not match the submitted predictions")
     for field, allow_na in (("species_scores", False), ("auxiliary_species_scores", True)):

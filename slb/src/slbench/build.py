@@ -248,10 +248,11 @@ def stage_splits() -> None:
     cols = ["example_id", "species", "context_id", "ancestry_group", "gene_a", "gene_b", "same_family", "sources", "label"]
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "hidden").mkdir(exist_ok=True)
+    (OUT / "features").mkdir(exist_ok=True)
     manifest = {"version": VERSION, "salt": SALT, "excluded_sources": EXCLUDED_SOURCES, "test_frac": TEST_FRAC, "dev_frac": DEV_FRAC,
                 "train_only_family_size": TRAIN_ONLY_FAMILY_SIZE, "paralog_min_identity": families.PARALOG_MIN_IDENTITY,
                 "linkage_kb": genome.LINKAGE_KB, "polars": pl.__version__,
-                "headline_species": HEADLINE_SPECIES, "auxiliary_species": AUXILIARY_SPECIES, "built": time.strftime("%Y-%m-%d"), "files": {}}
+                "headline_species": HEADLINE_SPECIES, "auxiliary_species": AUXILIARY_SPECIES, "files": {}}
     from slbench.fitness import propensity, with_degree
 
     for split in ["train", "dev", "dev_semi", "test", "test_semi"]:
@@ -264,14 +265,17 @@ def stage_splits() -> None:
         scored = with_degree(part).filter(pl.col("label").is_not_null())
         w = scored.select("example_id").with_columns(propensity(scored, ctx))
         _write(w, OUT / "hidden" / f"{split}_propensity.parquet", manifest)
-        if split.startswith("test"):
-            _write(part.drop("label", "sources"), OUT / f"{split}_inputs.parquet", manifest)
-            _write(part.select("example_id", "label", "sources"), OUT / "hidden" / f"{split}_labels.parquet", manifest)
-        else:
-            _write(part, OUT / f"{split}.parquet", manifest)
+        # dev and test alike: model inputs without labels or screen; labels (null = unscored) under hidden/
+        _write(part.drop("label", "sources"), OUT / f"{split}_inputs.parquet", manifest)
+        _write(part.select("example_id", "label", "sources"), OUT / "hidden" / f"{split}_labels.parquet", manifest)
     _write(ctx.sort("context_id"), OUT / "contexts.parquet", manifest)
     _write(_single_effects(genes), OUT / "gene_single_effects.parquet", manifest)
     _write(fam.sort("species", "gene"), OUT / "held_out_families.parquet", manifest)
+    from slbench import features
+
+    pairs = ex.select("species", "gene_a", "gene_b").unique()
+    for name, df in features.build(genes, fam.select("species", "gene", "bucket"), pairs, ctx).items():
+        _write(df, OUT / "features" / f"{name}.parquet", manifest)
     counts = ex.group_by("split", "species").agg(
         pl.len().alias("n"), pl.col("label").is_not_null().sum().alias("scored"), (pl.col("label") == 1).sum().alias("pos"),
         pl.col("context_id").n_unique().alias("contexts")

@@ -140,13 +140,20 @@ def with_degree(part: pl.DataFrame) -> pl.DataFrame:
     return part
 
 
-def covariates(df: pl.DataFrame, contexts: pl.DataFrame) -> pl.DataFrame:
+def covariates(df: pl.DataFrame, contexts: pl.DataFrame, bench: Path | None = None) -> pl.DataFrame:
     """Add f_lo/f_hi (context-specific where available, else reference) and pan_lo/pan_hi; deg_lo/deg_hi
-    (log1p row counts) when `df` carries with_degree's n_a / n_b."""
+    (log1p row counts) when `df` carries with_degree's n_a / n_b. With `bench`, the effects come from the
+    benchmark's own gene_single_effects.parquet and features/line_effects.parquet (no raw data needed)."""
     ctx = contexts.select("context_id", "depmap_id")
-    ids_ = tuple(sorted(i for i in ctx["depmap_id"].drop_nulls().unique().to_list()))
-    line, _ = depmap_long(ids_)
-    ref = gene_effects()
+    if bench is not None:
+        from slbench import features
+
+        line = features.read(bench, "line_effects")
+        ref = pl.read_parquet(bench / "gene_single_effects.parquet").rename({"single_effect": "effect"}).drop_nulls("effect")
+    else:
+        ids_ = tuple(sorted(i for i in ctx["depmap_id"].drop_nulls().unique().to_list()))
+        line, _ = depmap_long(ids_)
+        ref = gene_effects()
     out = df.join(ctx, on="context_id", how="left")
     for g in ("a", "b"):
         out = out.join(ref.rename({"gene": f"gene_{g}", "effect": f"pan_{g}"}), on=["species", f"gene_{g}"], how="left")

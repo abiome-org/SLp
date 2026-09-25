@@ -181,7 +181,7 @@ def balance() -> None:
 
 def _deg_probe(bench: Path, split: str) -> float:
     E.BENCH = bench
-    name = f"{split}.parquet" if split == "dev" else "test_inputs.parquet"
+    name = f"{split}_inputs.parquet" if (bench / f"{split}_inputs.parquet").exists() else f"{split}.parquet"
     X = pl.read_parquet(bench / name, columns=["example_id", "context_id", "gene_a", "gene_b"])
     n = pl.concat([X.select("context_id", pl.col(c).alias("g")) for c in ("gene_a", "gene_b")]).group_by("context_id", "g").len()
     for s in "ab":
@@ -209,7 +209,7 @@ def noise(seeds: int = 60) -> None:
     """SLB score of random per-gene scores (score(a, b) = r_a + r_b), the practical noise floor."""
     rows = []
     for split in ("dev", "test"):
-        name = f"{split}.parquet" if split == "dev" else "test_inputs.parquet"
+        name = f"{split}_inputs.parquet"
         X = pl.read_parquet(E.BENCH / name, columns=["example_id", "gene_a", "gene_b"])
         gold, ids = E.load_gold(split), E.input_ids(split)
         genes = pl.concat([X["gene_a"], X["gene_b"]]).unique().sort()

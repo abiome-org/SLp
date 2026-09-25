@@ -45,7 +45,7 @@ def main():
     p = tr.groupby(["gene_a", "gene_b"]).agg(frac_sl=("label", "mean"), n_ctx=("label", "size"), same_family=("same_family", "first"), split=("split", "first")).reset_index()
     p["label"] = (p.frac_sl > 0).astype(int)
     p.to_parquet(OUT / f"{SP}_train_pairs.parquet", index=False)
-    dv = pd.read_parquet(BENCH / "dev.parquet", columns=["example_id", "species", "context_id", "gene_a", "gene_b", "same_family"])
+    dv = pd.read_parquet(BENCH / "dev_inputs.parquet", columns=["example_id", "species", "context_id", "gene_a", "gene_b", "same_family"])
     dv = dv[dv.species == SP].copy()
     a, b = dv.gene_a.where(dv.gene_a < dv.gene_b, dv.gene_b), dv.gene_b.where(dv.gene_a < dv.gene_b, dv.gene_a)
     dv["gene_a"], dv["gene_b"] = a, b

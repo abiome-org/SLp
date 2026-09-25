@@ -11,10 +11,11 @@ import pyarrow.parquet as pq
 from slbench.evaluate import SCORER_VERSION, file_sha256
 
 PUBLIC_FILES = (
-    "train.parquet", "dev.parquet", "dev_semi.parquet", "test_inputs.parquet",
-    "test_semi_inputs.parquet", "contexts.parquet", "gene_single_effects.parquet",
-    "held_out_families.parquet", "hidden/dev_propensity.parquet",
-    "hidden/dev_semi_propensity.parquet", "manifest.json",
+    "train.parquet", "dev_inputs.parquet", "dev_semi_inputs.parquet", "test_inputs.parquet",
+    "test_semi_inputs.parquet", "contexts.parquet", "gene_single_effects.parquet", "held_out_families.parquet",
+    *(f"features/{n}.parquet" for n in ("line_effects", "paralogs", "codependency", "homology_status", "gene_aliases")),
+    "hidden/dev_labels.parquet", "hidden/dev_semi_labels.parquet",
+    "hidden/dev_propensity.parquet", "hidden/dev_semi_propensity.parquet", "manifest.json",
 )
 
 

@@ -3,7 +3,8 @@
 Input: a parquet/csv of training records with columns `species`, `gene_a`, `gene_b` (pairs; e.g.
 combinatorial screen measurements or SL labels you fit on). Species are SLB codes (see SPECIES); genes
 may be any identifier the SLB resolvers know (symbols in any case, previous symbols, aliases, Ensembl,
-Entrez, ORFs, locus tags) and are mapped to canonical IDs with `slbench.ids_extra.resolver`.
+Entrez, ORFs, locus tags) and are mapped to canonical IDs with the benchmark's features/gene_aliases.parquet
+(the tables of `slbench.ids_extra.resolver`), so the public bundle is enough.
 
 A record leaks if either gene belongs to a dev or test family. Genes not in the benchmark are
 checked through the homology graph (a paralog/ortholog of a test gene also leaks). Each gene gets a
@@ -18,26 +19,22 @@ from pathlib import Path
 
 import polars as pl
 
-from slbench import families, ids, ids_extra
+from slbench import features
 from slbench.evaluate import BENCH
 
-SPECIES = sorted(set(ids.RESOLVERS) | set(ids_extra.RESOLVERS))
-RANK = {"test": 0, "dev": 1, "train": 2}
+SPECIES = sorted(["human", "scer", "spom", "dmel", "mmus", "cele", "calb", "spne", "ecol", "bsub", "mtub", "saur"])
 
 
 @functools.cache
-def _graph() -> tuple[families.DSU, dict[str, str]]:
-    """Homology components over families.edges(), and component root -> strictest benchmark bucket."""
-    fam = pl.read_parquet(BENCH / "held_out_families.parquet")
-    dsu = families.DSU()
-    for u, v in families.edges().select("u", "v").iter_rows():
-        dsu.union(u, v)
-    comp: dict[str, str] = {}
-    for sp, g, b in fam.select("species", "gene", "bucket").iter_rows():
-        r = dsu.find(f"{sp}:{g}")
-        if r not in comp or RANK[b] < RANK[comp[r]]:
-            comp[r] = b
-    return dsu, comp
+def _status() -> dict[str, str]:
+    """Homology-graph node ("species:gene") -> strictest split of a benchmark gene in its component, or none."""
+    s = features.read(BENCH, "homology_status")
+    return dict(zip(s["node"], s["status"]))
+
+
+@functools.cache
+def _resolver(species: str) -> features.TableResolver:
+    return features.TableResolver(features.read(BENCH, "gene_aliases"), species)
 
 
 def gene_status(genes: pl.DataFrame) -> pl.DataFrame:
@@ -47,20 +44,18 @@ def gene_status(genes: pl.DataFrame) -> pl.DataFrame:
         raise ValueError(f"unknown species {bad}; valid species codes: {', '.join(SPECIES)}")
     fam = pl.read_parquet(BENCH / "held_out_families.parquet")
     known = {(s, g): b for s, g, b in fam.select("species", "gene", "bucket").iter_rows()}
-    dsu, comp = _graph()
+    status = _status()
     rows = []
     for sp, g in genes.unique().iter_rows():
-        gid = None if g is None else ids_extra.resolver(sp)(g)
+        gid = None if g is None else _resolver(sp)(g)
         if gid is None and (sp, g) in known:
             gid = g
         if gid is None:
             b = "unknown"
         elif (sp, gid) in known:
             b = known[sp, gid]
-        elif f"{sp}:{gid}" in dsu.p:
-            b = comp.get(dsu.find(f"{sp}:{gid}"), "none")
         else:
-            b = "unknown"
+            b = status.get(f"{sp}:{gid}", "unknown")
         rows.append((sp, g, gid, b))
     return pl.DataFrame(rows, schema={"species": pl.String, "gene": pl.String, "gene_id": pl.String,
                                       "bucket": pl.String}, orient="row")

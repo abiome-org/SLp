@@ -9,36 +9,34 @@ pytestmark = pytest.mark.skipif(not (BENCH / "manifest.json").exists(), reason="
 
 @pytest.fixture(scope="module")
 def g():
-    from slbench import families, ids, ids_extra
+    """Adversarial genes drawn from the benchmark's own tables, so this runs on the public bundle too."""
+    from slbench import features
     fam = pl.read_parquet(BENCH / "held_out_families.parquet")
-    known = {(s, x): b for s, x, b in fam.select("species", "gene", "bucket").iter_rows()}
+    known = {(s, x) for s, x in fam.select("species", "gene").iter_rows()}
     test = {sp: sorted(fam.filter((pl.col("species") == sp) & (pl.col("bucket") == "test"))["gene"]) for sp in
             ("human", "scer", "spom", "bsub")}
     by = lambda sp, b: sorted(fam.filter((pl.col("species") == sp) & (pl.col("bucket") == b))["gene"])
-    hgnc = pl.read_csv("data/raw/ids/hgnc_complete_set.txt", separator="\t", infer_schema_length=0, quote_char=None,
-                       columns=["symbol", "prev_symbol", "ensembl_gene_id"])
-    hgnc = hgnc.filter(pl.col("symbol").is_in(test["human"]))
-    h = ids.human()
-    prev = next((p, s) for s, cell in zip(hgnc["symbol"], hgnc["prev_symbol"]) for p in (cell or "").strip('"').split("|")
-                if p and h(p) == s and p.upper() != s.upper())
-    ens = next((e, s) for s, e in zip(hgnc["symbol"], hgnc["ensembl_gene_id"]) if e and h(e) == s)
-    spom = pl.read_csv("data/raw/ids/pombase_gene_IDs_names_products.tsv", separator="\t", has_header=False,
-                       infer_schema_length=0, quote_char=None, comment_prefix="#", columns=[0, 2], new_columns=["id", "name"])
-    pname = next((n.lower(), i) for i, n in zip(spom["id"], spom["name"])
-                 if n and i in set(test["spom"]) and ids.spom()(n.lower()) == i)
-    e = families.edges().filter(pl.col("kind") == "ortholog")
+    al = features.read(BENCH, "gene_aliases")
+    th = al.filter((pl.col("species") == "human") & pl.col("gene_id").is_in(test["human"]))
+    rh, rs = features.TableResolver(al, "human"), features.TableResolver(al, "spom")
+    first = lambda df, r, low=False: next(x for x in df.sort("key").iter_rows() if r(x[2].lower() if low else x[2]) == x[3])
+    prev = first(th.filter((pl.col("tier") >= 1) & (pl.col("key").str.to_uppercase() != pl.col("gene_id").str.to_uppercase())
+                           & ~pl.col("key").str.starts_with("ENSG")), rh)
+    ens = first(th.filter(pl.col("key").str.starts_with("ENSG")), rh)
+    ps = first(al.filter((pl.col("species") == "spom") & pl.col("gene_id").is_in(test["spom"])
+                         & ~pl.col("key").str.starts_with("SP") & (pl.col("key") != pl.col("gene_id"))), rs, low=True)
+    st = features.read(BENCH, "homology_status")
+    nodes = set(st["node"])
 
-    def ortholog(src, dst):  # a dst-species ortholog of a src test gene, dst gene not in the benchmark
-        for u, v in e.select("u", "v").iter_rows():
-            for a, b in ((u, v), (v, u)):
-                (sa, ga), (sb, gb) = a.split(":", 1), b.split(":", 1)
-                if sa == src and sb == dst and known.get((sa, ga)) == "test" and (sb, gb) not in known:
-                    return gb, ga
-    r = ids_extra.resolver("human")
+    def outside(sp):  # a gene of `sp` outside the benchmark whose homology component holds a test gene
+        n = st.filter(pl.col("node").str.starts_with(f"{sp}:") & (pl.col("status") == "test")).sort("node")["node"]
+        return next(x.split(":", 1)[1] for x in n if (sp, x.split(":", 1)[1]) not in known)
+    r = features.TableResolver(al, "human")
     graphless = next(s for s in ("MIR21", "MIR155", "SNORD3A", "RNU6-1")
-                                if r(s) and f"human:{r(s)}" not in set(e["u"]) | set(e["v"]) and ("human", r(s)) not in known)
-    return dict(test=test, train=by("human", "train"), dev=by("human", "dev"), prev=prev, ens=ens, pname=pname,
-                mouse=ortholog("human", "mmus"), ecoli=ortholog("bsub", "ecol"), graphless=graphless)
+                     if r(s) and f"human:{r(s)}" not in nodes and ("human", r(s)) not in known)
+    return dict(test=test, train=by("human", "train"), dev=by("human", "dev"), prev=(prev[2], prev[3]),
+                ens=(ens[2], ens[3]), pname=(ps[2].lower(), ps[3]), mouse=(outside("mmus"), None),
+                ecoli=(outside("ecol"), None), graphless=graphless)
 
 
 def _rec(rows):

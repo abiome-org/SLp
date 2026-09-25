@@ -12,7 +12,7 @@ FD = WORK / "feng/data"
 z = np.load(FD / "data_split/slb_split_arrays.npz")
 gi = pd.read_parquet(FD / "slb_gene_index.parquet"); u = dict(zip(gi.gene, gi.unified_id))
 pp = [z["fit_pos"], z["fit_neg"], z["val_pos"], z["val_neg"]]
-for f in ["dev.parquet", "test_inputs.parquet"]:
+for f in ["dev_inputs.parquet", "test_inputs.parquet"]:
     if (BENCH / f).exists():
         d = pd.read_parquet(BENCH / f, columns=["species", "gene_a", "gene_b"]); d = d[d.species == "human"]
         a, b = d.gene_a.map(u).values, d.gene_b.map(u).values

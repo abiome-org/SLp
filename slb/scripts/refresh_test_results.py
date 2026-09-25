@@ -1,7 +1,10 @@
 """Re-evaluate registered test predictions and refresh hash-pinned result JSON.
 
 Maintainer-only: requires the private benchmark with hidden test labels.
-Usage: SLB_BENCH=data/slb uv run python scripts/refresh_test_results.py
+Usage: SLB_BENCH=data/slb uv run python scripts/refresh_test_results.py [--rescore]
+
+Without --rescore a changed point score is an error (the pins should only move when the scorer's output
+does not). After a deliberate rebuild of the benchmark, pass --rescore to accept the new scores.
 """
 
 from __future__ import annotations
@@ -43,12 +46,12 @@ def score_one(entry: dict) -> tuple[str, dict | None, float, list[float]]:
     if cache_valid:
         return entry["result"], None, old["slb_score"], ci
 
-    report = E.evaluate(E.read_predictions(pred), "test", boot=200)
+    report = E.evaluate(E.read_predictions(pred), "test", boot=200, log=False)
     report["predictions_sha256"] = pred_hash
-    if old and (abs(old["slb_score"] - report["slb_score"]) > 1e-10
-                or old["n"] != report["n"]
-                or old["species_scores"] != report["species_scores"]):
-        raise ValueError(f"point score changed for {entry['name']}: {dest}")
+    if old and not os.environ.get("SLB_RESCORE") and (abs(old["slb_score"] - report["slb_score"]) > 1e-10
+                                                     or old["n"] != report["n"]
+                                                     or old["species_scores"] != report["species_scores"]):
+        raise ValueError(f"point score changed for {entry['name']}: {dest} (pass --rescore after a deliberate rebuild)")
     return entry["result"], report, report["slb_score"], report["slb_score_ci95"]
 
 
@@ -70,6 +73,10 @@ def stage_file(dest: Path, content: bytes | None = None, report: dict | None = N
 
 
 def main() -> None:
+    import sys
+
+    if "--rescore" in sys.argv[1:]:
+        os.environ["SLB_RESCORE"] = "1"  # inherited by the spawned workers
     config = Path("leaderboard.yaml")
     config_bytes = config.read_bytes()
     entries = yaml.safe_load(config_bytes)

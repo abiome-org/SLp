@@ -32,7 +32,7 @@ def test_leaderboard_rejects_tampered_ci_and_nonfinite_scores(tmp_path, monkeypa
               "strata": [{**strata[0], "within_gene": None}]}
     monkeypatch.setattr(leaderboard, "BENCH", bench)
     monkeypatch.setattr(leaderboard.E, "read_predictions", lambda _: None)
-    monkeypatch.setattr(leaderboard.E, "evaluate", lambda *_: actual)
+    monkeypatch.setattr(leaderboard.E, "evaluate", lambda *_, **__: actual)
     monkeypatch.delenv("SLB_VERIFY_CI", raising=False)
 
     def entry():
@@ -85,7 +85,7 @@ def test_leaderboard_rechecks_strata_and_bootstrap_ci(tmp_path, monkeypatch):
                "unadjusted_auroc": 0.7, "ap_lift": 1.5}]
     calls = []
 
-    def evaluate(preds, split, boot=0, *_):
+    def evaluate(preds, split, boot=0, *_, **__):
         calls.append(boot)
         return {"slb_score": 0.64, "n": 10, "species_scores": {"human": 0.65}, "auxiliary_species_scores": {},
                 "strata": strata, **({"slb_score_ci95": (0.601234, 0.681234)} if boot else {})}

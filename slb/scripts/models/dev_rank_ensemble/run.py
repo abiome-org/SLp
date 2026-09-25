@@ -36,7 +36,7 @@ def sha256(path: Path) -> str:
 def blend(split: str, variant: str) -> tuple[pl.DataFrame, dict]:
     if BENCH.name != "slb":
         raise ValueError("this frozen recipe was selected on the canonical benchmark (data/slb)")
-    path = BENCH / (f"{split}_inputs.parquet" if split.startswith("test") else f"{split}.parquet")
+    path = BENCH / ("train.parquet" if split == "train" else f"{split}_inputs.parquet")
     d = pl.read_parquet(path).select("example_id", "species")
     ids, species = d["example_id"], d["species"].to_numpy()
     src = list(SOURCES) + (["depmap_ols__loss"] if variant == "loss" else [])

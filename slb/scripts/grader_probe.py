@@ -8,7 +8,7 @@ import polars as pl
 
 from slbench import evaluate as E
 
-PUBLIC = {"dev": "dev.parquet", "test": "test_inputs.parquet"}
+PUBLIC = {"dev": "dev_inputs.parquet", "test": "test_inputs.parquet"}
 
 
 def public_inputs(split: str) -> pl.DataFrame:

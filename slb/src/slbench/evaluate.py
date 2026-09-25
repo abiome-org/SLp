@@ -58,11 +58,18 @@ def species_tiers() -> tuple[list[str], list[str]]:
     return m["headline_species"], m["auxiliary_species"]
 
 
+def inputs_path(split: str, bench: Path | None = None) -> Path:
+    """The model-facing file of a split: train.parquet (labelled) or <split>_inputs.parquet (no labels)."""
+    bench = bench or BENCH
+    return bench / ("train.parquet" if split == "train" else f"{split}_inputs.parquet")
+
+
 def load_split(split: str) -> pl.DataFrame:
-    if split.startswith("test"):
-        x = pl.read_parquet(BENCH / f"{split}_inputs.parquet")
-        return x.join(pl.read_parquet(BENCH / "hidden" / f"{split}_labels.parquet"), on="example_id", maintain_order="left")
-    return pl.read_parquet(BENCH / f"{split}.parquet")
+    """A split with its labels (null = measured but unscored). Evaluation machinery: reads hidden/."""
+    if split == "train":
+        return pl.read_parquet(inputs_path(split))
+    x = pl.read_parquet(inputs_path(split))
+    return x.join(pl.read_parquet(BENCH / "hidden" / f"{split}_labels.parquet"), on="example_id", maintain_order="left")
 
 
 def load_gold(split: str) -> pl.DataFrame:
@@ -236,8 +243,7 @@ def compare(pa: pl.DataFrame, pb: pl.DataFrame, split: str, reps: int = 200, see
 
 def input_ids(split: str) -> pl.Series:
     """Every example_id a submission for this split must score."""
-    name = f"{split}_inputs.parquet" if split.startswith("test") else f"{split}.parquet"
-    return pl.read_parquet(BENCH / name, columns=["example_id"])["example_id"]
+    return pl.read_parquet(inputs_path(split), columns=["example_id"])["example_id"]
 
 
 def _log_test_eval(split: str, preds: pl.DataFrame) -> None:
@@ -255,8 +261,9 @@ def _log_test_eval(split: str, preds: pl.DataFrame) -> None:
                             "argv": sys.argv}) + "\n")
 
 
-def evaluate(preds: pl.DataFrame, split: str, boot: int = 0, allow_missing: bool = False) -> dict:
-    if split.startswith("test"):
+def evaluate(preds: pl.DataFrame, split: str, boot: int = 0, allow_missing: bool = False, log: bool = True) -> dict:
+    """log=False only for maintainer re-verification of already-recorded results (leaderboard, refresh)."""
+    if split.startswith("test") and log:
         _log_test_eval(split, preds)
     df, missing = validated_join(load_gold(split), preds, allow_missing, inputs=input_ids(split))
     score, parts = headline(df)

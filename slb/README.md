@@ -28,6 +28,31 @@ There is one benchmark, built into `data/slb/`. It is updated in place. Results 
 SHA-256 of its `manifest.json` and to the scorer version (`2.0.0`), so a rebuild invalidates every pinned
 result until it is re-scored.
 
+## Quickstart
+
+The public bundle holds everything a model needs (train labels, dev and test inputs, single-gene and
+homology features) plus the dev scoring files; test labels stay with the maintainers.
+
+```bash
+git clone https://github.com/abiome-org/slp && cd slp/slb
+uv sync
+mkdir -p data/release results/slb
+curl -L -o data/release/slb-public.tar.gz https://github.com/abiome-org/slp/releases/download/slb/slb-public.tar.gz
+sha256sum -c reference/public.sha256
+tar xzf data/release/slb-public.tar.gz -C data/release
+export SLB_BENCH=data/release/slb
+uv run slbench verify
+uv run slbench baseline lgbm --split dev --out results/slb/lgbm_dev.parquet
+uv run slbench eval results/slb/lgbm_dev.parquet --split dev
+uv run slbench baseline fitness --split dev --out results/slb/fitness_dev.parquet
+uv run slbench compare results/slb/fitness_dev.parquet results/slb/lgbm_dev.parquet --split dev
+uv run slbench check-leakage my_training_pairs.parquet   # columns species, gene_a, gene_b
+```
+
+A model trains on `train.parquet`, reads `dev_inputs.parquet` / `test_inputs.parquet`, and writes a
+parquet with one finite `score` per `example_id` for every input row (higher = more likely SL).
+Files under `hidden/` are scoring machinery (labels and balance weights); a model must never read them.
+
 ## Species
 
 - **Headline** (averaged into the SLB score), each with cross-study replication and hundreds of test
@@ -178,8 +203,10 @@ with at least 20 positives and 20 negatives (smaller screens share their species
 of each gene's context and pan-context effect and of the two genes' log row counts, their products,
 context intercepts, and screen × covariate interactions. It is fitted on the evaluation split because the
 fitness→SL relation differs between held-out family sets, and it is logistic so the smooth design
-cannot memorise individual genes. Within-stratum standardised mean differences of the fitness
-covariates fall below 0.03 (asserted in `tests/test_benchmark.py`). Reject probes
+cannot memorise individual genes. Pooled over strata, the standardised mean differences of the fitness
+covariates fall below 0.03 in every headline species (asserted in `tests/test_benchmark.py`); within
+individual human strata some imbalance remains (mean |SMD| about 0.15 on dev), but a LightGBM on the
+fitness covariates plus the cell line, trained on train, still scores 0.498 on human. Reject probes
 (`scripts/grader_probe.py`, `reference/grader_probe.json`), on dev: exact labels 1.000, inverted 0.000,
 constant and per-stratum hit rate 0.500, random 0.501 ± 0.008, −(gene row counts) 0.501, fitness-only
 LightGBM 0.509. On test, −(f_a + f_b) scores 0.498, `fitness_lgbm` 0.503 and −(row counts) 0.512
@@ -187,10 +214,11 @@ LightGBM 0.509. On test, −(f_a + f_b) scores 0.498, `fitness_lgbm` 0.503 and �
 
 ## Hill-climbing
 
-- **Work from the public bundle** (`data/release/slb`: train and dev labels, dev weights, test inputs) and
-  select models with `eval` and `compare` on `dev`. Test labels exist only in the private
-  `data/slb/hidden/`; every test evaluation is appended to `results/test_evals.jsonl`. Evaluate on
-  `test` only at milestones and record every test result in `leaderboard.yaml`.
+- **Work from the public bundle** and select models with `eval` and `compare` on `dev`. Models read only
+  `train.parquet` and the `*_inputs.parquet` files: dev labels live under `hidden/` like test labels,
+  because the pattern of which dev rows are scored is itself label information (a per-gene
+  unscored-row fraction scores 0.67 on dev and nothing on test). Test labels exist only in the private
+  `data/slb/hidden/`; every test evaluation there is appended to `results/test_evals.jsonl`.
 - **Noise floor.** Scores computed from random per-gene values have SD 0.022 on dev (human alone 0.043)
   and 0.018 on test. Dev differences below about 0.03 are not evidence; use `slbench compare A B
   --split dev`, whose paired family bootstrap gives the CI of the difference.
@@ -198,10 +226,14 @@ LightGBM 0.509. On test, −(f_a + f_b) scores 0.498, `fitness_lgbm` 0.503 and �
   0.007–0.021; the baselines all sit within 0.49–0.55 and their order is not stable. `fitness_lgbm` on
   human ranges 0.50–0.55 across salts, so treat human gains under about 0.05 over it with care.
 - **Dev and test are different family sets.** Across the published battery, dev ranks models well
-  overall but dev→test shifts of ±0.02–0.05 are common near the top, so a dev-selected winner needs its
-  test readout.
-- **`dev_semi` pairs share one gene with train and the other with dev.** Training on `dev_semi` labels
-  leaks dev genes into the model; don't use them for anything scored on dev.
+  overall (Spearman 0.82 over 29 models) but dev→test shifts of ±0.02–0.05 are common near the top, so a
+  dev-selected winner needs its test readout.
+- **Dev human and test human are different estimands.** Dev has 17 African-ancestry positives, below the
+  20 needed, so the dev human score averages East Asian and European lines while test averages all three.
+  Human dev ranks models only moderately well for human test (Spearman 0.52); lean on the yeasts
+  (0.87–0.90) and the overall score when selecting on dev.
+- **`dev_semi` pairs share one gene with train and the other with dev.** Their labels (under `hidden/`)
+  involve dev genes; never train on them for anything scored on dev.
 - Predictions must cover every row of the evaluated inputs (scored or not), with unique ids and finite
   scores.
 
@@ -219,7 +251,7 @@ in any species:
 `slbench check-leakage pairs.parquet` (columns `species, gene_a, gene_b`) flags records touching
 held-out families, including genes absent from the benchmark that are paralogs or orthologs of
 held-out genes. Add `--allow-dev` for final models trained on train + dev. Models fitted on public SL
-databases without this filter are marked `leaky` and not ranked. What holding out leaves behind:
+databases without this filter are marked `leaky` (\* on the leaderboard). What holding out leaves behind:
 distant paralogs below 30% identity, and orthologs too distant to be reciprocal best hits.
 
 ## Leaderboard
@@ -278,23 +310,23 @@ population-level verdict. Both write JSON to `reference/` and a report to `resul
 
 | File | Contents |
 |---|---|
-| `train.parquet` | Scored pairs with both genes in train families. |
-| `dev.parquet`, `dev_semi.parquet` | Every measured pair; `label` is null for unscored pairs. Hill-climbing and model selection. `*_semi`: one gene held out. |
-| `test_inputs.parquet`, `test_semi_inputs.parquet` | Every measured pair, no labels. |
-| `hidden/test*_labels.parquet` | Test labels. Only `slbench eval --split test` reads them. |
-| `hidden/*_propensity.parquet` | Per-example fitness propensity for the balance weights. Not a model input. |
+| `train.parquet` | Scored pairs with both genes in train families, with `label` and `sources`. |
+| `dev_inputs.parquet`, `test_inputs.parquet` | Every measured pair of the split (scored and unscored), no labels. |
+| `dev_semi_inputs.parquet`, `test_semi_inputs.parquet` | The same for pairs with one gene held out. |
+| `hidden/*_labels.parquet` | Labels (null = unscored) and screen of every input row. Dev ones ship in the public bundle for `eval`; test ones stay private. Never a model input. |
+| `hidden/*_propensity.parquet` | Per-example propensity for the balance weights. Not a model input. |
+| `features/` | Permitted single-gene and homology inputs: per-line DepMap effects, paralog identities, DepMap co-dependency of every human pair, the homology graph's hold-out status and the gene-name tables (`slbench.features`). |
 | `contexts.parquet` | Per context: Cellosaurus accession, DepMap ID, disease, sex, ancestry group and fractions. |
 | `held_out_families.parquet` | Gene → family → bucket. Used by the leakage checker. |
 | `gene_single_effects.parquet` | Reference single-loss effect per gene. A permitted input. |
 | `manifest.json` | Revision, build parameters, species tiers, excluded sources, row counts, sha256 of every file. |
 
-Example columns: `example_id, species, context_id, ancestry_group, gene_a, gene_b, same_family,
-sources, label` (`sources` is the labelling screen of a scored pair and the measuring screens of an
-unscored one). A model reads `{split}.parquet` (or `test_inputs.parquet`) and writes one `score` per
-`example_id`, for every row; higher means more likely SL. Gene IDs: HGNC symbol (human), SGD systematic ORF
+Input columns: `example_id, species, context_id, ancestry_group, gene_a, gene_b, same_family`
+(`train.parquet` adds `sources` and `label`). A model writes one `score` per `example_id`, for every row;
+higher means more likely SL. Gene IDs: HGNC symbol (human), SGD systematic ORF
 (*S. cerevisiae*), PomBase systematic ID (*S. pombe*), BSU locus tag (*B. subtilis*), WBGene
-(*C. elegans*), FBgn (fly), MGI symbol (mouse). `slbench.ids.resolve` and `slbench.ids_extra.resolve`
-map other names.
+(*C. elegans*), FBgn (fly), MGI symbol (mouse). `slbench.features.TableResolver` over
+`features/gene_aliases.parquet` maps other names.
 
 ## Known limitations
 
@@ -344,18 +376,36 @@ uv run slbench eval results/slb/lgbm_dev.parquet --split dev
 uv run slbench compare results/slb/fitness_dev.parquet results/slb/lgbm_dev.parquet --split dev
 uv run slbench check-leakage my_training_pairs.parquet
 bash scripts/models/run_battery.sh    # re-run every adapter, then `slbench battery` -> results/reports/models_dev.md
-uv run python scripts/refresh_test_results.py   # re-score pinned test results after a rebuild
+uv run python scripts/refresh_test_results.py --rescore   # re-score pinned test results after a rebuild
 uv run slbench leaderboard            # verify leaderboard.yaml, update the table above
 uv run slbench export-public data/release/slb && bash scripts/package_public.sh
 uv run pytest -q
 ```
 
-The public bundle (`data/release/slb`, archived as `slb-public.tar.gz` and pinned by
-`reference/public.sha256`) holds train/dev labels, dev propensity weights, test inputs, context and
-single-gene data and the family map, but no test labels or test propensities.
-`SLB_BENCH=data/release/slb uv run slbench verify` checks it.
+The public bundle (`data/release/slb`, archived as `slb-public.tar.gz`, published as the `slb` release of
+abiome-org/slp and pinned by `reference/public.sha256`) holds everything except the test labels and test
+propensities. `SLB_BENCH=data/release/slb uv run slbench verify` checks it.
 
-**Updating the benchmark.** Change the build, bump `VERSION` in `src/slbench/build.py`, rebuild into
-`data/slb`, then refresh the pinned test results and the leaderboard. The split depends only on
-`SALT`, the family graph and the bucket fractions (all in `manifest.json`); `scripts/robustness.sh`
-rebuilds with 4 alternative salts to check the ranking holds.
+**Updating the benchmark.** Change the build, rebuild into `data/slb`, re-run the adapters whose inputs
+changed, run `scripts/refresh_test_results.py --rescore` and `slbench leaderboard`, then re-export and
+re-publish the bundle. The manifest records no build date, so an unchanged rebuild keeps every pin. The
+split depends only on `SALT`, the family graph and the bucket fractions (all in `manifest.json`);
+`scripts/robustness.sh` rebuilds with 4 alternative salts to check the ranking holds.
+
+## Submitting test predictions
+
+Tune on dev only. When a model is final, open an issue on
+[abiome-org/slp](https://github.com/abiome-org/slp/issues) with a link to a parquet of `example_id, score`
+covering every row of `test_inputs.parquet`, a one-line description, what it was trained on (per the
+leakage rules), and the output of `slbench check-leakage` on its training pairs. The maintainers score it
+against the private labels once, and pin the result in `leaderboard.yaml`.
+
+## Sources and citation
+
+SLB's labels are derived from the published screens listed under Label quality; its inputs and IDs from
+DepMap 24Q4, Cellosaurus (ancestry from Dutil et al. 2019), HGNC, SGD, PomBase, WormBase WS298, FlyBase,
+MGI, Ensembl 116, the Alliance of Genome Resources, HCOP and STRING/BioGRID (feature bundle of the
+adapters). The bundle redistributes derived tables only; the original sources' terms apply to them, and
+work using SLB should cite the screens and resources it relies on. Download locations are pinned in
+`src/slbench/fetch.py` and `reference/fetch/`, and every raw file's SHA-256 in `reference/raw_sha256sums.txt`.
+The code is MIT-licensed (`LICENSE` at the repository root).

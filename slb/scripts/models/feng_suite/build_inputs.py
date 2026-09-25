@@ -69,7 +69,7 @@ def hgnc_maps():
 
 def slb_genes():
     genes = set()
-    for f in ["train.parquet", "dev.parquet", "dev_semi.parquet", "test_inputs.parquet", "test_semi_inputs.parquet"]:
+    for f in ["train.parquet", "dev_inputs.parquet", "dev_semi_inputs.parquet", "test_inputs.parquet", "test_semi_inputs.parquet"]:
         p = BENCH / f
         if p.exists():
             d = pd.read_parquet(p, columns=["species", "gene_a", "gene_b"])

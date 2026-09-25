@@ -4,18 +4,23 @@ import pytest
 
 from slbench.evaluate import BENCH
 
+from pathlib import Path
+
 pytestmark = pytest.mark.skipif(not (BENCH / "manifest.json").exists(), reason="benchmark not built")
+private = pytest.mark.skipif(not (BENCH / "hidden/test_labels.parquet").exists(), reason="needs the private test labels")
+raw = pytest.mark.skipif(not Path("data/raw/ids/hgnc_complete_set.txt").exists(), reason="needs the raw sources")
 
 
 def test_splits_are_family_disjoint():
     fam = pl.read_parquet(BENCH / "held_out_families.parquet")
-    for split, allowed in [("train.parquet", {"train"}), ("dev.parquet", {"dev"}), ("test_inputs.parquet", {"test"})]:
+    for split, allowed in [("train.parquet", {"train"}), ("dev_inputs.parquet", {"dev"}), ("test_inputs.parquet", {"test"})]:
         d = pl.read_parquet(BENCH / split).select("species", "gene_a", "gene_b")
         for col in ("gene_a", "gene_b"):
             b = d.join(fam.rename({"gene": col}), on=["species", col], how="left")["bucket"]
             assert set(b.unique().to_list()) <= allowed, (split, col)
 
 
+@raw
 def test_qualifying_homology_edges_never_cross_family_buckets():
     from slbench.families import edges
 
@@ -31,11 +36,12 @@ def test_qualifying_homology_edges_never_cross_family_buckets():
 
 def test_no_example_in_two_splits():
     ids = [pl.read_parquet(BENCH / f)["example_id"] for f in
-           ["train.parquet", "dev.parquet", "dev_semi.parquet", "test_inputs.parquet", "test_semi_inputs.parquet"]]
+           ["train.parquet", "dev_inputs.parquet", "dev_semi_inputs.parquet", "test_inputs.parquet", "test_semi_inputs.parquet"]]
     allids = pl.concat(ids)
     assert allids.n_unique() == allids.len()
 
 
+@private
 def test_both_classes_every_headline_species_in_test():
     from slbench.evaluate import MIN_GROUP_POS, load_split, species_tiers
     t = load_split("test")
@@ -44,6 +50,7 @@ def test_both_classes_every_headline_species_in_test():
     assert c.height == len(species_tiers()[0]) and (c["p"] >= MIN_GROUP_POS).all() and (c["n"] > 0).all()
 
 
+@raw
 def test_leakage_catches_paralog_of_heldout_gene():
     from slbench import leakage
     from slbench.homology import paralogs
@@ -60,11 +67,12 @@ def test_leakage_catches_paralog_of_heldout_gene():
 
 
 def test_balance_weights_equalise_single_gene_fitness():
-    """Within each stratum, SLB's weights give SL and non-SL pairs the same mean single-loss effects."""
+    """Pooled over strata (positive-weighted mean of the per-stratum differences), SLB's weights give SL and
+    non-SL pairs the same mean single-loss effects. Individual human strata keep some imbalance (README)."""
     from slbench.evaluate import load_gold
     from slbench.fitness import COVARIATES, covariates
 
-    d = covariates(load_gold("dev"), pl.read_parquet(BENCH / "contexts.parquet"))
+    d = covariates(load_gold("dev"), pl.read_parquet(BENCH / "contexts.parquet"), BENCH)
     pos, w = pl.col("label") == 1, pl.col("_bw")
     for (sp,), g in d.group_by(["species"]):
         if (g["label"] == 1).sum() < 20:
@@ -78,5 +86,5 @@ def test_balance_weights_equalise_single_gene_fitness():
                  - (x * w).filter(~pos).sum() / w.filter(~pos).sum()).alias("bal"),
             ).filter(pl.col("np") > 0)
             sd = g[c].cast(pl.Float64).std()
-            raw, bal = (abs((t[k] * t["np"]).sum() / t["np"].sum() / sd) for k in ("raw", "bal"))
-            assert bal < 0.03 and (bal < raw / 3 or raw < 0.03), (sp, c, raw, bal)
+            r0, bal = (abs((t[k] * t["np"]).sum() / t["np"].sum() / sd) for k in ("raw", "bal"))
+            assert bal < 0.03 and (bal < r0 / 3 or r0 < 0.03), (sp, c, r0, bal)

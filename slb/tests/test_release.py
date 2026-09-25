@@ -15,6 +15,7 @@ def test_public_export_excludes_answers_and_checks_hashes(tmp_path):
         if name == "manifest.json":
             continue
         path = bench / name
+        path.parent.mkdir(parents=True, exist_ok=True)
         pl.DataFrame({"example_id": ["x"]}).write_parquet(path)
         files[name] = {"sha256": file_sha256(path), "rows": 1}
     secret = bench / "hidden/test_labels.parquet"
