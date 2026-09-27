@@ -1,0 +1,405 @@
+{
+ "key": "deweirdt2020",
+ "citation": "DeWeirdt PC, Sangree AK, et al. Genetic screens in isogenic mammalian cell lines without single cell cloning. Nature Communications 11:752 (2020).",
+ "doi": "10.1038/s41467-020-14620-6",
+ "license": "CC BY 4.0",
+ "files": [
+  {
+   "name": "MOESM4.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-020-14620-6/MediaObjects/41467_2020_14620_MOESM4_ESM.xlsx",
+   "bytes": 29461430,
+   "sha256": "6b089350fa30530243e994b4c67f6dc3c0394806b490cb8e62f39c1ec038869b"
+  },
+  {
+   "name": "MOESM5.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-020-14620-6/MediaObjects/41467_2020_14620_MOESM5_ESM.xlsx",
+   "bytes": 11490436,
+   "sha256": "deee8d889428e955b990859d3c1d2941d94e03a7baa82b52ab5fd93ab25d042b"
+  }
+ ],
+ "contexts": [
+  "MEL-JUSO",
+  "OVCAR-8",
+  "A375",
+  "HAP1"
+ ],
+ "mechanism": "CRISPR-KO",
+ "queries_kept": {
+  "MEL-JUSO": [
+   "MCL1 (unlabelled)",
+   "BCL2L1"
+  ],
+  "OVCAR-8": [
+   "MCL1",
+   "BCL2L1",
+   "PARP1 (2 anchor guides)"
+  ],
+  "A375": [
+   "PARP1 (2 anchor guides; unlabelled)"
+  ],
+  "HAP1": [
+   "PARP1 single-cell KO clone vs parental"
+  ]
+ },
+ "queries_excluded": {
+  "drug arms (A-1331852, S63845, olaparib, talazoparib), Gattinara library": "not drug-free",
+  "secondary A375 MCL1 SpCas9-anchor screen": "targeted library, not genome-wide"
+ },
+ "scoring": "Per arm & replicate: guide LFC = log2(RPM+1) end - log2(RPM+1) T0 (arm's own T0; pDNA for DeWeirdt), guides with <30 T0 reads or bottom-2% T0 dropped, gene LFC = mean over guides (>=2), median-centred. GI(q,g) = LFC_g(q-KO) - running median of LFC_KO over genes ordered by LFC_WT (window n/40); z = residual / running MAD (floored at global MAD-SD), re-standardised per screen. Per-replicate z (KO rep A vs WT rep A, B vs B) = gi_rep1/gi_rep2; pooled z from replicate-mean LFCs. Query's own library row dropped. T0 = pDNA. PARP1 OVCAR-8/A375: both anchor guides pooled; gi_anchor1/gi_anchor2 = each anchor guide separately. Our z vs the authors' MOESM5 anchor z: Spearman 0.90-0.96 across all 9 genetic screens.",
+ "label_rule": "positive: pooled z <= -3 AND z < 0 in both replicates AND LFC_anchor < -0.5 AND gene not positive for >= 3 distinct anchors (OTUD5, H2BC13 removed). negative: |pooled z| < 1. else null. MCL1/MEL-JUSO and PARP1/A375 get no labels (own split-half 0.59-0.60).",
+ "n_pairs": 127055,
+ "n_pos": 255,
+ "n_neg": 61662,
+ "pos_rate": 0.0020070048404234385,
+ "unique_genes": 18160,
+ "paralog_fraction": 0.00012592971547754908,
+ "paralog_pairs": 16,
+ "paralog_pos": 4,
+ "unresolved_symbols": 50,
+ "symbols": 18223,
+ "per_query": [
+  {
+   "query": "MCL1",
+   "context": "MEL-JUSO",
+   "pairs": 18151,
+   "pos": 1,
+   "neg": 0,
+   "pos_rate": 5.509338328466751e-05,
+   "labelled": true,
+   "rep_spearman": 0.08943773894149842,
+   "split_auroc_1to2": 0.5900359619898439,
+   "split_auroc_2to1": 0.59585042318124,
+   "top_hits": [
+    "BCL2L1"
+   ]
+  },
+  {
+   "query": "BCL2L1",
+   "context": "MEL-JUSO",
+   "pairs": 18151,
+   "pos": 29,
+   "neg": 12276,
+   "pos_rate": 0.0015977081152553578,
+   "labelled": true,
+   "rep_spearman": 0.11374033463741291,
+   "split_auroc_1to2": 0.6805233075000261,
+   "split_auroc_2to1": 0.6824480336999554,
+   "top_hits": [
+    "MARCHF5",
+    "MCL1",
+    "BCL2",
+    "WSB2",
+    "ACLY",
+    "ATP13A1",
+    "XPO4",
+    "EIF1"
+   ]
+  },
+  {
+   "query": "MCL1",
+   "context": "OVCAR-8",
+   "pairs": 18151,
+   "pos": 43,
+   "neg": 12359,
+   "pos_rate": 0.002369015481240703,
+   "labelled": true,
+   "rep_spearman": 0.23800270411216418,
+   "split_auroc_1to2": 0.7290120721031659,
+   "split_auroc_2to1": 0.6884959855528712,
+   "top_hits": [
+    "BCL2L1",
+    "WSB2",
+    "UBE2D3",
+    "CLASP2",
+    "OR2T27",
+    "DNAJC3",
+    "PTAR1",
+    "TXNDC9"
+   ]
+  },
+  {
+   "query": "BCL2L1",
+   "context": "OVCAR-8",
+   "pairs": 18151,
+   "pos": 23,
+   "neg": 12343,
+   "pos_rate": 0.0012671478155473527,
+   "labelled": true,
+   "rep_spearman": 0.16776760037073343,
+   "split_auroc_1to2": 0.683433895959123,
+   "split_auroc_2to1": 0.7036191481773284,
+   "top_hits": [
+    "MARCHF5",
+    "MCL1",
+    "TMX2",
+    "PGM3",
+    "UBE2J2",
+    "TEAD4",
+    "ELP4",
+    "RAD51D"
+   ]
+  },
+  {
+   "query": "PARP1",
+   "context": "OVCAR-8",
+   "pairs": 18151,
+   "pos": 21,
+   "neg": 12383,
+   "pos_rate": 0.0011569610489780178,
+   "labelled": true,
+   "rep_spearman": 0.3093556713703202,
+   "split_auroc_1to2": 0.6982711889752372,
+   "split_auroc_2to1": 0.7009114869316934,
+   "anchor_split_auroc_1to2": 0.937915897448074,
+   "anchor_split_auroc_2to1": 0.9214503923487012,
+   "top_hits": [
+    "GEMIN5",
+    "LIG1",
+    "RAD51D",
+    "CCT6A",
+    "RPS18",
+    "RNF31",
+    "RAB21",
+    "SNRPA1"
+   ]
+  },
+  {
+   "query": "PARP1",
+   "context": "A375",
+   "pairs": 18150,
+   "pos": 0,
+   "neg": 0,
+   "pos_rate": 0.0,
+   "labelled": false,
+   "rep_spearman": 0.10044921535147192,
+   "split_auroc_1to2": 0.6001005698960777,
+   "split_auroc_2to1": 0.5871586499743758,
+   "anchor_split_auroc_1to2": 0.6488205010716692,
+   "anchor_split_auroc_2to1": 0.7833574579451124,
+   "top_hits": []
+  },
+  {
+   "query": "PARP1",
+   "context": "HAP1",
+   "pairs": 18154,
+   "pos": 140,
+   "neg": 12302,
+   "pos_rate": 0.0077117990525504025,
+   "labelled": true,
+   "rep_spearman": 0.18341209410256437,
+   "split_auroc_1to2": 0.7539629270556261,
+   "split_auroc_2to1": 0.7542991660884639,
+   "top_hits": [
+    "ITPA",
+    "MUS81",
+    "CENPO",
+    "NHEJ1",
+    "PARP2",
+    "EME1",
+    "TAF4",
+    "SWSAP1"
+   ]
+  }
+ ],
+ "own_replication": {
+  "split_rule_auroc_rep1_to_rep2": 0.685930069185336,
+  "split_rule_auroc_rep2_to_rep1": 0.6855753690783541,
+  "split_rule_n_pos_rep1": 733,
+  "split_rule_n_pos_rep2": 735,
+  "replicate_agreement": {
+   "pairs": 127055,
+   "replicates": 2,
+   "spearman": 0.17198768535216208,
+   "tail_2pct_in_10pct": 0.2775373721479151
+  },
+  "final_labels_auroc_rep1": 0.9909790947613841,
+  "final_labels_auroc_rep2": 0.9889941432769794,
+  "note_final_labels": "final labels require z<0 in both replicates, so single-replicate AUROCs for them are optimistic",
+  "anchor_guide_split_auroc_1to2": 0.761106037661692,
+  "anchor_guide_split_auroc_2to1": 0.8541958068903864,
+  "split_rule_auroc_labelled_screens_only": [
+   0.715,
+   0.713
+  ],
+  "kind": "technical A/B replicates share the pDNA reference and infection; the two PARP1 SaCas9 anchor guides are independent perturbations (OVCAR-8 0.94/0.92, A375 0.65/0.78)"
+ },
+ "authors_score_agreement": {
+  "spearman_range": [
+   0.899,
+   0.961
+  ],
+  "note": "our pooled/anchor-guide z vs MOESM5 per-screen z-scores"
+ },
+ "cross_study": {
+  "same_line": [
+   {
+    "partner": "chymera2020",
+    "overlap_pairs": 1,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 1,
+    "our_labelled": 1,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 0,
+    "their_labelled": 1,
+    "lines": [
+     "HAP1~HAP1"
+    ]
+   },
+   {
+    "partner": "thompson2021",
+    "overlap_pairs": 13,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 0,
+    "our_labelled": 0,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 2,
+    "their_labelled": 10,
+    "lines": [
+     "A-375~A-375"
+    ]
+   },
+   {
+    "partner": "ito2021",
+    "overlap_pairs": 7,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 2,
+    "our_labelled": 4,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 0,
+    "their_labelled": 6,
+    "lines": [
+     "Mel JuSo~Mel JuSo"
+    ]
+   },
+   {
+    "partner": "chou2025",
+    "overlap_pairs": 1,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 0,
+    "our_labelled": 0,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 1,
+    "their_labelled": 1,
+    "lines": [
+     "A-375~A-375"
+    ]
+   },
+   {
+    "partner": "dede2020",
+    "overlap_pairs": 2,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 1,
+    "our_labelled": 1,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 0,
+    "their_labelled": 1,
+    "lines": [
+     "OVCAR-8~OVCAR-8"
+    ]
+   }
+  ],
+  "different_line": [
+   {
+    "partner": "shen2017",
+    "overlap_pairs": 71,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 1,
+    "our_labelled": 63,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 3,
+    "their_labelled": 61,
+    "lines": [
+     "A-375~A-549",
+     "A-375~HEK293T",
+     "A-375~HeLa",
+     "HAP1~A-549",
+     "HAP1~HEK293T",
+     "HAP1~HeLa",
+     "OVCAR-8~A-549",
+     "OVCAR-8~HEK293T",
+     "OVCAR-8~HeLa"
+    ]
+   },
+   {
+    "partner": "ito2021",
+    "overlap_pairs": 9,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 3,
+    "our_labelled": 9,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 2,
+    "their_labelled": 9,
+    "lines": [
+     "A-375~A-549",
+     "A-375~GI-1",
+     "A-375~HSC-5 [Human skin squamous cell carcinoma]",
+     "A-375~Hs 936.T",
+     "A-375~Hs 944.T",
+     "A-375~IPC-298",
+     "A-375~MeWo",
+     "A-375~Mel JuSo",
+     "A-375~Mel202",
+     "A-375~PK-1",
+     "A-375~PaTu 8988s",
+     "HAP1~A-549"
+    ]
+   },
+   {
+    "partner": "thompson2021",
+    "overlap_pairs": 13,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 1,
+    "our_labelled": 12,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 3,
+    "their_labelled": 13,
+    "lines": [
+     "A-375~MeWo",
+     "A-375~hTERT-RPE1",
+     "HAP1~A-375",
+     "HAP1~MeWo",
+     "HAP1~hTERT-RPE1",
+     "OVCAR-8~A-375",
+     "OVCAR-8~MeWo",
+     "OVCAR-8~hTERT-RPE1"
+    ]
+   },
+   {
+    "partner": "han2017",
+    "overlap_pairs": 595,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 4,
+    "our_labelled": 489,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 3,
+    "their_labelled": 291,
+    "lines": [
+     "A-375~K-562",
+     "HAP1~K-562",
+     "Mel JuSo~K-562",
+     "OVCAR-8~K-562"
+    ]
+   },
+   {
+    "partner": "spidr2025",
+    "overlap_pairs": 524,
+    "their_score_for_our_labels_auroc": 0.5327628156724558,
+    "our_pos": 29,
+    "our_labelled": 440,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 0,
+    "their_labelled": 499,
+    "lines": [
+     "A-375~hTERT-RPE1",
+     "HAP1~hTERT-RPE1",
+     "OVCAR-8~hTERT-RPE1"
+    ]
+   }
+  ],
+  "note": "only pairs with >=5 labelled pos and neg get an AUROC; different-line rows with trivial overlap omitted (full list in the parser's checks())"
+ },
+ "fitness_auroc": 0.5454875391050652,
+ "fitness_auroc_own_wt_lfc": 0.79429572094804,
+ "verdict": "include",
+ "verdict_reason": "Independent anchor-guide replication 0.76/0.85 (PARP1), technical split-half 0.715/0.713 over labelled screens, scores match the authors' published z (rho 0.90-0.96), known biology recovered (BCL2L1<->MCL1 reciprocal, MARCHF5 and WSB2 with BCL2L1/MCL1, PARP1-PARP2/MUS81/EME1/GEN1 in HAP1). Hit rate 0.20% overall (255 pos; 0.12-0.77% per labelled screen) is at the low end of plausible, as expected for anchor screens. DepMap fitness AUROC 0.55; the own-screen control-arm LFC gives 0.79 because the LFC_anchor < -0.5 requirement ties positives to depletion. No same-line cross-study overlap with >=5 positives."
+}

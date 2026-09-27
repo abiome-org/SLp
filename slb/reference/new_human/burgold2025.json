@@ -1,0 +1,570 @@
+{
+ "key": "burgold2025",
+ "citation": "Burgold T, Barrio-Hernandez I, et al. A next-generation dual guide CRISPR system for genetic interaction library screening. Nat Commun (2025).",
+ "doi": "10.1038/s41467-025-67256-9",
+ "license": "CC BY 4.0 (article, Zenodo 10.5281/zenodo.17191951 GitHub snapshot)",
+ "files": [
+  {
+   "name": "COLO1_RUNMERGED_EXACT_ANNOTATED.txt",
+   "url": "https://raw.githubusercontent.com/ibarrioh/DualGuide_COLO1/HEAD/Analysis/ENCORE/input/COLO1_RUNMERGED_EXACT_ANNOTATED.txt",
+   "bytes": 12679962,
+   "sha256": "84397a6c76641f7485aeb9e5541da79314d897324d29c22750140b8de1dbbf8b"
+  },
+  {
+   "name": "readme.txt",
+   "url": "https://raw.githubusercontent.com/ibarrioh/DualGuide_COLO1/HEAD/Analysis/ENCORE/input/readme.txt",
+   "bytes": 1056,
+   "sha256": "58d43658409964dd4ece4987750dab0e569ed198da4b13e9a42b75a8fc1761c6"
+  },
+  {
+   "name": "All.stats",
+   "url": "https://raw.githubusercontent.com/ibarrioh/DualGuide_COLO1/HEAD/Analysis/ENCORE/input/All.stats",
+   "bytes": 505,
+   "sha256": "62f613db5b71ebf2789ba2cb6ba425f78a436c27c3f48bd3b8c9637adbd26f65"
+  },
+  {
+   "name": "lib-COLO-1.stats",
+   "url": "https://raw.githubusercontent.com/ibarrioh/DualGuide_COLO1/HEAD/Analysis/ENCORE/input/lib-COLO-1.stats",
+   "bytes": 204,
+   "sha256": "a6abf327bed8e8c9a0e30da846d162772620fb04694b1da2254f4e34270a0236"
+  },
+  {
+   "name": "Rscript_final.R",
+   "url": "https://raw.githubusercontent.com/ibarrioh/DualGuide_COLO1/HEAD/Analysis/ENCORE/scripts/Rscript_final.R",
+   "bytes": 87060,
+   "sha256": "a5ca73f871273ba1b370fdea4e3969e9badf58698a085cfc486dd5fa08e08127"
+  },
+  {
+   "name": "41467_2025_67256_MOESM3_ESM.xlsx",
+   "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-025-67256-9/MediaObjects/41467_2025_67256_MOESM3_ESM.xlsx",
+   "bytes": 4545468,
+   "sha256": "991270c181570bfeb65759e2fdfd6d79d83f4eedcfaa26c8df743da6733d1253"
+  },
+  {
+   "name": "41467_2025_67256_MOESM6_ESM.xlsx",
+   "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41467-025-67256-9/MediaObjects/41467_2025_67256_MOESM6_ESM.xlsx",
+   "bytes": 22284,
+   "sha256": "10ba8d6e839a79ff2371ed1600c0aa934693daf265a01b82375bd6c228f0f377"
+  }
+ ],
+ "contexts": [
+  "HT-29"
+ ],
+ "mechanism": "CRISPR-KO",
+ "design": "tRNA dual-guide Cas9 (Sanger ENCORE COLO1): 40 anchors x 404 library genes (4 guide pairs each) + 40x40 anchor pairs (both orientations) + GI-control pairs; singles = gene x 3 cutting-control genes (ADAD1/CYLC2/KLK12); 3 Cas9 reps, 3 Cas9-negative parental reps, plasmid. Drug-free only arm.",
+ "score": "zGI_additive: per Cas9 replicate LFC vs mean Cas9-negative parental, centred on cutting control x control, GI = LFC - f_a - f_b (median over guide pairs), per-anchor robust standardisation, mean of 3 reps, z-scored over pairs",
+ "label_rule": "Authors publish no stringent GI calls (GEMINI scores not released) -> re-scored. Positive: z <= -3 on pooled per-anchor-standardised additive GI AND GI < 0 in all 3 Cas9 replicates. Negative: |z| < 1. Else null.",
+ "n_pairs": 16993,
+ "n_pos": 58,
+ "n_neg": 12235,
+ "pos_rate": 0.003413170128876596,
+ "per_context": {
+  "HT-29": {
+   "pairs": 16993,
+   "pos": 58,
+   "neg": 12235
+  }
+ },
+ "unique_genes": 479,
+ "paralog_fraction": 0.011769552168539987,
+ "n_paralog_pairs": 200,
+ "n_paralog_pos": 8,
+ "unresolved_symbols": [],
+ "renamed_symbols": {
+  "ICK": "CILK1",
+  "TAZ": "TAFAZZIN"
+ },
+ "own_replication": {
+  "note": "replicates() = Cas9 rep i vs its own parental rep i (no shared reference counts). With the shared mean-parental reference (the literal recipe) agreement is inflated by common reference noise; both reported.",
+  "independent_reference": {
+   "replicate_agreement": {
+    "pairs": 16993,
+    "replicates": 3,
+    "spearman": 0.07369547865788346,
+    "tail_2pct_in_10pct": 0.1926470588235294
+   },
+   "split_rule_auroc": {
+    "rep1->rep2_z3": 0.7162959905660378,
+    "rep1->rep2_q2pct": 0.5808922377913429,
+    "rep1->rep3_z3": 0.6306933962264152,
+    "rep1->rep3_q2pct": 0.5710944436736958,
+    "rep2->rep1_z3": 0.6113622096672944,
+    "rep2->rep1_q2pct": 0.5753139885897861,
+    "rep2->rep3_z3": 0.5381532485875707,
+    "rep2->rep3_q2pct": 0.5501720532845906,
+    "rep3->rep1_z3": 0.6153459471123667,
+    "rep3->rep1_q2pct": 0.5572727996565858,
+    "rep3->rep2_z3": 0.6688245448838669,
+    "rep3->rep2_q2pct": 0.5359996399689819
+   },
+   "split_rule_auroc_mean_z3": 0.6301125561739253,
+   "split_rule_auroc_mean_q2pct": 0.5617908604941638,
+   "leave_one_out_z3": {
+    "rep2+rep3->rep1_z3": 0.7061126804770872,
+    "rep1+rep3->rep2_z3": 0.6801844936001787,
+    "rep1+rep2->rep3_z3": 0.7012287363773887
+   },
+   "n_split_pos_z3": {
+    "rep1": 50,
+    "rep2": 60,
+    "rep3": 48
+   }
+  },
+  "shared_reference": {
+   "replicate_agreement": {
+    "pairs": 16993,
+    "replicates": 3,
+    "spearman": 0.21609625678106106,
+    "tail_2pct_in_10pct": 0.2740196078431372
+   },
+   "split_rule_auroc_mean_z3": 0.6894657938321408,
+   "leave_one_out_z3": [
+    0.7788692004793699,
+    0.7442193385122411,
+    0.7321127946127947
+   ]
+  },
+  "final_labels_single_replicate_auroc": {
+   "rep1": 0.9369791299691388,
+   "rep2": 0.9489663627524202,
+   "rep3": 0.9466327522793568
+  },
+  "final_labels_single_replicate_auroc_mean": 0.9441927483336386,
+  "reference_sensitivity_plasmid_vs_parental": {
+   "spearman_score_parental_vs_plasmid": 0.6343043291869769,
+   "n_pos_plasmid_ref": 92,
+   "pos_overlap": 40,
+   "auroc_plasmid_score_for_parental_labels": 0.9899666023138818
+  }
+ },
+ "cross_study": {
+  "same_line_HT-29": {
+   "dede2020|HT-29": {
+    "cell_line": "HT-29",
+    "overlap_pairs": 11,
+    "ours_labelled": 7,
+    "ours_pos": 4,
+    "auroc_their_score_for_our_labels": 1.0,
+    "their_labelled": 10,
+    "their_pos": 3,
+    "auroc_our_score_for_their_labels": 1.0,
+    "spearman": 0.8454545454545455
+   },
+   "flister2025|HT-29": {
+    "cell_line": "HT-29",
+    "overlap_pairs": 65,
+    "ours_labelled": 44,
+    "ours_pos": 4,
+    "auroc_their_score_for_our_labels": 0.98125,
+    "their_labelled": 51,
+    "their_pos": 16,
+    "auroc_our_score_for_their_labels": 0.7196428571428571,
+    "spearman": 0.27749125874125874
+   }
+  },
+  "other_lines_summary": {
+   "chou2025": {
+    "lines": 4,
+    "overlap_pairs": 36,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 0.8991596638655461,
+    "n_lines_a": 4,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 0.8823529411764706,
+    "n_lines_b": 4
+   },
+   "chymera2020": {
+    "lines": 2,
+    "overlap_pairs": 15,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": null,
+    "n_lines_a": 0,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 0.5833333333333333,
+    "n_lines_b": 2
+   },
+   "dede2020": {
+    "lines": 2,
+    "overlap_pairs": 11,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 1.0,
+    "n_lines_a": 1,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 1.0,
+    "n_lines_b": 2
+   },
+   "flister2025": {
+    "lines": 19,
+    "overlap_pairs": 65,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 0.7301136363636364,
+    "n_lines_a": 17,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 0.8687499999999999,
+    "n_lines_b": 19
+   },
+   "han2017": {
+    "lines": 1,
+    "overlap_pairs": 665,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 0.6782407407407407,
+    "n_lines_a": 1,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": null,
+    "n_lines_b": 0
+   },
+   "harle2025": {
+    "lines": 27,
+    "overlap_pairs": 13,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 0.7777777777777778,
+    "n_lines_a": 24,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 1.0,
+    "n_lines_b": 27
+   },
+   "horlbeck2018": {
+    "lines": 2,
+    "overlap_pairs": 63,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": null,
+    "n_lines_a": 0,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": null,
+    "n_lines_b": 0
+   },
+   "ito2021": {
+    "lines": 11,
+    "overlap_pairs": 74,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 0.9772727272727273,
+    "n_lines_a": 2,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 0.6648936170212767,
+    "n_lines_b": 11
+   },
+   "parrish2021": {
+    "lines": 2,
+    "overlap_pairs": 12,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 0.888888888888889,
+    "n_lines_a": 1,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 0.8333333333333334,
+    "n_lines_b": 2
+   },
+   "shen2017": {
+    "lines": 3,
+    "overlap_pairs": 496,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 0.3975770925110132,
+    "n_lines_a": 3,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 0.49902248289345064,
+    "n_lines_b": 3
+   },
+   "spidr2025": {
+    "lines": 1,
+    "overlap_pairs": 239,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": null,
+    "n_lines_a": 0,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 0.6339869281045751,
+    "n_lines_b": 1
+   },
+   "thompson2021": {
+    "lines": 3,
+    "overlap_pairs": 39,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 0.7681159420289855,
+    "n_lines_a": 3,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": 0.5700000000000001,
+    "n_lines_b": 3
+   },
+   "wong2016": {
+    "lines": 1,
+    "overlap_pairs": 27,
+    "median_auroc_our_score_for_their_labels(lines with >=3 their pos)": 0.25,
+    "n_lines_a": 1,
+    "median_auroc_their_score_for_our_labels(lines with >=3 our pos)": null,
+    "n_lines_b": 0
+   }
+  }
+ },
+ "fitness_auroc": 0.6088795190782332,
+ "fitness_auroc_n": 8289,
+ "fitness_auroc_own_singles": 0.6082254132435212,
+ "fitness_auroc_before_anchor_normalisation": 0.788,
+ "positives": [
+  [
+   "CNOT7",
+   "CNOT8",
+   -13.19
+  ],
+  [
+   "ASF1A",
+   "ASF1B",
+   -11.11
+  ],
+  [
+   "MDM2",
+   "WEE1",
+   -5.64
+  ],
+  [
+   "POLA1",
+   "PORCN",
+   -5.28
+  ],
+  [
+   "MAPK1",
+   "MAPK3",
+   -5.08
+  ],
+  [
+   "SMAD4",
+   "WEE1",
+   -4.96
+  ],
+  [
+   "ATM",
+   "PTTG1",
+   -4.85
+  ],
+  [
+   "CDK4",
+   "CDK6",
+   -4.84
+  ],
+  [
+   "ATM",
+   "SMC3",
+   -4.83
+  ],
+  [
+   "BCL2L1",
+   "MCL1",
+   -4.72
+  ],
+  [
+   "JAK1",
+   "WEE1",
+   -4.64
+  ],
+  [
+   "DNMT3B",
+   "WEE1",
+   -4.61
+  ],
+  [
+   "BCL2",
+   "WEE1",
+   -4.59
+  ],
+  [
+   "PORCN",
+   "WEE1",
+   -4.59
+  ],
+  [
+   "HDAC1",
+   "HDAC2",
+   -4.56
+  ],
+  [
+   "AURKC",
+   "CDK6",
+   -4.47
+  ],
+  [
+   "PTPN11",
+   "WEE1",
+   -4.27
+  ],
+  [
+   "EGFR",
+   "MAP2K1",
+   -4.26
+  ],
+  [
+   "ATP1A1",
+   "BCL2",
+   -4.2
+  ],
+  [
+   "TAFAZZIN",
+   "WEE1",
+   -4.03
+  ],
+  [
+   "SRC",
+   "WEE1",
+   -4.01
+  ],
+  [
+   "AKT2",
+   "WEE1",
+   -3.97
+  ],
+  [
+   "CTNNB1",
+   "JUP",
+   -3.96
+  ],
+  [
+   "SMAD4",
+   "SMC3",
+   -3.78
+  ],
+  [
+   "ATP1A1",
+   "MDM2",
+   -3.78
+  ],
+  [
+   "CDK1",
+   "DNMT3B",
+   -3.77
+  ],
+  [
+   "INTS6",
+   "INTS6L",
+   -3.63
+  ],
+  [
+   "DNMT3B",
+   "POLA1",
+   -3.61
+  ],
+  [
+   "GKN2",
+   "GRB2",
+   -3.6
+  ],
+  [
+   "BRAF",
+   "WEE1",
+   -3.58
+  ],
+  [
+   "MAP2K2",
+   "XRCC2",
+   -3.58
+  ],
+  [
+   "MAPK1",
+   "WEE1",
+   -3.53
+  ],
+  [
+   "TAFAZZIN",
+   "TBCD",
+   -3.51
+  ],
+  [
+   "CSNK2A1",
+   "PRMT1",
+   -3.48
+  ],
+  [
+   "APC",
+   "DCTN4",
+   -3.47
+  ],
+  [
+   "BCL2",
+   "TBCD",
+   -3.45
+  ],
+  [
+   "APC",
+   "WEE1",
+   -3.41
+  ],
+  [
+   "MCL1",
+   "WEE1",
+   -3.38
+  ],
+  [
+   "BRAF",
+   "EGFR",
+   -3.38
+  ],
+  [
+   "DNMT3B",
+   "TPX2",
+   -3.28
+  ],
+  [
+   "ATP1A1",
+   "MAP2K1",
+   -3.28
+  ],
+  [
+   "ATP1A1",
+   "SMAD4",
+   -3.27
+  ],
+  [
+   "KRAS",
+   "WEE1",
+   -3.27
+  ],
+  [
+   "ATM",
+   "POLA1",
+   -3.25
+  ],
+  [
+   "ARID1A",
+   "PTTG1",
+   -3.25
+  ],
+  [
+   "BCL2L1",
+   "EFR3A",
+   -3.23
+  ],
+  [
+   "SMAD2",
+   "WEE1",
+   -3.23
+  ],
+  [
+   "ATM",
+   "SYVN1",
+   -3.2
+  ],
+  [
+   "ARID1A",
+   "WEE1",
+   -3.19
+  ],
+  [
+   "MAP2K2",
+   "WEE1",
+   -3.16
+  ],
+  [
+   "CDK6",
+   "PIK3R3",
+   -3.15
+  ],
+  [
+   "EGFR",
+   "MAPK1",
+   -3.14
+  ],
+  [
+   "ATM",
+   "FLCN",
+   -3.09
+  ],
+  [
+   "AKT1",
+   "WEE1",
+   -3.08
+  ],
+  [
+   "BRAF",
+   "BRD8",
+   -3.07
+  ],
+  [
+   "CDK4",
+   "DIDO1",
+   -3.07
+  ],
+  [
+   "FLT3",
+   "YAP1",
+   -3.03
+  ],
+  [
+   "AK6",
+   "ATM",
+   -3.02
+  ]
+ ],
+ "verdict": "include",
+ "verdict_reason": "Borderline include. Own replication with fully independent references: leave-one-replicate-out AUROC 0.68-0.71 (>=0.65), single-vs-single 0.63 (shared-reference recipe 0.69 / LOO 0.73-0.78, inflated). Same-line cross-study supports the labels: Flister 2025 HT-29 (65 shared pairs) scores our 4 positives at AUROC 0.98 and our score ranks their 16 'Lethal' pairs at AUROC 0.72; Dede 2020 HT-29 (11 pairs) 1.0 both ways (3-4 pos). No contradiction (no overlap reaches 20 positives). Hit rate 0.34% (low end, plausible); fitness-only AUROC 0.61 after per-anchor normalisation. Caveat: cross-study evidence covers only paralog pairs; most positives are anchor x library pairs (WEE1 is a hub with 19/58) that no other study measures."
+}

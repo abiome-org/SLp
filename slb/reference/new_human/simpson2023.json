@@ -1,0 +1,351 @@
+{
+ "key": "simpson2023",
+ "citation": "Simpson D, Ling J, Jing Y, Adamson B. Mapping the Genetic Interaction Network of PARP inhibitor Response. bioRxiv 2023 (preprint)",
+ "doi": "10.1101/2023.08.19.553986",
+ "license": "CC BY 4.0 (repository github.com/simpsondl/parpi-manuscript; Zenodo 10.5281/zenodo.17666844)",
+ "files": [
+  {
+   "name": "screen2022_raw_counts.zip",
+   "url": "https://raw.githubusercontent.com/simpsondl/parpi-manuscript/HEAD/manuscript_data/counts/screen2022_raw_counts.zip",
+   "bytes": 29626213,
+   "sha256": "e72067bdc280ea8ed41c5a629273068eadc939db5194e6590b395526340e052e"
+  },
+  {
+   "name": "screen2023_raw_counts.zip",
+   "url": "https://raw.githubusercontent.com/simpsondl/parpi-manuscript/HEAD/manuscript_data/counts/screen2023_raw_counts.zip",
+   "bytes": 28617180,
+   "sha256": "1b3ecdc668e4bf693987dc00e9eb93ae8e5f1d5e5f78f694fbfe7096519dbb96"
+  },
+  {
+   "name": "screen2022_id_to_name_mapping.tsv",
+   "url": "https://raw.githubusercontent.com/simpsondl/parpi-manuscript/HEAD/manuscript_data/annotations/screen2022_id_to_name_mapping.tsv",
+   "bytes": 6006318,
+   "sha256": "de9ad2ea8230eae85697badfb1f8bbaa9edd12c02e40f9c326258b7624d0134f"
+  },
+  {
+   "name": "screen2023_id_to_name_mapping.tsv",
+   "url": "https://raw.githubusercontent.com/simpsondl/parpi-manuscript/HEAD/manuscript_data/annotations/screen2023_id_to_name_mapping.tsv",
+   "bytes": 6006318,
+   "sha256": "de9ad2ea8230eae85697badfb1f8bbaa9edd12c02e40f9c326258b7624d0134f"
+  },
+  {
+   "name": "config.yaml",
+   "url": "https://raw.githubusercontent.com/simpsondl/parpi-manuscript/HEAD/config/config.yaml",
+   "bytes": 1316,
+   "sha256": "2392441a1efa48dfe33726ca1bf6766187aec9ccdaf3b8850c0d9f99c2f5f410"
+  },
+  {
+   "name": "README.md",
+   "url": "https://raw.githubusercontent.com/simpsondl/parpi-manuscript/HEAD/README.md",
+   "bytes": 5138,
+   "sha256": "574cbad4bdbeb23c11daa4e625f2b23b2b1613f577fa2583700429bd42f63f3b"
+  },
+  {
+   "name": "LICENSE",
+   "url": "https://raw.githubusercontent.com/simpsondl/parpi-manuscript/HEAD/LICENSE",
+   "bytes": 990,
+   "sha256": "a912be034d6ec26fcf4ebe466e9670f7c1f6c5afec43b94cab77cd14a6c308fb"
+  }
+ ],
+ "contexts": [
+  "K562"
+ ],
+ "mechanism": "CRISPRi",
+ "label_rule": "Score = mean of the two independent screens' (2022, 2023) gene-level GI.z from the untreated arm only (T0->DMSO 'gamma'; niraparib never read), authors' R pipeline re-implemented in Python (filters, orientation-averaged phenotypes, per-query quadratic fit with free intercept, z by non-targeting residual SD, gene = mean over sgRNA combinations). Positive: mean GI <= -3 and GI < 0 in both screens. Negative: |mean GI| < median |mean GI| (horlbeck2018 SLB rule). Otherwise null. The authors' own hit call (sign-agnostic discriminant, top 0.5% vs control pairs) is not used.",
+ "n_pairs": 139274,
+ "n_pos": 499,
+ "n_neg": 69615,
+ "pos_rate": 0.00358,
+ "unique_genes": 529,
+ "paralog_fraction": 0.00107,
+ "paralog_pairs": 149,
+ "paralog_pos": 12,
+ "symbol_resolution": {
+  "raw_symbols": 543,
+  "unresolved": [
+   "STRA13"
+  ],
+  "renamed": {
+   "ATP5J2": "ATP5MF",
+   "C12orf45": "NOPCHAP1",
+   "C12orf66": "KICS2",
+   "C16orf59": "TEDC2",
+   "C17orf53": "HROB",
+   "C17orf70": "FAAP100",
+   "C19orf40": "FAAP24",
+   "C1orf109": "AIRIM",
+   "C20orf196": "SHLD1",
+   "C4orf27": "HPF1",
+   "C7orf26": "INTS15",
+   "C9orf41": "CARNMT1",
+   "CXorf57": "RADX",
+   "DIEXF": "UTP25",
+   "FAM175A": "ABRAXAS1",
+   "FAM19A2": "TAFA2",
+   "FAM35A": "SHLD2",
+   "FAM96B": "CIAO2B",
+   "H2AFX": "H2AX",
+   "KIAA0020": "PUM3",
+   "KIAA1524": "CIP2A",
+   "MINOS1": "MICOS10",
+   "MRE11A": "MRE11",
+   "MYEOV2": "COPS9",
+   "NARS": "NARS1",
+   "NDNL2": "NSMCE3",
+   "OBFC1": "STN1",
+   "PPP2R4": "PTPA",
+   "PTPLB": "HACD2",
+   "SARS": "SARS1",
+   "TMEM199": "VMA12",
+   "WAPAL": "WAPL",
+   "WDR61": "SKIC8",
+   "YAE1D1": "YAE1",
+   "YARS": "YARS1",
+   "ZNF131": "ZBTB35"
+  }
+ },
+ "score_quantiles": {
+  "0.001": -4.63,
+  "0.01": -2.08,
+  "0.05": -1.111,
+  "0.5": 0.035,
+  "0.95": 1.085,
+  "0.99": 1.703
+ },
+ "own_replication": {
+  "screens": {
+   "columns": [
+    "gi_rep1",
+    "gi_rep2"
+   ],
+   "agreement": {
+    "pairs": 139274,
+    "replicates": 2,
+    "spearman": 0.3563,
+    "tail_2pct_in_10pct": 0.6872
+   },
+   "split_rule_auroc": {
+    "gi_rep1->gi_rep2": {
+     "thr_-3": 0.9748,
+     "npos_-3": 717,
+     "q2pct": 0.8864
+    },
+    "gi_rep2->gi_rep1": {
+     "thr_-3": 0.9425,
+     "npos_-3": 552,
+     "q2pct": 0.8574
+    }
+   }
+  },
+  "bio_replicates": {
+   "columns": [
+    "gi_rep3",
+    "gi_rep4",
+    "gi_rep5",
+    "gi_rep6"
+   ],
+   "agreement": {
+    "pairs": 139274,
+    "replicates": 4,
+    "spearman": 0.2693,
+    "tail_2pct_in_10pct": 0.5371
+   },
+   "split_rule_auroc": {
+    "gi_rep3->gi_rep4": {
+     "thr_-3": 0.9562,
+     "npos_-3": 410,
+     "q2pct": 0.8275
+    },
+    "gi_rep4->gi_rep3": {
+     "thr_-3": 0.9722,
+     "npos_-3": 370,
+     "q2pct": 0.8379
+    },
+    "gi_rep3->gi_rep5": {
+     "thr_-3": 0.9465,
+     "npos_-3": 410,
+     "q2pct": 0.7829
+    },
+    "gi_rep5->gi_rep3": {
+     "thr_-3": 0.8832,
+     "npos_-3": 291,
+     "q2pct": 0.7591
+    },
+    "gi_rep3->gi_rep6": {
+     "thr_-3": 0.9339,
+     "npos_-3": 410,
+     "q2pct": 0.7808
+    },
+    "gi_rep6->gi_rep3": {
+     "thr_-3": 0.915,
+     "npos_-3": 284,
+     "q2pct": 0.7522
+    },
+    "gi_rep4->gi_rep5": {
+     "thr_-3": 0.9622,
+     "npos_-3": 370,
+     "q2pct": 0.7967
+    },
+    "gi_rep5->gi_rep4": {
+     "thr_-3": 0.921,
+     "npos_-3": 291,
+     "q2pct": 0.7779
+    },
+    "gi_rep4->gi_rep6": {
+     "thr_-3": 0.9585,
+     "npos_-3": 370,
+     "q2pct": 0.8038
+    },
+    "gi_rep6->gi_rep4": {
+     "thr_-3": 0.9045,
+     "npos_-3": 284,
+     "q2pct": 0.7771
+    },
+    "gi_rep5->gi_rep6": {
+     "thr_-3": 0.9112,
+     "npos_-3": 291,
+     "q2pct": 0.7866
+    },
+    "gi_rep6->gi_rep5": {
+     "thr_-3": 0.91,
+     "npos_-3": 284,
+     "q2pct": 0.7811
+    }
+   }
+  },
+  "orientation_2022": {
+   "columns": [
+    "gi_rep7",
+    "gi_rep8"
+   ],
+   "agreement": {
+    "pairs": 140745,
+    "replicates": 2,
+    "spearman": 0.1372,
+    "tail_2pct_in_10pct": 0.4179
+   },
+   "split_rule_auroc": {
+    "gi_rep7->gi_rep8": {
+     "thr_-3": 0.702,
+     "npos_-3": 607,
+     "q2pct": 0.6304
+    },
+    "gi_rep8->gi_rep7": {
+     "thr_-3": 0.6716,
+     "npos_-3": 587,
+     "q2pct": 0.6484
+    }
+   }
+  },
+  "orientation_2023": {
+   "columns": [
+    "gi_rep9",
+    "gi_rep10"
+   ],
+   "agreement": {
+    "pairs": 137977,
+    "replicates": 2,
+    "spearman": 0.098,
+    "tail_2pct_in_10pct": 0.3621
+   },
+   "split_rule_auroc": {
+    "gi_rep9->gi_rep10": {
+     "thr_-3": 0.6958,
+     "npos_-3": 408,
+     "q2pct": 0.5886
+    },
+    "gi_rep10->gi_rep9": {
+     "thr_-3": 0.6467,
+     "npos_-3": 453,
+     "q2pct": 0.5987
+    }
+   }
+  },
+  "final_labels_single_replicate_auroc": {
+   "gi_rep1": 0.9999,
+   "gi_rep2": 1.0,
+   "gi_rep3": 0.9968,
+   "gi_rep4": 0.9995,
+   "gi_rep5": 0.9969,
+   "gi_rep6": 0.9983,
+   "gi_rep7": 0.9925,
+   "gi_rep8": 0.9954,
+   "gi_rep9": 0.9916,
+   "gi_rep10": 0.9902
+  },
+  "note": "gi_rep1/2 = screens 2022/2023 (replicate-averaged); gi_rep3..6 = 2022 R1, R2, 2023 R1, R2; gi_rep7..10 = orientation-specific GI (AB-only / BA-only constructs) for 2022 and 2023. Final-label single-replicate AUROCs are optimistic; independent tests are screen->screen and replicate->replicate split rules."
+ },
+ "cross_study": {
+  "horlbeck2018": {
+   "mechanism": "CRISPRi",
+   "overlap_pairs": 3976,
+   "spearman_score": 0.1992,
+   "their_score_for_our_labels": 0.8749,
+   "our_labelled": 1448,
+   "our_pos_in_overlap": 14,
+   "our_score_for_their_labels": 0.7307,
+   "their_labelled": 1947,
+   "their_pos_in_overlap": 97
+  },
+  "han2017": {
+   "mechanism": "CRISPR-KO",
+   "overlap_pairs": 153,
+   "spearman_score": 0.1341,
+   "their_score_for_our_labels": 0.812,
+   "our_labelled": 84,
+   "our_pos_in_overlap": 6,
+   "our_score_for_their_labels": null,
+   "their_labelled": 74,
+   "their_pos_in_overlap": 2
+  },
+  "herken2026": {
+   "mechanism": "CRISPRi",
+   "overlap_pairs": 5767,
+   "spearman_score": 0.5885,
+   "their_score_for_our_labels": 0.9739,
+   "our_labelled": 2441,
+   "our_pos_in_overlap": 170,
+   "our_score_for_their_labels": 0.9512,
+   "their_labelled": 2947,
+   "their_pos_in_overlap": 165
+  },
+  "_note": "All K562 partners are joined on HGNC symbols with context 'K562' (contexts.lookup -> K-562, CVCL_0004). horlbeck2018, herken2026 and simpson2023 all come from the Weissman/Gilbert/Adamson CRISPRi lineage (shared vector design, analysis pipeline and K562 dCas9-KRAB background), so their agreement is not fully independent evidence; han2017 is CRISPR-KO with tiny overlap.",
+  "jurkat_horlbeck2018_different_line": {
+   "overlap_pairs": 2986,
+   "their_score_for_our_labels": 0.5151,
+   "our_pos_in_overlap": 8,
+   "our_score_for_their_labels": 0.5766,
+   "their_pos_in_overlap": 15
+  },
+  "label_contradictions_in_K562": {
+   "horlbeck2018": {
+    "both_labelled": 757,
+    "pos_pos": 6,
+    "ours_pos_theirs_neg": 3,
+    "ours_neg_theirs_pos": 23
+   },
+   "han2017": {
+    "both_labelled": 42,
+    "pos_pos": 0,
+    "ours_pos_theirs_neg": 2,
+    "ours_neg_theirs_pos": 2
+   },
+   "herken2026": {
+    "both_labelled": 1429,
+    "pos_pos": 81,
+    "ours_pos_theirs_neg": 7,
+    "ours_neg_theirs_pos": 4
+   }
+  }
+ },
+ "fitness_auroc": 0.6208,
+ "fitness_detail": {
+  "depmap_pan": 0.4994,
+  "depmap_n_labelled": 32887,
+  "screen_own_singles": 0.6208,
+  "own_n_labelled": 70114,
+  "screen_own_min_single": 0.5767
+ },
+ "verdict": "include",
+ "verdict_reason": "Independent-screen replication: labels from the 2022 screen scored by 2023 AUROC 0.975, reverse 0.943 (Spearman 0.36); replicates 0.88-0.97. Orientation split (AB-only vs BA-only) is weak (0.65-0.70, Spearman 0.10-0.14; AB-2022 correlates better with AB-2023 than with BA-2022, i.e. a reproducible sgRNA-position effect), which is why the orientation-averaged score is used. Cross-study K562 vs horlbeck2018: our score for their labels 0.731 (97 pos); their score for our labels 0.875 but only 14 pos; vs herken2026 0.97/0.95 (170/165 pos), same lab lineage so partly non-independent. Hit rate 0.36% (strict end of plausible); fitness-only AUROC 0.62 (screen singles) / 0.50 (DepMap). Caveats: still a preprint; CRISPRi hypomorphic; 23 of 97 horlbeck2018 positives in the overlap fall in our negative band (and 6 are shared positives), so the builder's cross-source conflict rule will blank some pairs."
+}

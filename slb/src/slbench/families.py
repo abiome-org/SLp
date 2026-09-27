@@ -26,7 +26,8 @@ RAW = Path("data/raw")
 PARALOG_MIN_IDENTITY = 0.30
 ORTHOLOG_MIN_ALGORITHMS = 3
 HCOP_MIN_SUPPORT = 2  # HCOP human-yeast orthologs asserted by at least this many databases
-MAX_FAMILY = 400  # fail if a component exceeds this; never break homology edges
+MAX_FAMILY = 1000  # fail if a component exceeds this; never break homology edges (genome-wide human
+# screens bring in the C2H2 zinc-finger family, ~470 genes: real homology, and train-only by size)
 
 NAMING_SPECIES = ("human", "scer", "spom", "dmel", "spne")
 

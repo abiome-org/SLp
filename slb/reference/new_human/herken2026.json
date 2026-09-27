@@ -1,0 +1,261 @@
+{
+ "key": "herken2026",
+ "citation": "Herken BW, Norman TM, Gilbert LA. Mol Cell 2026 (K562 CRISPRi dual-sgRNA DDR genetic interaction maps; GEO GSE312636)",
+ "doi": "10.1016/j.molcel.2026.01.025",
+ "license": "CC BY 4.0",
+ "files": [
+  {
+   "name": "GSE312636_GI_expt1_counts.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE312nnn/GSE312636/suppl/GSE312636_GI_expt1_counts.txt.gz",
+   "bytes": 8996156,
+   "sha256": "105353899a4b91bc5446bfacc20ee91a13ff6bf17f8d53805fc8bb543f2a1403"
+  },
+  {
+   "name": "GSE312636_GI_expt2_counts.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE312nnn/GSE312636/suppl/GSE312636_GI_expt2_counts.txt.gz",
+   "bytes": 11452826,
+   "sha256": "f9f5c85fc81e366709fd5d42f1c3c85388f00ab19624e14ebede53f72e09080b"
+  },
+  {
+   "name": "herken2024_originalcode-main.zip",
+   "url": "https://zenodo.org/api/records/17822522/files/herken2024_originalcode-main.zip/content",
+   "bytes": 6035757,
+   "sha256": "bde5b8cb6a6fd9f80ab879e1e27a09fda39a7ed20016b318a5d5d1bc42815b52"
+  }
+ ],
+ "contexts": [
+  "K562"
+ ],
+ "mechanism": "CRISPRi",
+ "label_rule": "Score = mean of the two independent drug-free maps' gene-level GI (authors' Horlbeck-2018 pipeline re-run from GEO counts, T0->UT/DMSO only; same method and units as SLB horlbeck2018). Positive: mean GI <= -3 and GI < 0 in both maps. Negative: |mean GI| < median |mean GI| (the horlbeck2018 SLB negative rule). Otherwise null. No processed GI or author calls are public (Zenodo record is code only).",
+ "n_pairs": 48828,
+ "n_pos": 872,
+ "n_neg": 24414,
+ "pos_rate": 0.01786,
+ "unique_genes": 313,
+ "paralog_fraction": 0.00063,
+ "paralog_pairs": 31,
+ "paralog_pos": 8,
+ "symbol_resolution": {
+  "raw_symbols": 313,
+  "unresolved": [],
+  "renamed": {
+   "ADSS": "ADSS2",
+   "ATP5I": "ATP5ME",
+   "C11orf82": "DDIAS",
+   "C14orf2": "ATP5MJ",
+   "C16orf80": "CFAP20",
+   "C19orf40": "FAAP24",
+   "C19orf70": "MICOS13",
+   "C20orf196": "SHLD1",
+   "CSRP2BP": "KAT14",
+   "FAM35A": "SHLD2",
+   "GCN1L1": "GCN1",
+   "H2AFX": "H2AX",
+   "H2AFZ": "H2AZ1",
+   "HIST2H3A": "H3C15",
+   "ICT1": "MRPL58",
+   "KIAA1429": "VIRMA",
+   "KIAA1524": "CIP2A",
+   "MINOS1": "MICOS10",
+   "MLF1IP": "CENPU",
+   "MRE11A": "MRE11",
+   "MTERFD1": "MTERF3",
+   "OBFC1": "STN1",
+   "SRPR": "SRPRA",
+   "TMEM261": "DMAC1"
+  }
+ },
+ "score_quantiles": {
+  "0.001": -8.008,
+  "0.01": -3.669,
+  "0.05": -1.859,
+  "0.5": 0.133,
+  "0.95": 1.653,
+  "0.99": 2.611
+ },
+ "own_replication": {
+  "maps": {
+   "columns": [
+    "gi_rep1",
+    "gi_rep2"
+   ],
+   "agreement": {
+    "pairs": 48828,
+    "replicates": 2,
+    "spearman": 0.5806,
+    "tail_2pct_in_10pct": 0.8802
+   },
+   "split_rule_auroc": {
+    "gi_rep1->gi_rep2": {
+     "thr_-3": 0.9638,
+     "npos_-3": 1190,
+     "q2pct": 0.9743
+    },
+    "gi_rep2->gi_rep1": {
+     "thr_-3": 0.9703,
+     "npos_-3": 835,
+     "q2pct": 0.9646
+    }
+   }
+  },
+  "bio_replicates": {
+   "columns": [
+    "gi_rep3",
+    "gi_rep4",
+    "gi_rep5",
+    "gi_rep6"
+   ],
+   "agreement": {
+    "pairs": 48828,
+    "replicates": 4,
+    "spearman": 0.472,
+    "tail_2pct_in_10pct": 0.7915
+   },
+   "split_rule_auroc": {
+    "gi_rep3->gi_rep4": {
+     "thr_-3": 0.9581,
+     "npos_-3": 739,
+     "q2pct": 0.9411
+    },
+    "gi_rep4->gi_rep3": {
+     "thr_-3": 0.9651,
+     "npos_-3": 682,
+     "q2pct": 0.9428
+    },
+    "gi_rep3->gi_rep5": {
+     "thr_-3": 0.9608,
+     "npos_-3": 739,
+     "q2pct": 0.9436
+    },
+    "gi_rep5->gi_rep3": {
+     "thr_-3": 0.971,
+     "npos_-3": 456,
+     "q2pct": 0.9496
+    },
+    "gi_rep3->gi_rep6": {
+     "thr_-3": 0.9601,
+     "npos_-3": 739,
+     "q2pct": 0.9399
+    },
+    "gi_rep6->gi_rep3": {
+     "thr_-3": 0.9657,
+     "npos_-3": 458,
+     "q2pct": 0.9379
+    },
+    "gi_rep4->gi_rep5": {
+     "thr_-3": 0.9435,
+     "npos_-3": 682,
+     "q2pct": 0.9185
+    },
+    "gi_rep5->gi_rep4": {
+     "thr_-3": 0.9543,
+     "npos_-3": 456,
+     "q2pct": 0.9233
+    },
+    "gi_rep4->gi_rep6": {
+     "thr_-3": 0.9321,
+     "npos_-3": 682,
+     "q2pct": 0.9067
+    },
+    "gi_rep6->gi_rep4": {
+     "thr_-3": 0.9337,
+     "npos_-3": 458,
+     "q2pct": 0.8985
+    },
+    "gi_rep5->gi_rep6": {
+     "thr_-3": 0.9797,
+     "npos_-3": 456,
+     "q2pct": 0.9548
+    },
+    "gi_rep6->gi_rep5": {
+     "thr_-3": 0.9807,
+     "npos_-3": 458,
+     "q2pct": 0.9479
+    }
+   }
+  },
+  "final_labels_single_replicate_auroc": {
+   "gi_rep1": 0.9999,
+   "gi_rep2": 0.9996,
+   "gi_rep3": 0.9969,
+   "gi_rep4": 0.9945,
+   "gi_rep5": 0.9949,
+   "gi_rep6": 0.9925
+  },
+  "note": "gi_rep1/gi_rep2 = the two independent maps (expt1 T0->UT, expt2 T0->DMSO, each replicate-averaged); gi_rep3..6 = the four biological replicates (expt1 r1, r2, expt2 r1, r2). Final-label single-replicate AUROCs are optimistic (labels come from the pooled maps); the independent test is the map->map split rule."
+ },
+ "cross_study": {
+  "han2017": {
+   "mechanism": "CRISPR-KO",
+   "overlap_pairs": 66,
+   "spearman_score": 0.2666,
+   "their_score_for_our_labels": null,
+   "our_labelled": 36,
+   "our_pos_in_overlap": 3,
+   "our_score_for_their_labels": null,
+   "their_labelled": 34,
+   "their_pos_in_overlap": 3
+  },
+  "horlbeck2018": {
+   "mechanism": "CRISPRi",
+   "overlap_pairs": 1711,
+   "spearman_score": 0.4289,
+   "their_score_for_our_labels": 0.7974,
+   "our_labelled": 710,
+   "our_pos_in_overlap": 46,
+   "our_score_for_their_labels": 0.8432,
+   "their_labelled": 848,
+   "their_pos_in_overlap": 75
+  },
+  "simpson2023": {
+   "mechanism": "CRISPRi",
+   "overlap_pairs": 5767,
+   "spearman_score": 0.5885,
+   "their_score_for_our_labels": 0.9512,
+   "our_labelled": 2947,
+   "our_pos_in_overlap": 165,
+   "our_score_for_their_labels": 0.9739,
+   "their_labelled": 2441,
+   "their_pos_in_overlap": 170
+  },
+  "_note": "All K562 partners are joined on HGNC symbols with context 'K562' (contexts.lookup -> K-562, CVCL_0004). horlbeck2018, herken2026 and simpson2023 all come from the Weissman/Gilbert/Adamson CRISPRi lineage (shared vector design, analysis pipeline and K562 dCas9-KRAB background), so their agreement is not fully independent evidence; han2017 is CRISPR-KO with tiny overlap.",
+  "jurkat_horlbeck2018_different_line": {
+   "overlap_pairs": 1176,
+   "their_score_for_our_labels": 0.61,
+   "our_pos_in_overlap": 33,
+   "our_score_for_their_labels": 0.6225,
+   "their_pos_in_overlap": 16
+  },
+  "label_contradictions_in_K562": {
+   "han2017": {
+    "both_labelled": 17,
+    "pos_pos": 1,
+    "ours_pos_theirs_neg": 1,
+    "ours_neg_theirs_pos": 1
+   },
+   "horlbeck2018": {
+    "both_labelled": 365,
+    "pos_pos": 12,
+    "ours_pos_theirs_neg": 7,
+    "ours_neg_theirs_pos": 13
+   },
+   "simpson2023": {
+    "both_labelled": 1429,
+    "pos_pos": 81,
+    "ours_pos_theirs_neg": 4,
+    "ours_neg_theirs_pos": 7
+   }
+  }
+ },
+ "fitness_auroc": 0.657,
+ "fitness_detail": {
+  "depmap_pan": 0.5468,
+  "depmap_n_labelled": 10104,
+  "screen_own_singles": 0.657,
+  "own_n_labelled": 25286,
+  "screen_own_min_single": 0.623
+ },
+ "verdict": "include",
+ "verdict_reason": "Independent-map replication: labels from map 1 scored by map 2 AUROC 0.964, reverse 0.970 (Spearman 0.58); biological replicates 0.93-0.98. Cross-study K562 vs horlbeck2018: their score for our labels 0.797 (46 pos), our score for their labels 0.843 (75 pos); vs simpson2023 0.95/0.97 (165/170 pos) but same lab lineage, so partly non-independent. Hit rate 1.79% plausible; fitness-only AUROC 0.66 (screen singles) / 0.55 (DepMap), below 0.8. Caveat: CRISPRi knockdown is hypomorphic; library is DDR/essential-gene focused (313 genes, not the paper's 293 because the drug maps are not used for gene intersection)."
+}

@@ -1,0 +1,427 @@
+{
+ "key": "desjardins2026",
+ "citation": "Desjardins J, Bowlan J, et al. CRISPR-enabled genetic screens identify synthetic lethal targets across frequently altered cancer drivers. Cell Reports (2026) 117961.",
+ "doi": "10.1016/j.celrep.2026.117961",
+ "data_doi": "10.17632/k6wm46g4tw.1",
+ "license": "CC BY 4.0 (Mendeley Data)",
+ "files": [
+  {
+   "name": "ARID1A_BEAS2B_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/8818c0e3-5795-4ade-acc8-f429b96d3116/file_downloaded",
+   "bytes": 3980703,
+   "sha256": "10c6d72fcde03e10b8c565062efd337eff422060c9280917b43e349d44de78ec"
+  },
+  {
+   "name": "CCNE1_FT282_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/78d8fe12-5bd3-4bb2-8ba4-2749b3f6f9ff/file_downloaded",
+   "bytes": 3998688,
+   "sha256": "98676375214d92fd0566c4c831e9ea192aff52726a59316abbdf04a2936488d3"
+  },
+  {
+   "name": "CDK12_RPE1_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/9bfcb339-a860-47f8-88a8-b370f5a429bb/file_downloaded",
+   "bytes": 4000166,
+   "sha256": "bd8b31d4a1e871418df372371b1e05c5eeaf96df44bb1bde3c26e7dd5373c23f"
+  },
+  {
+   "name": "Chr13q_FT282_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/15ef1e20-6640-4d15-b1b8-7388177e2762/file_downloaded",
+   "bytes": 4401460,
+   "sha256": "d68f5d1420b86a0b55af95cea825f25f4c0d327165f962a53cb4e41172cfdbe4"
+  },
+  {
+   "name": "Chr18q_RPE1_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/379a2278-537b-45ae-b142-e80f09f458ea/file_downloaded",
+   "bytes": 3986012,
+   "sha256": "2d30841615a73a4fa03beeb7316c683fad84208575b059fdd7c35a375802cd60"
+  },
+  {
+   "name": "DNMT3A_K562_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/ecb34553-e21a-4ba5-a49b-4b73cbe37b52/file_downloaded",
+   "bytes": 3933038,
+   "sha256": "67da3b19a2a720c5fa77ae34262fad96c4bb76f4f5d16973b0d3f6cd397e4ffe"
+  },
+  {
+   "name": "FBXW7_RPE1_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/05826a00-cbb7-4386-affd-19685e704cfc/file_downloaded",
+   "bytes": 3936379,
+   "sha256": "b204b58571015f06321486e7a2e6e2d5b49a4ae6f8bc28c29e2d00ca16d8b977"
+  },
+  {
+   "name": "IDH1_RPE1_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/9e4c043f-c7b2-4d0f-a7c9-f8ff07641282/file_downloaded",
+   "bytes": 3958821,
+   "sha256": "148225a59542e7e13c90c0901ca00c1a028384d02e82aa1481d416c5e46f9c52"
+  },
+  {
+   "name": "KEAP1_A549_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/830ea289-8ac7-474e-84c8-fbff325a39b8/file_downloaded",
+   "bytes": 3967904,
+   "sha256": "277da5332efa299964e050eb558c7951f6ef3edffa4a60ca6e7003dee9119577"
+  },
+  {
+   "name": "KMT2D_BEAS2B_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/b69324af-0837-4674-8087-8f497a2fff67/file_downloaded",
+   "bytes": 3971211,
+   "sha256": "eadcee1979c2e6b769601273e1b1d80e7b6325cafc726570232b08ee48ba3a7f"
+  },
+  {
+   "name": "PKMYT1i_COLhTERT_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/35b5b825-c4e8-43ed-806c-2784d6179703/file_downloaded",
+   "bytes": 8422921,
+   "sha256": "beb7dd980dd4afaed6bc00bdb4f0ad1c534dbc6e5757840fdddcfdbde8f9478e"
+  },
+  {
+   "name": "PKMYT1i_DLD1_FNLS_FBXW7_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/ee0143fe-121b-4c35-be0f-591859cc5d3e/file_downloaded",
+   "bytes": 638140,
+   "sha256": "9d09e30768d628da02295fb968a6eceef8365f832c6e6d2771189d2dada20bff"
+  },
+  {
+   "name": "SF3B1_K562_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/25a450fd-4f7f-439f-91bf-ba37efd9f627/file_downloaded",
+   "bytes": 3927742,
+   "sha256": "1f5e4bb546090ce3fe8a150a05dd6e512322b418bd57fca619359ed78f8f3cd3"
+  },
+  {
+   "name": "SRSF2_K562_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/9b385709-a5ef-46bb-b924-b2166c5b27a2/file_downloaded",
+   "bytes": 3966152,
+   "sha256": "23a150d3556e5f67f1dda7ddf768e0793487258946ec3efb76a988ad115f40a3"
+  },
+  {
+   "name": "STK11_RPE1_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/cbd17d2c-ed22-4517-932e-3cedf8fedc19/file_downloaded",
+   "bytes": 3969350,
+   "sha256": "72a7e71ece39b5828521e59fa033971d150f8d2d9e7ddd98bca9b2c56331427a"
+  },
+  {
+   "name": "TET2_RPE1_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/37230ccc-6851-4913-8fae-c70426892f47/file_downloaded",
+   "bytes": 3927095,
+   "sha256": "64240860981b06fc89a7a97604586618cda77aba042481989d6029d312301c98"
+  },
+  {
+   "name": "U2AF1_K562_sgRNA_readcounts.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/k6wm46g4tw/files/6daf1fef-f232-440d-a19b-77ded716cb3e/file_downloaded",
+   "bytes": 3925741,
+   "sha256": "8809be209f4789c45b3d27a7f2fcc3056df733beca1b7ed51007112d590e554d"
+  }
+ ],
+ "contexts": [
+  "RPE1",
+  "BEAS-2B"
+ ],
+ "mechanism": "CRISPR-KO",
+ "queries_kept": {
+  "RPE1": [
+   "FBXW7",
+   "CDK12",
+   "STK11",
+   "TET2"
+  ],
+  "BEAS-2B": [
+   "ARID1A",
+   "KMT2D"
+  ]
+ },
+ "queries_excluded": {
+  "CCNE1 (FT282)": "overexpression",
+  "IDH1 R132H (RPE1)": "point mutation",
+  "DNMT3A R882H (K562)": "point mutation",
+  "SF3B1 K666N / SRSF2 P95H / U2AF1 Q157R (K562)": "point mutations",
+  "Chr18q (RPE1), Chr13q (FT282)": "chromosome-arm loss",
+  "KEAP1 (A549)": "KEAP1 rescue/re-expression in KEAP1-mutant A549, not a knockout",
+  "PKMYT1i COL-hTERT, DLD-1 FNLS": "drug screens"
+ },
+ "scoring": "Per arm & replicate: guide LFC = log2(RPM+1) end - log2(RPM+1) T0 (arm's own T0; pDNA for DeWeirdt), guides with <30 T0 reads or bottom-2% T0 dropped, gene LFC = mean over guides (>=2), median-centred. GI(q,g) = LFC_g(q-KO) - running median of LFC_KO over genes ordered by LFC_WT (window n/40); z = residual / running MAD (floored at global MAD-SD), re-standardised per screen. Per-replicate z (KO rep A vs WT rep A, B vs B) = gi_rep1/gi_rep2; pooled z from replicate-mean LFCs. Query's own library row dropped.",
+ "label_rule": "positive: pooled z <= -4 AND z < 0 in both replicates AND median-centred LFC_KO < -0.5 (library gene actually depletes in the KO; removes masked WT growth gains such as TSC2/NF1/PTEN) AND gene not positive for >= 3 distinct queries (IER3IP1, MARK2, LARP7 removed). negative: |pooled z| < 1. else null. -4 rather than -3 because parental-vs-parental null screens reproduce 56% of the z<=-3 hit rate but 32% at z<=-4.",
+ "n_pairs": 106561,
+ "n_pos": 245,
+ "n_neg": 72384,
+ "pos_rate": 0.002299152598042436,
+ "unique_genes": 17766,
+ "paralog_fraction": 0.0005536734827938927,
+ "paralog_pairs": 59,
+ "paralog_pos": 2,
+ "unresolved_symbols": 33,
+ "symbols": 17808,
+ "per_query": [
+  {
+   "query": "FBXW7",
+   "context": "RPE1",
+   "pairs": 17760,
+   "pos": 20,
+   "neg": 12047,
+   "pos_rate": 0.0011261261261261261,
+   "labelled": true,
+   "rep_spearman": 0.6993387510584982,
+   "split_auroc_1to2": 0.9582735189970333,
+   "split_auroc_2to1": 0.9872178189474905,
+   "top_hits": [
+    "CRK",
+    "NEK2",
+    "FRMD4A",
+    "MRPL47",
+    "TRNAU1AP",
+    "UBE2S",
+    "IBA57",
+    "MRPL34"
+   ]
+  },
+  {
+   "query": "CDK12",
+   "context": "RPE1",
+   "pairs": 17762,
+   "pos": 33,
+   "neg": 12151,
+   "pos_rate": 0.0018578988852606688,
+   "labelled": true,
+   "rep_spearman": 0.4208544685117032,
+   "split_auroc_1to2": 0.9402745814788053,
+   "split_auroc_2to1": 0.9900928388691197,
+   "top_hits": [
+    "CDK13",
+    "CNOT1",
+    "DAZAP1",
+    "KCTD10",
+    "PFKP",
+    "KHDRBS1",
+    "CNOT11",
+    "CHMP2B"
+   ]
+  },
+  {
+   "query": "STK11",
+   "context": "RPE1",
+   "pairs": 17760,
+   "pos": 21,
+   "neg": 12029,
+   "pos_rate": 0.0011824324324324325,
+   "labelled": true,
+   "rep_spearman": 0.4530354983578165,
+   "split_auroc_1to2": 0.8839215497456145,
+   "split_auroc_2to1": 0.9538591169531514,
+   "top_hits": [
+    "PAX6",
+    "PAXIP1",
+    "RIC8A",
+    "STAT2",
+    "CDC25B",
+    "RPRD1B",
+    "CRK",
+    "EGLN1"
+   ]
+  },
+  {
+   "query": "TET2",
+   "context": "RPE1",
+   "pairs": 17763,
+   "pos": 70,
+   "neg": 12040,
+   "pos_rate": 0.003940775769858695,
+   "labelled": true,
+   "rep_spearman": 0.4942224536010429,
+   "split_auroc_1to2": 0.9942863687825164,
+   "split_auroc_2to1": 0.7978824983149855,
+   "top_hits": [
+    "TMCO6",
+    "SETDB2",
+    "ZNF511",
+    "ARL14EP",
+    "FBL",
+    "SP110",
+    "USB1",
+    "RPL13A"
+   ]
+  },
+  {
+   "query": "ARID1A",
+   "context": "BEAS-2B",
+   "pairs": 17761,
+   "pos": 77,
+   "neg": 12046,
+   "pos_rate": 0.004335341478520354,
+   "labelled": true,
+   "rep_spearman": 0.433315744010954,
+   "split_auroc_1to2": 0.9576543176138728,
+   "split_auroc_2to1": 0.961873197768041,
+   "top_hits": [
+    "TEFM",
+    "KIF18B",
+    "GFPT1",
+    "PGM3",
+    "DLD",
+    "UBIAD1",
+    "MRPL45",
+    "ITGAV"
+   ]
+  },
+  {
+   "query": "KMT2D",
+   "context": "BEAS-2B",
+   "pairs": 17762,
+   "pos": 24,
+   "neg": 12072,
+   "pos_rate": 0.0013511991892804864,
+   "labelled": true,
+   "rep_spearman": 0.3650209397100269,
+   "split_auroc_1to2": 0.9540316191512257,
+   "split_auroc_2to1": 0.8958405669818835,
+   "top_hits": [
+    "OSGEP",
+    "MNS1",
+    "TPRKB",
+    "NCKAP1",
+    "GABRA2",
+    "CSDE1",
+    "CNOT11",
+    "SNAP23"
+   ]
+  }
+ ],
+ "own_replication": {
+  "split_rule_auroc_rep1_to_rep2": 0.9583589093784005,
+  "split_rule_auroc_rep2_to_rep1": 0.9080666241245641,
+  "split_rule_n_pos_rep1": 222,
+  "split_rule_n_pos_rep2": 244,
+  "replicate_agreement": {
+   "pairs": 106561,
+   "replicates": 2,
+   "spearman": 0.47785647390210156,
+   "tail_2pct_in_10pct": 0.5963883677298312
+  },
+  "final_labels_auroc_rep1": 0.9919572371388874,
+  "final_labels_auroc_rep2": 0.9994189154441617,
+  "note_final_labels": "final labels require z<0 in both replicates, so single-replicate AUROCs for them are optimistic",
+  "kind": "technical replicates (same clone, same T0, same parental arm) -> upper bound"
+ },
+ "null_calibration": {
+  "null": "22 ordered pairs of parental arms from different screens of the same line (RPE1 x4, BEAS-2B x2)",
+  "rule": "z<=t, z<0 in both reps, lfc_ko<-0.5 (before the recurrence filter)",
+  "t=-3": {
+   "query_rate": 0.006618562747080809,
+   "null_rate": 0.003735113457905028,
+   "fdr_estimate": 0.564339056776706
+  },
+  "t=-4": {
+   "query_rate": 0.0023777917375367654,
+   "null_rate": 0.0007702989264461088,
+   "fdr_estimate": 0.323955590511088
+  },
+  "t=-5": {
+   "query_rate": 0.0009548421374606951,
+   "null_rate": 0.00022467154364754852,
+   "fdr_estimate": 0.2352970557468688
+  }
+ },
+ "positive_controls": {
+  "CDK12-CDK13 (RPE1)": -13.03,
+  "ARID1A-ARID1B (BEAS-2B)": -6.62
+ },
+ "cross_study": {
+  "same_line": [
+   {
+    "partner": "chymera2020",
+    "overlap_pairs": 2,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 1,
+    "our_labelled": 1,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 0,
+    "their_labelled": 1,
+    "lines": [
+     "hTERT-RPE1~hTERT-RPE1"
+    ]
+   },
+   {
+    "partner": "thompson2021",
+    "overlap_pairs": 4,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 1,
+    "our_labelled": 4,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 0,
+    "their_labelled": 2,
+    "lines": [
+     "hTERT-RPE1~hTERT-RPE1"
+    ]
+   }
+  ],
+  "different_line": [
+   {
+    "partner": "flister2025",
+    "overlap_pairs": 9,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 2,
+    "our_labelled": 6,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 4,
+    "their_labelled": 9,
+    "lines": [
+     "BEAS-2B~A-549",
+     "BEAS-2B~COLO 678",
+     "BEAS-2B~Detroit 562",
+     "BEAS-2B~HSC-2",
+     "BEAS-2B~HT-29",
+     "BEAS-2B~LK-2",
+     "BEAS-2B~LS180",
+     "BEAS-2B~LS513",
+     "BEAS-2B~MDA-MB-231",
+     "BEAS-2B~MIA PaCa-2",
+     "BEAS-2B~MKN74",
+     "BEAS-2B~NCI-H1299"
+    ]
+   },
+   {
+    "partner": "shen2017",
+    "overlap_pairs": 141,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 0,
+    "our_labelled": 92,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 4,
+    "their_labelled": 130,
+    "lines": [
+     "BEAS-2B~A-549",
+     "BEAS-2B~HEK293T",
+     "BEAS-2B~HeLa"
+    ]
+   },
+   {
+    "partner": "horlbeck2018",
+    "overlap_pairs": 438,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 3,
+    "our_labelled": 275,
+    "our_score_for_their_labels_auroc": 0.41268353639487654,
+    "their_pos": 11,
+    "their_labelled": 302,
+    "lines": [
+     "hTERT-RPE1~Jurkat",
+     "hTERT-RPE1~K-562"
+    ]
+   },
+   {
+    "partner": "feng2022",
+    "overlap_pairs": 35527,
+    "their_score_for_our_labels_auroc": 0.45922352157181257,
+    "our_pos": 98,
+    "our_labelled": 24169,
+    "our_score_for_their_labels_auroc": 0.5112431947068494,
+    "their_pos": 27,
+    "their_labelled": 24198,
+    "lines": [
+     "BEAS-2B~HEK293-A",
+     "hTERT-RPE1~HEK293-A"
+    ]
+   }
+  ],
+  "note": "only pairs with >=5 labelled pos and neg get an AUROC; different-line rows with trivial overlap omitted (full list in the parser's checks())"
+ },
+ "fitness_auroc": 0.6702254065776041,
+ "fitness_auroc_own_wt_lfc": 0.6780910540608817,
+ "verdict": "measurements-only",
+ "verdict_reason": "Downgraded at integration (2026-09-25): replication is technical only (same transduction), a WT-vs-WT null reproduces ~32% of the hit rate at z<=-4, and there is no independent same-line or cross-study check. Original agent reason: Borderline include. Technical split-half AUROC 0.96/0.91 (>=0.84 for every query), hit rate 0.23% (245 pos; 0.11-0.43% per query, no hub), fitness-only AUROC 0.67, recovers CDK12-CDK13 and ARID1A-ARID1B. Caveats: replicates are technical only (no second clone); a parental-vs-parental null implies ~30% FDR at the chosen cut-off; no same-line cross-study overlap, and the different-line overlap with feng2022 (STK11, ARID1A in HEK293-A) is at chance (0.46 with 98 of our positives; 0.51 for their 27) - not counted as a contradiction because lines differ and feng2022 itself fails its null calibration. If SLB requires independent (biological/cross-study) replication, downgrade to measurements-only.",
+ "verdict_agent": "include"
+}

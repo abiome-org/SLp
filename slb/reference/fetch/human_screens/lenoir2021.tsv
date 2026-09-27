@@ -1,0 +1,6 @@
+gene_residuals.csv	https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/data/processed/gene_residuals.csv
+guide_residuals.csv	https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/data/processed/guide_residuals.csv
+Cas12_FASN_GI_12k_library.csv	https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/data/raw/Cas12_FASN_GI_12k_library.csv
+lognorm-FASN_MOLM13_NOMO-1_AKS_ALG_v2.txt	https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/data/raw/lognorm-FASN_MOLM13_NOMO-1_AKS_ALG_v2.txt
+calc_lfcs.ipynb	https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/notebooks/calc_lfcs.ipynb
+Hart_calc_gis.ipynb	https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/notebooks/Hart_calc_gis.ipynb

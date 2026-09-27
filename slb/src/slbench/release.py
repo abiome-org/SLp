@@ -15,8 +15,16 @@ PUBLIC_FILES = (
     "test_semi_inputs.parquet", "contexts.parquet", "gene_single_effects.parquet", "held_out_families.parquet",
     *(f"features/{n}.parquet" for n in ("line_effects", "paralogs", "codependency", "homology_status", "gene_aliases")),
     "hidden/dev_labels.parquet", "hidden/dev_semi_labels.parquet",
-    "hidden/dev_propensity.parquet", "hidden/dev_semi_propensity.parquet", "manifest.json",
+    "hidden/dev_propensity.parquet", "hidden/dev_semi_propensity.parquet", "label_reliability.parquet",
+    "manifest.json", "DATA_LICENSE.txt",
 )
+DATA_LICENSE = """SLB benchmark data: non-commercial research use only (CC BY-NC 4.0 terms).
+
+The labels and features are derived from published screens. Several of them are licensed for
+non-commercial use (CC BY-NC, CC BY-NC-ND) or released under journal terms (see the SLB README,
+"Sources and citation"). Cite the original studies when you use the data. The SLB code is MIT-licensed
+(LICENSE in the repository).
+"""
 
 
 def _verify_public(bench: Path, raw: bool) -> dict:
@@ -37,7 +45,7 @@ def _verify_public(bench: Path, raw: bool) -> dict:
         path = bench / name
         if file_sha256(path) != digest:
             raise ValueError(f"sha256 mismatch: {path}")
-        if name != "manifest.json":
+        if name not in ("manifest.json", "DATA_LICENSE.txt"):
             expected = manifest["files"][name]
             if digest != expected["sha256"] or pq.ParquetFile(path).metadata.num_rows != expected["rows"]:
                 raise ValueError(f"manifest mismatch: {path}")
@@ -89,7 +97,10 @@ def export_public(bench: Path, out: Path) -> dict:
         raise ValueError(f"public export destination contains different files: {out}")
     for name in PUBLIC_FILES:
         (out / name).parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(bench / name, out / name)
+        if name == "DATA_LICENSE.txt":
+            (out / name).write_text(DATA_LICENSE)
+        else:
+            shutil.copyfile(bench / name, out / name)
     lock = {**verification, "public_files": {name: file_sha256(out / name) for name in PUBLIC_FILES}}
     (out / "release.lock.json").write_text(json.dumps(lock, indent=2) + "\n")
     return lock

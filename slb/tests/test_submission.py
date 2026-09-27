@@ -4,7 +4,7 @@ import numpy as np
 import polars as pl
 import pytest
 
-from slbench.evaluate import _family_weights, species_score, validated_join
+from slbench.evaluate import _family_weights, species_result, species_score, validated_join
 
 
 def _gold():
@@ -55,7 +55,7 @@ def test_bootstrap_family_indices_are_canonical(tmp_path, monkeypatch):
     assert (ia.tolist(), ib.tolist(), n) == ([2, 1], [0, 2], 3)
 
 
-def test_unknown_ancestry_is_excluded_from_human_headline():
+def test_unknown_ancestry_is_its_own_human_group():
     d = pl.DataFrame({
         "context_id": ["eur"] * 40 + ["unknown"] * 40,
         "sources": ["screen"] * 80,
@@ -64,4 +64,20 @@ def test_unknown_ancestry_is_excluded_from_human_headline():
         "score": [0.0] * 20 + [1.0] * 20 + [1.0] * 20 + [0.0] * 20,
         "_bw": [1.0] * 80,
     })
-    assert species_score(d, "human") == 0.0
+    # lines without an ancestry estimate form their own group, averaged in like the others (scorer 3)
+    assert species_score(d, "human") == 0.5
+
+
+def test_normalized_score_uses_the_stratum_noise_ceiling():
+    y = [1] * 20 + [0] * 20
+    d = pl.DataFrame({
+        "context_id": ["a"] * 40 + ["b"] * 40, "sources": ["s1"] * 40 + ["s2"] * 40,
+        "ancestry_group": ["n/a"] * 80, "label": y + y,
+        "score": [1.0] * 20 + [0.0] * 20 + [1.0] * 10 + [0.0] * 10 + [0.5] * 20,
+        "_bw": [1.0] * 80, "_rel": [0.9] * 40 + [0.7] * 40,
+    })
+    r = species_result(d, "scer")
+    assert abs(r["auroc"] - 0.75) < 1e-12           # strata a: 1.0, b: 0.5, equal pair weights
+    assert abs(r["ceiling"] - 0.8) < 1e-12          # pair-weighted mean reliability
+    assert abs(r["normalized"] - (0.75 - 0.5) / (0.8 - 0.5)) < 1e-12
+    assert np.isnan(species_result(d.drop("_rel"), "scer")["normalized"])

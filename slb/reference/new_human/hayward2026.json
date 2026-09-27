@@ -1,0 +1,673 @@
+{
+ "key": "hayward2026",
+ "citation": "Hayward, Vaitsiankova et al. 2026, bioRxiv (Ciccia lab with Hart lab): enCas12a in4mer all-by-all genetic interaction map of 233 DNA damage response genes in MCF10A and hTERT-RPE1 TP53-/-",
+ "doi": "10.64898/2026.06.07.728858",
+ "license": "Preprint CC BY-NC-ND 4.0; data portal (ddr-genetic-interactions.ciccialab-database.com) states no explicit license; GEO GSE343308 counts (NCBI GEO, no additional restrictions stated)",
+ "files": [
+  {
+   "name": "GSE343308_Cas12a_IN4MER_MCF10A_gRNA_counts_GEO.tsv.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE343nnn/GSE343308/suppl/GSE343308_Cas12a_IN4MER_MCF10A_gRNA_counts_GEO.tsv.gz",
+   "bytes": 1652069,
+   "sha256": "1cfcc9ad63049378d67cd710519c7c860ecc02ec911b9b00b327141cedce1c53"
+  },
+  {
+   "name": "GSE343308_Cas12a_IN4MER_RPE1_gRNA_counts_GEO.tsv.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE343nnn/GSE343308/suppl/GSE343308_Cas12a_IN4MER_RPE1_gRNA_counts_GEO.tsv.gz",
+   "bytes": 1489271,
+   "sha256": "e09eb3eea9d8702ee7279fd57b59a840a4b16841490b68d47a8daa33ad522a79"
+  },
+  {
+   "name": "full_dataset_for_download.zip",
+   "url": "https://ddr-genetic-interactions.ciccialab-database.com/data/full_dataset_for_download.zip",
+   "bytes": 12619047,
+   "sha256": "639afa91980e346d022a3a93401ddbd473af6b4d00e1ef4b8d32ab3236ab60b5"
+  }
+ ],
+ "contexts": [
+  "MCF10A",
+  "RPE1"
+ ],
+ "mechanism": "CRISPR-Cas12a",
+ "label_rule": "Final timepoint only (MCF10A T17, RPE1 T18; authors' per-timepoint GI z-score with local std, and FDR_negative). Positive: GI_z <= -5 and FDR_negative < 0.05. Negative: |GI_z| < 1 and FDR_negative > 0.25. Else null. Chosen over the authors' looser FDR<0.1 (z about -3.5) because cross-study recovery by SPIDR rises from 0.65 (z<=-3) to 0.68 (z<=-5) and replicate recovery from ~0.80 to ~0.96-0.99; z<=-6 replicates slightly better but halves the positives.",
+ "n_pairs": 52982,
+ "n_pos": 146,
+ "n_neg": 34049,
+ "pos_rate": 0.00276,
+ "per_context": {
+  "MCF10A": {
+   "pairs": 26611,
+   "pos": 36,
+   "neg": 17395,
+   "pos_rate": 0.00135
+  },
+  "RPE1": {
+   "pairs": 26371,
+   "pos": 110,
+   "neg": 16654,
+   "pos_rate": 0.00417
+  }
+ },
+ "unique_genes": 232,
+ "symbols_unresolved": [],
+ "paralog_fraction": 0.0043,
+ "paralog_fraction_of_pos": 0.068,
+ "threshold_counts": {
+  "MCF10A": {
+   "z<=-3&FDR<0.05": 127,
+   "z<=-4&FDR<0.05": 77,
+   "z<=-5&FDR<0.05": 36,
+   "z<=-6&FDR<0.05": 17,
+   "z<=-8&FDR<0.05": 6,
+   "FDR<0.1 (authors)": 151
+  },
+  "RPE1": {
+   "z<=-3&FDR<0.05": 266,
+   "z<=-4&FDR<0.05": 168,
+   "z<=-5&FDR<0.05": 110,
+   "z<=-6&FDR<0.05": 71,
+   "z<=-8&FDR<0.05": 33,
+   "FDR<0.1 (authors)": 326
+  }
+ },
+ "own_replication": {
+  "MCF10A": {
+   "timepoint": "T17 vs T0",
+   "replicate_agreement_rawGI": {
+    "pairs": 26377,
+    "replicates": 3,
+    "spearman": 0.565,
+    "tail_2pct_in_10pct": 0.335
+   },
+   "split_rule_rawGI_q": {
+    "0.005": [
+     0.699,
+     0.691,
+     0.741,
+     0.677,
+     0.748,
+     0.697
+    ],
+    "0.01": [
+     0.667,
+     0.655,
+     0.687,
+     0.655,
+     0.692,
+     0.669
+    ],
+    "0.02": [
+     0.623,
+     0.616,
+     0.66,
+     0.606,
+     0.651,
+     0.621
+    ]
+   },
+   "localz_spearman": [
+    0.218,
+    0.217,
+    0.244
+   ],
+   "split_rule_localz_thr": {
+    "-3": {
+     "n_pos_per_rep": [
+      226,
+      100,
+      89
+     ],
+     "auroc_all_directions": [
+      0.773,
+      0.746,
+      0.841,
+      0.75,
+      0.89,
+      0.826
+     ],
+     "mean": 0.804,
+     "min": 0.746
+    },
+    "-4": {
+     "n_pos_per_rep": [
+      52,
+      22,
+      21
+     ],
+     "auroc_all_directions": [
+      0.865,
+      0.869,
+      0.94,
+      0.916,
+      0.972,
+      0.949
+     ],
+     "mean": 0.918,
+     "min": 0.865
+    },
+    "-5": {
+     "n_pos_per_rep": [
+      11,
+      7,
+      5
+     ],
+     "auroc_all_directions": [
+      0.972,
+      0.998,
+      0.989,
+      1.0,
+      0.999,
+      0.997
+     ],
+     "mean": 0.992,
+     "min": 0.972
+    },
+    "-6": {
+     "n_pos_per_rep": [
+      5,
+      2,
+      1
+     ],
+     "auroc_all_directions": [
+      0.984,
+      0.999,
+      0.964,
+      1.0,
+      1.0,
+      1.0
+     ],
+     "mean": 0.991,
+     "min": 0.964
+    }
+   },
+   "two_vs_one_localz": {
+    "-3": {
+     "n_pos": [
+      115,
+      184,
+      199
+     ],
+     "auroc": [
+      0.911,
+      0.825,
+      0.79
+     ]
+    },
+    "-4": {
+     "n_pos": [
+      27,
+      50,
+      56
+     ],
+     "auroc": [
+      0.984,
+      0.916,
+      0.909
+     ]
+    },
+    "-5": {
+     "n_pos": [
+      15,
+      17,
+      20
+     ],
+     "auroc": [
+      0.981,
+      0.977,
+      0.999
+     ]
+    },
+    "-6": {
+     "n_pos": [
+      6,
+      9,
+      7
+     ],
+     "auroc": [
+      0.988,
+      0.995,
+      0.999
+     ]
+    }
+   },
+   "final_labels_single_replicate_auroc": {
+    "z<=-3": {
+     "pos": 127,
+     "neg": 17218,
+     "auroc": [
+      0.801,
+      0.79,
+      0.796
+     ]
+    },
+    "z<=-4": {
+     "pos": 77,
+     "neg": 17218,
+     "auroc": [
+      0.851,
+      0.858,
+      0.864
+     ]
+    },
+    "z<=-5": {
+     "pos": 36,
+     "neg": 17218,
+     "auroc": [
+      0.933,
+      0.954,
+      0.943
+     ]
+    },
+    "z<=-6": {
+     "pos": 17,
+     "neg": 17218,
+     "auroc": [
+      0.944,
+      0.949,
+      0.956
+     ]
+    },
+    "z<=-8": {
+     "pos": 6,
+     "neg": 17218,
+     "auroc": [
+      0.979,
+      0.997,
+      0.998
+     ]
+    }
+   },
+   "final_labels_vs_T9_z_auroc (same populations, not independent)": {
+    "pos": 36,
+    "auroc": 0.983
+   }
+  },
+  "RPE1": {
+   "timepoint": "T18 vs T0",
+   "replicate_agreement_rawGI": {
+    "pairs": 26139,
+    "replicates": 3,
+    "spearman": 0.58,
+    "tail_2pct_in_10pct": 0.443
+   },
+   "split_rule_rawGI_q": {
+    "0.005": [
+     0.573,
+     0.519,
+     0.861,
+     0.79,
+     0.715,
+     0.748
+    ],
+    "0.01": [
+     0.502,
+     0.438,
+     0.794,
+     0.758,
+     0.672,
+     0.656
+    ],
+    "0.02": [
+     0.524,
+     0.486,
+     0.733,
+     0.721,
+     0.65,
+     0.63
+    ]
+   },
+   "localz_spearman": [
+    0.346,
+    0.305,
+    0.346
+   ],
+   "split_rule_localz_thr": {
+    "-3": {
+     "n_pos_per_rep": [
+      331,
+      191,
+      204
+     ],
+     "auroc_all_directions": [
+      0.768,
+      0.698,
+      0.918,
+      0.9,
+      0.906,
+      0.863
+     ],
+     "mean": 0.842,
+     "min": 0.698
+    },
+    "-4": {
+     "n_pos_per_rep": [
+      117,
+      62,
+      72
+     ],
+     "auroc_all_directions": [
+      0.869,
+      0.793,
+      0.989,
+      0.973,
+      0.972,
+      0.962
+     ],
+     "mean": 0.926,
+     "min": 0.793
+    },
+    "-5": {
+     "n_pos_per_rep": [
+      58,
+      34,
+      39
+     ],
+     "auroc_all_directions": [
+      0.962,
+      0.927,
+      0.998,
+      0.997,
+      0.982,
+      0.996
+     ],
+     "mean": 0.977,
+     "min": 0.927
+    },
+    "-6": {
+     "n_pos_per_rep": [
+      39,
+      24,
+      20
+     ],
+     "auroc_all_directions": [
+      0.986,
+      0.974,
+      0.999,
+      0.996,
+      1.0,
+      0.997
+     ],
+     "mean": 0.992,
+     "min": 0.974
+    }
+   },
+   "two_vs_one_localz": {
+    "-3": {
+     "n_pos": [
+      223,
+      244,
+      241
+     ],
+     "auroc": [
+      0.949,
+      0.915,
+      0.894
+     ]
+    },
+    "-4": {
+     "n_pos": [
+      99,
+      111,
+      101
+     ],
+     "auroc": [
+      0.981,
+      0.963,
+      0.984
+     ]
+    },
+    "-5": {
+     "n_pos": [
+      49,
+      69,
+      65
+     ],
+     "auroc": [
+      0.993,
+      0.997,
+      0.99
+     ]
+    },
+    "-6": {
+     "n_pos": [
+      31,
+      43,
+      37
+     ],
+     "auroc": [
+      0.999,
+      0.999,
+      1.0
+     ]
+    }
+   },
+   "final_labels_single_replicate_auroc": {
+    "z<=-3": {
+     "pos": 265,
+     "neg": 16506,
+     "auroc": [
+      0.871,
+      0.878,
+      0.915
+     ]
+    },
+    "z<=-4": {
+     "pos": 168,
+     "neg": 16506,
+     "auroc": [
+      0.925,
+      0.941,
+      0.97
+     ]
+    },
+    "z<=-5": {
+     "pos": 110,
+     "neg": 16506,
+     "auroc": [
+      0.965,
+      0.966,
+      0.992
+     ]
+    },
+    "z<=-6": {
+     "pos": 71,
+     "neg": 16506,
+     "auroc": [
+      0.978,
+      0.964,
+      0.992
+     ]
+    },
+    "z<=-8": {
+     "pos": 33,
+     "neg": 16506,
+     "auroc": [
+      0.997,
+      0.999,
+      0.999
+     ]
+    }
+   },
+   "final_labels_vs_T9_z_auroc (same populations, not independent)": {
+    "pos": 110,
+    "auroc": 0.985
+   }
+  },
+  "paired_t0_recheck": {
+   "note": "each replicate scored against its own T0 (no shared reference), z within fitness bins, z<=-5",
+   "RPE1_rep_to_rep_auroc": [
+    0.92,
+    0.879,
+    0.99,
+    0.989,
+    0.983,
+    0.981
+   ],
+   "RPE1_leave_one_out": [
+    0.998,
+    0.999,
+    0.991
+   ],
+   "MCF10A_rep_to_rep_auroc": [
+    0.993,
+    0.999,
+    0.984,
+    0.96,
+    0.996,
+    0.993
+   ],
+   "MCF10A_leave_one_out": [
+    0.997,
+    0.993,
+    1.0
+   ]
+  }
+ },
+ "cross_study": {
+  "note": "Only SPIDR (Fielden 2025, CRISPRi, RPE1, SLB zGI re-scoring) overlaps substantially; thompson2021 RPE1 shares 14 pairs with 0 positives. SPIDR's RPE1 and this RPE1 are both hTERT-RPE1 (this screen TP53-/-).",
+  "RPE1_vs_spidr2025_RPE1": {
+   "overlap_pairs": 17661,
+   "ours_labels_scored_by_spidr": {
+    "z<=-3&FDR<0.05": {
+     "pos": 190,
+     "auroc": 0.65
+    },
+    "z<=-4&FDR<0.05": {
+     "pos": 121,
+     "auroc": 0.653
+    },
+    "z<=-5&FDR<0.05": {
+     "pos": 85,
+     "auroc": 0.682
+    },
+    "z<=-6&FDR<0.05": {
+     "pos": 58,
+     "auroc": 0.727
+    },
+    "z<=-8&FDR<0.05": {
+     "pos": 29,
+     "auroc": 0.733
+    },
+    "FDR<0.1 (authors' call)": {
+     "pos": 230,
+     "auroc": 0.65
+    }
+   },
+   "spidr_labels_scored_by_ours": {
+    "SLB spidr label (z<=-3)": {
+     "pos": 15,
+     "auroc": 0.775
+    }
+   },
+   "spearman": 0.033
+  },
+  "MCF10A_vs_spidr2025_RPE1 (different line, weaker)": {
+   "overlap_pairs": 17816,
+   "ours_labels_scored_by_spidr": {
+    "z<=-3&FDR<0.05": {
+     "pos": 96,
+     "auroc": 0.568
+    },
+    "z<=-4&FDR<0.05": {
+     "pos": 59,
+     "auroc": 0.631
+    },
+    "z<=-5&FDR<0.05": {
+     "pos": 24,
+     "auroc": 0.634
+    },
+    "z<=-6&FDR<0.05": {
+     "pos": 13,
+     "auroc": 0.644
+    },
+    "z<=-8&FDR<0.05": {
+     "pos": 5,
+     "auroc": 0.818
+    },
+    "FDR<0.1 (authors' call)": {
+     "pos": 111,
+     "auroc": 0.565
+    }
+   },
+   "spidr_labels_scored_by_ours": {
+    "SLB spidr label (z<=-3)": {
+     "pos": 16,
+     "auroc": 0.613
+    }
+   },
+   "spearman": 0.024
+  },
+  "cross_line_MCF10A_vs_RPE1 (within study)": {
+   "overlap_pairs": 26320,
+   "spearman": 0.334,
+   "note": "same library/lab/pipeline, so shared guide artefacts can inflate this",
+   "by_threshold": {
+    "z<=-3": {
+     "MCF10A_labels_by_RPE1": {
+      "pos": 127,
+      "auroc": 0.946
+     },
+     "RPE1_labels_by_MCF10A": {
+      "pos": 266,
+      "auroc": 0.863
+     }
+    },
+    "z<=-4": {
+     "MCF10A_labels_by_RPE1": {
+      "pos": 77,
+      "auroc": 0.962
+     },
+     "RPE1_labels_by_MCF10A": {
+      "pos": 168,
+      "auroc": 0.878
+     }
+    },
+    "z<=-5": {
+     "MCF10A_labels_by_RPE1": {
+      "pos": 36,
+      "auroc": 0.987
+     },
+     "RPE1_labels_by_MCF10A": {
+      "pos": 110,
+      "auroc": 0.896
+     }
+    },
+    "z<=-6": {
+     "MCF10A_labels_by_RPE1": {
+      "pos": 17,
+      "auroc": 0.99
+     },
+     "RPE1_labels_by_MCF10A": {
+      "pos": 71,
+      "auroc": 0.927
+     }
+    },
+    "z<=-8": {
+     "MCF10A_labels_by_RPE1": {
+      "pos": 6,
+      "auroc": 0.999
+     },
+     "RPE1_labels_by_MCF10A": {
+      "pos": 33,
+      "auroc": 0.971
+     }
+    }
+   }
+  }
+ },
+ "fitness_auroc": 0.518,
+ "fitness_auroc_detail": {
+  "RPE1": {
+   "depmap": 0.541,
+   "n": 13225,
+   "own_SMF": 0.573
+  },
+  "MCF10A": {
+   "depmap": 0.438,
+   "n": 13736,
+   "own_SMF": 0.599
+  }
+ },
+ "verdict": "include",
+ "verdict_reason": "Own replication: labels defined from one replicate's locally z-scored GI (z<-5) are recovered by each other replicate at AUROC 0.97-1.00 (MCF10A) and 0.93-1.00 (RPE1); the final labels are recovered by each single replicate at 0.93-0.95 (MCF10A) and 0.97-0.99 (RPE1). Cross-study in RPE1: SPIDR (CRISPRi) recovers the 85 overlapping RPE1 positives at 0.68 (0.65 at the authors' FDR<0.1 call), and this screen recovers SPIDR's 15 overlapping positives at 0.78; not a contradiction. Hit rate 0.42% (RPE1) and 0.14% (MCF10A; low because of the strict cut-off). Single-gene fitness does not predict labels (DepMap 0.52, own SMF 0.57-0.60). MCF10A labels have only different-line cross-study evidence (SPIDR RPE1 0.63, 24 pos) plus within-study cross-line 0.99.",
+ "rescored_replicates": "replicates(): GEO GSE343308 counts, final timepoint vs pooled T0, additive GI per replicate (3 reps), centred on 50 non-essential control genes' single-gene arrays"
+}

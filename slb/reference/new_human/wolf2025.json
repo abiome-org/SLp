@@ -1,0 +1,407 @@
+{
+ "key": "wolf2025",
+ "citation": "Wolf G, Leippe P, Onstein S, et al., Superti-Furga G. The genetic interaction map of the human solute carrier superfamily. Mol Syst Biol (2025). PMID 40355755, PMC12130552",
+ "doi": "10.1038/s44320-025-00105-5",
+ "license": "CC BY 4.0 (article and supplements); GEO GSE269905 counts public",
+ "files": [
+  {
+   "name": "44320_2025_105_MOESM2_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs44320-025-00105-5/MediaObjects/44320_2025_105_MOESM2_ESM.xlsx",
+   "bytes": 18107,
+   "sha256": "beceeb1717f574b13da5fca544428505eb4dc0a78766db7dd853159758420f11"
+  },
+  {
+   "name": "44320_2025_105_MOESM4_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs44320-025-00105-5/MediaObjects/44320_2025_105_MOESM4_ESM.xlsx",
+   "bytes": 768560,
+   "sha256": "0396d3245b0659804f877d99e130207323ac0cf16cb150af21f6e91505279afc"
+  },
+  {
+   "name": "44320_2025_105_MOESM5_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs44320-025-00105-5/MediaObjects/44320_2025_105_MOESM5_ESM.xlsx",
+   "bytes": 97829765,
+   "sha256": "9804e299744a04b367ee46c119e1bcd27f6f6a39a8f8b948a58b965aebce1f99"
+  },
+  {
+   "name": "44320_2025_105_MOESM6_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs44320-025-00105-5/MediaObjects/44320_2025_105_MOESM6_ESM.xlsx",
+   "bytes": 54501907,
+   "sha256": "7a030efe5d11c7d5724b0144e9707a380f9c276c2804046692975fec73d98eb8"
+  },
+  {
+   "name": "44320_2025_105_MOESM7_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs44320-025-00105-5/MediaObjects/44320_2025_105_MOESM7_ESM.xlsx",
+   "bytes": 18960,
+   "sha256": "93f21f457bca59b98c3869b078b09e9c2b4ec9db90554e562a68f0ff6b500c02"
+  },
+  {
+   "name": "44320_2025_105_MOESM8_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs44320-025-00105-5/MediaObjects/44320_2025_105_MOESM8_ESM.xlsx",
+   "bytes": 6222713,
+   "sha256": "cbbd85ed4e688d2dcef17b05a18ce320425b359b9438e8b8a7dd21d97f13737f"
+  },
+  {
+   "name": "44320_2025_105_MOESM9_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs44320-025-00105-5/MediaObjects/44320_2025_105_MOESM9_ESM.xlsx",
+   "bytes": 5586007,
+   "sha256": "8c43247e225c99fa03349922966b47d962e29f45d3c343cf95c4878dbbc1b8c1"
+  },
+  {
+   "name": "GSE269905_Cas12a-SLCxSLC_lib1_sgRNAs_.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE269nnn/GSE269905/suppl/GSE269905_Cas12a-SLCxSLC_lib1_sgRNAs_.txt.gz",
+   "bytes": 2242306,
+   "sha256": "75269f8d4ca5d10d716b554a4c7f827264f21cb693c7da40bdce3222bee1138c"
+  },
+  {
+   "name": "GSE269905_Cas12a-SLCxSLC_lib2_sgRNAs.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE269nnn/GSE269905/suppl/GSE269905_Cas12a-SLCxSLC_lib2_sgRNAs.txt.gz",
+   "bytes": 2265724,
+   "sha256": "dfaa99dd2d51ce73165e17bd73a34d1f64164398091f70802d17b7f1b514a2f2"
+  },
+  {
+   "name": "GSE269905_Cas12a-SLCxSLC_lib3_sgRNAs.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE269nnn/GSE269905/suppl/GSE269905_Cas12a-SLCxSLC_lib3_sgRNAs.txt.gz",
+   "bytes": 2280885,
+   "sha256": "06b5b73fc8aa6ba8fb6925221590e4a1ff0c441f1f7dcb34ad0eb00fe0f539a8"
+  },
+  {
+   "name": "GSE269905_Cas12a-SLCxSLC_lib4_sgRNAs.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE269nnn/GSE269905/suppl/GSE269905_Cas12a-SLCxSLC_lib4_sgRNAs.txt.gz",
+   "bytes": 2266536,
+   "sha256": "03ea599af62095058176613a6ebaa978992da362fef3ea8546ec56fc5a7d7192"
+  },
+  {
+   "name": "GSE269905_Cas12a-SLCxSLC_sublib1_counts.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE269nnn/GSE269905/suppl/GSE269905_Cas12a-SLCxSLC_sublib1_counts.txt.gz",
+   "bytes": 6702473,
+   "sha256": "78e86744b4d1388c3df8f4c7cc33c033cbba67614afdcd9a21799282d034803f"
+  },
+  {
+   "name": "GSE269905_Cas12a-SLCxSLC_sublib2_counts.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE269nnn/GSE269905/suppl/GSE269905_Cas12a-SLCxSLC_sublib2_counts.txt.gz",
+   "bytes": 5904317,
+   "sha256": "3ab4ccd962d8ec68f50b47b81fc3fc669f5daf8afeaa61dded37ea0a90869f0b"
+  },
+  {
+   "name": "GSE269905_Cas12a-SLCxSLC_sublib3_4_counts.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE269nnn/GSE269905/suppl/GSE269905_Cas12a-SLCxSLC_sublib3_4_counts.txt.gz",
+   "bytes": 12124206,
+   "sha256": "58bbdbf3d828069e1939985ec0ab7ec22afd6cabd354b746a38a8056e0dacc03"
+  },
+  {
+   "name": "GSE269905_Cas9-SLCxSLC_counts.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE269nnn/GSE269905/suppl/GSE269905_Cas9-SLCxSLC_counts.txt.gz",
+   "bytes": 10771385,
+   "sha256": "39979a18274db600d6ed8a6820d78460d10359a6ed72431160c12fdeae24bcc3"
+  },
+  {
+   "name": "GSE269905_Cas9-SLCxSLC_sgRNAs.txt.gz",
+   "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE269nnn/GSE269905/suppl/GSE269905_Cas9-SLCxSLC_sgRNAs.txt.gz",
+   "bytes": 6007984,
+   "sha256": "29caaa9ffa950864753713e0d9d566b6fdc72794f8a027f503dd6d2d67b919e2"
+  }
+ ],
+ "contexts": [
+  "HCT 116"
+ ],
+ "mechanism": [
+  "CRISPR-Cas12a",
+  "CRISPR-KO"
+ ],
+ "arms_used": "SLC x SLC, standard high-glucose medium, week 3 (authors' scoring time point); Cas12a = Dataset EV2 (4 sublibraries, 3 reps), Cas9 = Dataset EV3 (2 reps). SLC x enzyme arm (4 conditions) and the Cas12a metal pilot (EV1) not used.",
+ "label_rule": "Authors' week-3 calls, per nuclease. Positive: interaction == 'synthetic_lethal' (Cas12a: padj<0.1 in each of 3 replicates, dLFC<-0.3, plus saturation and week1->3 trend filters; Cas9: pooled padj<0.005, dLFC<-0.3, same filters). Negative: 'neutral', |dLFC| < that screen's median |dLFC| and padj > 0.1. Otherwise null. Only the Cas12a arm is labelled (LABELLED_ARMS); Cas9 rows are measurements with label null because Cas9 fails both gates (see verdict). Re-scoring from counts with additive GI and z<=-3 was rejected: 166-252 hits dominated by 6 essential SLCs, fitness-only AUROC 0.90-0.92, Cas12a hits recovered by Cas9 at 0.52.",
+ "score": "authors' week-3 dLFC = LFC_obs - LFC_exp (negative = synthetic lethal); signif = authors' padj",
+ "n_pairs": 33158,
+ "n_pairs_by_mechanism": {
+  "CRISPR-Cas12a": 33158,
+  "CRISPR-KO": 33158
+ },
+ "n_pos": 26,
+ "n_neg": 16588,
+ "pos_rate": 0.00078,
+ "if_cas9_also_labelled": {
+  "cas9_pos": 97,
+  "cas9_neg": 16571,
+  "cas9_pos_rate": 0.00293,
+  "collapsed_consensus": {
+   "pos": 71,
+   "neg": 24707
+  },
+  "pos_in_both": 10,
+  "pos_vs_neg_conflicts": 42
+ },
+ "unique_genes": 268,
+ "hgnc": {
+  "symbols": 268,
+  "unresolved": [],
+  "renamed": [
+   "DIRC2->SLC49A4",
+   "MFSD10->SLC75A1",
+   "MFSD13A->SLC68A1",
+   "MFSD14A->SLC71A1",
+   "MFSD14B->SLC71A2",
+   "MFSD3->SLC33A2",
+   "MFSD4B->SLC60A2",
+   "MFSD5->SLC61A1",
+   "MFSD9->SLC67A2",
+   "SLC22A18->SLC67A1",
+   "SLC35C2->SLC35H1",
+   "SLC66A4->CTNS",
+   "SLC66A5->MPDU1",
+   "TMEM104->SLC38A12",
+   "TMEM241->SLC35D4"
+  ]
+ },
+ "paralog_fraction": 0.0141,
+ "n_paralog_pairs": 467,
+ "paralog_fraction_of_positives": {
+  "CRISPR-Cas12a": 0.423,
+  "CRISPR-KO": 0.124
+ },
+ "own_replication": {
+  "note": "Replicate GI re-scored from GEO counts (spidr recipe, week 3). 'independent_inputs' = each replicate vs its own plasmid-input replicate (headline); 'shared_input' = all vs mean input, which shares input noise and inflates agreement (Cas9 Spearman 0.28 -> 0.05). final_labels_single_replicate_auroc is optimistic (labels come from the same data).",
+  "CRISPR-Cas12a": {
+   "independent_inputs": {
+    "agreement": {
+     "pairs": 33158,
+     "replicates": 3,
+     "spearman": 0.227,
+     "tail_2pct_in_10pct": 0.486
+    },
+    "split_rule_auroc": {
+     "rep1->rest": {
+      "z<=-3": 0.814,
+      "pos": 279,
+      "q1%": 0.813
+     },
+     "rep2->rest": {
+      "z<=-3": 0.887,
+      "pos": 195,
+      "q1%": 0.842
+     },
+     "rep3->rest": {
+      "z<=-3": 0.707,
+      "pos": 273,
+      "q1%": 0.719
+     }
+    },
+    "final_labels_single_replicate_auroc": {
+     "rep1": 0.962,
+     "rep2": 0.97,
+     "rep3": 0.985
+    },
+    "final_labels_pos_in_rep_table": 26
+   },
+   "shared_input": {
+    "agreement": {
+     "pairs": 33158,
+     "replicates": 3,
+     "spearman": 0.298,
+     "tail_2pct_in_10pct": 0.532
+    },
+    "split_rule_auroc": {
+     "rep1->rest": {
+      "z<=-3": 0.836,
+      "pos": 266,
+      "q1%": 0.831
+     },
+     "rep2->rest": {
+      "z<=-3": 0.877,
+      "pos": 217,
+      "q1%": 0.857
+     },
+     "rep3->rest": {
+      "z<=-3": 0.717,
+      "pos": 303,
+      "q1%": 0.726
+     }
+    },
+    "final_labels_single_replicate_auroc": {
+     "rep1": 0.975,
+     "rep2": 0.968,
+     "rep3": 0.979
+    },
+    "final_labels_pos_in_rep_table": 26
+   }
+  },
+  "CRISPR-KO": {
+   "independent_inputs": {
+    "agreement": {
+     "pairs": 33153,
+     "replicates": 2,
+     "spearman": 0.054,
+     "tail_2pct_in_10pct": 0.212
+    },
+    "split_rule_auroc": {
+     "rep1->rest": {
+      "z<=-3": 0.631,
+      "pos": 161,
+      "q1%": 0.6
+     },
+     "rep2->rest": {
+      "z<=-3": 0.654,
+      "pos": 136,
+      "q1%": 0.585
+     }
+    },
+    "final_labels_single_replicate_auroc": {
+     "rep1": 0.93,
+     "rep2": 0.897
+    },
+    "final_labels_pos_in_rep_table": 93
+   },
+   "shared_input": {
+    "agreement": {
+     "pairs": 33153,
+     "replicates": 2,
+     "spearman": 0.277,
+     "tail_2pct_in_10pct": 0.353
+    },
+    "split_rule_auroc": {
+     "rep1->rest": {
+      "z<=-3": 0.723,
+      "pos": 199,
+      "q1%": 0.706
+     },
+     "rep2->rest": {
+      "z<=-3": 0.74,
+      "pos": 144,
+      "q1%": 0.729
+     }
+    },
+    "final_labels_single_replicate_auroc": {
+     "rep1": 0.959,
+     "rep2": 0.9
+    },
+    "final_labels_pos_in_rep_table": 93
+   }
+  },
+  "cross_nuclease_headline": {
+   "CRISPR-Cas12a labels scored by CRISPR-KO": {
+    "pos": 26,
+    "labelled": 16614,
+    "auroc_other_author_dLFC": 0.774,
+    "auroc_other_rescored_GI": 0.668,
+    "excl_control_pairs": {
+     "pos": 22,
+     "auroc_other_author_dLFC": 0.733,
+     "auroc_other_rescored_GI": 0.668
+    }
+   },
+   "CRISPR-KO labels scored by CRISPR-Cas12a": {
+    "pos": 97,
+    "labelled": 16668,
+    "auroc_other_author_dLFC": 0.628,
+    "auroc_other_rescored_GI": 0.629,
+    "excl_control_pairs": {
+     "pos": 93,
+     "auroc_other_author_dLFC": 0.612,
+     "auroc_other_rescored_GI": 0.613
+    }
+   },
+   "pairs_in_both": 33158,
+   "positive_in_both": 10,
+   "conflicts_pos_vs_neg": 42,
+   "spearman_author_dLFC": 0.034,
+   "spearman_rescored_GI": -0.007,
+   "collapsed_consensus": {
+    "pos": 71,
+    "neg": 24707
+   }
+  }
+ },
+ "cross_study": {
+  "same_line_overlap": 0,
+  "CRISPR-Cas12a": {
+   "overlap_pairs": 109,
+   "sources": [
+    "chou2025",
+    "chymera2020",
+    "dede2020",
+    "flister2025",
+    "han2017",
+    "harle2025",
+    "horlbeck2018",
+    "ito2021",
+    "parrish2021",
+    "shen2017",
+    "thompson2021",
+    "wong2016"
+   ],
+   "my_labels_by_other_lines_mean_pct": {
+    "pos": 9,
+    "n": 56,
+    "auroc": 0.794
+   },
+   "other_majority_labels_by_my_score": {
+    "pos": 7,
+    "n": 104,
+    "auroc": 0.776
+   },
+   "excl_control_pairs": {
+    "my_labels_pos": 5,
+    "auroc": 0.643,
+    "their_labels_pos": 4,
+    "auroc_theirs": null
+   }
+  },
+  "CRISPR-KO": {
+   "overlap_pairs": 109,
+   "sources": [
+    "chou2025",
+    "chymera2020",
+    "dede2020",
+    "flister2025",
+    "han2017",
+    "harle2025",
+    "horlbeck2018",
+    "ito2021",
+    "parrish2021",
+    "shen2017",
+    "thompson2021",
+    "wong2016"
+   ],
+   "my_labels_by_other_lines_mean_pct": {
+    "pos": 11,
+    "n": 60,
+    "auroc": 0.768
+   },
+   "other_majority_labels_by_my_score": {
+    "pos": 7,
+    "n": 104,
+    "auroc": 0.82
+   },
+   "excl_control_pairs": {
+    "my_labels_pos": 7,
+    "auroc": 0.665,
+    "their_labels_pos": 4,
+    "auroc_theirs": null
+   }
+  },
+  "note": "No other SLB study in HCT 116. Other-line overlap is ~109 pairs, mostly the non-SLC control pairs (HDAC1/2, MAPK1/3, STAG1/2, MAP2K1/2, SLC25A28/37); without them <=7 positives, too few to judge."
+ },
+ "fitness_auroc": 0.7,
+ "fitness_auroc_detail": {
+  "CRISPR-Cas12a": {
+   "screen_singles": 0.607,
+   "depmap_HCT116": 0.7,
+   "depmap_pan": 0.786
+  },
+  "CRISPR-KO": {
+   "screen_singles": 0.635,
+   "depmap_HCT116": 0.645,
+   "depmap_pan": 0.681
+  },
+  "CRISPR-Cas12a_excl_control_pairs": {
+   "depmap_HCT116": 0.714,
+   "depmap_pan": 0.769
+  },
+  "note": "AUROC of -(f_a+f_b) for the labels; headline = DepMap HCT 116 for the labelled Cas12a arm. None > 0.8."
+ },
+ "verdict": "include",
+ "verdict_by_mechanism": {
+  "CRISPR-Cas12a": "include",
+  "CRISPR-KO": "measurements-only"
+ },
+ "verdict_reason": "Cas12a labels (26 pos incl. 4 non-SLC control pairs, 16,588 neg): own replicates recover the split-rule labels at 0.71-0.89 (independent inputs), and the independent Cas9 screen of the same pairs recovers the Cas12a calls at 0.77 by author dLFC (0.67 by re-scored GI; 0.73 / 0.67 without control pairs, 22 pos); 10 of 26 are also called in Cas9. Fitness-only 0.61-0.79. Cas9 labels fail: independent-input replicate split 0.59-0.65 (the shared-input 0.71-0.74 is inflated by input noise), and Cas12a recovers them at only 0.61-0.63 (97 pos; not a <0.6 contradiction, but below 0.65). Cas9 is kept as measurements only. Caveats: Cas12a hit rate is low (0.08%, below the usual 0.3-5%; the authors' filters removed 164 pairs that passed padj/dLFC); genome-wide dLFC barely correlates between nucleases (Spearman 0.03), so agreement is confined to the strong hits."
+}

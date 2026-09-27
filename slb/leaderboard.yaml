@@ -181,22 +181,6 @@
   description: context-only paralog random forest refitted on SLB; human only, 79% native coverage
   trained_on: SLB train; filtered GO/PPI and DepMap single-gene data
   leaky: false
-- name: SL-Predict MAE vectors only (exploratory test ablation)
-  result: results/diagnostics/sl_predict_2026/slb/mae_only_test.json
-  result_sha256: a8bc34711be842cfab4902913ef4e4d093974e9f9793432fd1a3318634b666bd
-  predictions: results/diagnostics/sl_predict_2026/slb/mae_only_test.parquet
-  description: feature-group ablation run after full-branch test inspection; human only
-  trained_on: DepMap 26Q1 single-gene profiles; SLB train pairs
-  leaky: false
-  ranked: false
-- name: SL-Predict coessentiality only (exploratory test ablation)
-  result: results/diagnostics/sl_predict_2026/slb/coess_only_test.json
-  result_sha256: 20d2df8590cb04bdf313730803d8510b7b000e998fbc3be14b455471b586c6a8
-  predictions: results/diagnostics/sl_predict_2026/slb/coess_only_test.parquet
-  description: feature-group ablation run after full-branch test inspection; human only
-  trained_on: DepMap 26Q1 single-gene profiles; SLB train pairs
-  leaky: false
-  ranked: false
 - name: SLxGO 2026 (GO-PCA branch, input provenance unresolved)
   result: results/models/slb/slxgo2026__go_pca_test.json
   result_sha256: bd8a4b001a9681749a2e6cfaa82e981974f072cfd5dd446948c1ad0c5e7602d6

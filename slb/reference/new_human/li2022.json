@@ -1,0 +1,505 @@
+{
+ "key": "li2022",
+ "citation": "Li R, Klingbeil O, Monducci D, et al., Sellers WR. Comparative optimization of combinatorial CRISPR screens. Nat Commun 13:2469 (2022).",
+ "doi": "10.1038/s41467-022-30196-9",
+ "license": "CC BY 4.0 (article, supplementary data and figshare 19565902)",
+ "files": [
+  {
+   "name": "41467_2022_30196_MOESM10_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM10_ESM.xlsx",
+   "bytes": 114895,
+   "sha256": "49db0912103dd90ad6987703a0819bf83986f9e009b4352ba5c7ec883e68ba36"
+  },
+  {
+   "name": "41467_2022_30196_MOESM11_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM11_ESM.xlsx",
+   "bytes": 450256,
+   "sha256": "a2c373a56504c3b5b6228823e112e1e141f1f11be2acf2199fc304667b9bb413"
+  },
+  {
+   "name": "41467_2022_30196_MOESM12_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM12_ESM.xlsx",
+   "bytes": 4030573,
+   "sha256": "5d37cdf2b69f2997ec444cbe5654bbe3ea01893df3918f096d82af6e187e9f23"
+  },
+  {
+   "name": "41467_2022_30196_MOESM13_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM13_ESM.xlsx",
+   "bytes": 2779279,
+   "sha256": "0e8d136e7c4b08d6e1ba28f6bd53be6a1690edcb01a45c088ecf47401c88e68d"
+  },
+  {
+   "name": "41467_2022_30196_MOESM14_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM14_ESM.xlsx",
+   "bytes": 111966,
+   "sha256": "d1487fd0a2e260782f321ed8f46633d07c052a2834f8cb4436123fad7b104614"
+  },
+  {
+   "name": "41467_2022_30196_MOESM4_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM4_ESM.xlsx",
+   "bytes": 9591,
+   "sha256": "24c3816e6e10bb695604797eaf3b39bc9f119be46b67a38e61a34c4b8d9e30c6"
+  },
+  {
+   "name": "41467_2022_30196_MOESM5_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM5_ESM.xlsx",
+   "bytes": 10061,
+   "sha256": "d58a21dc58ea7aa110f34fedd0414c240c0a7078699cb771dbff5001cb1c5bd7"
+  },
+  {
+   "name": "41467_2022_30196_MOESM6_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM6_ESM.xlsx",
+   "bytes": 9272,
+   "sha256": "2e0b800638a8603f4c34a7f4c9bfd6d813a48b53213edfda0d406d672c9d1329"
+  },
+  {
+   "name": "41467_2022_30196_MOESM7_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM7_ESM.xlsx",
+   "bytes": 10452,
+   "sha256": "4f84bdac04143e1d97d4d4369123b8f7b1b8932c182dbba3c252ea93d680d581"
+  },
+  {
+   "name": "41467_2022_30196_MOESM8_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM8_ESM.xlsx",
+   "bytes": 106198,
+   "sha256": "f272a28b538d3fa96780bcc364b9769fe8578def9ea1299080ec9b785929113e"
+  },
+  {
+   "name": "41467_2022_30196_MOESM9_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-30196-9/MediaObjects/41467_2022_30196_MOESM9_ESM.xlsx",
+   "bytes": 439077,
+   "sha256": "f9510009c19512b7597abf3eeadc4a11ca461008c4a2a65b91a35771f44cfdad"
+  },
+  {
+   "name": "Raw_Data.zip",
+   "url": "https://ndownloader.figshare.com/files/34762738",
+   "bytes": 17785267,
+   "sha256": "ebd31bd9d661996520defae3d8335c028a28cc64d110cf7060cf28acce2d3105"
+  }
+ ],
+ "contexts": [
+  "IPC-298",
+  "PK-1",
+  "MEL-JUSO"
+ ],
+ "mechanism": "CRISPR-KO",
+ "architecture_used": "VCR1-WCR3",
+ "label_rule": "VCR1-WCR3 architecture only (paper's best library; screened in all 3 lines). Per line and replicate: LFC(end vs pDNA) centred on AAVS1xAAVS1, f_g = median LFC of gene x AAVS1, GI = LFC - f_a - f_b, median over the 18 guide pairs (both orientations); pooled GI from the replicate-mean LFC; score = z of pooled GI over all 423 gene pairs in the line. Positive: z <= -3 and GI < 0 in all 3 replicates. Negative: |z| < 1. Else null. Same z<=-3 / |z|<1 convention as spidr2025 and the zdLFC paralog sources; the authors give no binary call (GEMINI scores only; FDR not published per pair), so we re-score.",
+ "n_pairs": 1269,
+ "n_unique_pairs": 423,
+ "n_unique_genes": 586,
+ "n_pos": 27,
+ "n_neg": 1062,
+ "pos_rate": 0.0213,
+ "per_context": {
+  "IPC-298": {
+   "pairs": 423,
+   "pos": 12,
+   "neg": 377,
+   "pos_rate_tested": 0.0284,
+   "pos_rate_labelled": 0.0308,
+   "positives": [
+    "NXT1|NXT2",
+    "TRA2A|TRA2B",
+    "HDAC1|HDAC2",
+    "VPS4A|VPS4B",
+    "UBE2A|UBE2B",
+    "ASF1A|ASF1B",
+    "MAP2K1|MAP2K2",
+    "HNRNPA1|HNRNPA2B1",
+    "TIMM17A|TIMM17B",
+    "FUBP1|KHSRP",
+    "PPP2CA|PPP2CB",
+    "POC1A|POC1B"
+   ]
+  },
+  "PK-1": {
+   "pairs": 423,
+   "pos": 9,
+   "neg": 359,
+   "pos_rate_tested": 0.0213,
+   "pos_rate_labelled": 0.0245,
+   "positives": [
+    "HDAC1|HDAC2",
+    "TRA2A|TRA2B",
+    "ASF1A|ASF1B",
+    "BCL2L1|MCL1",
+    "NXT1|NXT2",
+    "UBE2A|UBE2B",
+    "CDK4|CDK6",
+    "STAG1|STAG2",
+    "CREBBP|EP300"
+   ]
+  },
+  "MEL-JUSO": {
+   "pairs": 423,
+   "pos": 6,
+   "neg": 326,
+   "pos_rate_tested": 0.0142,
+   "pos_rate_labelled": 0.0181,
+   "positives": [
+    "NXT1|NXT2",
+    "HDAC1|HDAC2",
+    "TUBB|TUBB4B",
+    "UBE2A|UBE2B",
+    "TRA2A|TRA2B",
+    "DUSP4|DUSP6"
+   ]
+  }
+ },
+ "paralog_fraction": 0.52,
+ "unresolved_gene_symbols": [],
+ "renamed_gene_symbols": {
+  "BTBD11": "ABTB3",
+  "DUSP13": "DUSP13B",
+  "DUSP27": "STYXL2",
+  "G6PC": "G6PC1",
+  "GK3P": "GK3",
+  "MPP5": "PALS1",
+  "MPP6": "PALS2",
+  "PRSS42": "PRSS42P",
+  "PRSS45": "PRSS45P",
+  "RNF165": "ARK2C",
+  "TARS": "TARS1",
+  "TUBB8P12": "TUBB8B",
+  "VARS": "VARS1"
+ },
+ "excluded_rows": "15 gene x '<GENE>_copy' self-pair cutting controls and the chr2 x chr2 intergenic control (not gene pairs); AAVS1 used as the single-gene control.",
+ "positive_control_note": "19 of the 27 line-level positives are pairs from the authors' 21 designed pan-essential paralog positive controls (Supplementary Data 3, chosen from DepMap paralog-dependency evidence). The non-control positives are UBE2A|UBE2B (3 lines), MAP2K1|MAP2K2, POC1A|POC1B, CDK4|CDK6, BCL2L1|MCL1, DUSP4|DUSP6.",
+ "own_replication": {
+  "summary": "VCR1-WCR3, 3 biological replicates per line and 2 guide-disjoint orientations. split_rule_auroc (labels from one replicate by z<=-3 or 2% tail vs |x|<median, scored by the mean of the other two) = 0.93-1.00 in every line and direction; orientation split (disjoint guide sets) 0.74-1.00 (MEL-JUSO orient1->orient2 lowest, 0.739). Single-replicate AUROC for final labels >= 0.994. Whole-distribution replicate Spearman is modest (0.40-0.52) because most pairs are neutral.",
+  "per_context": {
+   "PK-1": {
+    "replicate_agreement": {
+     "pairs": 423,
+     "replicates": 3,
+     "spearman": 0.408,
+     "tail_2pct_in_10pct": 1.0
+    },
+    "orientation_spearman": 0.571,
+    "split_rule_auroc": {
+     "rep1_vs_mean_others_z3": 1.0,
+     "mean_others_vs_rep1_z3": 1.0,
+     "rep1_vs_mean_others_q2": 1.0,
+     "rep2_vs_mean_others_z3": 1.0,
+     "mean_others_vs_rep2_z3": 1.0,
+     "rep2_vs_mean_others_q2": 1.0,
+     "rep3_vs_mean_others_z3": 1.0,
+     "mean_others_vs_rep3_z3": 1.0,
+     "rep3_vs_mean_others_q2": 1.0,
+     "orient1_vs_orient2_z3": 0.984,
+     "orient2_vs_orient1_z3": 0.986,
+     "orient1_vs_orient2_q2": 0.983,
+     "orient2_vs_orient1_q2": 0.985
+    },
+    "final_labels_single_replicate_auroc": {
+     "gi_rep1": 1.0,
+     "gi_rep2": 1.0,
+     "gi_rep3": 1.0,
+     "gi_orient1": 1.0,
+     "gi_orient2": 1.0
+    }
+   },
+   "MEL-JUSO": {
+    "replicate_agreement": {
+     "pairs": 423,
+     "replicates": 3,
+     "spearman": 0.515,
+     "tail_2pct_in_10pct": 0.963
+    },
+    "orientation_spearman": 0.51,
+    "split_rule_auroc": {
+     "rep1_vs_mean_others_z3": 1.0,
+     "mean_others_vs_rep1_z3": 1.0,
+     "rep1_vs_mean_others_q2": 1.0,
+     "rep2_vs_mean_others_z3": 1.0,
+     "mean_others_vs_rep2_z3": 0.999,
+     "rep2_vs_mean_others_q2": 0.932,
+     "rep3_vs_mean_others_z3": 1.0,
+     "mean_others_vs_rep3_z3": 1.0,
+     "rep3_vs_mean_others_q2": 1.0,
+     "orient1_vs_orient2_z3": 0.739,
+     "orient2_vs_orient1_z3": 0.998,
+     "orient1_vs_orient2_q2": 0.824,
+     "orient2_vs_orient1_q2": 0.958
+    },
+    "final_labels_single_replicate_auroc": {
+     "gi_rep1": 1.0,
+     "gi_rep2": 0.999,
+     "gi_rep3": 1.0,
+     "gi_orient1": 0.996,
+     "gi_orient2": 1.0
+    }
+   },
+   "IPC-298": {
+    "replicate_agreement": {
+     "pairs": 423,
+     "replicates": 3,
+     "spearman": 0.402,
+     "tail_2pct_in_10pct": 1.0
+    },
+    "orientation_spearman": 0.556,
+    "split_rule_auroc": {
+     "rep1_vs_mean_others_z3": 1.0,
+     "mean_others_vs_rep1_z3": 1.0,
+     "rep1_vs_mean_others_q2": 1.0,
+     "rep2_vs_mean_others_z3": 1.0,
+     "mean_others_vs_rep2_z3": 1.0,
+     "rep2_vs_mean_others_q2": 1.0,
+     "rep3_vs_mean_others_z3": 1.0,
+     "mean_others_vs_rep3_z3": 1.0,
+     "rep3_vs_mean_others_q2": 1.0,
+     "orient1_vs_orient2_z3": 0.999,
+     "orient2_vs_orient1_z3": 0.987,
+     "orient1_vs_orient2_q2": 0.999,
+     "orient2_vs_orient1_q2": 0.983
+    },
+    "final_labels_single_replicate_auroc": {
+     "gi_rep1": 1.0,
+     "gi_rep2": 1.0,
+     "gi_rep3": 1.0,
+     "gi_orient1": 1.0,
+     "gi_orient2": 0.998
+    }
+   }
+  },
+  "pooled_lines_final_labels_single_replicate_auroc": {
+   "gi_rep1": 0.998,
+   "gi_rep2": 0.994,
+   "gi_rep3": 0.997,
+   "gi_orient1": 0.994,
+   "gi_orient2": 0.996
+  },
+  "pooled_lines_n_pos": 27,
+  "architecture_agreement": {
+   "summary": "Pooled GI of each other library architecture vs VCR1-WCR3 in the same line (arch_n_pos_z3 = positives the other architecture calls by z<=-3; AUROCs with 0-1 positives are not meaningful). Functional architectures (SPCR1-WCR3, WCR2-WCR3, WCR3-VCR1, enCas12a): VCR1-WCR3 labels scored by the other architecture 0.886-1.00, reverse direction 0.973-1.00 where >=2 positives, final-label AUROC 0.887-1.00, Spearman 0.16-0.64 (enCas12a lowest; different guides and nuclease). SCR27/SCR43-tracrRNA libraries, which the paper reports as inert (no knockout), give 0.27-0.49; they are non-functional reagents, not replication failures. The spCas9-saCas9 arm is the published Ito 2021 data (see cross_study).",
+   "per_context": {
+    "IPC-298": {
+     "SPCR1-SCR27": {
+      "spearman": 0.093,
+      "vcr1wcr3_labels_z3_scored_by_arch": 0.414,
+      "arch_labels_z3_scored_by_vcr1wcr3": 0.009,
+      "arch_n_pos_z3": 1,
+      "final_labels_auroc_of_arch_gi": 0.383
+     },
+     "SPCR1-SCR43": {
+      "spearman": 0.155,
+      "vcr1wcr3_labels_z3_scored_by_arch": 0.331,
+      "arch_labels_z3_scored_by_vcr1wcr3": null,
+      "arch_n_pos_z3": 0,
+      "final_labels_auroc_of_arch_gi": 0.265
+     },
+     "SPCR1-WCR3": {
+      "spearman": 0.526,
+      "vcr1wcr3_labels_z3_scored_by_arch": 0.999,
+      "arch_labels_z3_scored_by_vcr1wcr3": 1.0,
+      "arch_n_pos_z3": 11,
+      "final_labels_auroc_of_arch_gi": 0.999
+     },
+     "VCR1-SCR27": {
+      "spearman": 0.18,
+      "vcr1wcr3_labels_z3_scored_by_arch": 0.332,
+      "arch_labels_z3_scored_by_vcr1wcr3": 0.487,
+      "arch_n_pos_z3": 5,
+      "final_labels_auroc_of_arch_gi": 0.283
+     },
+     "VCR1-SCR43": {
+      "spearman": 0.18,
+      "vcr1wcr3_labels_z3_scored_by_arch": 0.447,
+      "arch_labels_z3_scored_by_vcr1wcr3": 0.009,
+      "arch_n_pos_z3": 1,
+      "final_labels_auroc_of_arch_gi": 0.394
+     },
+     "WCR2-WCR3": {
+      "spearman": 0.583,
+      "vcr1wcr3_labels_z3_scored_by_arch": 1.0,
+      "arch_labels_z3_scored_by_vcr1wcr3": 1.0,
+      "arch_n_pos_z3": 8,
+      "final_labels_auroc_of_arch_gi": 0.998
+     },
+     "WCR3-VCR1": {
+      "spearman": 0.543,
+      "vcr1wcr3_labels_z3_scored_by_arch": 1.0,
+      "arch_labels_z3_scored_by_vcr1wcr3": 1.0,
+      "arch_n_pos_z3": 11,
+      "final_labels_auroc_of_arch_gi": 1.0
+     },
+     "enCas12a": {
+      "spearman": 0.267,
+      "vcr1wcr3_labels_z3_scored_by_arch": 0.964,
+      "arch_labels_z3_scored_by_vcr1wcr3": 0.996,
+      "arch_n_pos_z3": 5,
+      "final_labels_auroc_of_arch_gi": 0.961
+     }
+    },
+    "PK-1": {
+     "WCR2-WCR3": {
+      "spearman": 0.482,
+      "vcr1wcr3_labels_z3_scored_by_arch": 0.999,
+      "arch_labels_z3_scored_by_vcr1wcr3": 1.0,
+      "arch_n_pos_z3": 2,
+      "final_labels_auroc_of_arch_gi": 0.994
+     },
+     "enCas12a": {
+      "spearman": 0.247,
+      "vcr1wcr3_labels_z3_scored_by_arch": 0.947,
+      "arch_labels_z3_scored_by_vcr1wcr3": null,
+      "arch_n_pos_z3": 0,
+      "final_labels_auroc_of_arch_gi": 0.953
+     }
+    },
+    "MEL-JUSO": {
+     "WCR2-WCR3": {
+      "spearman": 0.64,
+      "vcr1wcr3_labels_z3_scored_by_arch": 1.0,
+      "arch_labels_z3_scored_by_vcr1wcr3": 1.0,
+      "arch_n_pos_z3": 1,
+      "final_labels_auroc_of_arch_gi": 0.996
+     },
+     "enCas12a": {
+      "spearman": 0.164,
+      "vcr1wcr3_labels_z3_scored_by_arch": 0.886,
+      "arch_labels_z3_scored_by_vcr1wcr3": 0.973,
+      "arch_n_pos_z3": 6,
+      "final_labels_auroc_of_arch_gi": 0.887
+     }
+    }
+   }
+  },
+  "authors_gemini": {
+   "MEL-JUSO": {
+    "auroc_of_minus_gemini_sens_for_our_labels": 1.0,
+    "spearman_vs_our_z": 0.611
+   },
+   "IPC-298": {
+    "auroc_of_minus_gemini_sens_for_our_labels": 1.0,
+    "spearman_vs_our_z": 0.535
+   },
+   "PK-1": {
+    "auroc_of_minus_gemini_sens_for_our_labels": 1.0,
+    "spearman_vs_our_z": 0.381
+   }
+  },
+  "authors_gemini_note": "Supplementary Data 11 GEMINI sensitive scores (VCR1-WCR3) are negative for synergy in this file; -score ranks our labels perfectly (AUROC 1.0)."
+ },
+ "cross_study": {
+  "same_line": {
+   "MEL-JUSO vs ito2021": {
+    "theirs": "ito2021|MEL-JUSO",
+    "ours": "MEL-JUSO",
+    "overlap": 296,
+    "their_score_for_our_labels": 0.955,
+    "n_pos_ours": 4,
+    "n_lab_ours": 235,
+    "our_score_for_their_labels": null,
+    "n_pos_theirs": 0,
+    "n_lab_theirs": 203,
+    "spearman": 0.301
+   },
+   "IPC-298 vs ito2021": {
+    "theirs": "ito2021|IPC-298",
+    "ours": "IPC-298",
+    "overlap": 296,
+    "their_score_for_our_labels": 0.967,
+    "n_pos_ours": 5,
+    "n_lab_ours": 268,
+    "our_score_for_their_labels": 0.981,
+    "n_pos_theirs": 5,
+    "n_lab_theirs": 176,
+    "spearman": 0.302
+   },
+   "PK-1 vs ito2021": {
+    "theirs": "ito2021|PK-1",
+    "ours": "PK-1",
+    "overlap": 296,
+    "their_score_for_our_labels": 0.94,
+    "n_pos_ours": 5,
+    "n_lab_ours": 252,
+    "our_score_for_their_labels": 0.852,
+    "n_pos_theirs": 7,
+    "n_lab_theirs": 176,
+    "spearman": 0.208
+   },
+   "MEL-JUSO vs chou2025": {
+    "theirs": "chou2025|MelJuso",
+    "ours": "MEL-JUSO",
+    "overlap": 104,
+    "their_score_for_our_labels": 0.886,
+    "n_pos_ours": 5,
+    "n_lab_ours": 61,
+    "our_score_for_their_labels": 0.79,
+    "n_pos_theirs": 15,
+    "n_lab_theirs": 60,
+    "spearman": 0.395
+   }
+  },
+  "ito2021_pooled_same_lines": {
+   "their_score_for_our_labels": 0.95,
+   "n_pos_ours": 14,
+   "n_lab_ours": 755,
+   "our_score_for_their_labels": 0.897,
+   "n_pos_theirs": 12,
+   "n_lab_theirs": 555
+  },
+  "ito2021_relationship": "Same lab (Sellers; T. Ito is an author of both), same three cell lines (probably the same Cas9-expressing derivatives), different library. Ito 2021 used the spCas9-saCas9 orthologous system; Li 2022 re-uses exactly those published Ito screens as its 10th ('spCas9-saCas9') architecture. Our labels come from the new VCR1-WCR3 dual-spCas9 library: 681 of 3,674 Li spCas9 guide sequences (19%) also occur as spCas9 guides in the Ito library (checked from figshare Raw_Data Minilib_Annotation.rds vs SpSa_Annotation.rds); saCas9 guides are all different. So this is partly-shared-reagent, same-lab replication, not fully independent.",
+  "chou2025_note": "Hart lab, enCas12a in4mer, MelJuso: independent lab and reagents, same line. 104 overlapping pairs: chou ZdLFC for our labels 0.886 (5 pos); our z for chou labels 0.790 (15 pos).",
+  "other_lines_weaker": {
+   "flister2025": {
+    "n_line_pairs": 60,
+    "median_their_score_for_our_labels": 0.89,
+    "median_our_score_for_their_labels": 0.877,
+    "median_overlap": 109.0
+   },
+   "parrish2021": {
+    "n_line_pairs": 6,
+    "median_their_score_for_our_labels": 0.89,
+    "median_our_score_for_their_labels": 0.929,
+    "median_overlap": 50.0
+   },
+   "ito2021": {
+    "n_line_pairs": 30,
+    "median_their_score_for_our_labels": 0.8055,
+    "median_our_score_for_their_labels": 0.905,
+    "median_overlap": 296.0
+   },
+   "chou2025": {
+    "n_line_pairs": 11,
+    "median_their_score_for_our_labels": 0.79,
+    "median_our_score_for_their_labels": 0.888,
+    "median_overlap": 76.0
+   },
+   "harle2025": {
+    "n_line_pairs": 81,
+    "median_their_score_for_our_labels": 0.967,
+    "median_our_score_for_their_labels": 0.9355,
+    "median_overlap": 22.0
+   },
+   "thompson2021": {
+    "n_line_pairs": 9,
+    "median_their_score_for_our_labels": null,
+    "median_our_score_for_their_labels": 0.511,
+    "median_overlap": 25.0
+   },
+   "chymera2020": {
+    "n_line_pairs": 6,
+    "median_their_score_for_our_labels": 0.491,
+    "median_our_score_for_their_labels": null,
+    "median_overlap": 23.0
+   }
+  }
+ },
+ "fitness_auroc": 0.773,
+ "fitness_auroc_per_context": {
+  "PK-1": 0.826,
+  "IPC-298": 0.775,
+  "MEL-JUSO": 0.713
+ },
+ "fitness_auroc_own_singles": {
+  "IPC-298": 0.727,
+  "PK-1": 0.799,
+  "MEL-JUSO": 0.699
+ },
+ "fitness_flag": "Overall 0.773 (<0.8). PK-1 alone 0.826 (>0.8, flagged): its positives include CDK4|CDK6, BCL2L1|MCL1 and the pan-essential controls, whose members have a single-gene fitness effect.",
+ "verdict": "include",
+ "verdict_reason": "Own replication strong (replicate split AUROC 0.93-1.0; guide-disjoint orientation split 0.74-1.0; four other functional library architectures recover the labels at AUROC 0.89-1.0). Cross-study agrees in the same lines: Ito 2021 (same lab, 19% shared spCas9 guides) 0.95 for our labels (14 pos) and 0.90 for theirs (12 pos) pooled; independent Chou 2025 MelJuso 0.886 (5 pos) / 0.790 (15 pos). No contradiction (no overlap reaches 20 positives). Hit rate 0.9-2.8% per line is plausible. Caveats: small (423 pairs x 3 lines, 27 positives), positives dominated by designed pan-essential control pairs, PK-1 fitness AUROC 0.83."
+}

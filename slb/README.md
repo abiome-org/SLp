@@ -25,8 +25,16 @@ appear in training (CV1/CV2) are not offered: models can memorise which genes ha
 so those splits measure training-set lookup, not prediction.
 
 There is one benchmark, built into `data/slb/`. It is updated in place. Results are pinned to the
-SHA-256 of its `manifest.json` and to the scorer version (`2.0.0`), so a rebuild invalidates every pinned
+SHA-256 of its `manifest.json` and to the scorer version (`3.0.0`), so a rebuild invalidates every pinned
 result until it is re-scored.
+
+**Scores are normalized to the labels' noise ceiling.** Every label is a measurement, and an independent
+re-measurement of the same pairs recovers it only at AUROC 0.68–0.96 depending on the screen. So no model
+can reach a raw AUROC of 1 except by predicting measurement noise. The SLB score is
+(AUROC − 0.5) / (ceiling − 0.5): **0 = chance, 1 = as good as re-running the experiment**. A model that
+captures the real biology can reach 1, and can exceed it, since a single re-measurement is itself noisy.
+Dev/test labels must also come from sources that re-measure at ≥ 0.70, so a gain on dev/test is a gain on
+labels that replicate. See Metric.
 
 ## Quickstart
 
@@ -58,7 +66,9 @@ Keep your own outputs outside `data/release/slb/` (`verify` rejects extra files 
 
 - **Headline** (averaged into the SLB score), each with cross-study replication and hundreds of test
   positives:
-  - **Human:** 50 cell lines from 8 studies, annotated with genetic ancestry.
+  - **Human:** 60 cell lines from 19 studies, annotated with genetic ancestry. Since 2026-09 this includes
+    genome-wide query screens (Billmann 2026, HAP1) and all-by-all panels (Herken 2026, Simpson 2023 K562
+    CRISPRi; Najm 2023; Hayward 2026), so most human positives are no longer paralog pairs.
   - ***S. cerevisiae***: Costanzo 2016, Kuzmin 2018 and 2020, Costanzo 2021, 9 merged E-MAPs.
   - ***S. pombe***: Ryan 2012, Frost 2012.
 - **Auxiliary** (scored and reported the same way, not averaged in): *B. subtilis* (Koo 2025),
@@ -99,6 +109,17 @@ A source's labels are used only if all three hold:
 | Byrne 2007 (*C. elegans*, auxiliary) | Pairs measured twice; Lehner 2006 hits recovered at 0.70 | 0.87–0.93 |
 | Horn 2011 (*D. melanogaster*, auxiliary) | Replicate screens; vs Heigwer 2023 0.72 | 0.92–0.93 |
 | Roguev 2013 (*M. musculus*, auxiliary) | Own orientations | 0.73 |
+| Billmann 2026 (HAP1, query × genome, rich medium) | Independent re-screens of the same query (0.49 for an unrelated query) | 0.87 |
+| Herken 2026 (K562 CRISPRi) | Cross-study vs Horlbeck 2018; own independent maps 0.96–0.97 | 0.80 |
+| Simpson 2023 (K562 CRISPRi, preprint) | Cross-study vs Herken 2026 | 0.95–0.97 |
+| Najm 2023 (THP-1, Reh) | Independent libraries in the same lines (THP-1 0.80–0.82, Reh 0.66–0.71³) | 0.73–0.76 |
+| DeWeirdt 2020 (anchor × genome) | Independent anchor guides | 0.76–0.85 |
+| Hayward 2026 (MCF10A, RPE1; preprint) | RPE1 cross-study vs SPIDR³; MCF10A own replicates 0.96–1.00 | 0.68 |
+| Lenoir 2021 (MOLM-13, NOMO-1) | Independent infections | 0.93–0.99 |
+| Li 2022 (IPC-298, PK-1, MEL-JUSO) | Library architectures, orientations, replicates | 0.74–1.00 |
+| Burgold 2025 (HT-29)³ | Leave-one-replicate-out, independent references | 0.68–0.71 |
+| Wolf 2025 (HCT 116, Cas12a arm) | Cas9 arm of the same library | 0.73–0.77 |
+| Najm 2018 (5 lines) | Sp/Sa orientation swap; same-line included studies 0.81–0.83 | 0.80 |
 
 ¹ Schuldiner 2005, Collins 2007, Wilmes 2008, Fiedler 2009, Zheng 2010, Aguilar 2010, Hoppins 2011,
 Guénolé 2013, Surma 2013. They share many measurements, so listed separately they would look like
@@ -106,6 +127,14 @@ independent confirmations of each other.
 
 ² Frost's positive cut-off (S < −4) was tightened after its S < −3 calls replicated in Ryan 2012 at
 only 0.64, so it was chosen with the cross-study number in view.
+
+³ Below the 0.70 evaluation bar (Metric): these labels are used for training only, and their dev/test
+pairs are unscored. The same holds for Frost 2012 (0.67). Burgold's per-anchor standardisation was also
+chosen partly in view of its agreement with Flister 2025.
+
+Per-source evidence for the 2026-09 human sources (replication at several cut-offs, cross-study, fitness
+confounding, licence, file hashes) is in `reference/new_human/<source>.{json,md}`. The reliability number
+each source contributes to the noise ceiling is in `reference/label_reliability.tsv`.
 
 **Excluded sources** keep their measurements in `data/interim/measurements` as optional training data
 but supply no labels:
@@ -123,6 +152,12 @@ but supply no labels:
 | Lehner 2006 (*C. elegans*) | Hit list only: negatives would be inferred, not measured |
 | Gier 2020 (mouse) | 56% of labelled pairs called SL; indistinguishable from non-expressed controls (0.47) |
 | Diehl 2021, Tang 2022 | Implausible hit rates: 63% and 22% of tested pairs called SL |
+| Fong 2025 (7 lines) | Replicates don't agree on GI (0.45–0.60); single-gene fitness predicts its calls at 0.80 |
+| Ford 2023 | 7 positives, fitness predicts them at 0.92, replicate GI Spearman 0.09–0.18 |
+| Kim 2025 | No replicate or orientation data published; most hits in kinases not expressed in the line |
+| Desjardins 2026, Feng 2022 (query × genome) | Technical replicates only; a WT-vs-WT null reproduces 32% (Desjardins) and 51–83% (Feng) of the hit rate |
+| Nebenfuehr 2026 (eHAP) | Replicates don't agree (Spearman ≈ 0) and essential genes aren't depleted; not parsed |
+| Lin 2025 (Hart lab, 8 lines) | Data not public (repository 404); not parsed |
 
 **Where published calls were replaced:** the yeast positive cut-offs are stricter than the authors'
 (ε < −0.2 instead of −0.12; S < −3 instead of −2.3), because stronger interactions replicate better.
@@ -156,12 +191,23 @@ excluded.
 | Byrne 2007 *C. elegans* | In the authors' SGI network, strength ≥ 2 | Not in the network, weak |
 | Horn 2011 fly | q < 0.05 and π < 0 | q > 0.25, small \|π\| |
 | Roguev 2013 mouse E-MAP | S < −3 | \|S\| < 1 |
+| Billmann 2026 HAP1 qGI (rich medium, mean over a query's screens) | qGI < −0.5 and FDR < 0.05 | FDR > 0.5 and \|qGI\| below the screens' median |
+| Herken 2026, Simpson 2023 (K562 CRISPRi, re-scored from counts) | mean GI ≤ −3 over the two independent maps/screens and GI < 0 in both | \|mean GI\| below its median |
+| Najm 2023 | pair z ≤ −4 (authors' synergy threshold; lethality filter not applied) | \|z\| < 1 |
+| DeWeirdt 2020 anchors | pooled z ≤ −3, z < 0 in both replicates, library gene depleted (LFC < −0.5), not a hit for ≥ 3 anchors | \|z\| < 1 |
+| Hayward 2026 (final timepoint) | GI z ≤ −5 and FDR < 0.05 | \|z\| < 1 and FDR > 0.25 |
+| Lenoir 2021 (day 21) | z ≤ −3 and FDR < 0.05 | \|z\| < 1 |
+| Li 2022 (VCR1-WCR3 library) | z ≤ −3 and GI < 0 in all 3 replicates | \|z\| < 1 |
+| Burgold 2025 | per-anchor standardised z ≤ −3 and GI < 0 in all 3 replicates | \|z\| < 1 |
+| Wolf 2025 (Cas12a arm) | authors' `synthetic_lethal` call | `neutral`, \|dLFC\| below median, padj > 0.1 |
+| Najm 2018 (re-scored from reads) | authors' per-line SynLet q < 0.05 and GI < 0 | SynLet and buffering q > 0.25, \|GI\| below median |
 
 Per-source rationale is in the parser docstrings under `src/slbench/sources/`.
 
 ## Metric
 
-**SLB score** is the one number to hill-climb. It is fitness-balanced by construction.
+**SLB score** is the one number to hill-climb. It is fitness-balanced and normalized to the labels' noise
+ceiling by construction.
 
 1. **Compare within a stratum.** A stratum is one context (cell line or strain) × one screen. SL pairs
    are compared by AUROC only with non-SL pairs from the same stratum, so knowing which cell lines or
@@ -172,14 +218,22 @@ Per-source rationale is in the parser docstrings under `src/slbench/sources/`.
    evaluation split itself. SL pairs are weighted 1 − *e* and non-SL pairs *e* (overlap weights;
    Li, Morgan & Zaslavsky 2018), rescaled per stratum and class. The design columns balance in their
    weighted means; the `fitness_lgbm` control and the row-count probe measure any residual signal.
-3. **Human species score:** the mean over genetic-ancestry groups with at least 20 positives in the
-   split. Ancestry is the donor's majority super-population (> 50%) from Cellosaurus, genotype-inferred
-   for every line except PC-9 (self-reported East Asian;
-   [Dutil et al. 2019](https://doi.org/10.1158/0008-5472.CAN-18-2747)). Lines with no estimate
-   (hTERT-RPE1, C092) are reported but not averaged in. On test that is AFR (32 positives), EAS (86)
-   and EUR (439); on dev AFR has 17 positives, so the dev human score averages EAS and EUR only.
-4. **SLB score** = the mean of the headline species' scores, each counting equally. The tiers are
-   recorded in `manifest.json`.
+3. **Noise ceiling and normalization.** Each label source has a reliability: the AUROC at which an
+   independent re-measurement recovers its labels (`reference/label_reliability.tsv`, copied into the
+   benchmark as `label_reliability.parquet`). A stratum's ceiling is its source's reliability (the best
+   one when several sources agree on a pair), averaged over strata with the AUROC's own pair weights. The
+   score is (balanced AUROC − 0.5) / (ceiling − 0.5): 0 = chance, 1 = an independent re-measurement.
+   Dev/test labels whose best source is below 0.70 are unscored (they stay in train): Frost 2012 and, per
+   line, Najm 2023 Reh, Burgold 2025 and Hayward 2026 RPE1.
+4. **Human species score:** the mean over genetic-ancestry groups with at least 20 positives in the
+   split, each normalized by its own ceiling. Ancestry is the donor's majority super-population (> 50%)
+   from Cellosaurus, genotype-inferred for every line except PC-9 (self-reported East Asian;
+   [Dutil et al. 2019](https://doi.org/10.1158/0008-5472.CAN-18-2747)). Lines with no estimate (HAP1,
+   MCF10A, hTERT-RPE1, C092) form their own group, `unknown`, so their screens count. See Human ancestry
+   for the per-group numbers.
+5. **SLB score** = the mean of the headline species' scores, each counting equally. The tiers are
+   recorded in `manifest.json`. `eval` also reports the raw balanced AUROCs (`slb_auroc`,
+   `species_auroc`) and the ceilings.
 
 `eval` also reports every species, ancestry group, cell line and paralog/non-paralog stratum:
 **within-gene** balanced AUROC (stratified additionally by gene), **unadj** (plain stratified AUROC; the
@@ -307,6 +361,34 @@ stricter cancer-site/screen/pair-matched comparison under `reference/ancestry_pr
 donor-adequacy gate fails on current public screens (2 matched AFR lines), so it issues no
 population-level verdict. Both write JSON to `reference/` and a report to `results/reports/`.
 
+## Transfer track: no human pair labels
+
+Human combinatorial screens are scarce. This track asks whether a model trained **without any human pair
+labels** (non-human pair labels plus human single-gene data are allowed) predicts human SL as well as the
+same model trained with them. If so, human screens are needed only for evaluation.
+
+- **H0** trains on non-human train pairs only. Every scored human pair (train, dev, test and the semi
+  splits) is then held out for it. Model selection must not use human labels.
+- **H+** is the same recipe with human labels. It is cross-fitted: human gene families are hashed into 5
+  folds, and each pair is scored by a model that saw neither of its genes' folds.
+- The readout is the human score (ancestry-averaged, and over all lines), H0 − H+ with a family-cluster
+  bootstrap CI, and H0 against label-free baselines (paralog identity, codependency, fitness) and the
+  measured-ortholog lookup. It is ortholog-open: non-human orthologs of human genes stay in training,
+  because removing them would drop 69–78% of yeast training rows. Pairs without a measured ortholog pair
+  are reported separately.
+- **Pass (pre-registered):** the lower 95% bound of H0 − H+ above −0.03, and H0 above every label-free
+  baseline. A fail says something only if H+ itself beats the label-free baselines.
+
+Protocol, arms, dose curves and results: `scripts/transfer/` (`PROTOCOL.md`, `README.md`).
+
+```bash
+uv run python scripts/transfer/crossfit.py build --scope all
+uv run python scripts/transfer/crossfit.py fit --scope all --h0            # and --pair i j for 0 <= i <= j < 5
+uv run python scripts/transfer/crossfit.py score --scope all
+```
+
+H+ fold models train on human test labels. They must never be submitted to the leaderboard.
+
 ## Files (`data/slb/`)
 
 | File | Contents |
@@ -320,7 +402,8 @@ population-level verdict. Both write JSON to `reference/` and a report to `resul
 | `contexts.parquet` | Per context: Cellosaurus accession, DepMap ID, disease, sex, ancestry group and fractions. |
 | `held_out_families.parquet` | Gene → family → bucket. Used by the leakage checker. |
 | `gene_single_effects.parquet` | Reference single-loss effect per gene. A permitted input. |
-| `manifest.json` | Revision, build parameters, species tiers, excluded sources, row counts, sha256 of every file. |
+| `label_reliability.parquet` | Reliability of every label source (noise ceiling; `reference/label_reliability.tsv`). Scoring metadata, not a label. |
+| `manifest.json` | Revision, build parameters, species tiers, excluded sources, evaluation reliability bar, row counts, sha256 of every file. |
 
 Input columns: `example_id, species, context_id, ancestry_group, gene_a, gene_b, same_family`
 (`train.parquet` adds `sources` and `label`). A model writes one `score` per `example_id`, for every row;
@@ -337,7 +420,13 @@ higher means more likely SL. Gene IDs: HGNC symbol (human), SGD systematic ORF
   *B. subtilis* are scored but noisy.
 - **No bacterium in the headline.** Every bacterium with more than one pairwise screen has screens
   that contradict each other; *B. subtilis* has one screen, verified only against itself.
-- **Human screens mostly test paralog pairs,** so same-family pairs are overrepresented.
+- **Human positives are hub-structured.** Most now come from query × genome screens (Billmann 2026: 127
+  queries in HAP1), so a few query genes carry many positives. Scoring within context × screen strata and
+  the row-count term of the balance weights limit what a model gains from learning which genes are queries.
+- **Noise ceilings are estimates.** A source's reliability comes from one kind of re-measurement: another
+  study where one exists, otherwise its own independent maps, guides or replicates. Own re-measurements
+  miss lab-specific artifacts, so those ceilings are optimistic, which makes the normalized score
+  conservative for those strata.
 - **Inclusion is binary.** Labels are not weighted by source reliability (Dede 0.93 versus Zhao 0.69).
 - **Cross-study agreement is modest.** Where two included studies measured the same pair in the same
   context and at least one called SL, all agreed 35% of the time. In *S. pombe*, Frost 2012 and Ryan
@@ -407,6 +496,10 @@ SLB's labels are derived from the published screens listed under Label quality; 
 DepMap 24Q4, Cellosaurus (ancestry from Dutil et al. 2019), HGNC, SGD, PomBase, WormBase WS298, FlyBase,
 MGI, Ensembl 116, the Alliance of Genome Resources, HCOP and STRING/BioGRID (feature bundle of the
 adapters). The bundle redistributes derived tables only; the original sources' terms apply to them, and
-work using SLB should cite the screens and resources it relies on. Download locations are pinned in
+work using SLB should cite the screens and resources it relies on. **The benchmark data are for
+non-commercial research use only** (`DATA_LICENSE.txt` in the bundle). Several sources are CC BY-NC
+(Billmann 2026, Feng 2022) or CC BY-NC-ND (Hayward 2026), or are released under journal terms (Najm 2018,
+Fong 2025). The NoDerivatives terms of Hayward 2026 must be cleared before its derived labels are
+republished. Download locations are pinned in
 `src/slbench/fetch.py` and `reference/fetch/`, and every raw file's SHA-256 in `reference/raw_sha256sums.txt`.
 The code is MIT-licensed (`LICENSE` at the repository root).

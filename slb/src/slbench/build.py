@@ -8,20 +8,49 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import os
 import json
+import os
 import time
 from pathlib import Path
 
 import polars as pl
 
 from slbench import contexts, families, genome
-from slbench.sources import bacteria, bacteria_extra, dmel, eukaryotes_extra, human, yeast
+from slbench.sources import (
+    bacteria,
+    bacteria_extra,
+    dmel,
+    eukaryotes_extra,
+    human,
+    yeast,
+)
+from slbench.sources.human_screens import (
+    billmann2026,
+    burgold2025,
+    desjardins2026,
+    deweirdt2020,
+    feng2022,
+    fong2025,
+    ford2023,
+    hayward2026,
+    herken2026,
+    kim2025,
+    lenoir2021,
+    li2022,
+    najm2018,
+    najm2023,
+    simpson2023,
+    wolf2025,
+)
 
 VERSION = "slb"  # benchmark identity in manifest.json; results are pinned to the manifest sha256
 SALT = os.environ.get("SLB_SALT", "slb1-2026-09-22")  # fixed so family buckets stay stable across rebuilds
 INTERIM = Path("data/interim")
 OUT = Path(os.environ.get("SLB_OUT", "data/slb"))  # overrides are for robustness studies only
+# Side-by-side builds (a candidate benchmark next to data/slb): examples/contexts go to SLB_WORK instead of
+# data/interim, and SLB_EXTRA_MEASUREMENTS adds a directory of candidate measurement tables.
+WORK = Path(os.environ.get("SLB_WORK", INTERIM))
+EXTRA_MEASUREMENTS = os.environ.get("SLB_EXTRA_MEASUREMENTS")
 
 # Species in the SLB score: cross-study-verified labels and enough test positives. Auxiliary species
 # are held out, scored and reported the same way, but not averaged into the headline.
@@ -32,6 +61,14 @@ AUXILIARY_SPECIES = ["bsub", "cele", "dmel", "mmus"]
 # component can dominate dev or test
 TEST_FRAC, DEV_FRAC = 0.20, 0.15
 TRAIN_ONLY_FAMILY_SIZE = 100
+
+# Evaluation labels must be more reliable than training labels. Every label source has a reliability: the
+# AUROC at which an independent re-measurement recovers its labels (reference/label_reliability.tsv). Train
+# keeps every label that passed the inclusion gate (>= 0.65); a dev/test label is scored only if its most
+# reliable source reaches EVAL_MIN_RELIABILITY, so a score gain on dev/test is a gain on labels that replicate.
+# The evaluator also uses the reliabilities as each stratum's noise ceiling (evaluate.py).
+EVAL_MIN_RELIABILITY = 0.70
+RELIABILITY = Path("reference/label_reliability.tsv")
 
 # Sources measured and audited but NOT used for benchmark labels, with the evidence (`slbench audit`).
 # Rule: a source's labels enter the benchmark only if an independent re-measurement (another study
@@ -59,6 +96,16 @@ EXCLUDED_SOURCES = {
     "gagarinova2016": "E. coli eSGA/GIANT-coli maps contradict each other (cross-study 0.46-0.51 in all 8 directions)",
     "kumar2016": "E. coli eSGA/GIANT-coli maps contradict each other (cross-study 0.46-0.51 in all 8 directions)",
     "cote2016": "E. coli eSGA/GIANT-coli maps contradict each other (cross-study 0.46-0.51 in all 8 directions)",
+    # 2026-09 human expansion (evidence: reference/new_human/<source>.{json,md})
+    "fong2025": "replicates do not agree on GI (split-rule AUROC 0.45-0.60 per line); single-gene fitness "
+                "predicts its calls at 0.80",
+    "ford2023": "7 positives, no same-line cross-study check, replicate GI Spearman 0.09-0.18; fitness predicts "
+                "its calls at 0.92",
+    "kim2025": "no replicate or orientation data published (unverifiable); most hits involve kinases not "
+               "expressed in the line",
+    "desjardins2026": "technical replicates only (same transduction); a WT-vs-WT null reproduces ~32% of the "
+                      "hit rate at z <= -4; no independent check",
+    "feng2022": "a WT-vs-WT null (no query) reproduces 51-83% of the hit rate; technical replicates only",
 }
 
 PARSERS = {
@@ -91,7 +138,43 @@ PARSERS = {
     "gagarinova2016": bacteria_extra.gagarinova2016,
     "kumar2016": bacteria_extra.kumar2016,
     "cote2016": bacteria_extra.cote2016,
+    "billmann2026": billmann2026.load,
+    "herken2026": herken2026.load,
+    "simpson2023": simpson2023.load,
+    "najm2023": najm2023.load,
+    "najm2018": najm2018.load,
+    "deweirdt2020": deweirdt2020.load,
+    "hayward2026": hayward2026.load,
+    "lenoir2021": lenoir2021.load,
+    "li2022": li2022.load,
+    "burgold2025": burgold2025.load,
+    "wolf2025": wolf2025.load,
+    "fong2025": fong2025.load,
+    "ford2023": ford2023.load,
+    "kim2025": kim2025.load,
+    "desjardins2026": desjardins2026.load,
+    "feng2022": feng2022.load,
 }
+
+
+def reliability() -> pl.DataFrame:
+    """reference/label_reliability.tsv as (source, context_id [null = source-wide], reliability)."""
+    lines = [x for x in RELIABILITY.read_text().splitlines() if x and not x.startswith("#")]
+    rows = [x.split("\t") for x in lines[1:]]
+    return pl.DataFrame({"source": [r[0] for r in rows], "context_id": [r[1] or None for r in rows],
+                         "reliability": [float(r[2]) for r in rows]}, schema_overrides={"context_id": pl.String})
+
+
+def label_reliability(ex: pl.DataFrame, rel: pl.DataFrame) -> pl.Series:
+    """Per example: the reliability of its most reliable labelling source (`sources`, comma-separated)."""
+    long = ex.select("example_id", "context_id", pl.col("sources").str.split(",").alias("source")).explode("source")
+    ctx_rel = rel.filter(pl.col("context_id").is_not_null())
+    wide_rel = rel.filter(pl.col("context_id").is_null()).drop("context_id")
+    long = long.join(ctx_rel.rename({"reliability": "r_ctx"}), on=["source", "context_id"], how="left") \
+        .join(wide_rel.rename({"reliability": "r_src"}), on="source", how="left") \
+        .with_columns(pl.coalesce("r_ctx", "r_src").alias("r"))
+    best = long.group_by("example_id").agg(pl.col("r").max())
+    return ex.select("example_id").join(best, on="example_id", how="left", maintain_order="left")["r"]
 
 
 RAW = Path("data/raw")
@@ -168,7 +251,10 @@ def stage_examples() -> None:
     pairs and the measuring sources of unscored ones.
     """
 
-    m = pl.concat([pl.read_parquet(p) for p in sorted((INTERIM / "measurements").glob("*.parquet"))])
+    paths = sorted((INTERIM / "measurements").glob("*.parquet"))
+    if EXTRA_MEASUREMENTS:
+        paths += sorted(Path(EXTRA_MEASUREMENTS).glob("*.parquet"))
+    m = pl.concat([pl.read_parquet(p) for p in paths])
     m = m.filter(~pl.col("source").is_in(list(EXCLUDED_SOURCES)))
     ctx = _context_table(m)
     m = m.join(ctx.select("species", "source", "context", "context_id"), on=["species", "source", "context"])
@@ -194,9 +280,9 @@ def stage_examples() -> None:
     ex = ex.with_columns(pl.when(pl.col("label").is_not_null()).then(pl.col("lsources")).otherwise(pl.col("msources"))
                          .alias("sources")).drop("lmin", "lmax", "lsources", "msources", "_linked")
     ctx_meta = ctx.drop("source", "context").unique("context_id").sort("context_id")
-    INTERIM.mkdir(exist_ok=True, parents=True)
-    ex.write_parquet(INTERIM / "examples.parquet")
-    ctx_meta.write_parquet(INTERIM / "contexts.parquet")
+    WORK.mkdir(exist_ok=True, parents=True)
+    ex.write_parquet(WORK / "examples.parquet")
+    ctx_meta.write_parquet(WORK / "contexts.parquet")
     lab = m.filter(labelled)
     multi = lab.group_by("species", "context_id", "gene_a", "gene_b").agg(
         pl.col("source").n_unique().alias("ns"), pl.col("label").min().alias("lmin"), pl.col("label").max().alias("any_pos"),
@@ -213,7 +299,7 @@ def stage_examples() -> None:
         "multi_source_positive_agreement": float(
             ((multi["any_pos"] == 1) & (multi["lmin"] == 1)).sum() / max(1, (multi["any_pos"] == 1).sum())),
     }
-    (INTERIM / "examples_report.json").write_text(json.dumps(report, indent=2))
+    (WORK / "examples_report.json").write_text(json.dumps(report, indent=2))
     print(json.dumps(report, indent=2))
 
 
@@ -223,8 +309,8 @@ def bucket(family: str) -> str:
 
 
 def stage_splits() -> None:
-    ex = pl.read_parquet(INTERIM / "examples.parquet")
-    ctx = pl.read_parquet(INTERIM / "contexts.parquet")
+    ex = pl.read_parquet(WORK / "examples.parquet")
+    ctx = pl.read_parquet(WORK / "contexts.parquet")
     genes = pl.concat([
         ex.select("species", pl.col("gene_a").alias("gene")), ex.select("species", pl.col("gene_b").alias("gene"))
     ]).unique().sort("species", "gene")
@@ -245,6 +331,17 @@ def stage_splits() -> None:
     ex = ex.with_columns(
         (pl.col("species") + "|" + pl.col("context_id") + "|" + pl.col("gene_a") + "|" + pl.col("gene_b")).alias("example_id")
     )
+    # evaluation labels need a reliable source (EVAL_MIN_RELIABILITY); train keeps every gated label
+    rel = reliability()
+    scored = ex.filter(pl.col("label").is_not_null())
+    r = label_reliability(scored, rel)
+    missing = scored.filter(r.is_null())["sources"].str.split(",").explode().unique().to_list()
+    if missing:
+        raise ValueError(f"no reliability for label sources {missing}: add them to {RELIABILITY}")
+    low = scored.filter((r < EVAL_MIN_RELIABILITY) & (pl.col("split") != "train")).select("example_id")
+    ex = ex.with_columns(pl.when(pl.col("example_id").is_in(low["example_id"].implode())).then(None)
+                         .otherwise(pl.col("label")).alias("label"))
+    print(f"eval labels below reliability {EVAL_MIN_RELIABILITY} made unscored: {low.height:,}")
     cols = ["example_id", "species", "context_id", "ancestry_group", "gene_a", "gene_b", "same_family", "sources", "label"]
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "hidden").mkdir(exist_ok=True)
@@ -252,7 +349,9 @@ def stage_splits() -> None:
     manifest = {"version": VERSION, "salt": SALT, "excluded_sources": EXCLUDED_SOURCES, "test_frac": TEST_FRAC, "dev_frac": DEV_FRAC,
                 "train_only_family_size": TRAIN_ONLY_FAMILY_SIZE, "paralog_min_identity": families.PARALOG_MIN_IDENTITY,
                 "linkage_kb": genome.LINKAGE_KB, "polars": pl.__version__,
-                "headline_species": HEADLINE_SPECIES, "auxiliary_species": AUXILIARY_SPECIES, "files": {}}
+                "headline_species": HEADLINE_SPECIES, "auxiliary_species": AUXILIARY_SPECIES,
+                "eval_min_reliability": EVAL_MIN_RELIABILITY, "files": {}}
+    _write(rel, OUT / "label_reliability.parquet", manifest)
     from slbench.fitness import propensity, with_degree
 
     for split in ["train", "dev", "dev_semi", "test", "test_semi"]:

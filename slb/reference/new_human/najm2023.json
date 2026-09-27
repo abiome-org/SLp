@@ -1,0 +1,305 @@
+{
+ "key": "najm2023",
+ "citation": "Najm FJ, DeWeirdt P, et al. Chromatin complex dependencies reveal targeting opportunities in leukemia. Nat Commun 14:448 (2023)",
+ "doi": "10.1038/s41467-023-36150-7",
+ "license": "CC BY 4.0",
+ "files": [
+  {
+   "name": "41467_2023_36150_MOESM5_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-023-36150-7/MediaObjects/41467_2023_36150_MOESM5_ESM.xlsx",
+   "bytes": 12551647,
+   "sha256": "ee3b7f054b1218bc34bd9aac08741d440348abe5b079985c254aae9171b033a5"
+  },
+  {
+   "name": "41467_2023_36150_MOESM4_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-023-36150-7/MediaObjects/41467_2023_36150_MOESM4_ESM.xlsx",
+   "bytes": 42899,
+   "sha256": "370fd2a8bc4053c7a2459e667a1889bcf690161c1d2861ae6e30b312b2daa01c"
+  }
+ ],
+ "contexts": [
+  "THP-1",
+  "Reh"
+ ],
+ "mechanism": "CRISPR-KO",
+ "label_rule": "positive: authors' synergy score pair_z_score <= -4 (paper: 'synergy z-score less than -4'; all have BH FDR < 0.006; the authors' extra lethality filter LFC < line mean is not applied because it injects single-gene fitness); negative: |pair_z_score| < 1; else null. Self pairs, EEF2 and non-targeting rows dropped. score = pair_z_score (300k library), signif = fdr_bh.",
+ "n_pairs": 71368,
+ "n_unique_pairs": 35684,
+ "n_pos": 341,
+ "n_neg": 35588,
+ "pos_rate": 0.004778051787916153,
+ "per_context": {
+  "THP-1": {
+   "pairs": 35684,
+   "pos": 158,
+   "neg": 17659
+  },
+  "Reh": {
+   "pairs": 35684,
+   "pos": 183,
+   "neg": 17929
+  }
+ },
+ "unique_genes": 268,
+ "paralog_fraction": 0.016954377311960544,
+ "paralog_pos": 22,
+ "symbols_unresolved": 0,
+ "symbols_renamed": {
+  "WDR92": "DNAAF10",
+  "WBSCR22": "BUD23",
+  "WDR61": "SKIC8",
+  "WHSC1L1": "NSD3",
+  "RFWD2": "COP1",
+  "WHSC1": "NSD2"
+ },
+ "own_replication": {
+  "note": "No per-replicate or per-orientation data are published (MOESM5 is merged over duplicates and Sp/Sa orientations; GEO GSE215348 has only RNA-seq plus a 40k H1-barcode count matrix that is not pair-resolved). Replication = independent re-screens of the same pairs in the same lines: the 40k pilot library (100-gene subset) and the 40-gene validation library. replicates() returns gi_rep1=300k, gi_rep2=40k, gi_rep3=validation pair z.",
+  "40k_library": {
+   "THP-1": {
+    "pairs": 4744,
+    "replicates": 2,
+    "spearman": 0.09256781460203736,
+    "tail_2pct_in_10pct": 0.17368421052631577,
+    "slb_rule_300k_labels_scored_by_other": 0.8196901138077609,
+    "n_pos_300k": 13,
+    "slb_rule_other_labels_scored_by_300k": 0.6277592944655682,
+    "n_pos_other": 32,
+    "split_rule_2pct_300k_to_other": 0.5899795864027692,
+    "split_rule_2pct_other_to_300k": 0.5950208573710837,
+    "split_rule_z3_300k_to_other": 0.5897669783841791
+   },
+   "Reh": {
+    "pairs": 4744,
+    "replicates": 2,
+    "spearman": 0.052997844374016424,
+    "tail_2pct_in_10pct": 0.14736842105263157,
+    "slb_rule_300k_labels_scored_by_other": 0.6571161460624725,
+    "n_pos_300k": 16,
+    "slb_rule_other_labels_scored_by_300k": 0.6146454031331933,
+    "n_pos_other": 38,
+    "split_rule_2pct_300k_to_other": 0.5351602023608769,
+    "split_rule_2pct_other_to_300k": 0.5712168279044999,
+    "split_rule_z3_300k_to_other": 0.5325544595624754
+   },
+   "pooled": {
+    "pairs": 9488,
+    "replicates": 2,
+    "spearman": 0.07143119618831781,
+    "tail_2pct_in_10pct": 0.16842105263157894,
+    "slb_rule_300k_labels_scored_by_other": 0.7276953730352004,
+    "n_pos_300k": 29,
+    "slb_rule_other_labels_scored_by_300k": 0.6223847253663767,
+    "n_pos_other": 70,
+    "split_rule_2pct_300k_to_other": 0.5726180438448567,
+    "split_rule_2pct_other_to_300k": 0.5808334072956421,
+    "split_rule_z3_300k_to_other": 0.5559044977866779
+   }
+  },
+  "validation_library": {
+   "THP-1": {
+    "pairs": 741,
+    "replicates": 2,
+    "spearman": 0.14913240226050556,
+    "tail_2pct_in_10pct": 0.5333333333333333,
+    "slb_rule_300k_labels_scored_by_other": 0.7991582491582491,
+    "n_pos_300k": 18,
+    "slb_rule_other_labels_scored_by_300k": 0.8651026392961877,
+    "n_pos_other": 8,
+    "split_rule_2pct_300k_to_other": 0.8306306306306306,
+    "split_rule_2pct_other_to_300k": 0.7926126126126126,
+    "split_rule_z3_300k_to_other": 0.5992921492921492
+   },
+   "Reh": {
+    "pairs": 741,
+    "replicates": 2,
+    "spearman": 0.12484403060371284,
+    "tail_2pct_in_10pct": 0.5333333333333333,
+    "slb_rule_300k_labels_scored_by_other": 0.712616074287544,
+    "n_pos_300k": 18,
+    "slb_rule_other_labels_scored_by_300k": 0.8635003739715781,
+    "n_pos_other": 7,
+    "split_rule_2pct_300k_to_other": 0.7931531531531532,
+    "split_rule_2pct_other_to_300k": 0.731891891891892,
+    "split_rule_z3_300k_to_other": 0.611373873873874
+   },
+   "pooled": {
+    "pairs": 1482,
+    "replicates": 2,
+    "spearman": 0.13620188837478442,
+    "tail_2pct_in_10pct": 0.5333333333333333,
+    "slb_rule_300k_labels_scored_by_other": 0.7595601509929427,
+    "n_pos_300k": 36,
+    "slb_rule_other_labels_scored_by_300k": 0.8666666666666667,
+    "n_pos_other": 15,
+    "split_rule_2pct_300k_to_other": 0.8196581196581196,
+    "split_rule_2pct_other_to_300k": 0.7893387314439946,
+    "split_rule_z3_300k_to_other": 0.6067476383265857
+   }
+  },
+  "validation_other_aml_lines_mean_z_for_slb_labels": {
+   "pairs": 503,
+   "n_pos": 30,
+   "auroc": 0.6595489781536293
+  }
+ },
+ "cross_study": {
+  "note": "No other SLB study measures THP-1 or Reh; all overlaps are other cell lines (weaker evidence). Paralog positives (HDAC1-HDAC2, ASF1A-ASF1B, ING4-ING5, ARID1A-ARID1B, CREBBP-EP300, BRD2-BRD3, KAT6A-KAT6B) sit in the SL tail of the paralog screens; non-paralog positives overlap only SPIDR (RPE1 CRISPRi DDR library), where they are neutral.",
+  "shen2017|other_lines": {
+   "overlap_pairs": 78,
+   "lines": null,
+   "our_labels_n_pos": 3,
+   "our_labels_n_neg": 53,
+   "auroc_their_score_for_our_labels": 0.5534591194968553,
+   "their_labels_n_pos": 5,
+   "their_labels_n_neg": 62,
+   "auroc_our_score_for_their_labels": 0.5258064516129032
+  },
+  "horlbeck2018|other_lines": {
+   "overlap_pairs": 10,
+   "lines": null,
+   "our_labels_n_pos": 0,
+   "our_labels_n_neg": 6,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 0,
+   "their_labels_n_neg": 7,
+   "auroc_our_score_for_their_labels": null
+  },
+  "han2017|other_lines": {
+   "overlap_pairs": 21,
+   "lines": null,
+   "our_labels_n_pos": 0,
+   "our_labels_n_neg": 13,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 1,
+   "their_labels_n_neg": 14,
+   "auroc_our_score_for_their_labels": null
+  },
+  "wong2016|other_lines": {
+   "overlap_pairs": 990,
+   "lines": null,
+   "our_labels_n_pos": 22,
+   "our_labels_n_neg": 624,
+   "auroc_their_score_for_our_labels": 0.4739219114219115,
+   "their_labels_n_pos": 40,
+   "their_labels_n_neg": 489,
+   "auroc_our_score_for_their_labels": 0.47423312883435575
+  },
+  "ito2021|other_lines": {
+   "overlap_pairs": 98,
+   "lines": null,
+   "our_labels_n_pos": 6,
+   "our_labels_n_neg": 61,
+   "auroc_their_score_for_our_labels": 0.855191256830601,
+   "their_labels_n_pos": 2,
+   "their_labels_n_neg": 96,
+   "auroc_our_score_for_their_labels": null
+  },
+  "parrish2021|other_lines": {
+   "overlap_pairs": 18,
+   "lines": null,
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 8,
+   "auroc_their_score_for_our_labels": 0.9375,
+   "their_labels_n_pos": 3,
+   "their_labels_n_neg": 12,
+   "auroc_our_score_for_their_labels": 0.7777777777777777
+  },
+  "dede2020|other_lines": {
+   "overlap_pairs": 17,
+   "lines": null,
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 8,
+   "auroc_their_score_for_our_labels": 0.84375,
+   "their_labels_n_pos": 2,
+   "their_labels_n_neg": 15,
+   "auroc_our_score_for_their_labels": null
+  },
+  "chymera2020|other_lines": {
+   "overlap_pairs": 18,
+   "lines": null,
+   "our_labels_n_pos": 2,
+   "our_labels_n_neg": 6,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 0,
+   "their_labels_n_neg": 13,
+   "auroc_our_score_for_their_labels": null
+  },
+  "thompson2021|other_lines": {
+   "overlap_pairs": 26,
+   "lines": null,
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 14,
+   "auroc_their_score_for_our_labels": 0.7142857142857143,
+   "their_labels_n_pos": 4,
+   "their_labels_n_neg": 21,
+   "auroc_our_score_for_their_labels": 0.6666666666666666
+  },
+  "chou2025|other_lines": {
+   "overlap_pairs": 78,
+   "lines": null,
+   "our_labels_n_pos": 11,
+   "our_labels_n_neg": 44,
+   "auroc_their_score_for_our_labels": 0.7727272727272727,
+   "their_labels_n_pos": 5,
+   "their_labels_n_neg": 66,
+   "auroc_our_score_for_their_labels": 0.8787878787878788
+  },
+  "spidr2025|other_lines": {
+   "overlap_pairs": 902,
+   "lines": null,
+   "our_labels_n_pos": 9,
+   "our_labels_n_neg": 599,
+   "auroc_their_score_for_our_labels": 0.3737710999814505,
+   "their_labels_n_pos": 0,
+   "their_labels_n_neg": 814,
+   "auroc_our_score_for_their_labels": null
+  },
+  "harle2025|other_lines": {
+   "overlap_pairs": 13,
+   "lines": null,
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 4,
+   "auroc_their_score_for_our_labels": 0.6875,
+   "their_labels_n_pos": 6,
+   "their_labels_n_neg": 7,
+   "auroc_our_score_for_their_labels": 0.8095238095238095
+  },
+  "flister2025|other_lines": {
+   "overlap_pairs": 122,
+   "lines": null,
+   "our_labels_n_pos": 8,
+   "our_labels_n_neg": 79,
+   "auroc_their_score_for_our_labels": 0.7737341772151898,
+   "their_labels_n_pos": 44,
+   "their_labels_n_neg": 78,
+   "auroc_our_score_for_their_labels": 0.46853146853146854
+  },
+  "included_sources_pooled|same_line": {
+   "overlap_pairs": 0,
+   "our_labels_n_pos": 0,
+   "our_labels_n_neg": 0,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 0,
+   "their_labels_n_neg": 0,
+   "auroc_our_score_for_their_labels": null
+  },
+  "included_sources_pooled|any_line_pair_level": {
+   "overlap_pairs": 1072,
+   "our_labels_n_pos": 20,
+   "our_labels_n_neg": 706,
+   "auroc_their_score_for_our_labels": 0.5796033994334278,
+   "their_labels_n_pos": 49,
+   "their_labels_n_neg": 928,
+   "auroc_our_score_for_their_labels": 0.5853712174524983
+  }
+ },
+ "fitness_auroc": 0.6037832120418857,
+ "fitness": {
+  "depmap_mean_sum": 0.5816539676556639,
+  "depmap_line_sum": null,
+  "screen_singles_sum": 0.6037832120418857,
+  "paralog_flag": 0.5242637967854332
+ },
+ "verdict": "include",
+ "verdict_reason": "Own replication passes: SLB-rule labels from the 300k library are recovered by independent re-screens of the same lines at 0.73 (40k library, 29 pos; THP-1 0.82, Reh 0.66) and 0.76 (validation library, 36 pos; THP-1 0.80, Reh 0.71); reverse direction 0.62 / 0.87. Hit rate 0.48% (341/71,368), fitness-only AUROC 0.58-0.60. No same-line cross-study data exist, so no contradiction is possible under the rule; the pooled other-line comparison with included sources is 0.58 (20 pos), driven by non-paralog chromatin pairs measured only in SPIDR (RPE1, CRISPRi) - weak, different-line evidence, flagged. Caveat: the z-score is only reproducible in its extreme tail (Spearman 0.05-0.15 between libraries; 2%-tail split rule 0.53-0.59 vs 40k), so the -4 cut-off must not be loosened; z <= -5 replicates at 0.89-0.99 but gives only 63 positives (0.09%)."
+}

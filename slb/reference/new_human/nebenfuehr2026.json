@@ -1,0 +1,134 @@
+{
+  "key": "nebenfuehr2026",
+  "citation": "Nebenfuehr et al. 2026, Cell Reports (combinatorial CRISPR map of the DNA-repair network, eHAP iCas9)",
+  "doi": "10.1016/j.celrep.2025.116850",
+  "license": "CC BY-NC-ND 4.0 (article); GEO GSE290153 data public",
+  "files": [
+    {
+      "name": "GSE290153_fullbasal_grna1_coupled_counts.tsv.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE290nnn/GSE290153/suppl/GSE290153_fullbasal_grna1_coupled_counts.tsv.gz",
+      "bytes": 8907716,
+      "sha256": "2cece3166a5a250f8ecb11ba4ec93015c6da3ee1d77723d826e9e86a867a8df4"
+    },
+    {
+      "name": "GSE290153_grna_library.fa.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE290nnn/GSE290153/suppl/GSE290153_grna_library.fa.gz",
+      "bytes": 27411,
+      "sha256": "86ee6301609abf21eb58649983c61f5fd0958e8390cfd1b2ce8e25fc2df7022e"
+    }
+  ],
+  "contexts": [
+    "eHAP E9"
+  ],
+  "mechanism": "CRISPR-KO",
+  "label_rule": "none (not labelled; excluded before labelling because the basal arm does not replicate and shows no single-gene fitness signal)",
+  "n_pairs": 105111,
+  "n_pos": null,
+  "n_neg": null,
+  "pos_rate": null,
+  "paralog_fraction": null,
+  "design": {
+    "guide_pairs": 864187,
+    "control_x_control_guide_pairs": 877,
+    "gene_x_control_guide_pairs": 54294,
+    "genes_measured": 459,
+    "median_guide_pairs_per_gene_pair": 8,
+    "unresolved_symbols": [
+      "4930447C04Rik",
+      "Morc2b",
+      "Supt16",
+      "Trp53",
+      "Trp53bp1",
+      "Zfp365"
+    ],
+    "note": "library symbols use mouse-style case (e.g. Abl1, Trp53, 4930447C04Rik) but the guides are human: all 4 BRCA1 and all 4 PCNA guides match the human genomic sequence (Ensembl REST) and none match mouse; 453/459 symbols resolve to HGNC after upper-casing"
+  },
+  "count_quality": {
+    "total_reads": {
+      "day0_rep1": 84399152,
+      "day14_rep1": 61962789,
+      "day0_rep2": 86542435,
+      "day14_rep2": 61185707,
+      "day0_rep3": 7977464,
+      "day14_rep3": 51057966
+    },
+    "zero_fraction": {
+      "day0_rep1": 0.048,
+      "day14_rep1": 0.541,
+      "day0_rep2": 0.02,
+      "day14_rep2": 0.057,
+      "day0_rep3": 0.425,
+      "day14_rep3": 0.418
+    },
+    "note": "rep3 is not among the GEO samples (only 2 control reps deposited as GSMs) and its day0 has ~8M reads with 42% zeros; day14_rep1 is bottlenecked (54% zeros)"
+  },
+  "own_replication": {
+    "method": "spidr_replicate_gi recipe per replicate (LFC day14 vs same-rep day0, centred on nt x nt, f_g = median gene x nt, GI = LFC - f_a - f_b, median over guide pairs)",
+    "guide_pair_lfc_spearman": {
+      "rep1_rep2": 0.029,
+      "rep1_rep3": -0.035,
+      "rep2_rep3": -0.003
+    },
+    "single_gene_f_spearman": {
+      "rep1_rep2": 0.025,
+      "rep1_rep3": -0.085,
+      "rep2_rep3": -0.028
+    },
+    "replicate_agreement": {
+      "pairs": 105111,
+      "replicates": 3,
+      "spearman": -0.014,
+      "tail_2pct_in_10pct": 0.088
+    },
+    "split_rule_auroc_z3": {
+      "rep1->rep2": 0.615,
+      "rep2->rep1": 0.573,
+      "rep1->rep3": 0.54,
+      "rep3->rep1": 0.403,
+      "rep2->rep3": 0.467,
+      "rep3->rep2": 0.497
+    },
+    "split_rule_auroc_2pct_tail": {
+      "rep1->rep2": 0.498,
+      "rep2->rep1": 0.569,
+      "rep1->rep3": 0.484,
+      "rep3->rep1": 0.411,
+      "rep2->rep3": 0.472,
+      "rep3->rep2": 0.502
+    },
+    "common_day0_variant": {
+      "gi_spearman": {
+        "rep1_rep2": 0.007,
+        "rep1_rep3": 0.235,
+        "rep2_rep3": 0.028
+      },
+      "split_z3_rep2->rep1": 0.566,
+      "split_z3_rep2->rep3": 0.511,
+      "note": "using pooled day0 rep1+rep2 as a common reference; the rep1-rep3 0.235 comes from the shared day0 term, not shared biology"
+    },
+    "fitness_sanity": {
+      "single_f_vs_depmap_spearman": {
+        "rep1": -0.062,
+        "rep2": 0.06,
+        "rep3": -0.091
+      },
+      "guide_marginal_lfc_vs_depmap_spearman_pos1": {
+        "rep1": 0.065,
+        "rep2": 0.046,
+        "rep3": -0.024
+      },
+      "median_f_depmap_essential_genes_(n=69)": {
+        "rep1": 0.087,
+        "rep2": 0.034,
+        "rep3": 0.0
+      },
+      "note": "core-essential DNA-replication genes are not depleted at day 14 in any replicate, so the basal counts carry no detectable fitness signal"
+    }
+  },
+  "cross_study": {
+    "note": "not run: no other SLB measurement in eHAP; HAP1 (chymera2020, billmann2026) is related but without a replicable signal here labels could not be defined"
+  },
+  "fitness_auroc": null,
+  "verdict": "exclude",
+  "verdict_reason": "Basal-arm replicates do not agree (guide-pair LFC Spearman -0.03 to 0.03, pair-GI Spearman -0.01, split-rule AUROC 0.40-0.62, all < 0.65), and essential genes show no depletion in any replicate (single-effect vs DepMap Spearman -0.09 to 0.06), consistent with day-14 bottlenecking (54% zero counts in day14_rep1) and a failed rep3 day0 (8M reads, 42% zeros). No labels can be defined; no cross-study partner in eHAP. Not staged, not even measurements-only, since the scores are noise."
+}

@@ -1,0 +1,547 @@
+{
+ "key": "najm2018",
+ "citation": "Najm FJ, Strand C, Donovan KF, et al. Orthologous CRISPR-Cas9 enzymes for combinatorial genetic screens. Nat Biotechnol 36:179-189 (2018)",
+ "doi": "10.1038/nbt.4048",
+ "license": "Springer Nature journal supplementary material; no open licence stated (standard journal terms; redistribution of derived tables only)",
+ "files": [
+  {
+   "name": "41587_2018_BFnbt4048_MOESM27_ESM.zip",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fnbt.4048/MediaObjects/41587_2018_BFnbt4048_MOESM27_ESM.zip",
+   "bytes": 9865161,
+   "sha256": "a2148ee55139ec3f4b4248f22558afe47c8663e06381f1388fb8955838418fa7"
+  }
+ ],
+ "contexts": [
+  "786-O",
+  "A375",
+  "A549",
+  "HT-29",
+  "MEL-JUSO",
+  "OVCAR-8"
+ ],
+ "mechanism": "CRISPR-KO",
+ "label_rule": "Scores re-computed from per-construct reads (Supp. Tables 3, 6; day 21 / no-drug arm): LFC vs pDNA per replicate, centred on CD81/HPRT-intron cutting-control pairs, guide-level singles (guide x cutting controls), GI = LFC - f(U6 guide) - f(H1 guide), median over constructs of the replicate-mean LFC. Positive: authors' per-line SynLet q-value < 0.05 (Supp. Tables 4, 7, per-line rows) and GI < 0. Negative: SynLet q > 0.25, buffering q > 0.25 and |GI| < that line/library's median |GI|. Else null. 786-O labels set null (no author call, replicate/orientation tails do not reproduce). Pairs measured in both SynLet and Apoptosis libraries (MEL-JUSO, OVCAR-8) are merged by finalize (consensus label).",
+ "n_pairs": 2762,
+ "n_unique_pairs": 781,
+ "n_pos": 17,
+ "n_neg": 1208,
+ "pos_rate": 0.006154960173787111,
+ "pos_rate_labelled_lines": 0.006904955320877335,
+ "per_context": {
+  "OVCAR-8": {
+   "pairs": 781,
+   "pos": 4,
+   "neg": 382
+  },
+  "786-O": {
+   "pairs": 300,
+   "pos": 0,
+   "neg": 0
+  },
+  "MEL-JUSO": {
+   "pairs": 781,
+   "pos": 3,
+   "neg": 388
+  },
+  "A549": {
+   "pairs": 300,
+   "pos": 2,
+   "neg": 146
+  },
+  "HT-29": {
+   "pairs": 300,
+   "pos": 5,
+   "neg": 150
+  },
+  "A375": {
+   "pairs": 300,
+   "pos": 3,
+   "neg": 142
+  }
+ },
+ "positives": [
+  "A375:BCL2L1-BCL2L2",
+  "A375:BCL2L1-MCL1",
+  "A375:MAPK1-MAPK3",
+  "A549:BCL2L1-MCL1",
+  "A549:MAPK1-MAPK3",
+  "HT-29:AKT1-AKT2",
+  "HT-29:BCL2L1-BCL2L2",
+  "HT-29:BCL2L1-MCL1",
+  "HT-29:MAP2K1-MAP2K2",
+  "HT-29:MAPK1-MAPK3",
+  "MEL-JUSO:BCL2L1-MCL1",
+  "MEL-JUSO:MAPK1-MAPK3",
+  "MEL-JUSO:MCL1-MTOR",
+  "OVCAR-8:BCL2L1-BCL2L2",
+  "OVCAR-8:BCL2L1-MCL1",
+  "OVCAR-8:BRCA2-PARP1",
+  "OVCAR-8:MAPK1-MAPK3"
+ ],
+ "unique_genes": 51,
+ "paralog_fraction": 0.05720492396813903,
+ "paralog_pos": 15,
+ "symbols_unresolved": 0,
+ "symbols_note": "only the control labels 'HPRT intron' and '6T' do not resolve (dropped by design)",
+ "own_replication": {
+  "note": "replicates() gives per-replicate GI (gi_rep1..3) and per-orientation GI (gi_ori1: gene_a on SpCas9/U6, gi_ori2: gene_a on SaCas9/H1), keyed by library x line. Author labels use all replicates, so single-replicate label AUROCs are optimistic; the orientation split (disjoint guides and constructs) is the stronger check.",
+  "per_library_line": {
+   "SynLet|A549": {
+    "pairs": 300,
+    "replicates": 2,
+    "n_pos": 2,
+    "n_neg": 146,
+    "replicate_agreement": {
+     "pairs": 300,
+     "replicates": 2,
+     "spearman": 0.3106550072778586,
+     "tail_2pct_in_10pct": 0.75
+    },
+    "split_rule_2pct_rep_to_rep": [
+     0.8877777777777778,
+     0.9766666666666666
+    ],
+    "label_auroc_single_replicates": {
+     "gi_rep1": null,
+     "gi_rep2": null
+    },
+    "orientation_spearman": 0.01112456805075612,
+    "split_rule_2pct_ori": [
+     0.9255555555555556,
+     0.6877777777777777
+    ],
+    "label_auroc_single_orientations": {
+     "gi_ori1": null,
+     "gi_ori2": null
+    }
+   },
+   "Apoptosis|OVCAR-8": {
+    "pairs": 496,
+    "replicates": 1,
+    "n_pos": 2,
+    "n_neg": 245,
+    "label_auroc_single_replicates": {
+     "gi_rep1": null
+    },
+    "orientation_spearman": 0.09295430451723045,
+    "split_rule_2pct_ori": [
+     0.5451612903225806,
+     0.7431451612903226
+    ],
+    "label_auroc_single_orientations": {
+     "gi_ori1": null,
+     "gi_ori2": null
+    }
+   },
+   "SynLet|MEL-JUSO": {
+    "pairs": 300,
+    "replicates": 2,
+    "n_pos": 5,
+    "n_neg": 150,
+    "replicate_agreement": {
+     "pairs": 300,
+     "replicates": 2,
+     "spearman": 0.19606973410815673,
+     "tail_2pct_in_10pct": 0.9166666666666667
+    },
+    "split_rule_2pct_rep_to_rep": [
+     0.9966666666666666,
+     0.9466666666666665
+    ],
+    "label_auroc_single_replicates": {
+     "gi_rep1": 1.0,
+     "gi_rep2": 1.0
+    },
+    "orientation_spearman": 0.20929432549250546,
+    "split_rule_2pct_ori": [
+     0.9444444444444444,
+     0.79
+    ],
+    "label_auroc_single_orientations": {
+     "gi_ori1": 1.0,
+     "gi_ori2": 1.0
+    }
+   },
+   "Apoptosis|MEL-JUSO": {
+    "pairs": 496,
+    "replicates": 3,
+    "n_pos": 1,
+    "n_neg": 247,
+    "replicate_agreement": {
+     "pairs": 496,
+     "replicates": 3,
+     "spearman": 0.16704098819046567,
+     "tail_2pct_in_10pct": 0.26666666666666666
+    },
+    "split_rule_2pct_rep_to_rep": [
+     0.6741935483870969,
+     0.7443548387096774,
+     0.6584677419354839,
+     0.7310483870967741,
+     0.5923387096774193,
+     0.7399193548387097
+    ],
+    "label_auroc_single_replicates": {
+     "gi_rep1": null,
+     "gi_rep2": null,
+     "gi_rep3": null
+    },
+    "orientation_spearman": 0.06855502516565672,
+    "split_rule_2pct_ori": [
+     0.5153225806451612,
+     0.6250000000000001
+    ],
+    "label_auroc_single_orientations": {
+     "gi_ori1": null,
+     "gi_ori2": null
+    }
+   },
+   "SynLet|OVCAR-8": {
+    "pairs": 300,
+    "replicates": 3,
+    "n_pos": 4,
+    "n_neg": 150,
+    "replicate_agreement": {
+     "pairs": 300,
+     "replicates": 3,
+     "spearman": 0.16413812005318576,
+     "tail_2pct_in_10pct": 0.6666666666666666
+    },
+    "split_rule_2pct_rep_to_rep": [
+     0.8644444444444443,
+     0.8344444444444444,
+     0.8855555555555555,
+     0.8833333333333334,
+     0.9477777777777777,
+     0.7811111111111111
+    ],
+    "label_auroc_single_replicates": {
+     "gi_rep1": 0.9916666666666667,
+     "gi_rep2": 1.0,
+     "gi_rep3": 0.9983333333333333
+    },
+    "orientation_spearman": 0.03007855642840476,
+    "split_rule_2pct_ori": [
+     0.918888888888889,
+     0.7866666666666666
+    ],
+    "label_auroc_single_orientations": {
+     "gi_ori1": 0.9916666666666667,
+     "gi_ori2": 1.0
+    }
+   },
+   "SynLet|A375": {
+    "pairs": 300,
+    "replicates": 3,
+    "n_pos": 3,
+    "n_neg": 142,
+    "replicate_agreement": {
+     "pairs": 300,
+     "replicates": 3,
+     "spearman": 0.17257910273077107,
+     "tail_2pct_in_10pct": 0.6111111111111112
+    },
+    "split_rule_2pct_rep_to_rep": [
+     0.7722222222222221,
+     0.8022222222222222,
+     0.8577777777777778,
+     0.9577777777777778,
+     0.8544444444444443,
+     0.9455555555555556
+    ],
+    "label_auroc_single_replicates": {
+     "gi_rep1": 1.0,
+     "gi_rep2": 0.9413145539906104,
+     "gi_rep3": 1.0
+    },
+    "orientation_spearman": 0.13957577306414515,
+    "split_rule_2pct_ori": [
+     0.8188888888888889,
+     0.8311111111111111
+    ],
+    "label_auroc_single_orientations": {
+     "gi_ori1": 1.0,
+     "gi_ori2": 1.0
+    }
+   },
+   "SynLet|HT-29": {
+    "pairs": 300,
+    "replicates": 2,
+    "n_pos": 5,
+    "n_neg": 150,
+    "replicate_agreement": {
+     "pairs": 300,
+     "replicates": 2,
+     "spearman": 0.2960015111279014,
+     "tail_2pct_in_10pct": 0.75
+    },
+    "split_rule_2pct_rep_to_rep": [
+     0.9822222222222222,
+     0.788888888888889
+    ],
+    "label_auroc_single_replicates": {
+     "gi_rep1": 1.0,
+     "gi_rep2": 1.0
+    },
+    "orientation_spearman": 0.04442627140301559,
+    "split_rule_2pct_ori": [
+     0.8366666666666667,
+     0.7222222222222222
+    ],
+    "label_auroc_single_orientations": {
+     "gi_ori1": 0.8093333333333333,
+     "gi_ori2": 1.0
+    }
+   },
+   "SynLet|786-O": {
+    "pairs": 300,
+    "replicates": 3,
+    "n_pos": 0,
+    "n_neg": 0,
+    "replicate_agreement": {
+     "pairs": 300,
+     "replicates": 3,
+     "spearman": 0.1961829205509691,
+     "tail_2pct_in_10pct": 0.1111111111111111
+    },
+    "split_rule_2pct_rep_to_rep": [
+     0.5588888888888889,
+     0.4622222222222222,
+     0.36333333333333334,
+     0.5611111111111111,
+     0.5855555555555556,
+     0.3911111111111111
+    ],
+    "label_auroc_single_replicates": {
+     "gi_rep1": null,
+     "gi_rep2": null,
+     "gi_rep3": null
+    },
+    "orientation_spearman": 0.002361804020044667,
+    "split_rule_2pct_ori": [
+     0.5244444444444445,
+     0.28555555555555556
+    ],
+    "label_auroc_single_orientations": {
+     "gi_ori1": null,
+     "gi_ori2": null
+    }
+   }
+  },
+  "pooled_label_auroc_single_replicate": 0.9918591140159768,
+  "pooled_label_auroc_single_orientation": 0.9704453067257945,
+  "mean_split_rule_2pct_rep_to_rep": 0.7676033452807646,
+  "mean_split_rule_2pct_orientation": 0.718803203405018,
+  "orientation_robust_z3_rule_pooled": {
+   "n_pos": 69,
+   "auroc": 0.8019772999495469
+  }
+ },
+ "cross_study": {
+  "shen2017|same_line": {
+   "overlap_pairs": 55,
+   "lines": [
+    "A-549"
+   ],
+   "our_labels_n_pos": 0,
+   "our_labels_n_neg": 25,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 1,
+   "their_labels_n_neg": 23,
+   "auroc_our_score_for_their_labels": null
+  },
+  "shen2017|other_lines": {
+   "overlap_pairs": 56,
+   "lines": null,
+   "our_labels_n_pos": 1,
+   "our_labels_n_neg": 51,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 8,
+   "their_labels_n_neg": 44,
+   "auroc_our_score_for_their_labels": 0.6022727272727273
+  },
+  "han2017|other_lines": {
+   "overlap_pairs": 36,
+   "lines": null,
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 28,
+   "auroc_their_score_for_our_labels": 0.9732142857142858,
+   "their_labels_n_pos": 2,
+   "their_labels_n_neg": 13,
+   "auroc_our_score_for_their_labels": null
+  },
+  "dede2020|same_line": {
+   "overlap_pairs": 15,
+   "lines": [
+    "A-549",
+    "HT-29",
+    "OVCAR-8"
+   ],
+   "our_labels_n_pos": 8,
+   "our_labels_n_neg": 4,
+   "auroc_their_score_for_our_labels": 0.75,
+   "their_labels_n_pos": 3,
+   "their_labels_n_neg": 8,
+   "auroc_our_score_for_their_labels": 0.9583333333333334
+  },
+  "ito2021|same_line": {
+   "overlap_pairs": 134,
+   "lines": [
+    "A-549",
+    "Mel JuSo"
+   ],
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 68,
+   "auroc_their_score_for_our_labels": 0.22242647058823528,
+   "their_labels_n_pos": 9,
+   "their_labels_n_neg": 41,
+   "auroc_our_score_for_their_labels": 0.2981029810298103
+  },
+  "thompson2021|same_line": {
+   "overlap_pairs": 5,
+   "lines": [
+    "A-375"
+   ],
+   "our_labels_n_pos": 0,
+   "our_labels_n_neg": 1,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 0,
+   "their_labels_n_neg": 5,
+   "auroc_our_score_for_their_labels": null
+  },
+  "parrish2021|other_lines": {
+   "overlap_pairs": 3,
+   "lines": null,
+   "our_labels_n_pos": 2,
+   "our_labels_n_neg": 1,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 1,
+   "their_labels_n_neg": 1,
+   "auroc_our_score_for_their_labels": null
+  },
+  "thompson2021|other_lines": {
+   "overlap_pairs": 5,
+   "lines": null,
+   "our_labels_n_pos": 1,
+   "our_labels_n_neg": 3,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 0,
+   "their_labels_n_neg": 5,
+   "auroc_our_score_for_their_labels": null
+  },
+  "ito2021|other_lines": {
+   "overlap_pairs": 112,
+   "lines": null,
+   "our_labels_n_pos": 5,
+   "our_labels_n_neg": 86,
+   "auroc_their_score_for_our_labels": 0.39534883720930236,
+   "their_labels_n_pos": 33,
+   "their_labels_n_neg": 56,
+   "auroc_our_score_for_their_labels": 0.3939393939393939
+  },
+  "chymera2020|other_lines": {
+   "overlap_pairs": 6,
+   "lines": null,
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 1,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 0,
+   "their_labels_n_neg": 6,
+   "auroc_our_score_for_their_labels": null
+  },
+  "dede2020|other_lines": {
+   "overlap_pairs": 5,
+   "lines": null,
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 1,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 1,
+   "their_labels_n_neg": 4,
+   "auroc_our_score_for_their_labels": null
+  },
+  "chou2025|same_line": {
+   "overlap_pairs": 24,
+   "lines": [
+    "A-375",
+    "A-549",
+    "Mel JuSo"
+   ],
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 8,
+   "auroc_their_score_for_our_labels": 0.875,
+   "their_labels_n_pos": 6,
+   "their_labels_n_neg": 10,
+   "auroc_our_score_for_their_labels": 0.75
+  },
+  "chou2025|other_lines": {
+   "overlap_pairs": 12,
+   "lines": null,
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 7,
+   "auroc_their_score_for_our_labels": 0.7142857142857143,
+   "their_labels_n_pos": 5,
+   "their_labels_n_neg": 7,
+   "auroc_our_score_for_their_labels": 0.8285714285714286
+  },
+  "spidr2025|other_lines": {
+   "overlap_pairs": 28,
+   "lines": null,
+   "our_labels_n_pos": 1,
+   "our_labels_n_neg": 24,
+   "auroc_their_score_for_our_labels": null,
+   "their_labels_n_pos": 0,
+   "their_labels_n_neg": 23,
+   "auroc_our_score_for_their_labels": null
+  },
+  "flister2025|same_line": {
+   "overlap_pairs": 14,
+   "lines": [
+    "A-549",
+    "HT-29"
+   ],
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 6,
+   "auroc_their_score_for_our_labels": 1.0,
+   "their_labels_n_pos": 3,
+   "their_labels_n_neg": 9,
+   "auroc_our_score_for_their_labels": 1.0
+  },
+  "flister2025|other_lines": {
+   "overlap_pairs": 24,
+   "lines": null,
+   "our_labels_n_pos": 3,
+   "our_labels_n_neg": 15,
+   "auroc_their_score_for_our_labels": 1.0,
+   "their_labels_n_pos": 2,
+   "their_labels_n_neg": 22,
+   "auroc_our_score_for_their_labels": null
+  },
+  "included_sources_pooled|same_line": {
+   "overlap_pairs": 44,
+   "our_labels_n_pos": 11,
+   "our_labels_n_neg": 16,
+   "auroc_their_score_for_our_labels": 0.8125,
+   "their_labels_n_pos": 9,
+   "their_labels_n_neg": 25,
+   "auroc_our_score_for_their_labels": 0.8266666666666667
+  },
+  "included_sources_pooled|any_line_pair_level": {
+   "overlap_pairs": 55,
+   "our_labels_n_pos": 6,
+   "our_labels_n_neg": 41,
+   "auroc_their_score_for_our_labels": 0.7479674796747968,
+   "their_labels_n_pos": 5,
+   "their_labels_n_neg": 45,
+   "auroc_our_score_for_their_labels": 0.8133333333333334
+  }
+ },
+ "fitness_auroc": 0.7368675865407892,
+ "fitness": {
+  "depmap_mean_sum": 0.7069781712983256,
+  "depmap_line_sum": 0.7121592539454806,
+  "screen_singles_sum_synlet": 0.7368675865407892,
+  "paralog_flag": 0.917169848071679
+ },
+ "verdict": "include",
+ "verdict_reason": "Own replication: SLB-style rule defined on one Sp/Sa orientation recovered by the other at 0.80 (69 pos, pooled over library x line); replicate-to-replicate 2%-tail split 0.77 mean (0.79-0.99 in the 5 SynLet lines with signal); author calls vs single orientation 0.97. Same-line cross-study with included sources (Dede 2020, Chou 2025, Flister 2025 in A549/HT-29/OVCAR-8/A375/MEL-JUSO): 0.81 for our labels (11 pos) and 0.83 for theirs (9 pos). Only Ito 2021 disagrees (0.22, 4 pos), a source SLB already excludes as contradicted. Hit rate 0.6-0.7% (17 positives). Fitness-only 0.71-0.74 (<0.8). Caveat: a tiny designed panel (51 genes, 781 unique pairs); positives are 15/17 paralogs and repeat the same pairs across lines (BCL2L1-MCL1 x5, MAPK1-MAPK3 x5, BCL2L1-BCL2L2 x3), so the source adds little family diversity."
+}

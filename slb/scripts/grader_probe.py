@@ -1,4 +1,9 @@
-"""Accept/reject and random-noise probes for the frozen SLB grader (dev only)."""
+"""Accept/reject and random-noise probes for the frozen SLB grader (dev only).
+
+Scores are the normalized SLB score (scorer 3): 0 = chance, 1 = an independent re-measurement. The exact
+labels therefore score above 1 (they also carry the measurement noise); raw balanced AUROCs are reported
+alongside under raw_*.
+"""
 
 import json
 from pathlib import Path
@@ -34,10 +39,17 @@ def main() -> None:
     def score(x):
         return E.headline(gold.with_columns(pl.Series("score", x)))[0]
 
+    def raw(x):
+        return E.headline(gold.with_columns(pl.Series("score", x)), raw=True)[0]
+
     probes = {
         "label_oracle_accept": score(y.astype(float)),
         "inverse_oracle_reject": score(1.0 - y),
         "constant_reject": score(np.zeros(n)),
+        "raw_label_oracle": raw(y.astype(float)),
+        "raw_inverse_oracle": raw(1.0 - y),
+        "raw_constant": raw(np.zeros(n)),
+        "dev_ceilings": E.ceilings(gold, E.species_tiers()[0]),
     }
     random = [score(np.random.default_rng(seed).random(n)) for seed in range(20)]
     probes["random_mean"] = float(np.mean(random))
@@ -51,12 +63,12 @@ def main() -> None:
     probes["gene_degree_reject"] = score(deg)
     fit = E.read_predictions("results/slb/fitness_lgbm_dev.parquet")
     probes["fitness_only_probe"] = E.evaluate(fit, "dev")["slb_score"]
-    assert np.isclose(probes["label_oracle_accept"], 1.0)
-    assert np.isclose(probes["inverse_oracle_reject"], 0.0)
-    assert np.isclose(probes["constant_reject"], 0.5)
-    assert np.isclose(probes["stratum_hit_rate_prior_reject"], 0.5)
-    assert abs(probes["random_mean"] - 0.5) < 0.04
-    assert abs(probes["fitness_only_probe"] - 0.5) < 0.05
+    assert np.isclose(probes["raw_label_oracle"], 1.0) and probes["label_oracle_accept"] > 1.0
+    assert np.isclose(probes["raw_inverse_oracle"], 0.0) and probes["inverse_oracle_reject"] < -1.0
+    assert np.isclose(probes["constant_reject"], 0.0)
+    assert np.isclose(probes["stratum_hit_rate_prior_reject"], 0.0)
+    assert abs(probes["random_mean"]) < 0.1
+    assert abs(probes["fitness_only_probe"]) < 0.15
     Path("reference/grader_probe.json").write_text(json.dumps(probes, indent=2) + "\n")
     print(json.dumps(probes, indent=2))
 

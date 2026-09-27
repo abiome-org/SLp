@@ -1,0 +1,376 @@
+{
+ "key": "fong2025",
+ "citation": "Fong SH, Kuenzi BM, Mattson NM, et al. A multilineage screen identifies actionable synthetic lethal interactions in human cancers. Nat Genet 57:154-164 (2025)",
+ "doi": "10.1038/s41588-024-01971-9",
+ "license": "Springer Nature journal terms (supplementary information; not CC-licensed). Not open access in PMC (PMC12266356, isOpenAccess=N). Redistribute derived tables only.",
+ "files": [
+  {
+   "name": "41588_2024_1971_MOESM2_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41588-024-01971-9/MediaObjects/41588_2024_1971_MOESM2_ESM.xlsx",
+   "bytes": 4786591,
+   "sha256": "edbb152a06ef2350005a98431b55a677b9117daebf7a36b085a2ff664c3d06d5"
+  },
+  {
+   "name": "41588_2024_1971_MOESM3_ESM.txt",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41588-024-01971-9/MediaObjects/41588_2024_1971_MOESM3_ESM.txt",
+   "bytes": 29575068,
+   "sha256": "b406381dc961859d59753a693a0224098378fc83165a25645f4bfe4ac0f6d0bb"
+  },
+  {
+   "name": "41588_2024_1971_MOESM4_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41588-024-01971-9/MediaObjects/41588_2024_1971_MOESM4_ESM.xlsx",
+   "bytes": 6698175,
+   "sha256": "4a10d978247ebc5009284ca95c7c59c096530f502638932823db17093d842230"
+  }
+ ],
+ "contexts": [
+  "A427",
+  "A549",
+  "CAL27",
+  "CAL33",
+  "MCF7",
+  "MCF10A",
+  "MDA-MB-231"
+ ],
+ "mechanism": "CRISPR-KO",
+ "label_rule": "Evaluated rule (per line, authors' per-line cell-line-scores/cell-line-fdrs, NOT multi-lineage): positive = score <= -3 and FDR < 0.05; negative = |score| < 1 and FDR > 0.25; else null. Authors' score is z-standardised per line (sd 1) and their FDR is only weakly tied to |score| (FDR<0.05 occurs at |z|~0, and positive-score FDR<0.05 calls outnumber negative ones in 4/7 lines), so FDR alone is not a stringent call; the z<=-3 AND FDR<0.05 intersection is. SHIPPED: no line labelled (INCLUDED_LINES = ()); load() emits measurements with label null.",
+ "n_pairs": 11621,
+ "n_measurement_rows": 81347,
+ "n_pos": 0,
+ "n_neg": 0,
+ "n_pos_if_labelled": 162,
+ "n_neg_if_labelled": 47100,
+ "pos_rate": 0.0,
+ "pos_rate_if_labelled": 0.002,
+ "per_context_if_labelled": {
+  "A427": {
+   "pairs": 11621,
+   "pos": 17,
+   "neg": 7263,
+   "pos_rate": 0.001
+  },
+  "CAL27": {
+   "pairs": 11621,
+   "pos": 29,
+   "neg": 5076,
+   "pos_rate": 0.002
+  },
+  "MDA-MB-231": {
+   "pairs": 11621,
+   "pos": 35,
+   "neg": 6534,
+   "pos_rate": 0.003
+  },
+  "CAL33": {
+   "pairs": 11621,
+   "pos": 41,
+   "neg": 6850,
+   "pos_rate": 0.004
+  },
+  "MCF7": {
+   "pairs": 11621,
+   "pos": 5,
+   "neg": 7833,
+   "pos_rate": 0.0
+  },
+  "A549": {
+   "pairs": 11621,
+   "pos": 21,
+   "neg": 6172,
+   "pos_rate": 0.002
+  },
+  "MCF10A": {
+   "pairs": 11621,
+   "pos": 14,
+   "neg": 7372,
+   "pos_rate": 0.001
+  }
+ },
+ "unique_genes": 225,
+ "unresolved_symbols": [],
+ "paralog_fraction": 0.0032,
+ "paralog_pairs": 37,
+ "paralog_pairs_among_positives": 0,
+ "own_replication": {
+  "method": "Per-replicate additive GI re-scored from MOESM3 counts (replicates(), mode plasmid_last: LFC last timepoint vs plasmid, centred on control x control, f_g = median gene x AAVS, GI median over 9 guide pairs). Also guide-split pseudo-replicates (reps pooled; guide pairs split by parity of guide indices, 5 vs 4 guide pairs, singles split the same way). Split-rule AUROC both directions with 2% tail and z<=-3 positives. first_last and slope variants gave the same picture (all <0.66 except noted).",
+  "per_context": {
+   "MCF7": {
+    "bio_rep_spearman": 0.144,
+    "tail_2pct_in_10pct": 0.197,
+    "split_bio_rep_2pct": [
+     0.561,
+     0.45
+    ],
+    "split_bio_rep_z3": [
+     0.524,
+     0.525
+    ],
+    "split_guide_half_2pct": [
+     0.554,
+     0.555
+    ],
+    "split_guide_half_z3": [
+     0.548,
+     0.569
+    ],
+    "single_rep_auroc_for_labels_optimistic": [
+     0.773,
+     0.856
+    ],
+    "labelled_pos": 5,
+    "pooled_recount_vs_author_score_spearman": 0.439
+   },
+   "MDA-MB-231": {
+    "bio_rep_spearman": 0.012,
+    "tail_2pct_in_10pct": 0.227,
+    "split_bio_rep_2pct": [
+     0.482,
+     0.579
+    ],
+    "split_bio_rep_z3": [
+     0.464,
+     0.611
+    ],
+    "split_guide_half_2pct": [
+     0.496,
+     0.477
+    ],
+    "split_guide_half_z3": [
+     0.388,
+     0.395
+    ],
+    "single_rep_auroc_for_labels_optimistic": [
+     0.79,
+     0.83
+    ],
+    "labelled_pos": 35,
+    "pooled_recount_vs_author_score_spearman": 0.396
+   },
+   "MCF10A": {
+    "bio_rep_spearman": 0.143,
+    "tail_2pct_in_10pct": 0.152,
+    "split_bio_rep_2pct": [
+     0.543,
+     0.497
+    ],
+    "split_bio_rep_z3": [
+     0.541,
+     0.637
+    ],
+    "split_guide_half_2pct": [
+     0.508,
+     0.514
+    ],
+    "split_guide_half_z3": [
+     0.434,
+     0.677
+    ],
+    "single_rep_auroc_for_labels_optimistic": [
+     0.808,
+     0.817
+    ],
+    "labelled_pos": 14,
+    "pooled_recount_vs_author_score_spearman": 0.432
+   },
+   "CAL27": {
+    "bio_rep_spearman": 0.207,
+    "tail_2pct_in_10pct": 0.223,
+    "split_bio_rep_2pct": [
+     0.514,
+     0.491
+    ],
+    "split_bio_rep_z3": [
+     0.536,
+     0.506
+    ],
+    "split_guide_half_2pct": [
+     0.552,
+     0.516
+    ],
+    "split_guide_half_z3": [
+     0.529,
+     0.501
+    ],
+    "single_rep_auroc_for_labels_optimistic": [
+     0.807,
+     0.72
+    ],
+    "labelled_pos": 29,
+    "pooled_recount_vs_author_score_spearman": 0.425
+   },
+   "CAL33": {
+    "bio_rep_spearman": 0.128,
+    "tail_2pct_in_10pct": 0.376,
+    "split_bio_rep_2pct": [
+     0.683,
+     0.582
+    ],
+    "split_bio_rep_z3": [
+     0.717,
+     0.595
+    ],
+    "split_guide_half_2pct": [
+     0.534,
+     0.451
+    ],
+    "split_guide_half_z3": [
+     0.534,
+     0.467
+    ],
+    "single_rep_auroc_for_labels_optimistic": [
+     0.868,
+     0.823
+    ],
+    "labelled_pos": 41,
+    "pooled_recount_vs_author_score_spearman": 0.414
+   },
+   "A549": {
+    "bio_rep_spearman": 0.107,
+    "tail_2pct_in_10pct": 0.193,
+    "split_bio_rep_2pct": [
+     0.578,
+     0.562
+    ],
+    "split_bio_rep_z3": [
+     0.703,
+     0.666
+    ],
+    "split_guide_half_2pct": [
+     0.555,
+     0.554
+    ],
+    "split_guide_half_z3": [
+     0.531,
+     0.575
+    ],
+    "single_rep_auroc_for_labels_optimistic": [
+     0.827,
+     0.874
+    ],
+    "labelled_pos": 21,
+    "pooled_recount_vs_author_score_spearman": 0.421
+   },
+   "A427": {
+    "bio_rep_spearman": 0.051,
+    "tail_2pct_in_10pct": 0.129,
+    "split_bio_rep_2pct": [
+     0.512,
+     0.55
+    ],
+    "split_bio_rep_z3": [
+     0.506,
+     0.59
+    ],
+    "split_guide_half_2pct": [
+     0.515,
+     0.55
+    ],
+    "split_guide_half_z3": [
+     0.453,
+     0.564
+    ],
+    "single_rep_auroc_for_labels_optimistic": [
+     0.885,
+     0.816
+    ],
+    "labelled_pos": 17,
+    "pooled_recount_vs_author_score_spearman": 0.515
+   }
+  },
+  "summary": "Fitness replicates (construct LFC r=0.32-0.76, single-gene r=0.48-0.91), but the interaction residual does not: bio-replicate GI Spearman 0.01-0.21; split-rule AUROCs 0.45-0.72, mostly 0.50-0.60; guide-split 0.39-0.68. Only A549 reaches >=0.65 in both directions, and only with z<=-3 on plasmid_last (0.70/0.67, 11/19 positives, bootstrap 95% CI [0.56,0.85]/[0.53,0.79]); it falls to 0.58/0.56 at the 2% tail, 0.62/0.57 (first_last), 0.66/0.62 (slope) and 0.53/0.58 (guide split) - not robust. CAL33 0.72 one direction only (0.59 other). Single-replicate AUROCs for the evaluated labels (0.72-0.89) are circular (labels come from pooled data including that replicate) and are not evidence.",
+  "pooled_recount_vs_author_score_spearman": {
+   "MCF7": 0.439,
+   "MDA-MB-231": 0.396,
+   "MCF10A": 0.432,
+   "CAL27": 0.425,
+   "CAL33": 0.414,
+   "A549": 0.421,
+   "A427": 0.515
+  }
+ },
+ "cross_study": {
+  "same_line": {
+   "A549_vs_shen2017_slkb": {
+    "overlap_pairs": 1055,
+    "fong_labelled_in_overlap": 579,
+    "fong_pos_in_overlap": 1,
+    "auroc_shen_score_for_fong_labels": null,
+    "shen_labelled_in_overlap": 567,
+    "shen_pos": 29,
+    "auroc_fong_score_for_shen_labels": 0.436,
+    "note": "Shen 2017 (same lab, excluded from SLB labels itself). Too few Fong positives; Fong score does not recover Shen's hits."
+   },
+   "A549_vs_flister2025": {
+    "overlap_pairs": 7,
+    "note": "2 Flister positives; uninformative"
+   },
+   "MDA-MB-231_vs_flister2025": {
+    "overlap_pairs": 7,
+    "note": "2 Flister positives; uninformative"
+   },
+   "A549_vs_ryanlab_chou_harle": {
+    "overlap_pairs": "<=7 each",
+    "note": "0 positives; uninformative"
+   }
+  },
+  "any_line_weaker": {
+   "slkb (shen/han/wong/horlbeck)": {
+    "fong_pos": 40,
+    "auroc_other_score_for_fong_labels": 0.588,
+    "other_pos": 622,
+    "auroc_fong_score_for_other_labels": 0.518
+   },
+   "ryanlab_zdlfc": {
+    "fong_pos": 6,
+    "auroc_other_score_for_fong_labels": 0.286,
+    "other_pos": 98,
+    "auroc_fong_score_for_other_labels": 0.499
+   },
+   "spidr2025 (RPE1)": {
+    "fong_pos": 39,
+    "auroc_other_score_for_fong_labels": 0.495,
+    "other_pos": 35,
+    "auroc_fong_score_for_other_labels": 0.578
+   },
+   "harle2025": {
+    "other_pos": 84,
+    "auroc_fong_score_for_other_labels": 0.582
+   },
+   "flister2025": {
+    "other_pos": 262,
+    "auroc_fong_score_for_other_labels": 0.569
+   },
+   "chou2025": {
+    "other_pos": 14,
+    "auroc_fong_score_for_other_labels": 0.566
+   }
+  },
+  "authors_reference_SL_pairs_Table_S5": {
+   "n_pairs_in_screen": 57,
+   "auroc_author_score_per_line": {
+    "A549": 0.669,
+    "MDA-MB-231": 0.604,
+    "CAL33": 0.621,
+    "CAL27": 0.611,
+    "A427": 0.584,
+    "MCF7": 0.59,
+    "MCF10A": 0.595
+   },
+   "note": "sign check: negative score = SL confirmed weakly (0.58-0.67)"
+  },
+  "cross_line_within_fong_prior": "hits in one line recovered by another line's score at AUROC 0.50-0.61 (prior check)"
+ },
+ "fitness_auroc": 0.801,
+ "fitness_auroc_per_context": {
+  "CAL33": 0.846,
+  "A427": 0.533,
+  "CAL27": 0.887,
+  "MDA-MB-231": 0.877,
+  "MCF7": 0.684,
+  "MCF10A": 0.764,
+  "A549": 0.769
+ },
+ "fitness_flag": "Yes: DepMap -(f_a+f_b) predicts evaluated labels at 0.80 overall, 0.85-0.89 in CAL27/CAL33/MDA-MB-231.",
+ "verdict": "measurements-only",
+ "verdict_reason": "No cell line passes own replication robustly (bio-replicate and guide-split split-rule AUROCs mostly 0.45-0.60; the lone A549 pass at 0.70/0.67 is 11/19 positives and disappears under the 2% rule, other LFC definitions and guide splits). The only same-line cross-study overlap (A549 vs Shen 2017, 1,055 pairs) gives 0.44 for Shen's 29 hits and has 1 Fong positive. Evaluated labels are also largely predicted by single-gene fitness (0.80; >0.85 in 3 lines). Hit rate itself is plausible (0.04-0.35% per line). Keep scores/FDR as optional measurements with label null."
+}

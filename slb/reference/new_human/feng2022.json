@@ -1,0 +1,483 @@
+{
+ "key": "feng2022",
+ "citation": "Feng X, Tang M, Dede M, et al. Genome-wide CRISPR screens using isogenic cells reveal vulnerabilities conferred by loss of tumor suppressors. Science Advances 8:eabm6638 (2022).",
+ "doi": "10.1126/sciadv.abm6638",
+ "data_doi": "10.6084/m9.figshare.19398332",
+ "license": "CC BY-NC 4.0",
+ "files": [
+  {
+   "name": "Table_S1_Raw_read_counts_master_Xu_Feng_Tm_sup_screens.txt",
+   "url": "https://ndownloader.figshare.com/files/34466978",
+   "bytes": 16029711,
+   "sha256": "944124883ec16309a49acb3f630a2d2fbc846ab12fd6cd881bf66274f1414e17"
+  },
+  {
+   "name": "Table_S2_binary_calls.txt",
+   "url": "https://ndownloader.figshare.com/files/34466981",
+   "bytes": 766745,
+   "sha256": "5baed174b2e31ff8cab3fedef1d479993938f5fad892f6c1f6cff65f379fe093"
+  },
+  {
+   "name": "Master_QBF_293A_Xu_Feng_Tm_Sup_scr_042320.txt",
+   "url": "https://ndownloader.figshare.com/files/34466975",
+   "bytes": 2535193,
+   "sha256": "c1288dbf09ee85407106f85a9517585401f68feb79a7c634021703abecf1deb7"
+  },
+  {
+   "name": "BF_master_Xu_Feng_Tm_sup_screens_042320.txt",
+   "url": "https://ndownloader.figshare.com/files/34466984",
+   "bytes": 3340018,
+   "sha256": "f9b9e07dc8971f9f004246c4a21356635ad1c0b2c1cf48d6393ad7cf37c5e4be"
+  },
+  {
+   "name": "Binary_essentiality_calls_analysis_Feng_et_al.ipynb",
+   "url": "https://ndownloader.figshare.com/files/34466987",
+   "bytes": 22863,
+   "sha256": "75fe95630f2a2d2d60bf93330c7c79be3f67176ebf961d859d0c838f97845896"
+  }
+ ],
+ "contexts": [
+  "HEK293-A"
+ ],
+ "mechanism": "CRISPR-KO",
+ "queries_kept": [
+  "STK11 (LKB1)",
+  "PTEN",
+  "VHL",
+  "CDH1",
+  "NF2",
+  "BAP1",
+  "ARID1A",
+  "PBRM1",
+  "KEAP1",
+  "NF1",
+  "RB1",
+  "TP53",
+  "TP53BP1 (no batch-matched WT; scored vs mean of the 4 WT arms)"
+ ],
+ "scoring": "Per arm & replicate: guide LFC = log2(RPM+1) end - log2(RPM+1) T0 (arm's own T0; pDNA for DeWeirdt), guides with <30 T0 reads or bottom-2% T0 dropped, gene LFC = mean over guides (>=2), median-centred. GI(q,g) = LFC_g(q-KO) - running median of LFC_KO over genes ordered by LFC_WT (window n/40); z = residual / running MAD (floored at global MAD-SD), re-standardised per screen. Per-replicate z (KO rep A vs WT rep A, B vs B) = gi_rep1/gi_rep2; pooled z from replicate-mean LFCs. Query's own library row dropped. Authors' Table S2 is binary BAGEL essentiality per screen, not an interaction score, so re-scored from Table S1 counts; each query vs the WT arm of its batch.",
+ "label_rule": "positive: pooled z <= -4 AND z < 0 in both replicates AND LFC_KO < -0.5 AND gene not positive for >= 3 distinct queries (DDX19A, PRDX1, PRKRA, TYMS removed). negative: |pooled z| < 1. else null.",
+ "n_pairs": 229133,
+ "n_pos": 187,
+ "n_neg": 155868,
+ "pos_rate": 0.0008161198954319107,
+ "unique_genes": 17760,
+ "paralog_fraction": 0.000288042316034792,
+ "paralog_pairs": 66,
+ "paralog_pos": 0,
+ "unresolved_symbols": 38,
+ "symbols": 17815,
+ "per_query": [
+  {
+   "query": "STK11",
+   "context": "HEK293-A",
+   "pairs": 17752,
+   "pos": 19,
+   "neg": 12011,
+   "pos_rate": 0.0010703019378098242,
+   "labelled": true,
+   "rep_spearman": 0.3257620760828471,
+   "split_auroc_1to2": 0.9831377063911042,
+   "split_auroc_2to1": 0.8281891970181546,
+   "top_hits": [
+    "TSC2",
+    "TSC1",
+    "GTPBP2",
+    "BIRC6",
+    "FBXW11",
+    "FBXW7",
+    "RPRD1B",
+    "RALGAPB"
+   ]
+  },
+  {
+   "query": "PTEN",
+   "context": "HEK293-A",
+   "pairs": 17753,
+   "pos": 13,
+   "neg": 12109,
+   "pos_rate": 0.000732270602151749,
+   "labelled": true,
+   "rep_spearman": 0.30919434846361976,
+   "split_auroc_1to2": 0.8365969029121082,
+   "split_auroc_2to1": 0.7709755914944595,
+   "top_hits": [
+    "SMARCB1",
+    "LIN28B",
+    "EAF1",
+    "ZC3H7A",
+    "TJP1",
+    "COX6B2",
+    "LEO1",
+    "PARD6B"
+   ]
+  },
+  {
+   "query": "VHL",
+   "context": "HEK293-A",
+   "pairs": 17751,
+   "pos": 19,
+   "neg": 12062,
+   "pos_rate": 0.0010703622331136274,
+   "labelled": true,
+   "rep_spearman": 0.4953803957708097,
+   "split_auroc_1to2": 0.9121332384839068,
+   "split_auroc_2to1": 0.9985735145456587,
+   "top_hits": [
+    "RALGAPB",
+    "DHODH",
+    "TSC2",
+    "CIP2A",
+    "TSC1",
+    "UMPS",
+    "DGUOK",
+    "PGD"
+   ]
+  },
+  {
+   "query": "CDH1",
+   "context": "HEK293-A",
+   "pairs": 17744,
+   "pos": 7,
+   "neg": 12100,
+   "pos_rate": 0.0003944995491433724,
+   "labelled": true,
+   "rep_spearman": 0.280533289372282,
+   "split_auroc_1to2": 0.7730773552776025,
+   "split_auroc_2to1": 0.7406941791212496,
+   "top_hits": [
+    "SLX4",
+    "DRC2",
+    "PPP2R3C",
+    "MAX",
+    "SCAF4",
+    "DNAJA1",
+    "TUBB"
+   ]
+  },
+  {
+   "query": "NF2",
+   "context": "HEK293-A",
+   "pairs": 17744,
+   "pos": 12,
+   "neg": 12032,
+   "pos_rate": 0.0006762849413886385,
+   "labelled": true,
+   "rep_spearman": 0.2836205645005078,
+   "split_auroc_1to2": 0.9837959321272053,
+   "split_auroc_2to1": 0.9771659737049107,
+   "top_hits": [
+    "UBE2A",
+    "PPP1R15B",
+    "OVCA2",
+    "HELQ",
+    "ICE2",
+    "PPP2R3C",
+    "UBE2T",
+    "PLA2G4D"
+   ]
+  },
+  {
+   "query": "BAP1",
+   "context": "HEK293-A",
+   "pairs": 17743,
+   "pos": 19,
+   "neg": 11972,
+   "pos_rate": 0.0010708448402186779,
+   "labelled": true,
+   "rep_spearman": 0.2641101336551004,
+   "split_auroc_1to2": 0.86706371502416,
+   "split_auroc_2to1": 0.8261152938532419,
+   "top_hits": [
+    "FH",
+    "PMVK",
+    "DHODH",
+    "ATIC",
+    "SDHB",
+    "IMPDH2",
+    "CREBBP",
+    "SSX5"
+   ]
+  },
+  {
+   "query": "ARID1A",
+   "context": "HEK293-A",
+   "pairs": 17743,
+   "pos": 8,
+   "neg": 12134,
+   "pos_rate": 0.0004508820379868117,
+   "labelled": true,
+   "rep_spearman": 0.2964443697916628,
+   "split_auroc_1to2": 0.8149370715810765,
+   "split_auroc_2to1": 0.7865235113240507,
+   "top_hits": [
+    "ATP6V0D1",
+    "PDZD7",
+    "RNF7",
+    "FAAP24",
+    "EIF3I",
+    "TOPBP1",
+    "HAPSTR1",
+    "WAC"
+   ]
+  },
+  {
+   "query": "PBRM1",
+   "context": "HEK293-A",
+   "pairs": 17743,
+   "pos": 12,
+   "neg": 12106,
+   "pos_rate": 0.0006763230569802176,
+   "labelled": true,
+   "rep_spearman": 0.2060765883301449,
+   "split_auroc_1to2": 0.924219013372289,
+   "split_auroc_2to1": 0.995325317451399,
+   "top_hits": [
+    "XRCC2",
+    "SCO2",
+    "FAAP100",
+    "SFR1",
+    "AHR",
+    "OR4D2",
+    "NDUFS3",
+    "FANCF"
+   ]
+  },
+  {
+   "query": "KEAP1",
+   "context": "HEK293-A",
+   "pairs": 17429,
+   "pos": 20,
+   "neg": 11865,
+   "pos_rate": 0.0011475127660795226,
+   "labelled": true,
+   "rep_spearman": 0.32388321597124825,
+   "split_auroc_1to2": 0.7740198321891686,
+   "split_auroc_2to1": 0.7792295957284515,
+   "top_hits": [
+    "TMCO6",
+    "G6PC1",
+    "VGLL3",
+    "FFAR1",
+    "BRPF1",
+    "GPRC5A",
+    "MAPK1IP1L",
+    "GAK"
+   ]
+  },
+  {
+   "query": "NF1",
+   "context": "HEK293-A",
+   "pairs": 17412,
+   "pos": 16,
+   "neg": 11713,
+   "pos_rate": 0.0009189065012634965,
+   "labelled": true,
+   "rep_spearman": 0.2516070393232044,
+   "split_auroc_1to2": 0.7653979094657061,
+   "split_auroc_2to1": 0.8291832995222825,
+   "top_hits": [
+    "EBNA1BP2",
+    "HDDC3",
+    "C20orf173",
+    "BFAR",
+    "G6PC1",
+    "LLGL1",
+    "SRSF6",
+    "SLC31A2"
+   ]
+  },
+  {
+   "query": "RB1",
+   "context": "HEK293-A",
+   "pairs": 17422,
+   "pos": 13,
+   "neg": 11885,
+   "pos_rate": 0.0007461829870278958,
+   "labelled": true,
+   "rep_spearman": 0.2895905606658027,
+   "split_auroc_1to2": 0.8200867419617419,
+   "split_auroc_2to1": 0.8493446657509157,
+   "top_hits": [
+    "EBNA1BP2",
+    "TADA2B",
+    "HGS",
+    "TRIM8",
+    "KDM6B",
+    "TMED1",
+    "HPD",
+    "CRIPTO"
+   ]
+  },
+  {
+   "query": "TP53",
+   "context": "HEK293-A",
+   "pairs": 17428,
+   "pos": 10,
+   "neg": 11935,
+   "pos_rate": 0.0005737893045673629,
+   "labelled": true,
+   "rep_spearman": 0.35184083447987186,
+   "split_auroc_1to2": 0.8792110237787284,
+   "split_auroc_2to1": 0.787497399625546,
+   "top_hits": [
+    "NOP58",
+    "TADA2B",
+    "GATB",
+    "NSMF",
+    "ATP6V0E1",
+    "CAB39",
+    "KHDC4",
+    "RBM47"
+   ]
+  },
+  {
+   "query": "TP53BP1",
+   "context": "HEK293-A",
+   "pairs": 17547,
+   "pos": 19,
+   "neg": 11968,
+   "pos_rate": 0.0010828061776941927,
+   "labelled": true,
+   "rep_spearman": 0.6498847139681201,
+   "split_auroc_1to2": 0.9986828512396694,
+   "split_auroc_2to1": 0.9936800699300699,
+   "top_hits": [
+    "RFXAP",
+    "SPPL3",
+    "RAD51B",
+    "CHP1",
+    "IMP3",
+    "DDX53",
+    "UBE2T",
+    "C10orf55"
+   ]
+  }
+ ],
+ "own_replication": {
+  "split_rule_auroc_rep1_to_rep2": 0.8642072023028177,
+  "split_rule_auroc_rep2_to_rep1": 0.8452330662676631,
+  "split_rule_n_pos_rep1": 190,
+  "split_rule_n_pos_rep2": 150,
+  "replicate_agreement": {
+   "pairs": 229133,
+   "replicates": 2,
+   "spearman": 0.33281735998489786,
+   "tail_2pct_in_10pct": 0.38904647610735327
+  },
+  "final_labels_auroc_rep1": 0.9996234301642045,
+  "final_labels_auroc_rep2": 0.9992046609025682,
+  "note_final_labels": "final labels require z<0 in both replicates, so single-replicate AUROCs for them are optimistic",
+  "kind": "technical replicates (same clone, same T0, same WT arm) -> upper bound"
+ },
+ "null_calibration": {
+  "null": "12 ordered pairs of the 4 batch WT arms",
+  "rule": "z<=t, z<0 in both reps, lfc_ko<-0.5 (before the recurrence filter)",
+  "t=-3": {
+   "query_rate": 0.004704076949362923,
+   "null_rate": 0.003920265211222959,
+   "fdr_estimate": 0.8333760806684687
+  },
+  "t=-4": {
+   "query_rate": 0.0008527222464539573,
+   "null_rate": 0.00043468827993856297,
+   "fdr_estimate": 0.5097653799302326
+  },
+  "t=-5": {
+   "query_rate": 0.00016912639074654517,
+   "null_rate": 3.319429803180479e-05,
+   "fdr_estimate": 0.19626918002140872
+  }
+ },
+ "cross_study": {
+  "same_line": [],
+  "different_line": [
+   {
+    "partner": "desjardins2026",
+    "overlap_pairs": 35527,
+    "their_score_for_our_labels_auroc": 0.5112431947068494,
+    "our_pos": 27,
+    "our_labelled": 24198,
+    "our_score_for_their_labels_auroc": 0.45922352157181257,
+    "their_pos": 98,
+    "their_labelled": 24169,
+    "lines": [
+     "HEK293-A~BEAS-2B",
+     "HEK293-A~hTERT-RPE1"
+    ]
+   },
+   {
+    "partner": "thompson2021",
+    "overlap_pairs": 24,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 0,
+    "our_labelled": 18,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 4,
+    "their_labelled": 21,
+    "lines": [
+     "HEK293-A~A-375",
+     "HEK293-A~MeWo",
+     "HEK293-A~hTERT-RPE1"
+    ]
+   },
+   {
+    "partner": "shen2017",
+    "overlap_pairs": 540,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 3,
+    "our_labelled": 324,
+    "our_score_for_their_labels_auroc": 0.5277930992216707,
+    "their_pos": 37,
+    "their_labelled": 478,
+    "lines": [
+     "HEK293-A~A-549",
+     "HEK293-A~HEK293T",
+     "HEK293-A~HeLa"
+    ]
+   },
+   {
+    "partner": "spidr2025",
+    "overlap_pairs": 1039,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 4,
+    "our_labelled": 642,
+    "our_score_for_their_labels_auroc": null,
+    "their_pos": 1,
+    "their_labelled": 973,
+    "lines": [
+     "HEK293-A~hTERT-RPE1"
+    ]
+   },
+   {
+    "partner": "flister2025",
+    "overlap_pairs": 20,
+    "their_score_for_our_labels_auroc": null,
+    "our_pos": 0,
+    "our_labelled": 13,
+    "our_score_for_their_labels_auroc": 0.3939393939393939,
+    "their_pos": 9,
+    "their_labelled": 20,
+    "lines": [
+     "HEK293-A~A-549",
+     "HEK293-A~COLO 678",
+     "HEK293-A~Detroit 562",
+     "HEK293-A~HSC-2",
+     "HEK293-A~HT-29",
+     "HEK293-A~LK-2",
+     "HEK293-A~LS180",
+     "HEK293-A~LS513",
+     "HEK293-A~MDA-MB-231",
+     "HEK293-A~MIA PaCa-2",
+     "HEK293-A~MKN74",
+     "HEK293-A~NCI-H1299"
+    ]
+   }
+  ],
+  "note": "only pairs with >=5 labelled pos and neg get an AUROC; different-line rows with trivial overlap omitted (full list in the parser's checks())"
+ },
+ "fitness_auroc": 0.6598386990198215,
+ "fitness_auroc_own_wt_lfc": 0.5902978510954491,
+ "verdict": "measurements-only",
+ "verdict_reason": "Technical split-half passes (0.86/0.85), but scoring one batch's WT arm against another's (no query at all) reproduces 83% of the z<=-3 and 51% of the z<=-4 hit rate of the real query screens, the same library genes (PRDX1, DDX19A, PPP2R3C, C17orf70, BRIP1) come up for 5-6 unrelated queries across batches, known controls are absent (ARID1A-ARID1B z=+1.5), the hit rate at a null-calibrated cut-off is implausibly low (0.08%, 187 pos), and different-line overlap with desjardins2026 on STK11/ARID1A is at chance (0.51/0.46). Measurements (z) are kept; labels should not be used."
+}

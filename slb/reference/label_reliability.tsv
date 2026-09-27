@@ -1,0 +1,41 @@
+# Label reliability per label source: the AUROC at which an independent re-measurement recovers the
+# source's labels. The build copies it into the benchmark (label_reliability.parquet); the evaluator
+# uses it as each stratum's noise ceiling (evaluate.py), and the build drops dev/test labels whose best
+# source is below build.EVAL_MIN_RELIABILITY. Rule for the number: a cross-study re-measurement in the
+# same line with >= 20 overlapping positives if one exists, else the source's own independent
+# re-measurement (independent maps/libraries/guides/enzymes before biological replicates); a reported
+# range is entered as its midpoint. Existing sources: README "Label quality" table; new human sources:
+# reference/new_human/<source>.json. context_id is empty for a source-wide value.
+source	context_id	reliability	basis
+dede2020		0.93	cross-study vs the other included studies
+chou2025		0.81	cross-study
+harle2025		0.80	cross-study
+flister2025		0.76	cross-study
+horlbeck2018		0.76	own replicates 0.71-0.81
+parrish2021		0.925	own replicates 0.90-0.95
+zhao2018		0.705	own replicates 0.69-0.72
+spidr2025		0.83	own replicates after re-scoring
+costanzo2016		0.835	cross-study, 4 re-measurements, 0.74-0.93
+kuzmin2018		0.89	cross-study vs Costanzo 2016
+kuzmin2020		0.845	cross-study vs Costanzo 2016 and Kuzmin 2018, 0.80-0.89
+costanzo2021		0.95	cross-study vs Costanzo 2016
+scer_emaps		0.77	cross-study vs Costanzo 2016
+ryan2012		0.79	cross-study vs Frost 2012
+frost2012		0.67	cross-study vs Ryan 2012
+koo2025		0.88	own sgRNA orientation swap 0.87-0.89
+byrne2007		0.90	pairs measured twice 0.87-0.93
+horn2011		0.925	replicate screens 0.92-0.93
+roguev2013		0.73	own orientations
+billmann2026		0.87	independent re-screens of the same query (15,337 pos)
+herken2026		0.80	cross-study vs Horlbeck 2018 K562 (46 pos); own independent maps 0.96-0.97
+simpson2023		0.96	cross-study vs Herken 2026 K562 (165/170 pos: 0.95/0.97)
+najm2023	human:THP-1	0.81	independent 40k and validation libraries, same line (0.82/0.80)
+najm2023	human:Reh	0.685	independent 40k and validation libraries, same line (0.66/0.71)
+deweirdt2020		0.805	independent PARP1 anchor guides (0.76/0.85)
+hayward2026	human:hTERT-RPE1	0.68	cross-study: SPIDR recovers the RPE1 positives (85 pos)
+hayward2026	human:MCF-10A	0.987	own replicates with per-replicate T0 (no same-line study)
+lenoir2021		0.96	independent infections 0.93-0.99
+li2022		0.965	library architectures / replicates 0.93-1.00 (cross-study Ito < 20 pos)
+burgold2025		0.69	leave-one-replicate-out with independent references 0.68-0.71
+wolf2025		0.75	Cas9 arm recovers Cas12a labels 0.73-0.77
+najm2018		0.80	Sp/Sa orientation swap (69 pos)

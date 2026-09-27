@@ -1,0 +1,490 @@
+{
+ "key": "billmann2026",
+ "citation": "Billmann M, Costanzo M, et al. Global genetic interaction network of a human cell maps conserved principles and informs functional interpretation of gene co-essentiality profiles. Cell 2026.",
+ "doi": "10.1016/j.cell.2026.03.044",
+ "data_doi": "10.17632/bpcpfns6vb.2",
+ "license": "CC BY 4.0",
+ "files": [
+  {
+   "name": "Data_S1_Query_gene_and_screen_information.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/bpcpfns6vb/files/4b82cd2e-b7aa-414f-b01e-4cce4ccb8cdc/file_downloaded",
+   "bytes": 50072,
+   "sha256": "fcb2368515ac143f88efd06daf6fc3de4671c8b23c8a7b469353da14e1241442"
+  },
+  {
+   "name": "Data_S4_HAP1_genetic_interaction_dataset.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/bpcpfns6vb/files/a24e893a-0d83-497e-b067-15f64a1c8a5a/file_downloaded",
+   "bytes": 160034099,
+   "sha256": "c3eefaf6e8fe248dd446d4e4ecbb4e0d94b29d347398510c9b542f8f8c48bf06"
+  },
+  {
+   "name": "Data_S5_Replicate_screens_and_consensus_GI_profiles.xlsx",
+   "url": "https://data.mendeley.com/public-files/datasets/bpcpfns6vb/files/760ea9f4-5313-427f-858e-0524ab16a9a0/file_downloaded",
+   "bytes": 2980596,
+   "sha256": "2d1879d4de20edfa496321920fca27f13a3b9d76dbb2cd40a1232c590c05cf25"
+  }
+ ],
+ "contexts": [
+  "HAP1"
+ ],
+ "mechanism": "CRISPR-KO",
+ "arm": "rich medium (IMDM, standard HAP1 medium) only: 166 screens, 128 query genes (127 after HGNC; SLX1 ambiguous). The 132 'min' (DMEM 10 mM glucose/1 mM Gln) screens are excluded.",
+ "label_rule": "Per (query, library gene): score = mean qGI over the query's rich-medium screens, signif = median qGI FDR. Positive: qGI < -0.5 and FDR < 0.05. Negative: |qGI| < mean of the screens' median |qGI| and FDR > 0.5. Else null. Stricter than the authors' |qGI|>0.3 & FDR<0.1 (1.47% of pairs); -0.5/0.05 replicates at 0.87 vs 0.75 for the authors' cut-off in screen-to-screen tests.",
+ "n_pairs": 2245995,
+ "n_pos": 8261,
+ "n_neg": 1143296,
+ "pos_rate": 0.003678102578144653,
+ "unique_genes": 17749,
+ "paralog_fraction": 0.00016740909930787915,
+ "paralog_pairs": 376,
+ "paralog_pos": 31,
+ "symbols": {
+  "unique_input": 17807,
+  "unresolved": 39,
+  "unresolved_queries": [
+   "SLX1"
+  ],
+  "examples": [
+   "QARS",
+   "RP11-89N17.1",
+   "AP003774.4",
+   "AP001816.1",
+   "AC007040.11",
+   "C18orf21",
+   "SLX1",
+   "AC018755.1",
+   "FLJ27365",
+   "B3GNT1",
+   "TMEM155",
+   "RP11-93B14.6",
+   "AC007431.1",
+   "AC106876.2",
+   "C6orf123",
+   "AC093802.1",
+   "CRIPAK",
+   "AC079612.1",
+   "RP11-422N16.3",
+   "RP11-389E17.1"
+  ]
+ },
+ "degree": {
+  "n_queries": 127,
+  "pairs_per_query_median": 17748.0,
+  "pairs_per_query_min": 17748,
+  "pairs_per_query_max": 17748,
+  "pos_per_query_median": 43.0,
+  "pos_per_query_max": 305,
+  "pos_per_query_min": 2,
+  "top10_pos": [
+   [
+    "BCL2",
+    305
+   ],
+   [
+    "CDKN2B",
+    301
+   ],
+   [
+    "ATP5MG",
+    280
+   ],
+   [
+    "NDUFA2",
+    275
+   ],
+   [
+    "VPS52",
+    263
+   ],
+   [
+    "PC",
+    244
+   ],
+   [
+    "NAA30",
+    187
+   ],
+   [
+    "ATP5PF",
+    183
+   ],
+   [
+    "TUBB",
+    173
+   ],
+   [
+    "ANGPTL4",
+    163
+   ]
+  ],
+  "queries_with_0_pos": 0,
+  "pairs_with_both_genes_queries": 8001
+ },
+ "library_gene_pos_degree": {
+  "genes_with_pos": 3710,
+  "max": [
+   [
+    "RIC8A",
+    24
+   ],
+   [
+    "PAXIP1",
+    20
+   ],
+   [
+    "UBE2G2",
+    18
+   ],
+   [
+    "CTNNA1",
+    17
+   ],
+   [
+    "TSC2",
+    17
+   ],
+   [
+    "ACO2",
+    16
+   ],
+   [
+    "UNC50",
+    16
+   ],
+   [
+    "NSD1",
+    16
+   ],
+   [
+    "EIF2AK1",
+    16
+   ],
+   [
+    "CDK4",
+    15
+   ]
+  ]
+ },
+ "own_replication": {
+  "replicated_queries_rich": 28,
+  "replicate_pairs": 498512,
+  "agreement_rep1_rep2": {
+   "pairs": 498512,
+   "replicates": 2,
+   "spearman": 0.1655281724354212,
+   "tail_2pct_in_10pct": 0.401337938003699
+  },
+  "split_rule_auroc_q0.01": [
+   0.7806443925153487,
+   0.779033265575804
+  ],
+  "split_rule_auroc_thr-0.5": [
+   0.8020024632147358,
+   0.8072851912956667
+  ],
+  "slb_rule_screen_i_scored_by_screen_j_pooled": 0.8701185626027427,
+  "slb_rule_pos_pooled": 15337,
+  "slb_rule_by_rep_index": [
+   {
+    "from": 1,
+    "to": 2,
+    "pos": 2918,
+    "auroc": 0.8262374062945543
+   },
+   {
+    "from": 1,
+    "to": 3,
+    "pos": 924,
+    "auroc": 0.8385497537215366
+   },
+   {
+    "from": 1,
+    "to": 4,
+    "pos": 675,
+    "auroc": 0.876275720164609
+   },
+   {
+    "from": 1,
+    "to": 5,
+    "pos": 526,
+    "auroc": 0.9407486476800256
+   },
+   {
+    "from": 2,
+    "to": 1,
+    "pos": 2749,
+    "auroc": 0.8273833819751409
+   },
+   {
+    "from": 2,
+    "to": 3,
+    "pos": 825,
+    "auroc": 0.7918064902721623
+   },
+   {
+    "from": 2,
+    "to": 4,
+    "pos": 561,
+    "auroc": 0.8544541380585705
+   },
+   {
+    "from": 2,
+    "to": 5,
+    "pos": 390,
+    "auroc": 0.9426112109511157
+   },
+   {
+    "from": 3,
+    "to": 1,
+    "pos": 560,
+    "auroc": 0.8729916502219199
+   },
+   {
+    "from": 3,
+    "to": 2,
+    "pos": 560,
+    "auroc": 0.8617845272331741
+   },
+   {
+    "from": 3,
+    "to": 4,
+    "pos": 386,
+    "auroc": 0.9265229312975478
+   },
+   {
+    "from": 3,
+    "to": 5,
+    "pos": 366,
+    "auroc": 0.9317863476485031
+   },
+   {
+    "from": 4,
+    "to": 1,
+    "pos": 588,
+    "auroc": 0.9290469278993003
+   },
+   {
+    "from": 4,
+    "to": 2,
+    "pos": 588,
+    "auroc": 0.9127021407917344
+   },
+   {
+    "from": 4,
+    "to": 3,
+    "pos": 588,
+    "auroc": 0.9160113482267759
+   },
+   {
+    "from": 4,
+    "to": 5,
+    "pos": 569,
+    "auroc": 0.9271109065944385
+   },
+   {
+    "from": 5,
+    "to": 1,
+    "pos": 391,
+    "auroc": 0.9518849828322631
+   },
+   {
+    "from": 5,
+    "to": 2,
+    "pos": 391,
+    "auroc": 0.9400855475730475
+   },
+   {
+    "from": 5,
+    "to": 3,
+    "pos": 391,
+    "auroc": 0.9507556111169786
+   },
+   {
+    "from": 5,
+    "to": 4,
+    "pos": 391,
+    "auroc": 0.9515152475774573
+   }
+  ],
+  "per_query_rep1_to_rep2_mean": 0.7940835027414291,
+  "per_query_unrelated_query_control_mean": 0.48607725799311174,
+  "per_query_n": 28,
+  "cross_medium_min_screen_auroc": 0.6947100608429834,
+  "cross_medium_pos": 1459,
+  "cross_medium_labelled": 198632
+ },
+ "cross_study": {
+  "same_line_HAP1": [
+   {
+    "other": "chymera2020",
+    "overlap_pairs": 7,
+    "my_labels_scored_by_other": null,
+    "my_pos": 3,
+    "my_labelled": 6,
+    "other_labels_scored_by_me": null,
+    "other_pos": 0,
+    "other_labelled": 3
+   }
+  ],
+  "other_lines": [
+   {
+    "other": "spidr2025",
+    "overlap_pairs": 6193,
+    "my_labels_scored_by_other": 0.5243664253048781,
+    "my_pos": 112,
+    "my_labelled": 2736,
+    "other_labels_scored_by_me": 0.4365491319133703,
+    "other_pos": 5,
+    "other_labelled": 5592
+   },
+   {
+    "other": "horlbeck2018",
+    "overlap_pairs": 3669,
+    "my_labels_scored_by_other": 0.5671297432624809,
+    "my_pos": 39,
+    "my_labelled": 1606,
+    "other_labels_scored_by_me": 0.6749449919929172,
+    "other_pos": 89,
+    "other_labelled": 1815
+   },
+   {
+    "other": "flister2025",
+    "overlap_pairs": 1660,
+    "my_labels_scored_by_other": 0.5858808479532164,
+    "my_pos": 180,
+    "my_labelled": 940,
+    "other_labels_scored_by_me": 0.6464679898414838,
+    "other_pos": 77,
+    "other_labelled": 1156
+   },
+   {
+    "other": "shen2017",
+    "overlap_pairs": 1233,
+    "my_labels_scored_by_other": 0.5874603174603175,
+    "my_pos": 15,
+    "my_labelled": 435,
+    "other_labels_scored_by_me": 0.49793956043956045,
+    "other_pos": 13,
+    "other_labelled": 629
+   },
+   {
+    "other": "ito2021",
+    "overlap_pairs": 1111,
+    "my_labels_scored_by_other": 0.38712802349165987,
+    "my_pos": 154,
+    "my_labelled": 583,
+    "other_labels_scored_by_me": 0.3102751654475792,
+    "other_pos": 29,
+    "other_labelled": 524
+   },
+   {
+    "other": "han2017",
+    "overlap_pairs": 602,
+    "my_labels_scored_by_other": null,
+    "my_pos": 1,
+    "my_labelled": 273,
+    "other_labels_scored_by_me": null,
+    "other_pos": 2,
+    "other_labelled": 298
+   },
+   {
+    "other": "harle2025",
+    "overlap_pairs": 270,
+    "my_labels_scored_by_other": 0.8472031702484377,
+    "my_pos": 81,
+    "my_labelled": 162,
+    "other_labels_scored_by_me": null,
+    "other_pos": 4,
+    "other_labelled": 102
+   },
+   {
+    "other": "chou2025",
+    "overlap_pairs": 210,
+    "my_labels_scored_by_other": 0.6671296296296296,
+    "my_pos": 60,
+    "my_labelled": 114,
+    "other_labels_scored_by_me": 0.8578804347826088,
+    "other_pos": 23,
+    "other_labelled": 103
+   },
+   {
+    "other": "zhao2018",
+    "overlap_pairs": 194,
+    "my_labels_scored_by_other": null,
+    "my_pos": 2,
+    "my_labelled": 74,
+    "other_labels_scored_by_me": null,
+    "other_pos": 2,
+    "other_labelled": 103
+   },
+   {
+    "other": "thompson2021",
+    "overlap_pairs": 192,
+    "my_labels_scored_by_other": 0.17881944444444442,
+    "my_pos": 6,
+    "my_labelled": 102,
+    "other_labels_scored_by_me": 0.4870229007633588,
+    "other_pos": 5,
+    "other_labelled": 136
+   },
+   {
+    "other": "wong2016",
+    "overlap_pairs": 97,
+    "my_labels_scored_by_other": null,
+    "my_pos": 0,
+    "my_labelled": 40,
+    "other_labels_scored_by_me": null,
+    "other_pos": 0,
+    "other_labelled": 53
+   },
+   {
+    "other": "dede2020",
+    "overlap_pairs": 24,
+    "my_labels_scored_by_other": null,
+    "my_pos": 15,
+    "my_labelled": 18,
+    "other_labels_scored_by_me": 0.9166666666666666,
+    "other_pos": 6,
+    "other_labelled": 18
+   },
+   {
+    "other": "parrish2021",
+    "overlap_pairs": 20,
+    "my_labels_scored_by_other": null,
+    "my_pos": 8,
+    "my_labelled": 12,
+    "other_labels_scored_by_me": null,
+    "other_pos": 3,
+    "other_labelled": 14
+   },
+   {
+    "other": "chymera2020",
+    "overlap_pairs": 7,
+    "my_labels_scored_by_other": null,
+    "my_pos": 3,
+    "my_labelled": 6,
+    "other_labels_scored_by_me": null,
+    "other_pos": 1,
+    "other_labelled": 5
+   }
+  ],
+  "other_lines_pooled": {
+   "pairs": 10180,
+   "my_labels_scored_by_mean_other_pct": 0.5359334727825641,
+   "my_pos": 166,
+   "other_any_pos_scored_by_me": 0.6377114940519454,
+   "other_pos": 164
+  }
+ },
+ "fitness_auroc": 0.61119901237887,
+ "fitness_detail": {
+  "depmap_-(fa+fb)": 0.61119901237887,
+  "depmap_coverage": 0.21714687158343007,
+  "depmap_library_gene_only": 0.6754870447329608,
+  "hap1_wt_lfc_library_gene_only": 0.6929674584489879,
+  "hap1_coverage": 1.0
+ },
+ "subsets": "Aregger 2020 query screens (FASN, ACACA, C12orf49, SREBF1/2, LDLR, PDK1, SLC16A3) are present in this dataset re-scored with qGI, but all in the 'min' medium arm, so they are not in the SLB rich-medium measurements. Xiao 2024: not identified in the Data S1 metadata (no publication column); not verified.",
+ "verdict": "include",
+ "verdict_reason": "Own replication passes clearly: SLB rule applied to one independent screen of the same query, scored by another, AUROC 0.87 pooled (15,337 positives across 28 replicated queries, all 20 ordered screen pairs 0.79-0.95); per-query mean 0.79 vs 0.49 when scored by an unrelated query's screen, so replication is query-specific, not library-gene fitness. Hit rate 0.37% is plausible. There is no same-line cross-study overlap (7 pairs with CHyMErA HAP1), so there can be no contradiction. Cross-line overlap is weak (pooled 0.54 for 166 positives), as expected for non-paralog GIs across lines. Fitness alone gives 0.61-0.69 (<0.8). Caveat: only 28/127 queries have replicate screens; labels are hub-structured (127 queries x ~17.7k genes)."
+}

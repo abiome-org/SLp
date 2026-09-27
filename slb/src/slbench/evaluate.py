@@ -14,10 +14,18 @@ SLB score, the one headline number:
      weights), rescaled per stratum and class. Weighted SL and non-SL pairs then have the same
      fitted single-gene fitness design means; a flexible fitness-only model can retain residual
      signal, measured by the fitness_lgbm control.
-  3. Species score = that balanced AUROC; for human, the mean over ancestry groups with at least
-     MIN_GROUP_POS positives. SLB score = mean over the benchmark's headline species (manifest.json
-     "headline_species"). Auxiliary species ("auxiliary_species": too few test positives or labels
-     verified only within their own study) are scored and reported the same way, but not averaged in.
+  3. Noise ceiling: labels are measurements, and an independent re-measurement recovers them only at
+     AUROC < 1 (each source's reliability, label_reliability.parquet, from reference/label_reliability.tsv).
+     The ceiling of a set of strata is their reliability averaged with the same pair weights as the AUROC.
+     Normalized score = (AUROC - 0.5) / (ceiling - 0.5): 0 = chance, 1 = as good as re-running the
+     experiment. A model of the true biology can reach 1 and can exceed it, since a single re-measurement is
+     itself noisy; only predicting the measurement noise of these screens would take it much further.
+  4. Species score = normalized score; for human, the mean over ancestry groups (lines without an
+     ancestry estimate form their own group, "unknown") with at least MIN_GROUP_POS positives, each group
+     normalized by its own ceiling. SLB score = mean over the headline species (manifest.json
+     "headline_species"). Auxiliary species ("auxiliary_species") are scored and reported the same way, but
+     not averaged in. Raw balanced AUROCs and ceilings are reported alongside (slb_auroc, species_auroc,
+     ceilings).
 """
 
 from __future__ import annotations
@@ -34,7 +42,7 @@ from slbench.metrics import average_precision, stratified_auc
 
 BENCH = Path(os.environ.get("SLB_BENCH", "data/slb"))
 MIN_GROUP_POS = 20
-SCORER_VERSION = "2.0.0"
+SCORER_VERSION = "3.0.0"
 REPORTS = Path("results/reports")  # generated markdown reports (gitignored)
 SPECIES_NAMES = {"human": "H. sapiens", "scer": "S. cerevisiae", "spom": "S. pombe", "spne": "S. pneumoniae",
                  "dmel": "D. melanogaster", "cele": "C. elegans", "mmus": "M. musculus", "bsub": "B. subtilis",
@@ -81,7 +89,21 @@ def load_gold(split: str) -> pl.DataFrame:
     e = pl.col("propensity")
     d = d.with_columns(pl.when(pl.col("label") == 1).then(1 - e).otherwise(e).alias("_bw"))
     by = ["context_id", "sources", "label"]
-    return d.with_columns((pl.col("_bw") * pl.len().over(by) / pl.col("_bw").sum().over(by)).alias("_bw"))
+    d = d.with_columns((pl.col("_bw") * pl.len().over(by) / pl.col("_bw").sum().over(by)).alias("_bw"))
+    return d.with_columns(label_reliability(d).alias("_rel"))
+
+
+def label_reliability(d: pl.DataFrame, bench: Path | None = None) -> pl.Series:
+    """Per row: reliability of its most reliable labelling source (`sources`), context-specific where given."""
+    rel = pl.read_parquet((bench or BENCH) / "label_reliability.parquet")
+    long = d.select(pl.int_range(pl.len()).alias("_i"), "context_id", pl.col("sources").str.split(",").alias("source")) \
+        .explode("source")
+    long = long.join(rel.filter(pl.col("context_id").is_not_null()).rename({"reliability": "r_ctx"}),
+                     on=["source", "context_id"], how="left") \
+        .join(rel.filter(pl.col("context_id").is_null()).drop("context_id").rename({"reliability": "r_src"}),
+              on="source", how="left")
+    best = long.group_by("_i").agg(pl.coalesce("r_ctx", "r_src").max().alias("r")).sort("_i")
+    return best["r"]
 
 
 def read_predictions(path: str | Path) -> pl.DataFrame:
@@ -152,28 +174,70 @@ def _within_gene_auc(df: pl.DataFrame) -> tuple[float, float]:
                           both["score"].to_numpy(), both["_bw"].to_numpy())
 
 
+def _ceiling(df: pl.DataFrame, w: np.ndarray | None = None) -> float:
+    """Label reliability averaged over strata with the pair weights of stratified_auc (w_pos * w_neg)."""
+    if "_rel" not in df.columns:
+        return float("nan")
+    ww = df["_bw"].to_numpy() * (w if w is not None else 1.0)
+    codes, y, r = _codes(df["context_id"], df["sources"]), df["label"].to_numpy(), df["_rel"].to_numpy()
+    n = codes.max() + 1 if len(codes) else 0
+    wp = np.bincount(codes, weights=ww * (y == 1), minlength=n)
+    wn = np.bincount(codes, weights=ww * (y == 0), minlength=n)
+    rs = np.bincount(codes, weights=r, minlength=n) / np.maximum(np.bincount(codes, minlength=n), 1)
+    pw = wp * wn
+    return float((pw * rs).sum() / pw.sum()) if pw.sum() else float("nan")
+
+
+def _groups(d: pl.DataFrame, sp: str) -> list[pl.DataFrame]:
+    """Row sets averaged into a species score: the whole species, or human ancestry groups (incl. unknown)."""
+    d = d.with_row_index("_r")
+    parts = [d] if sp != "human" else list(d.partition_by("ancestry_group"))
+    return [g for g in parts if (g["label"] == 1).sum() >= MIN_GROUP_POS]
+
+
+def species_result(d: pl.DataFrame, sp: str, w: np.ndarray | None = None) -> dict:
+    """{"auroc", "ceiling", "normalized"}: balanced AUROC, noise ceiling and (AUROC - .5) / (ceiling - .5),
+    each averaged over the species' groups (human: ancestry groups, each normalized by its own ceiling).
+    NaN when no group has MIN_GROUP_POS positives."""
+    rows = []
+    for g in _groups(d, sp):
+        gw = w[g["_r"].to_numpy()] if w is not None else None
+        a, c = _auc(g, gw)[0], _ceiling(g, gw)
+        rows.append((a, c, (a - 0.5) / (c - 0.5) if c > 0.5 else float("nan")))
+    if not rows:
+        return {"auroc": float("nan"), "ceiling": float("nan"), "normalized": float("nan")}
+    a, c, n = (float(np.nanmean(x)) if not np.all(np.isnan(x)) else float("nan") for x in np.array(rows).T)
+    return {"auroc": a, "ceiling": c, "normalized": n}
+
+
 def species_score(d: pl.DataFrame, sp: str, w: np.ndarray | None = None) -> float:
-    """Balanced AUROC; human = mean over ancestry groups. NaN when fewer than MIN_GROUP_POS positives."""
-    if sp != "human":
-        return _auc(d, w)[0] if (d["label"] == 1).sum() >= MIN_GROUP_POS else float("nan")
-    groups = []
-    for g, dg in d.with_row_index("_r").partition_by("ancestry_group", as_dict=True).items():
-        if g[0] == "unknown":
-            continue
-        if (dg["label"] == 1).sum() >= MIN_GROUP_POS:
-            groups.append(_auc(dg, w[dg["_r"].to_numpy()] if w is not None else None)[0])
-    return float(np.nanmean(groups))
+    """Raw balanced AUROC of a species (human: mean over ancestry groups incl. unknown)."""
+    return species_result(d, sp, w)["auroc"]
 
 
-def headline(df: pl.DataFrame, w: np.ndarray | None = None, species: list[str] | None = None) -> tuple[float, dict]:
-    """Mean species score over `species` (default: the headline species)."""
+def headline(df: pl.DataFrame, w: np.ndarray | None = None, species: list[str] | None = None,
+             raw: bool = False) -> tuple[float, dict]:
+    """Mean species score over `species` (default: the headline species): normalized scores, or raw
+    balanced AUROCs with raw=True."""
     parts = {}
     for sp in species if species is not None else species_tiers()[0]:
         m = (df["species"] == sp).to_numpy()
         if m.any():
-            parts[sp] = species_score(df.filter(pl.Series(m)), sp, w[m] if w is not None else None)
+            parts[sp] = species_result(df.filter(pl.Series(m)), sp, w[m] if w is not None else None)[
+                "auroc" if raw else "normalized"]
     vals = [v for v in parts.values() if not np.isnan(v)]
     return (float(np.mean(vals)) if vals else float("nan")), parts
+
+
+def ceilings(df: pl.DataFrame, species: list[str]) -> dict:
+    """Noise ceiling (raw-AUROC scale) per species, averaged over the same groups as the species score.
+    Needs labels and balance weights only, not predictions."""
+    out = {}
+    for sp in species:
+        d = df.filter(pl.col("species") == sp)
+        vals = [_ceiling(g) for g in _groups(d, sp)] if d.height else []
+        out[sp] = float(np.mean(vals)) if vals else float("nan")
+    return out
 
 
 def _row(name: str, d: pl.DataFrame) -> dict:
@@ -181,7 +245,7 @@ def _row(name: str, d: pl.DataFrame) -> dict:
     wg, wn = _within_gene_auc(d)
     prev = y.mean() if len(y) else float("nan")
     return {
-        "stratum": name, "n": d.height, "pos": int(y.sum()), "slb_auroc": _auc(d)[0],
+        "stratum": name, "n": d.height, "pos": int(y.sum()), "slb_auroc": _auc(d)[0], "ceiling": _ceiling(d),
         "within_gene": wg if wn else float("nan"), "unadjusted_auroc": _auc(d, balanced=False)[0],
         "ap_lift": average_precision(y, d["score"].to_numpy()) / prev if prev > 0 else float("nan"),
     }
@@ -269,10 +333,14 @@ def evaluate(preds: pl.DataFrame, split: str, boot: int = 0, allow_missing: bool
         _log_test_eval(split, preds)
     df, missing = validated_join(load_gold(split), preds, allow_missing, inputs=input_ids(split))
     score, parts = headline(df)
-    aux = headline(df, species=species_tiers()[1])[1]
+    raw, raw_parts = headline(df, raw=True)
+    head, auxsp = species_tiers()
+    aux = headline(df, species=auxsp)[1]
     res = {"benchmark": bench_id(), "manifest_sha256": file_sha256(BENCH / "manifest.json"),
            "scorer_version": SCORER_VERSION, "split": split, "slb_score": score, "species_scores": parts,
-           "auxiliary_species_scores": aux, "n": df.height, "missing_filled": int(missing), "strata": []}
+           "auxiliary_species_scores": aux, "slb_auroc": raw, "species_auroc": raw_parts,
+           "auxiliary_species_auroc": headline(df, species=auxsp, raw=True)[1],
+           "ceilings": ceilings(df, head + auxsp), "n": df.height, "missing_filled": int(missing), "strata": []}
     if boot:
         res["slb_score_ci95"] = bootstrap(df, boot)
     res["strata"].append(_row("ALL (flat)", df))
@@ -297,8 +365,13 @@ def evaluate(preds: pl.DataFrame, split: str, boot: int = 0, allow_missing: bool
 def format_report(res: dict) -> str:
     lines = [f"{res['benchmark']} {res['split']}  n={res['n']:,}"]
     ci = res.get("slb_score_ci95")
-    lines.append(f"SLB score: {res['slb_score']:.4f}" + (f"  (95% CI {ci[0]:.4f}–{ci[1]:.4f})" if ci else ""))
+    lines.append(f"SLB score (normalized: 0 = chance, 1 = independent re-measurement): {res['slb_score']:.4f}"
+                 + (f"  (95% CI {ci[0]:.4f}–{ci[1]:.4f})" if ci else ""))
     lines.append("  " + "  ".join(f"{SPECIES_NAMES[k]}={v:.4f}" for k, v in res["species_scores"].items()))
+    if "slb_auroc" in res:
+        lines.append(f"raw balanced AUROC: {res['slb_auroc']:.4f}  " + "  ".join(
+            f"{SPECIES_NAMES[k]}={v:.4f} (ceiling {res['ceilings'].get(k, float('nan')):.3f})"
+            for k, v in res["species_auroc"].items()))
     if res.get("auxiliary_species_scores"):
         lines.append("auxiliary (not in SLB score): " + "  ".join(
             f"{SPECIES_NAMES[k]}=" + ("n/a (<20 pos)" if np.isnan(v) else f"{v:.4f}")
@@ -307,10 +380,11 @@ def format_report(res: dict) -> str:
         lines.append(f"  WARNING: {res['missing_filled']:,} missing scores filled with the median")
     lines.append("\nper stratum: SLB = fitness-balanced AUROC (what the score uses); wg = within-gene SLB;"
                  " unadj = AUROC without fitness balancing (diagnostic)")
-    lines.append(f"{'stratum':44s} {'n':>9s} {'pos':>7s} {'SLB':>7s} {'wg':>7s} {'unadj':>7s} {'AP×':>6s}")
+    lines.append(f"{'stratum':44s} {'n':>9s} {'pos':>7s} {'SLB':>7s} {'ceil':>6s} {'wg':>7s} {'unadj':>7s} {'AP×':>6s}")
     for r in res["strata"]:
         lines.append(f"{r['stratum'][:44]:44s} {r['n']:>9,d} {r['pos']:>7,d} {r['slb_auroc']:>7.4f} "
-                     f"{r['within_gene']:>7.4f} {r['unadjusted_auroc']:>7.4f} {r['ap_lift']:>6.2f}")
+                     f"{r.get('ceiling', float('nan')):>6.3f} {r['within_gene']:>7.4f} {r['unadjusted_auroc']:>7.4f} "
+                     f"{r['ap_lift']:>6.2f}")
     return "\n".join(lines)
 
 

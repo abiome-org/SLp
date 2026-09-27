@@ -1,12 +1,20 @@
 {
-  "label_oracle_accept": 1.0000000000000004,
-  "inverse_oracle_reject": 0.0,
-  "constant_reject": 0.5000000000000002,
-  "random_mean": 0.5011156633772372,
-  "random_sd": 0.007994672218419256,
-  "random_min": 0.4883719577698729,
-  "random_max": 0.5131263609026521,
-  "stratum_hit_rate_prior_reject": 0.5000000000000002,
-  "gene_degree_reject": 0.50055996443486,
-  "fitness_only_probe": 0.5091569460268759
+  "label_oracle_accept": 1.6414763647406214,
+  "inverse_oracle_reject": -1.6414763647406219,
+  "constant_reject": -3.2502851297469034e-16,
+  "raw_label_oracle": 0.9999999999999997,
+  "raw_inverse_oracle": 0.0,
+  "raw_constant": 0.49999999999999983,
+  "dev_ceilings": {
+    "human": 0.8035014747982712,
+    "scer": 0.8298122482596217,
+    "spom": 0.790000000000408
+  },
+  "random_mean": 0.011343606995117878,
+  "random_sd": 0.04155863734591273,
+  "random_min": -0.07514173074468768,
+  "random_max": 0.09346512842345207,
+  "stratum_hit_rate_prior_reject": -3.2502851297469034e-16,
+  "gene_degree_reject": 0.007507018034803012,
+  "fitness_only_probe": -0.024624322723186126
 }

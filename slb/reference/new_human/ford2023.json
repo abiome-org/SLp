@@ -1,0 +1,470 @@
+{
+ "key": "ford2023",
+ "citation": "Ford K, Munson BP, Fong SH, ..., Mali P, Ideker T. Multimodal perturbation analyses of cyclin-dependent kinases reveal a network of synthetic lethalities associated with cell-cycle regulation and transcriptional regulation. Sci Rep 2023;13:7678",
+ "doi": "10.1038/s41598-023-33329-2",
+ "license": "CC BY 4.0",
+ "files": [
+  {
+   "name": "41598_2023_33329_MOESM1_ESM.xlsx",
+   "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41598-023-33329-2/MediaObjects/41598_2023_33329_MOESM1_ESM.xlsx",
+   "bytes": 3045550,
+   "sha256": "6b16c076ea96b4b5face602a354608a880ae4ee7c3bcdeb466edbfba11928d25"
+  }
+ ],
+ "contexts": [
+  "MDA-MB-231",
+  "MDA-MB-468",
+  "Hs 578T"
+ ],
+ "mechanism": "CRISPR-KO",
+ "label_rule": "Per line over the 325 gene x gene pairs (self and control rows dropped): z = within-line z-score of the authors' new_pi. Positive: z <= -3 AND own additive GI (T28 vs T3, spidr recipe) < 0 in both replicates. Negative: |z| < 1. Else null. Authors' own highlighted set is |z| >~ 2 (not stringent; 52 pairs at z <= -2), so re-scored.",
+ "n_pairs": 975,
+ "n_pairs_per_context": 325,
+ "n_unique_pairs": 325,
+ "n_genes": 26,
+ "n_pos": 7,
+ "n_neg": 747,
+ "pos_rate": 0.0072,
+ "per_context": {
+  "Hs 578T": {
+   "n_pairs": 325,
+   "n_pos": 3,
+   "n_neg": 248,
+   "pos_rate": 0.0092
+  },
+  "MDA-MB-231": {
+   "n_pairs": 325,
+   "n_pos": 3,
+   "n_neg": 266,
+   "pos_rate": 0.0092
+  },
+  "MDA-MB-468": {
+   "n_pairs": 325,
+   "n_pos": 1,
+   "n_neg": 233,
+   "pos_rate": 0.0031
+  }
+ },
+ "positives": [
+  {
+   "context": "MDA-MB-468",
+   "gene_a": "CDK9",
+   "gene_b": "PRMT5",
+   "score": -0.869481127858065
+  },
+  {
+   "context": "MDA-MB-231",
+   "gene_a": "CDK12",
+   "gene_b": "PRMT5",
+   "score": -1.18367922546224
+  },
+  {
+   "context": "MDA-MB-231",
+   "gene_a": "CDK1",
+   "gene_b": "PRMT5",
+   "score": -1.07104088734281
+  },
+  {
+   "context": "MDA-MB-231",
+   "gene_a": "CDK1",
+   "gene_b": "CDK11B",
+   "score": -1.25902519051167
+  },
+  {
+   "context": "Hs 578T",
+   "gene_a": "CDK7",
+   "gene_b": "CDK8",
+   "score": -0.977752368623724
+  },
+  {
+   "context": "Hs 578T",
+   "gene_a": "CDK4",
+   "gene_b": "CDK6",
+   "score": -0.966774432101919
+  },
+  {
+   "context": "Hs 578T",
+   "gene_a": "CDK11B",
+   "gene_b": "CDK4",
+   "score": -0.929508886986919
+  }
+ ],
+ "paralog_fraction": 0.6462,
+ "n_paralog_pairs": 210,
+ "unresolved_symbols": [],
+ "own_replication": {
+  "MDA-MB-231": {
+   "pairs": 325,
+   "replicates": 2,
+   "spearman": 0.17256462692045516,
+   "tail_2pct_in_10pct": 0.5,
+   "pos_rep1_z3": 2,
+   "pos_rep2_z3": 4,
+   "split_rule_auroc_rep1_to_rep2_z3": 0.4104938271604939,
+   "split_rule_auroc_rep2_to_rep1_z3": 0.8024691358024691,
+   "split_rule_auroc_rep1_to_rep2_q05": 0.6238198983297023,
+   "split_rule_auroc_rep2_to_rep1_q05": 0.738562091503268,
+   "spearman_ownGI_vs_authors_pi": 0.2662901788055163,
+   "labels_pos": 3,
+   "labels_neg": 266,
+   "auroc_rep1_final_labels": 0.8947368421052632,
+   "auroc_rep2_final_labels": 0.9273182957393484,
+   "pi_z3_labels_pos": 6,
+   "auroc_rep1_for_pi_z3_labels": 0.5720551378446115,
+   "auroc_rep2_for_pi_z3_labels": 0.7374686716791979,
+   "spearman_rep1_rep2_AAVSonly_controls": 0.1378158810060651
+  },
+  "MDA-MB-468": {
+   "pairs": 325,
+   "replicates": 2,
+   "spearman": 0.17538706238092744,
+   "tail_2pct_in_10pct": 0.42857142857142855,
+   "pos_rep1_z3": 4,
+   "pos_rep2_z3": 5,
+   "split_rule_auroc_rep1_to_rep2_z3": 0.7577160493827161,
+   "split_rule_auroc_rep2_to_rep1_z3": 0.7728395061728395,
+   "split_rule_auroc_rep1_to_rep2_q05": 0.6521423384168482,
+   "split_rule_auroc_rep2_to_rep1_q05": 0.6285403050108932,
+   "spearman_ownGI_vs_authors_pi": 0.31156415499973783,
+   "labels_pos": 1,
+   "labels_neg": 233,
+   "auroc_rep1_final_labels": 0.9742489270386266,
+   "auroc_rep2_final_labels": 1.0,
+   "pi_z3_labels_pos": 2,
+   "auroc_rep1_for_pi_z3_labels": 0.924892703862661,
+   "auroc_rep2_for_pi_z3_labels": 0.6545064377682404,
+   "spearman_rep1_rep2_AAVSonly_controls": 0.11560099977277892
+  },
+  "Hs 578T": {
+   "pairs": 325,
+   "replicates": 2,
+   "spearman": 0.0869022774544247,
+   "tail_2pct_in_10pct": 0.21428571428571427,
+   "pos_rep1_z3": 1,
+   "pos_rep2_z3": 6,
+   "split_rule_auroc_rep1_to_rep2_z3": 0.9382716049382716,
+   "split_rule_auroc_rep2_to_rep1_z3": 0.5925925925925927,
+   "split_rule_auroc_rep1_to_rep2_q05": 0.5682643427741467,
+   "split_rule_auroc_rep2_to_rep1_q05": 0.5679012345679012,
+   "spearman_ownGI_vs_authors_pi": 0.34887735304913225,
+   "labels_pos": 3,
+   "labels_neg": 248,
+   "auroc_rep1_final_labels": 0.9408602150537635,
+   "auroc_rep2_final_labels": 0.8024193548387097,
+   "pi_z3_labels_pos": 5,
+   "auroc_rep1_for_pi_z3_labels": 0.7677419354838709,
+   "auroc_rep2_for_pi_z3_labels": 0.6846774193548387,
+   "spearman_rep1_rep2_AAVSonly_controls": 0.06792652019645885
+  },
+  "pooled_over_lines": {
+   "labels_pos": 7,
+   "labels_neg": 747,
+   "auroc_rep1_final_labels": 0.8997896347293938,
+   "auroc_rep2_final_labels": 0.8806655192197361,
+   "pi_z3_labels_pos": 13,
+   "auroc_rep1_for_pi_z3_labels": 0.6752136752136751,
+   "auroc_rep2_for_pi_z3_labels": 0.7049737411183193,
+   "split_rule_auroc_rep1_to_rep2_z3": 0.6896450572015255,
+   "pos_rep1_z3": 7,
+   "split_rule_auroc_rep2_to_rep1_z3": 0.7033538672142368,
+   "pos_rep2_z3": 15,
+   "split_rule_auroc_rep1_to_rep2_q02": 0.5131416837782341,
+   "split_rule_auroc_rep2_to_rep1_q02": 0.7319301848049281,
+   "spearman_rep1_rep2_mean_over_lines": 0.14495132225193577
+  },
+  "note": "Replicate GI Spearman only 0.09-0.18 per line; per-line z<=-3 split-rule AUROCs rest on 1-6 positives and swing 0.41-0.94. Pooled over lines (within-line z per replicate): 0.69 / 0.70 (7 / 15 positives). Final-label single-replicate AUROCs (~0.88-0.90) are circular (labels require GI<0 in both reps). Non-circular check: authors' pi z<=-3 labels (13) scored by each own replicate: 0.68 / 0.70. Sensitivity: AAVS1-only controls rho 0.07-0.14; replicate-matched T3 start rho -0.02-0.16 (worse)."
+ },
+ "cross_study": {
+  "horlbeck2018|different_line": {
+   "overlap_pairs": 9,
+   "contexts": [
+    "Hs 578T",
+    "Jurkat",
+    "K-562",
+    "MDA-MB-231",
+    "MDA-MB-468"
+   ],
+   "theirs_for_ours_pos": 4,
+   "theirs_for_ours_n": 6,
+   "theirs_for_ours_auroc": 0.5,
+   "ours_for_theirs_pos": 0,
+   "ours_for_theirs_n": 9,
+   "ours_for_theirs_auroc": null
+  },
+  "shen2017|different_line": {
+   "overlap_pairs": 18,
+   "contexts": [
+    "A-549",
+    "HEK293T",
+    "HeLa",
+    "Hs 578T",
+    "MDA-MB-231",
+    "MDA-MB-468"
+   ],
+   "theirs_for_ours_pos": 3,
+   "theirs_for_ours_n": 42,
+   "theirs_for_ours_auroc": 0.35470085470085466,
+   "ours_for_theirs_pos": 0,
+   "ours_for_theirs_n": 27,
+   "ours_for_theirs_auroc": null
+  },
+  "han2017|different_line": {
+   "overlap_pairs": 30,
+   "contexts": [
+    "Hs 578T",
+    "K-562",
+    "MDA-MB-231",
+    "MDA-MB-468"
+   ],
+   "theirs_for_ours_pos": 0,
+   "theirs_for_ours_n": 24,
+   "theirs_for_ours_auroc": null,
+   "ours_for_theirs_pos": 0,
+   "ours_for_theirs_n": 15,
+   "ours_for_theirs_auroc": null
+  },
+  "wong2016|different_line": {
+   "overlap_pairs": 3,
+   "contexts": [
+    "Hs 578T",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "OVCAR-8"
+   ],
+   "theirs_for_ours_pos": 0,
+   "theirs_for_ours_n": 2,
+   "theirs_for_ours_auroc": null,
+   "ours_for_theirs_pos": 0,
+   "ours_for_theirs_n": 0,
+   "ours_for_theirs_auroc": null
+  },
+  "parrish2021|different_line": {
+   "overlap_pairs": 9,
+   "contexts": [
+    "HeLa",
+    "Hs 578T",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "PC-9"
+   ],
+   "theirs_for_ours_pos": 2,
+   "theirs_for_ours_n": 14,
+   "theirs_for_ours_auroc": 0.6875,
+   "ours_for_theirs_pos": 3,
+   "ours_for_theirs_n": 15,
+   "ours_for_theirs_auroc": 0.7916666666666666
+  },
+  "ito2021|different_line": {
+   "overlap_pairs": 99,
+   "contexts": [
+    "A-549",
+    "GI-1",
+    "HSC-5 [Human skin squamous cell carcinoma]",
+    "Hs 578T",
+    "Hs 936.T",
+    "Hs 944.T",
+    "IPC-298",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "MeWo",
+    "Mel JuSo",
+    "Mel202",
+    "PK-1",
+    "PaTu 8988s"
+   ],
+   "theirs_for_ours_pos": 11,
+   "theirs_for_ours_n": 792,
+   "theirs_for_ours_auroc": 0.7489232918170178,
+   "ours_for_theirs_pos": 3,
+   "ours_for_theirs_n": 783,
+   "ours_for_theirs_auroc": 0.9034188034188033
+  },
+  "dede2020|different_line": {
+   "overlap_pairs": 3,
+   "contexts": [
+    "A-549",
+    "HT-29",
+    "Hs 578T",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "OVCAR-8"
+   ],
+   "theirs_for_ours_pos": 0,
+   "theirs_for_ours_n": 9,
+   "theirs_for_ours_auroc": null,
+   "ours_for_theirs_pos": 0,
+   "ours_for_theirs_n": 9,
+   "ours_for_theirs_auroc": null
+  },
+  "chymera2020|different_line": {
+   "overlap_pairs": 9,
+   "contexts": [
+    "HAP1",
+    "Hs 578T",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "hTERT-RPE1"
+   ],
+   "theirs_for_ours_pos": 0,
+   "theirs_for_ours_n": 12,
+   "theirs_for_ours_auroc": null,
+   "ours_for_theirs_pos": 0,
+   "ours_for_theirs_n": 15,
+   "ours_for_theirs_auroc": null
+  },
+  "thompson2021|different_line": {
+   "overlap_pairs": 6,
+   "contexts": [
+    "A-375",
+    "Hs 578T",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "MeWo",
+    "hTERT-RPE1"
+   ],
+   "theirs_for_ours_pos": 0,
+   "theirs_for_ours_n": 9,
+   "theirs_for_ours_auroc": null,
+   "ours_for_theirs_pos": 0,
+   "ours_for_theirs_n": 12,
+   "ours_for_theirs_auroc": null
+  },
+  "chou2025|different_line": {
+   "overlap_pairs": 78,
+   "contexts": [
+    "A-375",
+    "A-549",
+    "Hs 578T",
+    "K-562",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "Mel JuSo"
+   ],
+   "theirs_for_ours_pos": 2,
+   "theirs_for_ours_n": 160,
+   "theirs_for_ours_auroc": 0.6819620253164557,
+   "ours_for_theirs_pos": 6,
+   "ours_for_theirs_n": 111,
+   "ours_for_theirs_auroc": 0.8238095238095239
+  },
+  "spidr2025|different_line": {
+   "overlap_pairs": 30,
+   "contexts": [
+    "Hs 578T",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "hTERT-RPE1"
+   ],
+   "theirs_for_ours_pos": 0,
+   "theirs_for_ours_n": 13,
+   "theirs_for_ours_auroc": null,
+   "ours_for_theirs_pos": 0,
+   "ours_for_theirs_n": 24,
+   "ours_for_theirs_auroc": null
+  },
+  "harle2025|different_line": {
+   "overlap_pairs": 9,
+   "contexts": [
+    "A-375",
+    "A-549",
+    "A2058",
+    "AsPC-1",
+    "BxPC-3",
+    "C092",
+    "CFPAC-1",
+    "CHL-1",
+    "COR-L23",
+    "Capan-1",
+    "EBC-1",
+    "HPAF-II",
+    "Hs 578T",
+    "KP-1N",
+    "KP-4",
+    "LCLC-97TM1",
+    "LK-2",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "MIA PaCa-2",
+    "MeWo",
+    "NCI-H1299",
+    "NCI-H1568",
+    "NCI-H1975",
+    "NCI-H23",
+    "SK-MEL-2",
+    "SK-MEL-28",
+    "SK-MEL-5",
+    "SK-MES-1",
+    "SU.86.86"
+   ],
+   "theirs_for_ours_pos": 0,
+   "theirs_for_ours_n": 135,
+   "theirs_for_ours_auroc": null,
+   "ours_for_theirs_pos": 12,
+   "ours_for_theirs_n": 45,
+   "ours_for_theirs_auroc": 0.2828282828282828
+  },
+  "flister2025|same_line": {
+   "overlap_pairs": 4,
+   "contexts": [
+    "MDA-MB-231"
+   ],
+   "theirs_for_ours_pos": 0,
+   "theirs_for_ours_n": 3,
+   "theirs_for_ours_auroc": null,
+   "ours_for_theirs_pos": 1,
+   "ours_for_theirs_n": 3,
+   "ours_for_theirs_auroc": 1.0,
+   "pairs_pos_either": [
+    {
+     "cn": "MDA-MB-231",
+     "gene_a": "CDK4",
+     "gene_b": "CDK6",
+     "score": -0.667514255903239,
+     "label": null,
+     "score_o": -2.9526433636300093,
+     "label_o": 1,
+     "context_o": "MDAMB231"
+    }
+   ]
+  },
+  "flister2025|different_line": {
+   "overlap_pairs": 12,
+   "contexts": [
+    "A-549",
+    "COLO 678",
+    "Detroit 562",
+    "HSC-2",
+    "HT-29",
+    "Hs 578T",
+    "LK-2",
+    "LS180",
+    "LS513",
+    "MDA-MB-231",
+    "MDA-MB-468",
+    "MIA PaCa-2",
+    "MKN74",
+    "NCI-H1299",
+    "NCI-H2087",
+    "NCI-H520",
+    "PANC-1",
+    "RKO",
+    "SNU-1",
+    "SW1463",
+    "SW837",
+    "T84"
+   ],
+   "theirs_for_ours_pos": 20,
+   "theirs_for_ours_n": 157,
+   "theirs_for_ours_auroc": 0.6879562043795621,
+   "ours_for_theirs_pos": 71,
+   "ours_for_theirs_n": 186,
+   "ours_for_theirs_auroc": 0.8197795468462952
+  },
+  "summary": "Same-line overlap only flister2025 MDA-MB-231 (4 pairs, 1 positive there: CDK4-CDK6, pi z=-2.17 here -> null). No other same-line data. Different-line (weak) evidence: ito2021 theirs-for-ours 0.75 (11 pos), ours-for-theirs 0.90 (3 pos); chou2025 0.68/0.82; flister2025 0.69 (20)/0.82 (71); harle2025 ours-for-theirs 0.28 with 12 positives, all CDK8-CDK19 in 4 Sanger lines (one distinct pair; CDK8-CDK19 pi is ~0 to positive here, z=+2.19 in MDA-MB-468)."
+ },
+ "fitness_auroc": 0.9153,
+ "fitness_auroc_n_labelled_with_effects": 645,
+ "fitness_flag": true,
+ "verdict": "measurements-only",
+ "verdict_reason": "Only 7 positives (0.72% of pairs), no same-line cross-study positives to validate them, replicate GI agreement is poor (Spearman 0.09-0.18; per-line split-rule AUROC unstable 0.41-0.94 on 1-6 positives, pooled 0.69/0.70 barely above the gate), and single-gene fitness alone predicts the labels at AUROC 0.92 (all positives involve essential genes CDK1/CDK7/CDK9/CDK12/PRMT5/CDK11B/CDK4). The well-known CDK8-CDK19 paralog SL is not recovered (contradicting harle2025 in other lines). Scores are usable as measurements; labels are not benchmark-grade."
+}

@@ -126,6 +126,11 @@ SOURCES: dict[str, list[tuple[str, str]]] = {
 }
 
 
+# 2026-09 human screens: one `name<TAB>url` list per source (reference/fetch/human_screens/<source>.tsv)
+for _p in sorted(Path("reference/fetch/human_screens").glob("*.tsv")):
+    SOURCES[_p.stem] = [tuple(x.split("\t", 1)) for x in _p.read_text().splitlines() if x.strip()]
+
+
 # Ensembl BioMart paralog queries (POST); written to data/raw/paralogs/ensembl_<ds>_paralogs.tsv
 BIOMART_URL = "https://useast.ensembl.org/biomart/martservice"
 BIOMART_DATASETS = ["hsapiens", "scerevisiae", "dmelanogaster"]

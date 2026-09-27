@@ -1,0 +1,288 @@
+{
+ "key": "lenoir2021",
+ "citation": "Lenoir WF*, Morgado M*, DeWeirdt PC*, et al. Discovery of putative tumor suppressors from CRISPR screens reveals rewired lipid metabolism in acute myeloid leukemia cells. Nat Commun 12, 6506 (2021).",
+ "doi": "10.1038/s41467-021-26867-8",
+ "license": "CC BY 4.0 (article); data from github.com/PeterDeWeirdt/FASTS",
+ "files": [
+  {
+   "name": "gene_residuals.csv",
+   "url": "https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/data/processed/gene_residuals.csv",
+   "bytes": 1203685,
+   "sha256": "81583675de445fd5873c3c2224c13d674b435c60df80b8a7438fb85827f7a30b"
+  },
+  {
+   "name": "guide_residuals.csv",
+   "url": "https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/data/processed/guide_residuals.csv",
+   "bytes": 14162675,
+   "sha256": "c0d94527768988459926eff18ccb16bcb16b74f6b8dba6b73ff7fd480fea0dc6"
+  },
+  {
+   "name": "Cas12_FASN_GI_12k_library.csv",
+   "url": "https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/data/raw/Cas12_FASN_GI_12k_library.csv",
+   "bytes": 1015652,
+   "sha256": "e7f72f347f6403ec067a9a5e574a2b2a3cf5c5dce4dc29825bb196e778b39ab7"
+  },
+  {
+   "name": "lognorm-FASN_MOLM13_NOMO-1_AKS_ALG_v2.txt",
+   "url": "https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/data/raw/lognorm-FASN_MOLM13_NOMO-1_AKS_ALG_v2.txt",
+   "bytes": 3996229,
+   "sha256": "ede350f4448cb9500da1999590a1309f32e8f3dc14bf99ad8902f63a14fdfadb"
+  },
+  {
+   "name": "calc_lfcs.ipynb",
+   "url": "https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/notebooks/calc_lfcs.ipynb",
+   "bytes": 37764,
+   "sha256": "b8bdb29350a18c220116c7ceb40bfd684d6767696b3aabf81aa593a8f4d3eab3"
+  },
+  {
+   "name": "Hart_calc_gis.ipynb",
+   "url": "https://raw.githubusercontent.com/PeterDeWeirdt/FASTS/1fa560183fe56db9ac21f92f1ee0d02b119ce12b/notebooks/Hart_calc_gis.ipynb",
+   "bytes": 235396,
+   "sha256": "796f8e3d5cd5bf0573a529c6f912a521cd2d21d9d845d8cace0879ef5d04d548"
+  }
+ ],
+ "contexts": [
+  "MOLM-13",
+  "NOMO-1"
+ ],
+ "mechanism": "CRISPR-Cas12a",
+ "label_rule": "Day 21 authors' gnt pair_z_score (combined both anchor models, A/B mean LFC). positive: z <= -3 and BH FDR < 0.05 (within condition); negative: |z| < 1; else null. Gene x control-gene rows and self pairs dropped (756 real pairs per line). Day 21 chosen as later timepoint and the authors' focus; day 14 z recovers day-21 labels at AUROC 0.99.",
+ "n_pairs": 1512,
+ "n_unique_pairs": 756,
+ "n_pos": 68,
+ "n_neg": 719,
+ "pos_rate": 0.04497354497354497,
+ "per_context": {
+  "NOMO-1": {
+   "pairs": 756,
+   "pos": 26,
+   "neg": 370
+  },
+  "MOLM-13": {
+   "pairs": 756,
+   "pos": 42,
+   "neg": 349
+  }
+ },
+ "unique_genes": 99,
+ "paralog_fraction": 0.003968253968253968,
+ "paralog_pairs": [
+  "ACACA-ACACB",
+  "ACACA-PC",
+  "SREBF1-SREBF2"
+ ],
+ "own_replication": {
+  "replicate_type": "independent replicate infections A and B (day 21), additive GI recomputed from published lognorm table (spidr recipe); also day14 vs day21 and the two anchor-model orientations (same constructs, not independent)",
+  "MOLM-13": {
+   "agreement": {
+    "pairs": 756,
+    "replicates": 2,
+    "spearman": 0.5178144181757258,
+    "tail_2pct_in_10pct": 0.90625
+   },
+   "split_q0.02_1to2": 0.9884259259259259,
+   "split_q0.02_2to1": 0.9375,
+   "split_q0.05_1to2": 0.8751044277360067,
+   "split_q0.05_2to1": 0.8615288220551379,
+   "split_z-3_1to2": 0.9984126984126984,
+   "n_pos_z-3_1to2": 5,
+   "split_z-3_2to1": 1.0,
+   "n_pos_z-3_2to1": 2,
+   "final_labels_rep1_auroc": 0.8634875153499796,
+   "final_labels_rep2_auroc": 0.8653977350252422,
+   "labelled": 391,
+   "pos": 42
+  },
+  "NOMO-1": {
+   "agreement": {
+    "pairs": 756,
+    "replicates": 2,
+    "spearman": 0.5392356229207865,
+    "tail_2pct_in_10pct": 0.875
+   },
+   "split_q0.02_1to2": 0.9293981481481481,
+   "split_q0.02_2to1": 0.9584986772486772,
+   "split_q0.05_1to2": 0.8756613756613756,
+   "split_q0.05_2to1": 0.9155527708159288,
+   "split_z-3_1to2": 1.0,
+   "n_pos_z-3_1to2": 5,
+   "split_z-3_2to1": 1.0,
+   "n_pos_z-3_2to1": 2,
+   "final_labels_rep1_auroc": 0.8979209979209979,
+   "final_labels_rep2_auroc": 0.836070686070686,
+   "labelled": 396,
+   "pos": 26
+  },
+  "pooled": {
+   "agreement": {
+    "pairs": 1512,
+    "replicates": 2,
+    "spearman": 0.6289460541390539,
+    "tail_2pct_in_10pct": 0.8064516129032258
+   },
+   "split_q0.02_1to2": 0.9521249359959035,
+   "split_q0.02_2to1": 0.9511008704557092,
+   "final_labels_rep1_auroc": 0.8404237912132864,
+   "final_labels_rep2_auroc": 0.8405465106765931
+  },
+  "day14_z_auroc_for_day21_labels": 0.9905301480814858,
+  "anchor_orientation_split_q0.02": [
+   0.9121010411332993,
+   0.9596774193548387
+  ]
+ },
+ "cross_study": {
+  "same_line": "none: no existing SLB measurement in MOLM-13 or NOMO-1",
+  "other_line_pairs": {
+   "SREBF1-SREBF2": "ours pos in both lines (z -8.95, -4.00); flister2025 pos in 8/13 labelled lines; ryanlab_zdlfc 0/3, chou2025 0/2 labelled pos",
+   "ACACA-ACACB": "ours neg in both lines (z -0.96, -0.85); flister2025 pos in 7/11 labelled lines (median diff_z -1.88); harle2025 0/16, ryanlab_zdlfc 0/7",
+   "PTEN-TSC1": "ours pos in NOMO-1 (z -5.88) and MOLM-13 (z -2.76, null); slkb (shen2017) 0/2 labelled pos",
+   "TP53-TSC1 / PTEN-TP53": "slkb (shen2017) neutral; ours null/neg"
+  },
+  "other_line_row_level": {
+   "slkb:other_line": {
+    "overlap_rows": 18,
+    "overlap_pairs": 3,
+    "sources": [
+     "shen2017"
+    ],
+    "their_score_for_our_labels": {
+     "n": 9,
+     "pos": 3,
+     "auroc": 0.4722222222222222
+    },
+    "our_score_for_their_labels": {
+     "n": 10,
+     "pos": 0,
+     "auroc": null
+    }
+   },
+   "ryanlab_zdlfc:other_line": {
+    "overlap_rows": 38,
+    "overlap_pairs": 2,
+    "sources": [
+     "ito2021",
+     "parrish2021",
+     "thompson2021"
+    ],
+    "their_score_for_our_labels": {
+     "n": 38,
+     "pos": 6,
+     "auroc": 0.8958333333333334
+    },
+    "our_score_for_their_labels": {
+     "n": 20,
+     "pos": 0,
+     "auroc": null
+    }
+   },
+   "chou2025:other_line": {
+    "overlap_rows": 8,
+    "overlap_pairs": 1,
+    "sources": [
+     "chou2025"
+    ],
+    "their_score_for_our_labels": {
+     "n": 8,
+     "pos": 8,
+     "auroc": null
+    },
+    "our_score_for_their_labels": {
+     "n": 4,
+     "pos": 0,
+     "auroc": null
+    }
+   },
+   "harle2025:other_line": {
+    "overlap_rows": 54,
+    "overlap_pairs": 1,
+    "sources": [
+     "harle2025"
+    ],
+    "their_score_for_our_labels": {
+     "n": 54,
+     "pos": 0,
+     "auroc": null
+    },
+    "our_score_for_their_labels": {
+     "n": 32,
+     "pos": 0,
+     "auroc": null
+    }
+   },
+   "flister2025:other_line": {
+    "overlap_rows": 80,
+    "overlap_pairs": 2,
+    "sources": [
+     "flister2025"
+    ],
+    "their_score_for_our_labels": {
+     "n": 80,
+     "pos": 40,
+     "auroc": 0.3225
+    },
+    "our_score_for_their_labels": {
+     "n": 48,
+     "pos": 30,
+     "auroc": 0.4888888888888888
+    }
+   }
+  },
+  "note": "Only 5 unique pairs overlap any existing source, all in other cell lines; row-level AUROCs are driven by 1-2 unique pairs and are not informative (far below 20 overlapping positives). Not counted as contradiction."
+ },
+ "fitness_auroc": 0.5912631381381381,
+ "fitness_auroc_note": "DepMap single effects cover only 365 of 787 labelled rows (28 genes incl. anchors FASN, PSTK, C12orf49/SPRING1 missing); screen's own singles (base_lfc_a + base_lfc_b): 0.578",
+ "fitness_auroc_screen_singles": 0.5782132046142519,
+ "cross_line_auroc": {
+  "NOMO-1 z for MOLM-13 labels": 0.773,
+  "MOLM-13 z for NOMO-1 labels": 0.823
+ },
+ "pos_gene_counts": [
+  {
+   "gene_a": "ACACA",
+   "count": 15
+  },
+  {
+   "gene_a": "PTEN",
+   "count": 12
+  },
+  {
+   "gene_a": "SPRING1",
+   "count": 12
+  },
+  {
+   "gene_a": "GPX4",
+   "count": 11
+  },
+  {
+   "gene_a": "TP53",
+   "count": 7
+  },
+  {
+   "gene_a": "SREBF2",
+   "count": 5
+  },
+  {
+   "gene_a": "FASN",
+   "count": 5
+  },
+  {
+   "gene_a": "PSTK",
+   "count": 4
+  },
+  {
+   "gene_a": "SREBF1",
+   "count": 4
+  },
+  {
+   "gene_a": "SQLE",
+   "count": 4
+  }
+ ],
+ "unresolved_symbols": [],
+ "renamed_symbols": {
+  "C12orf49": "SPRING1"
+ },
+ "verdict": "include",
+ "verdict_reason": "Own replication strong: labels from one replicate infection (2% tail) scored by the other give AUROC 0.93-0.99 per line (both directions), and single replicates recover the final labels at 0.84-0.90. Pooled positive rate 4.5% (MOLM-13 5.6%, NOMO-1 3.4%) is plausible for a pathway-focused anchor design. Fitness alone does not predict labels (0.58-0.59). No same-line cross-study data; the 5 overlapping pairs are in other lines and too few to confirm or contradict. Caveat: small, hub-structured (8 anchors), positives concentrated on anchors."
+}

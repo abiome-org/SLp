@@ -1,0 +1,167 @@
+{
+ "key": "kim2025",
+ "citation": "Kim et al. 2025. Combinatorial CRISPR screen of tyrosine kinases in MDA-MB-231 (FYN/KDM4 and TKI resistance). eLife 12:RP93921.",
+ "doi": "10.7554/eLife.93921",
+ "license": "CC BY 4.0",
+ "files": [
+  {
+   "name": "elife-93921-supp1-v1.xlsx",
+   "url": "https://cdn.elifesciences.org/articles/93921/elife-93921-supp1-v1.xlsx",
+   "bytes": 10896,
+   "sha256": "70eb67edd67e8a9b10300d239575bdbaa52b16f70d504926362ebefbd32bcca3"
+  },
+  {
+   "name": "elife-93921-supp2-v1.xlsx",
+   "url": "https://cdn.elifesciences.org/articles/93921/elife-93921-supp2-v1.xlsx",
+   "bytes": 197164,
+   "sha256": "30186cb6952bfb6bcd1f9aec07d573b366a5065cb7765ef2b88ab43fac8f2f7b"
+  },
+  {
+   "name": "elife-93921-supp3-v1.xlsx",
+   "url": "https://cdn.elifesciences.org/articles/93921/elife-93921-supp3-v1.xlsx",
+   "bytes": 10154,
+   "sha256": "659d1974b6ab379d6f7f4f458acb949a3e0b5c410462c8111ac73f79e2d7a09a"
+  },
+  {
+   "name": "elife-93921-supp4-v1.xlsx",
+   "url": "https://cdn.elifesciences.org/articles/93921/elife-93921-supp4-v1.xlsx",
+   "bytes": 9899,
+   "sha256": "a8e219f132a7a6152dd597bb8fa8e3f96881f25d96b29314576c4a8002b39807"
+  },
+  {
+   "name": "elife-93921-v1.xml",
+   "url": "https://cdn.elifesciences.org/articles/93921/elife-93921-v1.xml",
+   "bytes": 224948,
+   "sha256": "cc54a7f334ad4ca76b6a4966d5a27a72ab8ad09b6013c9d4b3fccb1bf57796f3"
+  }
+ ],
+ "contexts": [
+  "MDA-MB-231"
+ ],
+ "mechanism": "CRISPR-KO",
+ "label_rule": "positive = authors' 30 hits (bold in supp2): normalized GI < -2 AND RIGER p(GI) < 0.01 AND observed double-KO growth Z < -5 (paper states only the first two; 40 pairs pass those, the bold 30 are exactly the subset with Z < -5; the 10 others -> null). negative = |normalized GI| < 1 AND RIGER p(GI) > 0.05. else null. Self pairs and NegCon rows dropped. score = normalized GI (local z-score, negative = SL), signif = RIGER p of GI.",
+ "n_pairs": 2850,
+ "n_pos": 30,
+ "n_neg": 2152,
+ "pos_rate": 0.010526315789473684,
+ "unique_genes": 76,
+ "unresolved_gene_symbols": 0,
+ "paralog_fraction": 0.39789473684210525,
+ "paralog_pos": 11,
+ "own_replication": {
+  "available": false,
+  "reason": "Only the gene-level table merged over 3 bio replicates, both orientations and 3x3 sgRNA pairs is published (supp2). No counts table; BioProject PRJNA976939 has no public SRA/ENA runs (checked 2026-09-25). replicates() returns an empty frame.",
+  "author_reported": "growth-phenotype Z (not GI): r=0.50 between AB/BA orientations, r=0.74 between bio replicates #2 and #3 (Z is dominated by single-gene effects, so this says little about GI reproducibility)",
+  "split_rule_auroc": null,
+  "replicate_agreement": null,
+  "single_replicate_auroc_for_labels": null
+ },
+ "cross_study": {
+  "same_line_MDA-MB-231": {
+   "partner": "flister2025 (Cas12a, diff_z; context MDAMB231)",
+   "overlap_pairs": 227,
+   "our_labels_n_pos": 4,
+   "our_labels_n_neg": 179,
+   "auroc_their_score_for_our_labels": 0.4245810055865922,
+   "their_labels_n_pos": 0,
+   "their_labels_n_neg": 168,
+   "auroc_our_score_for_their_labels": null,
+   "spearman_score": -0.12097096860900057,
+   "note": "only 4 of our 30 positives overlap (BTK-ITK, SRC-YES1, FGFR2-FGFR4, FGFR2-PDGFRA); flister diff_z for them = +0.21, -0.09, +0.67, +1.29 (none negative-strong); Spearman of scores over 227 shared pairs = -0.12; flister has 0 positives among the shared pairs"
+  },
+  "other_lines_weaker": {
+   "shen2017|other_lines": {
+    "overlap_pairs": 105,
+    "our_labels_n_pos": 3,
+    "our_labels_n_neg": 68,
+    "auroc_their_score_for_our_labels": 0.19117647058823528,
+    "their_labels_n_pos": 1,
+    "their_labels_n_neg": 95,
+    "auroc_our_score_for_their_labels": null,
+    "spearman_score": -0.20589935180286809
+   },
+   "han2017|other_lines": {
+    "overlap_pairs": 325,
+    "our_labels_n_pos": 4,
+    "our_labels_n_neg": 218,
+    "auroc_their_score_for_our_labels": 0.6215596330275229,
+    "their_labels_n_pos": 0,
+    "their_labels_n_neg": 163,
+    "auroc_our_score_for_their_labels": null,
+    "spearman_score": -0.06384597906070298
+   },
+   "ito2021|other_lines": {
+    "overlap_pairs": 206,
+    "our_labels_n_pos": 4,
+    "our_labels_n_neg": 167,
+    "auroc_their_score_for_our_labels": 0.25149700598802394,
+    "their_labels_n_pos": 2,
+    "their_labels_n_neg": 197,
+    "auroc_our_score_for_their_labels": null,
+    "spearman_score": -0.11742394733600588
+   },
+   "chou2025|other_lines": {
+    "overlap_pairs": 25,
+    "our_labels_n_pos": 2,
+    "our_labels_n_neg": 19,
+    "auroc_their_score_for_our_labels": null,
+    "their_labels_n_pos": 0,
+    "their_labels_n_neg": 23,
+    "auroc_our_score_for_their_labels": null,
+    "spearman_score": 0.014615384615384615
+   },
+   "flister2025|same_line": {
+    "overlap_pairs": 227,
+    "our_labels_n_pos": 4,
+    "our_labels_n_neg": 179,
+    "auroc_their_score_for_our_labels": 0.4245810055865922,
+    "their_labels_n_pos": 0,
+    "their_labels_n_neg": 168,
+    "auroc_our_score_for_their_labels": null,
+    "spearman_score": -0.12097096860900057
+   },
+   "flister2025|other_lines": {
+    "overlap_pairs": 227,
+    "our_labels_n_pos": 4,
+    "our_labels_n_neg": 179,
+    "auroc_their_score_for_our_labels": 0.46089385474860334,
+    "their_labels_n_pos": 20,
+    "their_labels_n_neg": 207,
+    "auroc_our_score_for_their_labels": 0.5002415458937197,
+    "spearman_score": 0.019543713285005787
+   }
+  },
+  "tiny_overlaps_pairs": {
+   "thompson2021|other_lines": 6,
+   "dede2020|other_lines": 2,
+   "parrish2021|other_lines": 2,
+   "chymera2020|other_lines": 5,
+   "spidr2025|other_lines": 1,
+   "harle2025|other_lines": 1
+  },
+  "ford2023": "also MDA-MB-231, being built by another agent; not checked",
+  "summary": "no informative cross-study test (max 4 overlapping positives); what little there is does not support the labels (AUROC 0.42 same line, 0.19-0.62 other lines, all n_pos <= 4)"
+ },
+ "fitness_auroc": 0.5073859987154785,
+ "fitness_detail": {
+  "depmap_mean_sum": 0.5073859987154785,
+  "depmap_mda_mb_231_sum": 0.4967747340202731,
+  "screen_singles_sum": 0.5126006815365551,
+  "screen_singles_min": 0.43353469640644365,
+  "paralog_flag": 0.4881660470879801
+ },
+ "hit_concentration": {
+  "top_genes_in_positives": {
+   "TEK": 10,
+   "FGFR2": 6,
+   "FRK": 6,
+   "FYN": 5,
+   "PDGFRA": 3,
+   "ABL1": 3
+  },
+  "positives_involving_FGFR2_FRK_or_TEK": 22,
+  "note": "authors state FGFR2, FRK and TEK are not expressed at appreciable levels in MDA-MB-231; BTK/ITK (another hit) are haematopoietic"
+ },
+ "verdict": "exclude",
+ "verdict_reason": "No own-replication evidence is possible (no per-replicate/orientation GI or counts published; SRA runs not public) and no usable cross-study test exists (4 overlapping positives with flister2025 in MDA-MB-231, AUROC 0.42, score Spearman -0.12). Beyond failing the gate, 22/30 positives involve FGFR2, FRK or TEK, genes the authors themselves report as not expressed in MDA-MB-231 (TEK alone is in 10 hits), so most calls are likely guide/noise artefacts of a 76-gene screen with GI normalised by local neighbourhood SD. Hit rate (1.05%) is plausible and fitness does not predict labels (0.51), but that is not enough. Not recommended even as measurements-only: the only same-line comparison of scores is slightly anti-correlated."
+}
